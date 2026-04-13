@@ -10,7 +10,7 @@ The host CPU will continue to handle embedding lookups, loss computation, the Ad
 
 ## (c) Interface Bandwidth Requirement
 
-The accelerator targets 1,390 GFLOP/s on `ff_backward`. At AI = 5.43 FLOPs/byte, this requires 1,390 / 5.43 = 256 GB/s of sustained data throughput. The on-chip SRAM bus provides this internally. For the host-to-accelerator interface, each invocation transfers 6,425,088 bytes of operands. At 2,000 calls per training step (2 layers x 1,000 iterations), the interface must sustain at least 6,425,088 x 2 / (target latency per step) — approximately 3.2 GB/s for a 4 ms per-call budget. A PCIe Gen3 x4 link (3.9 GB/s) is sufficient and avoids becoming interface-bound.
+The accelerator targets 1,390 GFLOP/s on `ff_backward`. At AI = 5.43 FLOPs/byte, this requires 1,390 / 5.43 = 256 GB/s of sustained data throughput. The on-chip SRAM bus provides this internally. For the host-to-accelerator interface, each invocation transfers 6,425,088 bytes of operands. At 2,000 calls per training step (2 layers x 1,000 iterations), the interface must sustain at least 6,425,088 x 2 / (target latency per step) — approximately 3.2 GB/s for a 4 ms per-call budget. A UCIe x16 link at 4 GT/s (8 GB/s bidirectional) is sufficient and avoids becoming interface-bound, with 2.2x headroom.
 
 ## (d) Compute-Bound vs. Memory-Bound
 
