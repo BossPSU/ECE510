@@ -1,6 +1,6 @@
 """
 Generate a single-slide 1-minute presentation PowerPoint for ECE 510 project.
-Focus: CPU vs GPU vs Accelerator at FP32, roofline, power, HW mapping.
+Accelerator+ version: includes attention, fusion, 512 GB/s SRAM.
 """
 
 from pptx import Presentation
@@ -31,7 +31,7 @@ title_box.line.fill.background()
 tf = title_box.text_frame
 tf.word_wrap = True
 p = tf.paragraphs[0]
-p.text = "Accelerating Transformer ff_backward: CPU vs GPU vs Custom Systolic Accelerator"
+p.text = "Accelerator+: Fused ff_backward + Attention Systolic Chiplet"
 p.font.size = Pt(22)
 p.font.bold = True
 p.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
@@ -45,6 +45,17 @@ p2.alignment = PP_ALIGN.CENTER
 # ============================================================
 # Helper
 # ============================================================
+def add_box(left, top, width, height, fill_color, border_color=None):
+    box = slide.shapes.add_shape(1, Inches(left), Inches(top), Inches(width), Inches(height))
+    box.fill.solid()
+    box.fill.fore_color.rgb = fill_color
+    if border_color:
+        box.line.color.rgb = border_color
+        box.line.width = Pt(1)
+    else:
+        box.line.fill.background()
+    return box
+
 def add_textbox(left, top, width, height, lines, title=None, title_size=13,
                 body_size=9, title_color=RGBColor(0x1B,0x3A,0x5C)):
     txBox = slide.shapes.add_textbox(Inches(left), Inches(top), Inches(width), Inches(height))
@@ -59,26 +70,11 @@ def add_textbox(left, top, width, height, lines, title=None, title_size=13,
         p.space_after = Pt(3)
     for i, line in enumerate(lines):
         p = tf.add_paragraph() if (title or i > 0) else tf.paragraphs[0]
-        if isinstance(line, tuple):
-            p.text = line[0]
-            p.font.bold = line[1]
-        else:
-            p.text = line
+        p.text = line
         p.font.size = Pt(body_size)
         p.font.color.rgb = RGBColor(0x33, 0x33, 0x33)
         p.space_after = Pt(1)
     return txBox
-
-def add_box(left, top, width, height, fill_color, border_color=None):
-    box = slide.shapes.add_shape(1, Inches(left), Inches(top), Inches(width), Inches(height))
-    box.fill.solid()
-    box.fill.fore_color.rgb = fill_color
-    if border_color:
-        box.line.color.rgb = border_color
-        box.line.width = Pt(1)
-    else:
-        box.line.fill.background()
-    return box
 
 # ============================================================
 # Column 1: Problem + Performance Comparison
@@ -87,45 +83,48 @@ c1 = 0.2
 
 add_textbox(c1, 0.85, 4.2, 1.0,
     [
-        "Dominant kernel: ff_backward (32.5% of training runtime)",
-        "Includes 4 matmuls + GELU gradient (18.1% alone)",
-        "Memory-bound at AI = 10.86 FLOP/B (FP32)",
-        "Profiled over 1,000 iterations on i5-10500H CPU",
+        "Accelerated: ff_backward (32.5%) + ff_forward (23.5%) + attention (24.8%)",
+        "Combined: 80% of training runtime on hardware",
+        "ff_forward reuses same systolic array + gelu circuit (zero extra area)",
+        "Operator fusion eliminates intermediate memory traffic",
+        "ff_backward fused AI: 10.86 → 35.4 | attn fused AI: 20.1 → 116.1",
     ],
-    title="The Problem: Memory-Bandwidth Bottleneck")
+    title="The Approach: Fuse & Accelerate 80% of Training")
 
 # Performance comparison table
-tbl_box = add_box(c1, 2.05, 4.2, 2.6, RGBColor(0xFF,0xFF,0xFF), RGBColor(0x1B,0x3A,0x5C))
+tbl_box = add_box(c1, 2.05, 4.2, 2.8, RGBColor(0xFF,0xFF,0xFF), RGBColor(0x1B,0x3A,0x5C))
 tf = tbl_box.text_frame
 tf.word_wrap = True
 p = tf.paragraphs[0]
-p.text = "FP32 Performance Comparison"
+p.text = "FP32 Performance Comparison (ff_backward)"
 p.font.size = Pt(12)
 p.font.bold = True
 p.font.color.rgb = RGBColor(0x1B, 0x3A, 0x5C)
 p.alignment = PP_ALIGN.CENTER
 
-headers = "Platform           Peak      BW        Attainable  Status"
 rows = [
-    headers,
-    "─────────────────────────────────────────────────────────",
+    "Platform           Peak      BW        Attain.   Status",
+    "──────────────────────────────────────────────────────────",
     "i5-10500H CPU      864G      25.6 GB/s    278 G/s   mem-bound",
     "RTX 3050 Ti GPU   5.3T     192 GB/s   2,085 G/s   mem-bound",
-    "Accelerator        8.2T     256 GB/s   2,780 G/s   mem-bound",
+    "RTX 4080 GPU     48.7T     717 GB/s   7,783 G/s   mem-bound",
+    "Accel+ (fused)    8.2T     512 GB/s   8,192 G/s   COMP-BOUND",
     "",
-    "Speedup vs CPU:  GPU = 7.5x  |  Accelerator = 10x",
+    "Fusion shifts AI from 10.86 → 35.4 FLOP/B, crossing the",
+    "ridge point (16.0). Accel+ becomes COMPUTE-BOUND, hitting",
+    "the full 8.2 TFLOP/s peak — beating even the RTX 4080.",
 ]
 
 for row in rows:
     p = tf.add_paragraph()
     p.text = row
-    p.font.size = Pt(9)
+    p.font.size = Pt(8.5)
     p.font.name = "Consolas"
     p.font.color.rgb = RGBColor(0x33, 0x33, 0x33)
     p.space_after = Pt(0)
 
 # Power comparison
-pwr_box = add_box(c1, 4.8, 4.2, 1.6, RGBColor(0xE8,0xF0,0xFE), RGBColor(0x1B,0x3A,0x5C))
+pwr_box = add_box(c1, 5.0, 4.2, 1.4, RGBColor(0xE8,0xF0,0xFE), RGBColor(0x1B,0x3A,0x5C))
 tf = pwr_box.text_frame
 tf.word_wrap = True
 p = tf.paragraphs[0]
@@ -138,25 +137,25 @@ pwr_rows = [
     "Platform         Power    Perf       Efficiency",
     "─────────────────────────────────────────────────",
     "i5-10500H CPU    45W      278 G/s      6.2 GFLOP/s/W",
-    "RTX 3050 Ti      80W    2,085 G/s     26.1 GFLOP/s/W",
-    "Accelerator     ~10W    2,780 G/s    278.0 GFLOP/s/W",
+    "RTX 4080        320W    7,783 G/s     24.3 GFLOP/s/W",
+    "Accel+         ~11.5W   8,192 G/s    712.3 GFLOP/s/W",
     "",
-    "Accelerator: 10x perf at 1/4 power → 45x efficiency vs CPU",
+    "Accel+: beats 4080 at 1/28 power → 29x efficiency",
 ]
 for row in pwr_rows:
     p = tf.add_paragraph()
     p.text = row
-    p.font.size = Pt(9)
+    p.font.size = Pt(8.5)
     p.font.name = "Consolas"
     p.font.color.rgb = RGBColor(0x33, 0x33, 0x33)
     p.space_after = Pt(0)
 
 # ============================================================
-# Column 2: HW Mapping + Attention extension
+# Column 2: HW Mapping + Future
 # ============================================================
 c2 = 4.7
 
-hw_box = add_box(c2, 0.85, 4.2, 3.2, RGBColor(0xFF,0xFF,0xFF), RGBColor(0x1B,0x3A,0x5C))
+hw_box = add_box(c2, 0.85, 4.2, 3.0, RGBColor(0xFF,0xFF,0xFF), RGBColor(0x1B,0x3A,0x5C))
 tf = hw_box.text_frame
 tf.word_wrap = True
 p = tf.paragraphs[0]
@@ -170,18 +169,17 @@ hw_rows = [
     "──────────────────────────────────────────────",
     "@ (matmul)             64x64 systolic array (4096 MACs)",
     "gelu_grad()            Pipelined LUT + multipliers",
+    "softmax()              Exp LUT + divider + comparators",
     "* (elementwise)        Single-cycle multiplier",
     ".sum() (reduction)     Adder tree",
-    "Variable assignment    SRAM read/write (256 GB/s)",
-    "Function call order    FSM state transitions",
+    "Variable assignment    SRAM read/write (512 GB/s)",
+    "Function call order    FSM state transitions (~25 states)",
     "",
-    "Key: gelu_grad is FUSED at systolic output.",
-    "Intermediates never touch memory — they flow",
-    "through the pipeline in registers.",
-    "",
-    "dout → [systolic: @W2.T] → [gelu_grad] → [systolic: x.T@]",
-    "       no memory write      no memory      no memory write",
-    "       between stages        round-trip     between stages",
+    "FUSION: intermediates never touch memory.",
+    "  systolic → [gelu_grad/softmax] → systolic",
+    "  Results flow through registers, not SRAM.",
+    "  Eliminates 69% of ff_bwd memory traffic",
+    "  Eliminates 83% of attention memory traffic",
 ]
 for row in hw_rows:
     p = tf.add_paragraph()
@@ -191,30 +189,31 @@ for row in hw_rows:
     p.font.color.rgb = RGBColor(0x33, 0x33, 0x33)
     p.space_after = Pt(0)
 
-# Attention extension
-attn_box = add_box(c2, 4.2, 4.2, 2.2, RGBColor(0xFE, 0xF3, 0xE0), RGBColor(0xE6, 0x7E, 0x22))
-tf = attn_box.text_frame
+# Future enhancements
+future_box = add_box(c2, 4.0, 4.2, 2.4, RGBColor(0xFE, 0xF3, 0xE0), RGBColor(0xE6, 0x7E, 0x22))
+tf = future_box.text_frame
 tf.word_wrap = True
 p = tf.paragraphs[0]
-p.text = "Future: Adding Attention (+15% area, +1.5W)"
+p.text = "Future Enhancements"
 p.font.size = Pt(12)
 p.font.bold = True
 p.font.color.rgb = RGBColor(0xC0, 0x5C, 0x00)
 
-attn_rows = [
-    "Attention uses the SAME systolic array for Q@K.T and attn@V.",
-    "Only new hardware: softmax unit (exp LUT + divider + comparators)",
-    "and causal mask logic (trivial).",
+future_rows = [
+    "1. Mixed-precision (FP16/BF16 accumulate to FP32)",
+    "   → 2x MACs per cycle, 2x effective bandwidth",
+    "   → Peak jumps to 16.4 TFLOP/s at same area/power",
     "",
-    "                Before          After",
-    "  Area:          1.0x            ~1.15x",
-    "  Power:        ~10W            ~11.5W",
-    "  Runtime:       32.5%           ~80% accelerated",
-    "  Amdahl's:      1.4x            3.6x end-to-end",
+    "2. Accelerate layer_norm (~11% runtime)",
+    "   → Coverage: 80% → ~91%, Amdahl's: 3.6x → 5.3x",
     "",
-    "15% more area → 2.6x more end-to-end speedup.",
+    "3. Double-buffered SRAM for overlapping compute + DMA",
+    "   → Hides UCIe transfer latency completely",
+    "",
+    "4. Configurable array partitioning (2x 32x64)",
+    "   → Run two matmuls concurrently for smaller dims",
 ]
-for row in attn_rows:
+for row in future_rows:
     p = tf.add_paragraph()
     p.text = row
     p.font.size = Pt(8.5)
@@ -223,18 +222,18 @@ for row in attn_rows:
     p.space_after = Pt(0)
 
 # ============================================================
-# Column 3: Roofline plot
+# Column 3: Roofline plot + Architecture
 # ============================================================
 c3 = 9.15
 c3_w = 4.0
 
-roofline_img = r"C:\Users\david\OneDrive\Documents\psu\510\GitHub\codefest\cf03\profiling\max.png"
+roofline_img = r"C:\Users\david\OneDrive\Documents\psu\510\GitHub\codefest\cf03\profiling\all.png"
 if os.path.exists(roofline_img):
     slide.shapes.add_picture(roofline_img, Inches(c3), Inches(0.85), Inches(c3_w), Inches(2.8))
     lbl = slide.shapes.add_textbox(Inches(c3), Inches(3.65), Inches(c3_w), Inches(0.25))
     tf = lbl.text_frame
     p = tf.paragraphs[0]
-    p.text = "FP32 Roofline: CPU / 3050 Ti / 4080 / Accelerator / Accelerator+"
+    p.text = "FP32 Roofline: ff_backward + attention — all platforms"
     p.font.size = Pt(8)
     p.font.italic = True
     p.font.color.rgb = RGBColor(0x66, 0x66, 0x66)
@@ -245,7 +244,7 @@ arch_box = add_box(c3, 4.0, c3_w, 2.5, RGBColor(0xFF,0xFF,0xFF), RGBColor(0x1B,0
 tf = arch_box.text_frame
 tf.word_wrap = True
 p = tf.paragraphs[0]
-p.text = "Accelerator Architecture"
+p.text = "Accelerator+ Architecture"
 p.font.size = Pt(12)
 p.font.bold = True
 p.font.color.rgb = RGBColor(0x1B, 0x3A, 0x5C)
@@ -253,18 +252,19 @@ p.alignment = PP_ALIGN.CENTER
 
 arch_rows = [
     "",
-    "  Host CPU (i5-10500H)    ← runs 67.5% of workload",
+    "  Host CPU (i5-10500H)    ← runs 20% of workload",
     "     |  UCIe x16 (8 GB/s bidir)",
     "     v",
-    "  +─────── Accelerator Chiplet ───────+",
-    "  │  64x64 Systolic Array @ 500 MHz   │",
-    "  │  4,096 MACs → 8.2 TFLOP/s FP32   │",
-    "  │                                   │",
-    "  │  [gelu_grad] ← fused at output    │",
-    "  │  [softmax]   ← future addition    │",
-    "  │                                   │",
-    "  │  SRAM Scratchpad (256 GB/s)       │",
-    "  +───────────────────────────────────+",
+    "  +──────── Accelerator+ Chiplet ────────+",
+    "  │  64x64 Systolic Array @ 500 MHz      │",
+    "  │  4,096 MACs → 8.2 TFLOP/s FP32      │",
+    "  │                                      │",
+    "  │  [gelu_grad] ← fused at output       │",
+    "  │  [softmax]   ← fused at output       │",
+    "  │  [causal mask] ← gate logic          │",
+    "  │                                      │",
+    "  │  SRAM Scratchpad (512 GB/s)  ~11.5W  │",
+    "  +──────────────────────────────────────+",
 ]
 for row in arch_rows:
     p = tf.add_paragraph()
@@ -283,12 +283,12 @@ bot.fill.fore_color.rgb = RGBColor(0x1B, 0x3A, 0x5C)
 bot.line.fill.background()
 tf = bot.text_frame
 p = tf.paragraphs[0]
-p.text = "Dominant kernel: ff_backward (32.5%)  |  AI = 10.86 FLOP/B (FP32)  |  10x speedup at 45x power efficiency  |  Amdahl's end-to-end: 1.4x → 3.6x with attention"
+p.text = "80% of training accelerated  |  Fusion: AI 10.86 → 35.4 (compute-bound)  |  8,192 GFLOP/s @ 11.5W  |  29x more efficient than RTX 4080  |  Amdahl's: 3.6x end-to-end"
 p.font.size = Pt(10)
 p.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
 p.alignment = PP_ALIGN.CENTER
 
 # Save
-out_path = r"C:\Users\david\OneDrive\Documents\psu\510\GitHub\presentation\1min_presentation.pptx"
+out_path = r"C:\Users\david\OneDrive\Documents\psu\510\GitHub\presentation\1min_presentation_accel+.pptx"
 prs.save(out_path)
 print(f"Saved to {out_path}")

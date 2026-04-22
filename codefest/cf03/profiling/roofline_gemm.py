@@ -9,16 +9,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # ============================================================
-# RTX 3050 Ti Laptop GPU specs
+# RTX 3050 Ti Laptop GPU specs (FP64)
 # Source: NVIDIA RTX 3050 Ti Laptop GPU spec sheet
 #   2560 CUDA cores, boost ~1695 MHz
-#   FP32 peak: 2560 * 2 * 1.695 GHz = 8.68 TFLOP/s
-#   (NVIDIA official: 5.3 TFLOP/s at base clocks)
+#   FP32 peak: 5.3 TFLOP/s (official rating)
+#   FP64 peak: 1/64 of FP32 on consumer Ampere = 82.8 GFLOP/s
 #   Memory: 4 GB GDDR6, 128-bit, 12 Gbps -> 192 GB/s
 # ============================================================
-peak_flops = 5.3e12        # 5.3 TFLOP/s FP32 (official rating)
+peak_flops = 5.3e12 / 64   # 82.8 GFLOP/s FP64 (1/64 of FP32 on consumer Ampere)
 peak_bw    = 192e9          # 192 GB/s GDDR6
-ridge_point = peak_flops / peak_bw  # ~27.6 FLOP/byte
+ridge_point = peak_flops / peak_bw  # ~0.43 FLOP/byte
 
 N = 1024
 flops = 2.0 * N * N * N    # 2,147,483,648 FLOPs
@@ -36,9 +36,9 @@ naive_gflops  = flops / (naive_time_ms / 1000) / 1e9  # 530 GFLOP/s
 
 # Naive AI: each thread reads N elements from A and N from B from global memory
 # With L2 cache, columns of B get partially cached, but rows of A are streamed
-# Theoretical no-reuse: bytes = 2*N^3*4 (each element loaded N times) + N^2*4 (output)
-# = 2*1024^3*4 + 1024^2*4 = 8,589,934,592 + 4,194,304 = 8.594 GB
-naive_bytes_no_reuse = 2.0 * N**3 * 4 + N**2 * 4
+# Theoretical no-reuse: bytes = 2*N^3*8 (each element loaded N times, FP64) + N^2*8 (output)
+# = 2*1024^3*8 + 1024^2*8 = 17,179,869,184 + 8,388,608 = 17.19 GB
+naive_bytes_no_reuse = 2.0 * N**3 * 8 + N**2 * 8
 naive_ai = flops / naive_bytes_no_reuse  # ~0.25 FLOP/byte
 
 # Effective AI from measured performance
@@ -64,8 +64,8 @@ TILE = 8
 tiled_bytes = 2.0 * N**2 * (N / TILE) * TILE * 4 + N**2 * 4
 # Simpler: total loads = (N/TILE) tiles * 2 matrices * (N/TILE)^2 blocks * TILE^2 elements * 4 bytes
 # = (N/TILE) * 2 * TILE^2 * (N/TILE)^2 * 4
-# = 2 * N^3 / TILE * 4
-tiled_bytes = 2.0 * N**3 / TILE * 4 + N**2 * 4  # ~1.074 GB
+# = 2 * N^3 / TILE * 8 (FP64)
+tiled_bytes = 2.0 * N**3 / TILE * 8 + N**2 * 8  # ~2.15 GB
 tiled_ai = flops / tiled_bytes  # ~2.0 FLOP/byte
 
 tiled_time_ms = 4.067
@@ -104,7 +104,7 @@ ax.loglog(ai_range, accel_roof, "m--", linewidth=2, alpha=0.7, label="Accelerato
 
 # cf03 GPU roofline
 roof = np.minimum(ai_range * peak_bw, peak_flops)
-ax.loglog(ai_range, roof, "g-", linewidth=2.5, label="RTX 3050 Ti Roofline (FP32)")
+ax.loglog(ai_range, roof, "g-", linewidth=2.5, label="RTX 3050 Ti Roofline (FP64)")
 
 # Ridge point
 ax.axvline(ridge_point, color="g", linestyle=":", alpha=0.4)
@@ -113,27 +113,8 @@ ax.annotate(f"Ridge\n{ridge_point:.1f} FLOP/B",
     fontsize=8, color="green", alpha=0.7,
     arrowprops=dict(arrowstyle="->", color="green", alpha=0.5))
 
-# Naive kernel - plot at effective AI (accounts for L2 cache reuse)
-ax.plot(naive_effective_ai, naive_gflops * 1e9, "bo", markersize=12, zorder=5)
-ax.annotate(f"Naive GEMM\nEffective AI = {naive_effective_ai:.2f} FLOP/B\n{naive_gflops:.0f} GFLOP/s",
-    xy=(naive_effective_ai, naive_gflops * 1e9),
-    xytext=(naive_effective_ai * 0.15, naive_gflops * 1e9 * 0.35),
-    fontsize=9, fontweight="bold", color="blue",
-    arrowprops=dict(arrowstyle="->", color="blue"))
-
-# Tiled kernel - plot at effective AI
-ax.plot(tiled_effective_ai, tiled_gflops * 1e9, "r^", markersize=12, zorder=5)
-ax.annotate(f"Tiled GEMM (T=8)\nEffective AI = {tiled_effective_ai:.2f} FLOP/B\n{tiled_gflops:.0f} GFLOP/s",
-    xy=(tiled_effective_ai, tiled_gflops * 1e9),
-    xytext=(tiled_effective_ai * 3, tiled_gflops * 1e9 * 0.35),
-    fontsize=9, fontweight="bold", color="red",
-    arrowprops=dict(arrowstyle="->", color="red"))
-
-# Also mark theoretical no-reuse AI for reference
-ax.axvline(naive_ai, color="blue", linestyle=":", alpha=0.3)
-ax.text(naive_ai, 1.5e9, f"Naive theoretical\nAI={naive_ai:.2f}", fontsize=7, color="blue", alpha=0.6, ha="center")
-ax.axvline(tiled_ai, color="red", linestyle=":", alpha=0.3)
-ax.text(tiled_ai, 1.5e9, f"Tiled theoretical\nAI={tiled_ai:.2f}", fontsize=7, color="red", alpha=0.6, ha="center")
+# NOTE: GEMM kernels (naive/tiled) were measured at FP32 using float.
+# They are NOT plotted on this FP64 roofline — see roofline32.png for FP32 comparison.
 
 # cf02 kernel points
 ax.plot(ff_backward_ai, ff_backward_cpu_perf, "bs", markersize=10, zorder=5)
@@ -157,23 +138,26 @@ ax.axvline(accel_ridge, color="m", linestyle=":", alpha=0.3)
 
 ax.set_xlabel("Arithmetic Intensity (FLOPs / Byte)", fontsize=12)
 ax.set_ylabel("Performance (FLOP/s)", fontsize=12)
-ax.set_title("Combined Roofline: cf02 (CPU/Accelerator) + cf03 (GPU GEMM)", fontsize=13)
+ax.set_title("Combined Roofline (FP64): CPU / GPU / Accelerator", fontsize=13)
 ax.legend(loc="upper left", fontsize=9)
 ax.grid(True, which="both", alpha=0.3)
 ax.set_xlim(0.01, 1000)
 ax.set_ylim(1e9, 1e13)
 
 specs = (
-    "cf03: RTX 3050 Ti (FP32)\n"
-    f"  Peak: {peak_flops/1e12:.1f} TFLOP/s, {peak_bw/1e9:.0f} GB/s\n"
-    f"  Naive GEMM:  eff.AI={naive_effective_ai:.2f}  {naive_gflops:.0f} GFLOP/s\n"
-    f"  Tiled GEMM:  eff.AI={tiled_effective_ai:.2f}  {tiled_gflops:.0f} GFLOP/s\n\n"
-    "cf02: i5-10500H (FP64)\n"
+    "All platforms at FP64\n"
+    f"  ff_backward AI = {ff_backward_ai:.2f} FLOP/B\n\n"
+    "RTX 3050 Ti (FP64)\n"
+    f"  Peak: {peak_flops/1e9:.1f} GFLOP/s, {peak_bw/1e9:.0f} GB/s\n"
+    f"  Ridge: {ridge_point:.2f} FLOP/B\n\n"
+    "i5-10500H (FP64)\n"
     f"  Peak: {cpu_peak_flops/1e9:.0f} GFLOP/s, {cpu_peak_bw/1e9:.1f} GB/s\n"
-    f"  ff_backward: AI={ff_backward_ai:.2f}  {ff_backward_cpu_perf/1e9:.0f} GFLOP/s\n\n"
-    "cf02: Accelerator (FP64)\n"
+    f"  ff_backward: {ff_backward_cpu_perf/1e9:.0f} GFLOP/s\n\n"
+    "Accelerator (FP64)\n"
     f"  Peak: {accel_peak_flops/1e12:.1f} TFLOP/s, {accel_peak_bw/1e9:.0f} GB/s\n"
-    f"  ff_backward: AI={ff_backward_ai:.2f}  {ff_backward_accel_perf/1e9:.0f} GFLOP/s"
+    f"  ff_backward: {ff_backward_accel_perf/1e9:.0f} GFLOP/s\n\n"
+    "Note: GEMM kernels (FP32) shown\n"
+    "in roofline32.png"
 )
 ax.text(0.98, 0.02, specs, transform=ax.transAxes, fontsize=7,
     verticalalignment="bottom", horizontalalignment="right",
