@@ -49,6 +49,10 @@ vlog -sv pipeline_stage.sv
 vlog -sv skid_buffer.sv
 vlog -sv stream_mux.sv
 
+# Tile load/store
+vlog -sv tile_loader.sv
+vlog -sv tile_writer.sv
+
 # Memory
 vlog -sv sram_bank.sv
 vlog -sv scratchpad_ctrl.sv
@@ -92,11 +96,11 @@ proc run_tb {tb_name} {
     echo " Running: $tb_name"
     echo "=============================="
 
-    # Simulate with no GUI, auto-finish
     if {[catch {
-        vsim -batch -t 1ps -L work work.$tb_name \
+        vsim -t 1ps -L work work.$tb_name \
              -suppress 3839 \
-             +nowarn3839
+             +nowarn3839 \
+             -onfinish stop
         run -all
         quit -sim
     } err]} {

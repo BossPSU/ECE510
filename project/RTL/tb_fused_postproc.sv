@@ -50,8 +50,8 @@ module tb_fused_postproc;
     @(posedge clk); #1;
     in_valid = 0;
 
-    // Wait for GELU pipeline (5 stages + 1 mux)
-    repeat (8) @(posedge clk);
+    // Wait for GELU pipeline (3 stages)
+    repeat (6) @(posedge clk);
 
     if (out_valid) begin
       shortreal got;
@@ -75,7 +75,7 @@ module tb_fused_postproc;
     @(posedge clk); #1;
     in_valid = 0;
 
-    repeat (8) @(posedge clk);
+    repeat (6) @(posedge clk);
 
     if (out_valid)
       $display("    PASS: GELU grad produced output = %0.4f", fp32(data_out));

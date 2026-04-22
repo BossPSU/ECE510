@@ -46,8 +46,8 @@ module tb_gelu_unit;
     end
     in_valid = 0;
 
-    // Wait for pipeline to drain (5 stages + margin)
-    repeat (10) @(posedge clk);
+    // Wait for pipeline to drain (3 stages + margin)
+    repeat (8) @(posedge clk);
 
     $display("=== tb_gelu_unit: DONE ===");
     $finish;

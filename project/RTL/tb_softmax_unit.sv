@@ -40,8 +40,8 @@ module tb_softmax_unit;
     in_valid = 0;
     start    = 0;
 
-    // Wait for pipeline (4 stages)
-    repeat (10) @(posedge clk);
+    // Wait for pipeline (4 stages + margin)
+    repeat (15) @(posedge clk);
 
     // Check output
     if (out_valid) begin

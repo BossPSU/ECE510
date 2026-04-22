@@ -1,12 +1,12 @@
-// tb_systolic_array.sv — Unit TB for systolic array (Option 3)
-// Load one tiny tile, check matrix multiply result
-// Uses a small 4x4 subarray to keep simulation fast
+// tb_systolic_array.sv — Unit TB for systolic array
+// Uses a small 4x4 subarray, feeds skewed inputs for proper systolic flow
+// Tests C = A * B where B = identity, so C should equal A
 `timescale 1ns/1ps
 
 module tb_systolic_array;
   import accel_pkg::*;
 
-  localparam int N = 4; // tiny 4x4 for test
+  localparam int N = 4;
 
   logic        clk, rst_n, en, clear_acc;
   logic [31:0] a_in  [N];
@@ -25,38 +25,38 @@ module tb_systolic_array;
     return $bitstoshortreal(bits);
   endfunction
 
-  // Test matrices (4x4)
+  // Test matrices
   // A = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]]
-  // B = identity (for easy checking: C should equal A)
-  shortreal A [N][N];
-  shortreal B [N][N];
+  // B = identity
+  shortreal A_mat [N][N];
+  shortreal B_mat [N][N];
   shortreal C_expected [N][N];
 
   initial begin
+    int pass_cnt, fail_cnt;
     $display("=== tb_systolic_array: START ===");
     clk = 0; rst_n = 0; en = 0; clear_acc = 0;
+    pass_cnt = 0;
+    fail_cnt = 0;
+
     for (int i = 0; i < N; i++) begin
       a_in[i] = '0;
       b_in[i] = '0;
     end
 
-    // Initialize test data
-    // A: sequential values 1..16
+    // Init matrices
     for (int i = 0; i < N; i++)
-      for (int j = 0; j < N; j++)
-        A[i][j] = shortreal'(i * N + j + 1);
-
-    // B: identity matrix
-    for (int i = 0; i < N; i++)
-      for (int j = 0; j < N; j++)
-        B[i][j] = (i == j) ? 1.0 : 0.0;
+      for (int j = 0; j < N; j++) begin
+        A_mat[i][j] = shortreal'(i * N + j + 1);
+        B_mat[i][j] = (i == j) ? shortreal'(1.0) : shortreal'(0.0);
+      end
 
     // Golden: C = A * I = A
     for (int i = 0; i < N; i++)
       for (int j = 0; j < N; j++) begin
-        C_expected[i][j] = 0.0;
+        C_expected[i][j] = shortreal'(0.0);
         for (int k = 0; k < N; k++)
-          C_expected[i][j] += A[i][k] * B[k][j];
+          C_expected[i][j] = C_expected[i][j] + A_mat[i][k] * B_mat[k][j];
       end
 
     // Reset
@@ -65,51 +65,59 @@ module tb_systolic_array;
 
     // Clear accumulators
     en = 1; clear_acc = 1;
-    @(posedge clk); #1;
-    clear_acc = 0;
-
-    // Feed data: systolic flow
-    // Each cycle, feed one column of A as row inputs and one row of B as col inputs
-    // In a real systolic array, data is staggered — simplified here
-    for (int k = 0; k < N; k++) begin
-      for (int i = 0; i < N; i++) begin
-        a_in[i] = $shortrealtobits(A[i][k]);
-        b_in[i] = $shortrealtobits(B[k][i]);
-      end
-      @(posedge clk); #1;
-    end
-
-    // Let pipeline drain
     for (int i = 0; i < N; i++) begin
       a_in[i] = '0;
       b_in[i] = '0;
     end
-    repeat (N + 4) @(posedge clk);
+    @(posedge clk); #1;
+    clear_acc = 0;
+
+    // Feed data with systolic skew:
+    // At cycle k, row i gets A[i][k-i] (if k-i is in range)
+    //             col j gets B[k-j][j] (if k-j is in range)
+    // Total cycles needed: N + N - 1 = 2*N - 1
+    for (int cyc = 0; cyc < 2*N - 1; cyc++) begin
+      for (int i = 0; i < N; i++) begin
+        int k_a;
+        k_a = cyc - i;
+        if (k_a >= 0 && k_a < N)
+          a_in[i] = $shortrealtobits(A_mat[i][k_a]);
+        else
+          a_in[i] = '0;
+      end
+      for (int j = 0; j < N; j++) begin
+        int k_b;
+        k_b = cyc - j;
+        if (k_b >= 0 && k_b < N)
+          b_in[j] = $shortrealtobits(B_mat[k_b][j]);
+        else
+          b_in[j] = '0;
+      end
+      @(posedge clk); #1;
+    end
+
+    // Zero inputs and let pipeline settle
+    for (int i = 0; i < N; i++) begin
+      a_in[i] = '0;
+      b_in[i] = '0;
+    end
+    repeat (N + 2) @(posedge clk);
 
     // Check results
     en = 0;
-    int pass_cnt = 0;
-    int fail_cnt = 0;
-
     $display("  Result C (expect C = A * I = A):");
     for (int i = 0; i < N; i++) begin
-      string row_str;
-      row_str = $sformatf("  Row %0d: [", i);
+      $display("  Row %0d: [%6.1f, %6.1f, %6.1f, %6.1f]  expect [%6.1f, %6.1f, %6.1f, %6.1f]",
+               i,
+               fp32(c_out[i][0]), fp32(c_out[i][1]), fp32(c_out[i][2]), fp32(c_out[i][3]),
+               C_expected[i][0], C_expected[i][1], C_expected[i][2], C_expected[i][3]);
       for (int j = 0; j < N; j++) begin
-        shortreal got, expected;
         real err;
-        got      = fp32(c_out[i][j]);
-        expected = C_expected[i][j];
-        err      = got - expected;
+        err = fp32(c_out[i][j]) - C_expected[i][j];
         if (err < 0) err = -err;
-
-        row_str = {row_str, $sformatf("%6.1f", got)};
-        if (j < N-1) row_str = {row_str, ","};
-
         if (err < 0.1) pass_cnt++;
         else           fail_cnt++;
       end
-      $display("%s]", row_str);
     end
 
     $display("  Results: %0d PASS, %0d FAIL (of %0d elements)",

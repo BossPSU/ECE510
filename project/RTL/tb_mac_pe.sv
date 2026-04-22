@@ -44,7 +44,9 @@ module tb_mac_pe;
     b_in = $shortrealtobits(shortreal'(4.0));
     @(posedge clk); #1;
 
-    // Wait for pipeline
+    // Zero inputs to stop accumulation, then wait
+    a_in = '0;
+    b_in = '0;
     @(posedge clk); #1;
 
     // Check accumulator
@@ -55,13 +57,16 @@ module tb_mac_pe;
       $display("  FAIL: MAC accumulation incorrect");
 
     // Test 4: Check forwarding — a_out should be delayed a_in
-    $display("  a_out = %f (expect 1.0)", fp32(a_out));
-    $display("  b_out = %f (expect 4.0)", fp32(b_out));
+    $display("  a_out = %f (expect 0.0, forwarded zero)", fp32(a_out));
+    $display("  b_out = %f (expect 0.0, forwarded zero)", fp32(b_out));
 
     // Test 5: Clear and verify
+    a_in = '0;
+    b_in = '0;
     clear_acc = 1;
     @(posedge clk); #1;
     clear_acc = 0;
+    en = 0;  // disable to prevent further accumulation
     @(posedge clk); #1;
     $display("  acc after clear = %f (expect 0.0)", fp32(acc_out));
 

@@ -1,7 +1,6 @@
 // gelu_grad_unit.sv — Backward GELU gradient datapath
-// Shares tanh LUT with gelu_unit
 // gelu'(x) = 0.5*(1+tanh) + 0.5*x*(1-tanh^2)*sqrt(2/pi)*(1+3*0.044715*x^2)
-// Pipelined: 5 stages
+// Pipelined: 3 stages (behavioral FP for simulation)
 module gelu_grad_unit
   import accel_pkg::*;
 #(
@@ -18,93 +17,58 @@ module gelu_grad_unit
 );
 
   // Pipeline registers
-  logic [DATA_WIDTH-1:0] p1_x, p1_x3_term;
+  logic [DATA_WIDTH-1:0] p1_x;
+  logic [DATA_WIDTH-1:0] p1_tanh_arg;
   logic                  p1_valid;
-  logic [DATA_WIDTH-1:0] p2_tanh_arg, p2_x;
+
+  logic [DATA_WIDTH-1:0] p2_x;
+  logic [DATA_WIDTH-1:0] p2_tanh_val;
   logic                  p2_valid;
-  logic [DATA_WIDTH-1:0] p3_tanh_val, p3_x;
-  logic                  p3_valid;
-  logic [DATA_WIDTH-1:0] p4_dtanh, p4_inner, p4_tanh_val, p4_x;
-  logic                  p4_valid;
 
-  // tanh LUT
-  logic [LUT_ADDR_W-1:0] tanh_addr;
-  logic [DATA_WIDTH-1:0]  tanh_data;
-
-  gelu_lut u_tanh_lut (
-    .clk  (clk),
-    .addr (tanh_addr),
-    .data (tanh_data)
-  );
-
-  // Stage 1: x + 0.044715 * x^3
+  // Stage 1: compute tanh_arg
   always_ff @(posedge clk or negedge rst_n) begin
-    if (!rst_n) p1_valid <= 1'b0;
-    else if (en) begin
-      p1_valid   <= in_valid;
-      p1_x       <= x_in;
-      p1_x3_term <= $shortrealtobits(
-        $bitstoshortreal(x_in) +
-        shortreal'(0.044715) * $bitstoshortreal(x_in) *
-        $bitstoshortreal(x_in) * $bitstoshortreal(x_in)
-      );
+    if (!rst_n) begin
+      p1_valid <= 1'b0;
+    end else if (en) begin
+      p1_valid <= in_valid;
+      if (in_valid) begin
+        shortreal x_r, arg;
+        x_r = $bitstoshortreal(x_in);
+        arg = shortreal'(0.7978845608) * (x_r + shortreal'(0.044715) * x_r * x_r * x_r);
+        p1_x        <= x_in;
+        p1_tanh_arg <= $shortrealtobits(arg);
+      end
     end
   end
 
-  // Stage 2: tanh_arg = sqrt(2/pi) * x3_term
+  // Stage 2: compute tanh
   always_ff @(posedge clk or negedge rst_n) begin
-    if (!rst_n) p2_valid <= 1'b0;
-    else if (en) begin
-      p2_valid    <= p1_valid;
-      p2_x        <= p1_x;
-      p2_tanh_arg <= $shortrealtobits(
-        shortreal'(0.7978845608) * $bitstoshortreal(p1_x3_term)
-      );
+    if (!rst_n) begin
+      p2_valid <= 1'b0;
+    end else if (en) begin
+      p2_valid <= p1_valid;
+      if (p1_valid) begin
+        p2_x        <= p1_x;
+        p2_tanh_val <= $shortrealtobits($tanh($bitstoshortreal(p1_tanh_arg)));
+      end
     end
   end
 
-  assign tanh_addr = LUT_ADDR_W'(
-    int'(($bitstoshortreal(p2_tanh_arg) + shortreal'(4.0)) * shortreal'(31.875))
-  );
-
-  // Stage 3: read tanh
+  // Stage 3: compute full gradient
   always_ff @(posedge clk or negedge rst_n) begin
-    if (!rst_n) p3_valid <= 1'b0;
-    else if (en) begin
-      p3_valid    <= p2_valid;
-      p3_x        <= p2_x;
-      p3_tanh_val <= tanh_data;
-    end
-  end
-
-  // Stage 4: compute dtanh = 1 - tanh^2, inner_grad = sqrt(2/pi)*(1 + 3*0.044715*x^2)
-  always_ff @(posedge clk or negedge rst_n) begin
-    if (!rst_n) p4_valid <= 1'b0;
-    else if (en) begin
-      p4_valid    <= p3_valid;
-      p4_x        <= p3_x;
-      p4_tanh_val <= p3_tanh_val;
-      p4_dtanh    <= $shortrealtobits(
-        shortreal'(1.0) - $bitstoshortreal(p3_tanh_val) * $bitstoshortreal(p3_tanh_val)
-      );
-      p4_inner    <= $shortrealtobits(
-        shortreal'(0.7978845608) * (shortreal'(1.0) +
-        shortreal'(3.0) * shortreal'(0.044715) *
-        $bitstoshortreal(p3_x) * $bitstoshortreal(p3_x))
-      );
-    end
-  end
-
-  // Stage 5: 0.5*(1+tanh) + 0.5*x*dtanh*inner_grad
-  always_ff @(posedge clk or negedge rst_n) begin
-    if (!rst_n) out_valid <= 1'b0;
-    else if (en) begin
-      out_valid <= p4_valid;
-      grad_out  <= $shortrealtobits(
-        shortreal'(0.5) * (shortreal'(1.0) + $bitstoshortreal(p4_tanh_val)) +
-        shortreal'(0.5) * $bitstoshortreal(p4_x) *
-        $bitstoshortreal(p4_dtanh) * $bitstoshortreal(p4_inner)
-      );
+    if (!rst_n) begin
+      out_valid <= 1'b0;
+    end else if (en) begin
+      out_valid <= p2_valid;
+      if (p2_valid) begin
+        shortreal x_r, t, dtanh, inner, result;
+        x_r    = $bitstoshortreal(p2_x);
+        t      = $bitstoshortreal(p2_tanh_val);
+        dtanh  = shortreal'(1.0) - t * t;
+        inner  = shortreal'(0.7978845608) * (shortreal'(1.0) + shortreal'(3.0) * shortreal'(0.044715) * x_r * x_r);
+        result = shortreal'(0.5) * (shortreal'(1.0) + t) + shortreal'(0.5) * x_r * dtanh * inner;
+        grad_out <= $shortrealtobits(result);
+      end
     end
   end
 

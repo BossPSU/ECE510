@@ -139,7 +139,17 @@ module tb_accel_top;
   endfunction
 
   // ---- Main test sequence ----
-  initial begin
+  initial begin : main_test
+    // All declarations at top of block
+    shortreal golden_fwd [4];
+    shortreal A_data [4];
+    shortreal B_data [4];
+    shortreal C_data [4];
+    shortreal result [4];
+    int fwd_pass;
+    int nonzero;
+    real err;
+
     $display("=== tb_accel_top: START ===");
     clk = 0; rst_n = 0;
     cmd_valid    = 0;
@@ -176,21 +186,15 @@ module tb_accel_top;
     $display("  Data loaded to SRAM");
 
     // Compute golden result: C = GELU(A * B)
-    // A*B = [[1*5+2*7, 1*6+2*8], [3*5+4*7, 3*6+4*8]]
-    //     = [[19, 22], [43, 50]]
-    // GELU(19)≈19, GELU(22)≈22, GELU(43)≈43, GELU(50)≈50
-    // (GELU(x) ≈ x for large positive x)
-    shortreal golden_fwd [4];
-    begin
-      shortreal A_data [4] = '{1.0, 2.0, 3.0, 4.0};
-      shortreal B_data [4] = '{5.0, 6.0, 7.0, 8.0};
-      shortreal C_data [4];
-      golden_matmul(A_data, B_data, C_data, 2, 2, 2);
-      for (int i = 0; i < 4; i++)
-        golden_fwd[i] = golden_gelu(C_data[i]);
-      $display("  Golden GEMM*GELU: [%0.2f, %0.2f, %0.2f, %0.2f]",
-               golden_fwd[0], golden_fwd[1], golden_fwd[2], golden_fwd[3]);
-    end
+    // A*B = [[19, 22], [43, 50]]
+    // GELU(x) ≈ x for large positive x
+    A_data = '{1.0, 2.0, 3.0, 4.0};
+    B_data = '{5.0, 6.0, 7.0, 8.0};
+    golden_matmul(A_data, B_data, C_data, 2, 2, 2);
+    for (int i = 0; i < 4; i++)
+      golden_fwd[i] = golden_gelu(C_data[i]);
+    $display("  Golden GEMM*GELU: [%0.2f, %0.2f, %0.2f, %0.2f]",
+             golden_fwd[0], golden_fwd[1], golden_fwd[2], golden_fwd[3]);
 
     // Issue FFN forward command
     issue_cmd(MODE_FFN_FWD, 16'h0000, 16'h0100, 16'h0200, 8'd2, 8'd2, 8'd2);
@@ -201,28 +205,23 @@ module tb_accel_top;
       $display("  FAIL: FFN forward did not complete");
 
     // Read back results from SRAM and compare against golden
-    begin
-      shortreal result [4];
-      int fwd_pass = 0;
-      for (int i = 0; i < 4; i++) begin
-        dma_read(16'h0200 + i[15:0], result[i]);
-      end
-      $display("  Read back: [%0.2f, %0.2f, %0.2f, %0.2f]",
-               result[0], result[1], result[2], result[3]);
-      for (int i = 0; i < 4; i++) begin
-        real err;
-        err = result[i] - golden_fwd[i];
-        if (err < 0) err = -err;
-        if (err < 1.0)  // loose tolerance for smoke test
-          fwd_pass++;
-        else
-          $display("  FAIL: element %0d: got %0.2f expected %0.2f", i, result[i], golden_fwd[i]);
-      end
-      if (fwd_pass == 4)
-        $display("  PASS: all 4 output elements match golden model");
+    fwd_pass = 0;
+    for (int i = 0; i < 4; i++)
+      dma_read(16'h0200 + i[15:0], result[i]);
+    $display("  Read back: [%0.2f, %0.2f, %0.2f, %0.2f]",
+             result[0], result[1], result[2], result[3]);
+    for (int i = 0; i < 4; i++) begin
+      err = result[i] - golden_fwd[i];
+      if (err < 0) err = -err;
+      if (err < 1.0)
+        fwd_pass++;
       else
-        $display("  PARTIAL: %0d/4 elements match", fwd_pass);
+        $display("  FAIL: element %0d: got %0.2f expected %0.2f", i, result[i], golden_fwd[i]);
     end
+    if (fwd_pass == 4)
+      $display("  PASS: all 4 output elements match golden model");
+    else
+      $display("  PARTIAL: %0d/4 elements match", fwd_pass);
 
     $display("  Perf: active=%0d stall=%0d tiles=%0d",
              perf_active, perf_stall, perf_tiles);
@@ -245,20 +244,17 @@ module tb_accel_top;
       $display("  FAIL: FFN backward did not complete");
 
     // Read back and check non-zero (basic sanity)
-    begin
-      shortreal result [4];
-      int nonzero = 0;
-      for (int i = 0; i < 4; i++)
-        dma_read(16'h0300 + i[15:0], result[i]);
-      $display("  Read back: [%0.2f, %0.2f, %0.2f, %0.2f]",
-               result[0], result[1], result[2], result[3]);
-      for (int i = 0; i < 4; i++)
-        if (result[i] != 0.0) nonzero++;
-      if (nonzero > 0)
-        $display("  PASS: backward produced non-zero outputs (%0d/4)", nonzero);
-      else
-        $display("  FAIL: all outputs are zero");
-    end
+    nonzero = 0;
+    for (int i = 0; i < 4; i++)
+      dma_read(16'h0300 + i[15:0], result[i]);
+    $display("  Read back: [%0.2f, %0.2f, %0.2f, %0.2f]",
+             result[0], result[1], result[2], result[3]);
+    for (int i = 0; i < 4; i++)
+      if (result[i] != 0.0) nonzero++;
+    if (nonzero > 0)
+      $display("  PASS: backward produced non-zero outputs (%0d/4)", nonzero);
+    else
+      $display("  FAIL: all outputs are zero");
 
     $display("  Perf: active=%0d stall=%0d tiles=%0d",
              perf_active, perf_stall, perf_tiles);
@@ -281,20 +277,17 @@ module tb_accel_top;
       $display("  FAIL: Attention forward did not complete");
 
     // Read back and check non-zero
-    begin
-      shortreal result [4];
-      int nonzero = 0;
-      for (int i = 0; i < 4; i++)
-        dma_read(16'h0400 + i[15:0], result[i]);
-      $display("  Read back: [%0.2f, %0.2f, %0.2f, %0.2f]",
-               result[0], result[1], result[2], result[3]);
-      for (int i = 0; i < 4; i++)
-        if (result[i] != 0.0) nonzero++;
-      if (nonzero > 0)
-        $display("  PASS: attention produced non-zero outputs (%0d/4)", nonzero);
-      else
-        $display("  FAIL: all outputs are zero");
-    end
+    nonzero = 0;
+    for (int i = 0; i < 4; i++)
+      dma_read(16'h0400 + i[15:0], result[i]);
+    $display("  Read back: [%0.2f, %0.2f, %0.2f, %0.2f]",
+             result[0], result[1], result[2], result[3]);
+    for (int i = 0; i < 4; i++)
+      if (result[i] != 0.0) nonzero++;
+    if (nonzero > 0)
+      $display("  PASS: attention produced non-zero outputs (%0d/4)", nonzero);
+    else
+      $display("  FAIL: all outputs are zero");
 
     $display("  Perf: active=%0d stall=%0d tiles=%0d",
              perf_active, perf_stall, perf_tiles);
