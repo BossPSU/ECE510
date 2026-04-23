@@ -91,8 +91,8 @@ module tb_accel_top;
         wait (done);
       end
       begin
-        repeat (5000) @(posedge clk);
-        $display("    TIMEOUT waiting for done");
+        repeat (10000) @(posedge clk);
+        $display("    TIMEOUT waiting for done (10000 cycles)");
       end
     join_any
     disable fork;

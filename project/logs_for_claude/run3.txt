@@ -1,6 +1,6 @@
 # ==============================================
 #  Accelerator TB Suite  QuestaSim
-#  Date: Wed Apr 22 17:00:33 PDT 2026
+#  Date: Wed Apr 22 17:13:53 PDT 2026
 # ==============================================
 # QuestaSim-64 vmap 2021.3_1 Lib Mapping Utility 2021.08 Aug 15 2021
 # vmap work work 
@@ -9,84 +9,84 @@
 # 
 # >>> Compiling RTL...
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:33 on Apr 22,2026
+# Start time: 17:13:53 on Apr 22,2026
 # vlog -reportprogress 300 -sv accel_pkg.sv 
 # -- Compiling package accel_pkg
 # 
 # Top level modules:
 # 	--none--
-# End time: 17:00:33 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:53 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:33 on Apr 22,2026
+# Start time: 17:13:53 on Apr 22,2026
 # vlog -reportprogress 300 -sv stream_if.sv 
 # -- Compiling interface stream_if
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	--none--
-# End time: 17:00:33 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:53 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:33 on Apr 22,2026
+# Start time: 17:13:53 on Apr 22,2026
 # vlog -reportprogress 300 -sv sram_if.sv 
 # -- Compiling interface sram_if
 # 
 # Top level modules:
 # 	--none--
-# End time: 17:00:33 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:53 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:33 on Apr 22,2026
+# Start time: 17:13:53 on Apr 22,2026
 # vlog -reportprogress 300 -sv cmd_if.sv 
 # -- Compiling interface cmd_if
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	--none--
-# End time: 17:00:34 on Apr 22,2026, Elapsed time: 0:00:01
+# End time: 17:13:54 on Apr 22,2026, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:34 on Apr 22,2026
+# Start time: 17:13:54 on Apr 22,2026
 # vlog -reportprogress 300 -sv tile_if.sv 
 # -- Compiling interface tile_if
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	--none--
-# End time: 17:00:34 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:54 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:34 on Apr 22,2026
+# Start time: 17:13:54 on Apr 22,2026
 # vlog -reportprogress 300 -sv ctrl_if.sv 
 # -- Compiling interface ctrl_if
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	--none--
-# End time: 17:00:34 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:54 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:34 on Apr 22,2026
+# Start time: 17:13:54 on Apr 22,2026
 # vlog -reportprogress 300 -sv status_if.sv 
 # -- Compiling interface status_if
 # 
 # Top level modules:
 # 	--none--
-# End time: 17:00:34 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:54 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:34 on Apr 22,2026
+# Start time: 17:13:54 on Apr 22,2026
 # vlog -reportprogress 300 -sv mac_pe.sv 
 # -- Compiling module mac_pe
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	mac_pe
-# End time: 17:00:34 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:54 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:34 on Apr 22,2026
+# Start time: 17:13:54 on Apr 22,2026
 # vlog -reportprogress 300 -sv systolic_array_64x64.sv 
 # -- Compiling module systolic_array_64x64
 # -- Importing package accel_pkg
@@ -95,30 +95,30 @@
 # 
 # Top level modules:
 # 	systolic_array_64x64
-# End time: 17:00:34 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:54 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 2
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:34 on Apr 22,2026
+# Start time: 17:13:54 on Apr 22,2026
 # vlog -reportprogress 300 -sv gelu_lut.sv 
 # -- Compiling module gelu_lut
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	gelu_lut
-# End time: 17:00:35 on Apr 22,2026, Elapsed time: 0:00:01
+# End time: 17:13:55 on Apr 22,2026, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:35 on Apr 22,2026
+# Start time: 17:13:55 on Apr 22,2026
 # vlog -reportprogress 300 -sv exp_lut.sv 
 # -- Compiling module exp_lut
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	exp_lut
-# End time: 17:00:35 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:55 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:35 on Apr 22,2026
+# Start time: 17:13:55 on Apr 22,2026
 # vlog -reportprogress 300 -sv adder_tree.sv 
 # -- Compiling module adder_tree
 # -- Importing package accel_pkg
@@ -126,30 +126,30 @@
 # 
 # Top level modules:
 # 	adder_tree
-# End time: 17:00:35 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:55 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:35 on Apr 22,2026
+# Start time: 17:13:55 on Apr 22,2026
 # vlog -reportprogress 300 -sv gelu_unit.sv 
 # -- Compiling module gelu_unit
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	gelu_unit
-# End time: 17:00:35 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:55 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:35 on Apr 22,2026
+# Start time: 17:13:55 on Apr 22,2026
 # vlog -reportprogress 300 -sv gelu_grad_unit.sv 
 # -- Compiling module gelu_grad_unit
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	gelu_grad_unit
-# End time: 17:00:35 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:55 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:35 on Apr 22,2026
+# Start time: 17:13:55 on Apr 22,2026
 # vlog -reportprogress 300 -sv softmax_unit.sv 
 # -- Compiling module softmax_unit
 # -- Importing package accel_pkg
@@ -157,10 +157,10 @@
 # 
 # Top level modules:
 # 	softmax_unit
-# End time: 17:00:36 on Apr 22,2026, Elapsed time: 0:00:01
+# End time: 17:13:55 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:36 on Apr 22,2026
+# Start time: 17:13:56 on Apr 22,2026
 # vlog -reportprogress 300 -sv causal_mask_unit.sv 
 # -- Compiling module causal_mask_unit
 # -- Importing package accel_pkg
@@ -168,50 +168,50 @@
 # 
 # Top level modules:
 # 	causal_mask_unit
-# End time: 17:00:36 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:56 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:36 on Apr 22,2026
+# Start time: 17:13:56 on Apr 22,2026
 # vlog -reportprogress 300 -sv divider_or_reciprocal_unit.sv 
 # -- Compiling module divider_or_reciprocal_unit
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	divider_or_reciprocal_unit
-# End time: 17:00:36 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:56 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:36 on Apr 22,2026
+# Start time: 17:13:56 on Apr 22,2026
 # vlog -reportprogress 300 -sv fused_postproc_unit.sv 
 # -- Compiling module fused_postproc_unit
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	fused_postproc_unit
-# End time: 17:00:36 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:56 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:36 on Apr 22,2026
+# Start time: 17:13:56 on Apr 22,2026
 # vlog -reportprogress 300 -sv pipeline_stage.sv 
 # -- Compiling module pipeline_stage
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	pipeline_stage
-# End time: 17:00:36 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:56 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:36 on Apr 22,2026
+# Start time: 17:13:56 on Apr 22,2026
 # vlog -reportprogress 300 -sv skid_buffer.sv 
 # -- Compiling module skid_buffer
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	skid_buffer
-# End time: 17:00:36 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:56 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:36 on Apr 22,2026
+# Start time: 17:13:56 on Apr 22,2026
 # vlog -reportprogress 300 -sv stream_mux.sv 
 # -- Compiling module stream_mux
 # -- Importing package accel_pkg
@@ -220,80 +220,80 @@
 # 
 # Top level modules:
 # 	stream_mux
-# End time: 17:00:37 on Apr 22,2026, Elapsed time: 0:00:01
+# End time: 17:13:57 on Apr 22,2026, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 2
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:37 on Apr 22,2026
+# Start time: 17:13:57 on Apr 22,2026
 # vlog -reportprogress 300 -sv tile_loader.sv 
 # -- Compiling module tile_loader
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	tile_loader
-# End time: 17:00:37 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:57 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:37 on Apr 22,2026
+# Start time: 17:13:57 on Apr 22,2026
 # vlog -reportprogress 300 -sv tile_writer.sv 
 # -- Compiling module tile_writer
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	tile_writer
-# End time: 17:00:37 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:57 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:37 on Apr 22,2026
+# Start time: 17:13:57 on Apr 22,2026
 # vlog -reportprogress 300 -sv sram_bank.sv 
 # -- Compiling module sram_bank
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	sram_bank
-# End time: 17:00:37 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:57 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:37 on Apr 22,2026
+# Start time: 17:13:57 on Apr 22,2026
 # vlog -reportprogress 300 -sv scratchpad_ctrl.sv 
 # -- Compiling module scratchpad_ctrl
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	scratchpad_ctrl
-# End time: 17:00:37 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:57 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:37 on Apr 22,2026
+# Start time: 17:13:57 on Apr 22,2026
 # vlog -reportprogress 300 -sv address_gen.sv 
 # -- Compiling module address_gen
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	address_gen
-# End time: 17:00:38 on Apr 22,2026, Elapsed time: 0:00:01
+# End time: 17:13:57 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:38 on Apr 22,2026
+# Start time: 17:13:57 on Apr 22,2026
 # vlog -reportprogress 300 -sv dma_engine.sv 
 # -- Compiling module dma_engine
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	dma_engine
-# End time: 17:00:38 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:58 on Apr 22,2026, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:38 on Apr 22,2026
+# Start time: 17:13:58 on Apr 22,2026
 # vlog -reportprogress 300 -sv double_buffer_ctrl.sv 
 # -- Compiling module double_buffer_ctrl
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	double_buffer_ctrl
-# End time: 17:00:38 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:58 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:38 on Apr 22,2026
+# Start time: 17:13:58 on Apr 22,2026
 # vlog -reportprogress 300 -sv mode_decoder.sv 
 # -- Compiling module mode_decoder
 # -- Importing package accel_pkg
@@ -301,20 +301,20 @@
 # 
 # Top level modules:
 # 	mode_decoder
-# End time: 17:00:38 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:58 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:38 on Apr 22,2026
+# Start time: 17:13:58 on Apr 22,2026
 # vlog -reportprogress 300 -sv tile_scheduler.sv 
 # -- Compiling module tile_scheduler
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	tile_scheduler
-# End time: 17:00:38 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:58 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:38 on Apr 22,2026
+# Start time: 17:13:58 on Apr 22,2026
 # vlog -reportprogress 300 -sv accel_controller.sv 
 # -- Compiling module accel_controller
 # -- Importing package accel_pkg
@@ -322,30 +322,30 @@
 # 
 # Top level modules:
 # 	accel_controller
-# End time: 17:00:38 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:58 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:38 on Apr 22,2026
+# Start time: 17:13:58 on Apr 22,2026
 # vlog -reportprogress 300 -sv perf_counter_block.sv 
 # -- Compiling module perf_counter_block
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	perf_counter_block
-# End time: 17:00:39 on Apr 22,2026, Elapsed time: 0:00:01
+# End time: 17:13:59 on Apr 22,2026, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:39 on Apr 22,2026
+# Start time: 17:13:59 on Apr 22,2026
 # vlog -reportprogress 300 -sv csr_block.sv 
 # -- Compiling module csr_block
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	csr_block
-# End time: 17:00:39 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:59 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:39 on Apr 22,2026
+# Start time: 17:13:59 on Apr 22,2026
 # vlog -reportprogress 300 -sv accel_top.sv 
 # -- Compiling module accel_top
 # -- Importing package accel_pkg
@@ -353,90 +353,90 @@
 # 
 # Top level modules:
 # 	accel_top
-# End time: 17:00:39 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:59 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 1
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:39 on Apr 22,2026
+# Start time: 17:13:59 on Apr 22,2026
 # vlog -reportprogress 300 -sv accel_chiplet_wrapper.sv 
 # -- Compiling module accel_chiplet_wrapper
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	accel_chiplet_wrapper
-# End time: 17:00:39 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:59 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # >>> RTL compilation complete.
 # 
 # >>> Compiling testbenches...
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:39 on Apr 22,2026
+# Start time: 17:13:59 on Apr 22,2026
 # vlog -reportprogress 300 -sv tb_mac_pe.sv 
 # -- Compiling module tb_mac_pe
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	tb_mac_pe
-# End time: 17:00:39 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:13:59 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:39 on Apr 22,2026
+# Start time: 17:13:59 on Apr 22,2026
 # vlog -reportprogress 300 -sv tb_gelu_unit.sv 
 # -- Compiling module tb_gelu_unit
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	tb_gelu_unit
-# End time: 17:00:40 on Apr 22,2026, Elapsed time: 0:00:01
+# End time: 17:13:59 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:40 on Apr 22,2026
+# Start time: 17:13:59 on Apr 22,2026
 # vlog -reportprogress 300 -sv tb_softmax_unit.sv 
 # -- Compiling module tb_softmax_unit
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	tb_softmax_unit
-# End time: 17:00:40 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:14:00 on Apr 22,2026, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:40 on Apr 22,2026
+# Start time: 17:14:00 on Apr 22,2026
 # vlog -reportprogress 300 -sv tb_causal_mask.sv 
 # -- Compiling module tb_causal_mask
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	tb_causal_mask
-# End time: 17:00:40 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:14:00 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:40 on Apr 22,2026
+# Start time: 17:14:00 on Apr 22,2026
 # vlog -reportprogress 300 -sv tb_systolic_array.sv 
 # -- Compiling module tb_systolic_array
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	tb_systolic_array
-# End time: 17:00:40 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:14:00 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:40 on Apr 22,2026
+# Start time: 17:14:00 on Apr 22,2026
 # vlog -reportprogress 300 -sv tb_fused_postproc.sv 
 # -- Compiling module tb_fused_postproc
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	tb_fused_postproc
-# End time: 17:00:40 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:14:00 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 17:00:40 on Apr 22,2026
+# Start time: 17:14:00 on Apr 22,2026
 # vlog -reportprogress 300 -sv tb_accel_top.sv 
 # -- Compiling module tb_accel_top
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	tb_accel_top
-# End time: 17:00:40 on Apr 22,2026, Elapsed time: 0:00:00
+# End time: 17:14:00 on Apr 22,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # >>> TB compilation complete.
 # 
@@ -448,7 +448,7 @@
 #  Running: tb_mac_pe
 # ==============================
 # vsim -t 1ps -L work work.tb_mac_pe -suppress 3839 "+nowarn3839" -onfinish stop 
-# Start time: 17:00:41 on Apr 22,2026
+# Start time: 17:14:00 on Apr 22,2026
 # ** Note: (vsim-3812) Design is being optimized...
 # Loading sv_std.std
 # Loading work.accel_pkg(fast)
@@ -463,7 +463,7 @@
 # ** Note: $finish    : tb_mac_pe.sv(74)
 #    Time: 24 ns  Iteration: 0  Instance: /tb_mac_pe
 # Break at tb_mac_pe.sv line 74
-# End time: 17:00:46 on Apr 22,2026, Elapsed time: 0:00:05
+# End time: 17:14:05 on Apr 22,2026, Elapsed time: 0:00:05
 # Errors: 0, Warnings: 0
 # RESULT: tb_mac_pe  COMPLETED
 # 
@@ -471,7 +471,7 @@
 #  Running: tb_causal_mask
 # ==============================
 # vsim -t 1ps -L work work.tb_causal_mask -suppress 3839 "+nowarn3839" -onfinish stop 
-# Start time: 17:00:46 on Apr 22,2026
+# Start time: 17:14:05 on Apr 22,2026
 # ** Note: (vsim-3812) Design is being optimized...
 # ** Warning: causal_mask_unit.sv(9): (vopt-13314) Defaulting port 'data_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
 # ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
@@ -489,7 +489,7 @@
 # ** Note: $finish    : tb_causal_mask.sv(63)
 #    Time: 3 ns  Iteration: 0  Instance: /tb_causal_mask
 # Break at tb_causal_mask.sv line 63
-# End time: 17:00:49 on Apr 22,2026, Elapsed time: 0:00:03
+# End time: 17:14:09 on Apr 22,2026, Elapsed time: 0:00:04
 # Errors: 0, Warnings: 1
 # RESULT: tb_causal_mask  COMPLETED
 # 
@@ -497,7 +497,7 @@
 #  Running: tb_gelu_unit
 # ==============================
 # vsim -t 1ps -L work work.tb_gelu_unit -suppress 3839 "+nowarn3839" -onfinish stop 
-# Start time: 17:00:49 on Apr 22,2026
+# Start time: 17:14:09 on Apr 22,2026
 # ** Note: (vsim-3812) Design is being optimized...
 # Loading sv_std.std
 # Loading work.accel_pkg(fast)
@@ -515,7 +515,7 @@
 # ** Note: $finish    : tb_gelu_unit.sv(53)
 #    Time: 43 ns  Iteration: 1  Instance: /tb_gelu_unit
 # Break at tb_gelu_unit.sv line 53
-# End time: 17:00:53 on Apr 22,2026, Elapsed time: 0:00:04
+# End time: 17:14:13 on Apr 22,2026, Elapsed time: 0:00:04
 # Errors: 0, Warnings: 0
 # RESULT: tb_gelu_unit  COMPLETED
 # 
@@ -523,7 +523,7 @@
 #  Running: tb_softmax_unit
 # ==============================
 # vsim -t 1ps -L work work.tb_softmax_unit -suppress 3839 "+nowarn3839" -onfinish stop 
-# Start time: 17:00:53 on Apr 22,2026
+# Start time: 17:14:13 on Apr 22,2026
 # ** Note: (vsim-3812) Design is being optimized...
 # ** Warning: softmax_unit.sv(14): (vopt-13314) Defaulting port 'scores_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
 # ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
@@ -533,10 +533,10 @@
 # === tb_softmax_unit: START ===
 #   FAIL: out_valid never asserted
 # === tb_softmax_unit: DONE ===
-# ** Note: $finish    : tb_softmax_unit.sv(73)
-#    Time: 43 ns  Iteration: 1  Instance: /tb_softmax_unit
-# Break at tb_softmax_unit.sv line 73
-# End time: 17:00:57 on Apr 22,2026, Elapsed time: 0:00:04
+# ** Note: $finish    : tb_softmax_unit.sv(74)
+#    Time: 55 ns  Iteration: 1  Instance: /tb_softmax_unit
+# Break at tb_softmax_unit.sv line 74
+# End time: 17:14:17 on Apr 22,2026, Elapsed time: 0:00:04
 # Errors: 0, Warnings: 1
 # RESULT: tb_softmax_unit  COMPLETED
 # 
@@ -544,7 +544,7 @@
 #  Running: tb_systolic_array
 # ==============================
 # vsim -t 1ps -L work work.tb_systolic_array -suppress 3839 "+nowarn3839" -onfinish stop 
-# Start time: 17:00:57 on Apr 22,2026
+# Start time: 17:14:17 on Apr 22,2026
 # ** Note: (vsim-3812) Design is being optimized...
 # ** Warning: systolic_array_64x64.sv(16): (vopt-13314) Defaulting port 'a_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
 # ** Warning: systolic_array_64x64.sv(19): (vopt-13314) Defaulting port 'b_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
@@ -564,7 +564,7 @@
 # ** Note: $finish    : tb_systolic_array.sv(132)
 #    Time: 39 ns  Iteration: 1  Instance: /tb_systolic_array
 # Break at tb_systolic_array.sv line 132
-# End time: 17:01:01 on Apr 22,2026, Elapsed time: 0:00:04
+# End time: 17:14:21 on Apr 22,2026, Elapsed time: 0:00:04
 # Errors: 0, Warnings: 2
 # RESULT: tb_systolic_array  COMPLETED
 # 
@@ -572,7 +572,7 @@
 #  Running: tb_fused_postproc
 # ==============================
 # vsim -t 1ps -L work work.tb_fused_postproc -suppress 3839 "+nowarn3839" -onfinish stop 
-# Start time: 17:01:01 on Apr 22,2026
+# Start time: 17:14:21 on Apr 22,2026
 # ** Note: (vsim-3812) Design is being optimized...
 # Loading sv_std.std
 # Loading work.accel_pkg(fast)
@@ -585,10 +585,10 @@
 #   Test 3: GELU grad (stubbed)
 #     INFO: GELU grad path (may need more cycles)
 # === tb_fused_postproc: DONE ===
-# ** Note: $finish    : tb_fused_postproc.sv(86)
-#    Time: 51 ns  Iteration: 1  Instance: /tb_fused_postproc
-# Break at tb_fused_postproc.sv line 86
-# End time: 17:01:06 on Apr 22,2026, Elapsed time: 0:00:05
+# ** Note: $finish    : tb_fused_postproc.sv(88)
+#    Time: 63 ns  Iteration: 1  Instance: /tb_fused_postproc
+# Break at tb_fused_postproc.sv line 88
+# End time: 17:14:26 on Apr 22,2026, Elapsed time: 0:00:05
 # Errors: 0, Warnings: 0
 # RESULT: tb_fused_postproc  COMPLETED
 # 
@@ -596,7 +596,7 @@
 #  Running: tb_accel_top
 # ==============================
 # vsim -t 1ps -L work work.tb_accel_top -suppress 3839 "+nowarn3839" -onfinish stop 
-# Start time: 17:01:06 on Apr 22,2026
+# Start time: 17:14:26 on Apr 22,2026
 # ** Note: (vsim-3812) Design is being optimized...
 # ** Warning: accel_controller.sv(10): (vopt-13314) Defaulting port 'cmd' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
 # ** Warning: systolic_array_64x64.sv(16): (vopt-13314) Defaulting port 'a_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
@@ -610,15 +610,41 @@
 # 
 # --- Test 1: FFN Forward Smoke Test ---
 #   Data loaded to SRAM
-# ** Fatal: Assignment of 0 elems. to array of length 4.
-#    Time: 71 ns  Iteration: 1  Process: /tb_accel_top/#INITIAL#142(main_test) File: tb_accel_top.sv
-# Fatal error at tb_accel_top.sv line 193
+#   Golden GEMM*GELU: [19.00, 22.00, 43.00, 50.00]
+#     TIMEOUT waiting for done
+#   FAIL: FFN forward did not complete
+#   Read back: [0.00, 0.00, 0.00, 0.00]
+#   FAIL: element 0: got 0.00 expected 19.00
+#   FAIL: element 1: got 0.00 expected 22.00
+#   FAIL: element 2: got 0.00 expected 43.00
+#   FAIL: element 3: got 0.00 expected 50.00
+#   PARTIAL: 0/4 elements match
+#   Perf: active=5010 stall=5 tiles=0
 # 
-# HDL call sequence:
-# Stopped at tb_accel_top.sv 193  
+# --- Test 2: FFN Backward Smoke Test ---
+#     TIMEOUT waiting for done
+#   FAIL: FFN backward did not complete
+#   Read back: [0.00, 0.00, 0.00, 0.00]
+#   FAIL: all outputs are zero
+#   Perf: active=10033 stall=5 tiles=0
 # 
-# End time: 17:01:15 on Apr 22,2026, Elapsed time: 0:00:09
-# Errors: 1, Warnings: 4
+# --- Test 3: Attention Smoke Test ---
+#     TIMEOUT waiting for done
+#   FAIL: Attention forward did not complete
+#   Read back: [0.00, 0.00, 0.00, 0.00]
+#   FAIL: all outputs are zero
+#   Perf: active=15056 stall=5 tiles=0
+# 
+# === tb_accel_top: ALL TESTS DONE ===
+#   Test 1 (FFN fwd):  golden model comparison
+#   Test 2 (FFN bwd):  non-zero output check
+#   Test 3 (Attn fwd): non-zero output check
+#   Check waveforms for detailed signal activity.
+# ** Note: $finish    : tb_accel_top.sv(302)
+#    Time: 30199 ns  Iteration: 1  Instance: /tb_accel_top
+# Break at tb_accel_top.sv line 302
+# End time: 17:14:36 on Apr 22,2026, Elapsed time: 0:00:10
+# Errors: 0, Warnings: 4
 # RESULT: tb_accel_top  COMPLETED
 # 
 # ==============================================
