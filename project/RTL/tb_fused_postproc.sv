@@ -48,10 +48,11 @@ module tb_fused_postproc;
     data_in  = $shortrealtobits(shortreal'(1.0));
     in_valid = 1;
     @(posedge clk); #1;
+    @(posedge clk); #1;  // hold valid 2 cycles
     in_valid = 0;
 
-    // Wait for GELU pipeline (3 stages)
-    repeat (6) @(posedge clk);
+    // Wait for GELU pipeline (3 stages + margin)
+    repeat (8) @(posedge clk);
 
     if (out_valid) begin
       shortreal got;
@@ -73,9 +74,10 @@ module tb_fused_postproc;
     aux_in   = $shortrealtobits(shortreal'(0.5)); // pre-activation h
     in_valid = 1;
     @(posedge clk); #1;
+    @(posedge clk); #1;  // hold valid 2 cycles
     in_valid = 0;
 
-    repeat (6) @(posedge clk);
+    repeat (8) @(posedge clk);
 
     if (out_valid)
       $display("    PASS: GELU grad produced output = %0.4f", fp32(data_out));

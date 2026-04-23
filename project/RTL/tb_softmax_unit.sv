@@ -37,11 +37,12 @@ module tb_softmax_unit;
     in_valid = 1;
     start    = 1;
     @(posedge clk); #1;
+    @(posedge clk); #1;  // hold valid for 2 cycles to ensure latch
     in_valid = 0;
     start    = 0;
 
     // Wait for pipeline (4 stages + margin)
-    repeat (15) @(posedge clk);
+    repeat (20) @(posedge clk);
 
     // Check output
     if (out_valid) begin

@@ -100,18 +100,16 @@ module tb_accel_top;
 
   // ---- Golden model functions ----
 
-  // Simple matmul C = A * B (tiny sizes)
-  function automatic void golden_matmul(
-    input  shortreal A[], input  shortreal B[],
-    output shortreal C[],
-    input  int M, input int N, input int K
+  // Simple 2x2 matmul: C = A * B (fixed size, no dynamic arrays)
+  function automatic void golden_matmul_2x2(
+    input  shortreal a00, a01, a10, a11,
+    input  shortreal b00, b01, b10, b11,
+    output shortreal c00, c01, c10, c11
   );
-    for (int i = 0; i < M; i++)
-      for (int j = 0; j < N; j++) begin
-        C[i*N + j] = 0.0;
-        for (int k = 0; k < K; k++)
-          C[i*N + j] += A[i*K + k] * B[k*N + j];
-      end
+    c00 = a00*b00 + a01*b10;
+    c01 = a00*b01 + a01*b11;
+    c10 = a10*b00 + a11*b10;
+    c11 = a10*b01 + a11*b11;
   endfunction
 
   // Simple GELU
@@ -142,9 +140,7 @@ module tb_accel_top;
   initial begin : main_test
     // All declarations at top of block
     shortreal golden_fwd [4];
-    shortreal A_data [4];
-    shortreal B_data [4];
-    shortreal C_data [4];
+    shortreal c00, c01, c10, c11;
     shortreal result [4];
     int fwd_pass;
     int nonzero;
@@ -186,13 +182,15 @@ module tb_accel_top;
     $display("  Data loaded to SRAM");
 
     // Compute golden result: C = GELU(A * B)
-    // A*B = [[19, 22], [43, 50]]
-    // GELU(x) ≈ x for large positive x
-    A_data = '{1.0, 2.0, 3.0, 4.0};
-    B_data = '{5.0, 6.0, 7.0, 8.0};
-    golden_matmul(A_data, B_data, C_data, 2, 2, 2);
-    for (int i = 0; i < 4; i++)
-      golden_fwd[i] = golden_gelu(C_data[i]);
+    // A = [[1,2],[3,4]], B = [[5,6],[7,8]]
+    // A*B = [[19,22],[43,50]]
+    golden_matmul_2x2(1.0, 2.0, 3.0, 4.0,
+                       5.0, 6.0, 7.0, 8.0,
+                       c00, c01, c10, c11);
+    golden_fwd[0] = golden_gelu(c00);
+    golden_fwd[1] = golden_gelu(c01);
+    golden_fwd[2] = golden_gelu(c10);
+    golden_fwd[3] = golden_gelu(c11);
     $display("  Golden GEMM*GELU: [%0.2f, %0.2f, %0.2f, %0.2f]",
              golden_fwd[0], golden_fwd[1], golden_fwd[2], golden_fwd[3]);
 
