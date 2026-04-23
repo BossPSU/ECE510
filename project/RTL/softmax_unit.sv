@@ -36,9 +36,12 @@ module softmax_unit
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       s1_valid <= 1'b0;
-    end else if (en) begin
-      s1_valid <= in_valid;
-      if (in_valid) begin
+      s1_max   <= '0;
+      for (int i = 0; i < VEC_LEN; i++)
+        s1_scores[i] <= '0;
+    end else if (en && in_valid) begin
+      s1_valid <= 1'b1;
+      begin
         shortreal mx;
         mx = $bitstoshortreal(scores_in[0]);
         s1_scores[0] <= scores_in[0];
@@ -50,6 +53,8 @@ module softmax_unit
         end
         s1_max <= $shortrealtobits(mx);
       end
+    end else if (en) begin
+      s1_valid <= 1'b0;
     end
   end
 
@@ -57,6 +62,8 @@ module softmax_unit
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       s2_valid <= 1'b0;
+      for (int i = 0; i < VEC_LEN; i++)
+        s2_exp[i] <= '0;
     end else if (en) begin
       s2_valid <= s1_valid;
       if (s1_valid) begin
@@ -76,6 +83,9 @@ module softmax_unit
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       s3_valid <= 1'b0;
+      s3_sum   <= '0;
+      for (int i = 0; i < VEC_LEN; i++)
+        s3_exp[i] <= '0;
     end else if (en) begin
       s3_valid <= s2_valid;
       if (s2_valid) begin
@@ -94,6 +104,8 @@ module softmax_unit
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       out_valid <= 1'b0;
+      for (int i = 0; i < VEC_LEN; i++)
+        probs_out[i] <= '0;
     end else if (en) begin
       out_valid <= s3_valid;
       if (s3_valid) begin

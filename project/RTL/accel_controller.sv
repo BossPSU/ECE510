@@ -58,8 +58,6 @@ module accel_controller
     FSM_LOAD_TILES,
     FSM_WAIT_LOAD,
     FSM_COMPUTE,
-    FSM_FUSED_POST,
-    FSM_WRITE_RESULT,
     FSM_WAIT_WRITE,
     FSM_NEXT_TILE,
     FSM_COMPLETE
@@ -68,6 +66,7 @@ module accel_controller
   fsm_t state;
   mode_t    current_mode;
   logic [7:0] compute_cnt;
+  logic [7:0] total_compute_cycles;
 
   // Latch done pulses so they aren't missed
   logic loader_a_done_r, loader_b_done_r, writer_done_r;
@@ -88,6 +87,9 @@ module accel_controller
       else if (writer_done) writer_done_r <= 1'b1;
     end
   end
+
+  // Total compute cycles: tile_k * 2 (for systolic drain) + 10 (fused pipeline drain)
+  assign total_compute_cycles = {cmd_tile_k[6:0], 1'b0} + 8'd10;
 
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
@@ -172,39 +174,33 @@ module accel_controller
           if (loader_a_done_r && loader_b_done_r) begin
             compute_cnt <= '0;
             array_en    <= 1'b1;
-            state       <= FSM_COMPUTE;
+            // Start writer immediately — it will capture fused output as it streams
+            writer_base  <= cmd_addr_out;
+            writer_start <= 1'b1;
+            state        <= FSM_COMPUTE;
           end
         end
 
         FSM_COMPUTE: begin
+          // Array stays enabled, fused output streams to writer in real-time
           array_en    <= 1'b1;
           compute_cnt <= compute_cnt + 1;
-          // Run systolic array for tile_k cycles
-          if (compute_cnt >= {cmd_tile_k, 1'b0}) begin // 2x tile_k for pipeline drain
+
+          // Run for enough cycles: systolic drain + fused pipeline drain
+          if (compute_cnt >= total_compute_cycles) begin
             array_en    <= 1'b0;
             compute_cnt <= '0;
-            state       <= FSM_FUSED_POST;
+            state       <= FSM_WAIT_WRITE;
           end
-        end
-
-        FSM_FUSED_POST: begin
-          // Wait for fused pipeline to drain (6 cycles)
-          compute_cnt <= compute_cnt + 1;
-          if (compute_cnt >= 8'd8) begin
-            state       <= FSM_WRITE_RESULT;
-            compute_cnt <= '0;
-          end
-        end
-
-        FSM_WRITE_RESULT: begin
-          writer_base  <= cmd_addr_out;
-          writer_start <= 1'b1;
-          state        <= FSM_WAIT_WRITE;
         end
 
         FSM_WAIT_WRITE: begin
-          if (writer_done_r) begin
-            state <= FSM_NEXT_TILE;
+          // Writer should have captured all data during compute
+          // Give it a few more cycles, then check done
+          compute_cnt <= compute_cnt + 1;
+          if (writer_done_r || compute_cnt >= 8'd20) begin
+            compute_cnt <= '0;
+            state       <= FSM_NEXT_TILE;
           end
         end
 

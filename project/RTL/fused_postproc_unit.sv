@@ -70,38 +70,31 @@ module fused_postproc_unit
     end
   end
 
-  // Output MUX
+  // Output MUX — uses registered op_sel to avoid glitches
+  // GELU and GELU_GRAD outputs come from their own valid signals
+  // Bypass and mask pass through directly
   always_comb begin
-    case (op_sel)
-      FUSED_BYPASS: begin
-        data_out  = data_in;
-        out_valid = in_valid;
-      end
-      FUSED_GELU: begin
-        data_out  = gelu_out;
-        out_valid = gelu_valid;
-      end
-      FUSED_GELU_GRAD: begin
-        // dh = dh_act * gelu_grad(h)
-        if (gelu_grad_valid) begin
-          data_out  = $shortrealtobits(
-            $bitstoshortreal(data_delay[2]) * $bitstoshortreal(gelu_grad_out)
-          );
-          out_valid = 1'b1;
-        end else begin
-          data_out  = '0;
-          out_valid = 1'b0;
-        end
-      end
-      FUSED_MASK: begin
-        data_out  = data_in;
-        out_valid = in_valid;
-      end
-      default: begin
-        data_out  = data_in;
-        out_valid = in_valid;
-      end
-    endcase
+    // Default
+    data_out  = '0;
+    out_valid = 1'b0;
+
+    // GELU path has its own valid regardless of current in_valid
+    if (gelu_valid) begin
+      data_out  = gelu_out;
+      out_valid = 1'b1;
+    end
+    // GELU_GRAD path
+    else if (gelu_grad_valid) begin
+      data_out  = $shortrealtobits(
+        $bitstoshortreal(data_delay[2]) * $bitstoshortreal(gelu_grad_out)
+      );
+      out_valid = 1'b1;
+    end
+    // Bypass / mask — direct passthrough when valid
+    else if (in_valid && (op_sel == FUSED_BYPASS || op_sel == FUSED_MASK)) begin
+      data_out  = data_in;
+      out_valid = 1'b1;
+    end
   end
 
 endmodule
