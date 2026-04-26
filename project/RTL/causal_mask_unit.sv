@@ -6,15 +6,15 @@ module causal_mask_unit
   parameter int DATA_WIDTH = 32,
   parameter int VEC_LEN    = 64
 )(
-  input  logic [DATA_WIDTH-1:0]   data_in [VEC_LEN],
-  input  logic [7:0]              row_idx,
-  input  logic                    in_valid,
-  output logic [DATA_WIDTH-1:0]   data_out [VEC_LEN],
+  input  logic signed [DATA_WIDTH-1:0]   data_in [VEC_LEN],
+  input  logic [7:0]                     row_idx,
+  input  logic                           in_valid,
+  output logic signed [DATA_WIDTH-1:0]   data_out [VEC_LEN],
   output logic                    out_valid
 );
 
-  // Large negative value for masked positions (FP32 ~ -1e9)
-  localparam logic [DATA_WIDTH-1:0] NEG_INF = 32'hCE6E6B28; // -1e9
+  // Large negative value for masked positions in Q16.16 (~-32767)
+  localparam logic signed [DATA_WIDTH-1:0] NEG_INF = 32'sh80010000;
 
   assign out_valid = in_valid;
 

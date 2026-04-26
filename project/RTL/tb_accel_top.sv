@@ -43,29 +43,38 @@ module tb_accel_top;
   // Clock: 500 MHz
   always #1 clk = ~clk;
 
+  // ---- Q16.16 helpers ----
+  function automatic logic signed [31:0] to_q(input real x);
+    return $signed(int'(x * 65536.0));
+  endfunction
+
+  function automatic real from_q(input logic signed [31:0] q);
+    return $itor(q) / 65536.0;
+  endfunction
+
   // ---- Helper tasks ----
 
-  // Write one FP32 value to scratchpad via DMA
-  task automatic dma_write(input logic [15:0] addr, input shortreal val);
+  // Write one Q16.16 value to scratchpad via DMA
+  task automatic dma_write(input logic [15:0] addr, input real val);
     @(posedge clk);
     dma_wr_valid <= 1'b1;
     dma_wr_addr  <= addr;
-    dma_wr_data  <= $shortrealtobits(val);
+    dma_wr_data  <= to_q(val);
     @(posedge clk);
     dma_wr_valid <= 1'b0;
-    @(posedge clk); // wait for write to complete
+    @(posedge clk);
   endtask
 
-  // Read one FP32 value from scratchpad via DMA
-  task automatic dma_read(input logic [15:0] addr, output shortreal val);
+  // Read one Q16.16 value from scratchpad via DMA
+  task automatic dma_read(input logic [15:0] addr, output real val);
     @(posedge clk);
     dma_rd_req  <= 1'b1;
     dma_rd_addr <= addr;
     @(posedge clk);
     dma_rd_req <= 1'b0;
-    @(posedge clk); // wait for read latency
     @(posedge clk);
-    val = $bitstoshortreal(dma_rd_data);
+    @(posedge clk);
+    val = from_q($signed(dma_rd_data));
   endtask
 
   // Issue a command and wait for done
@@ -98,13 +107,12 @@ module tb_accel_top;
     disable fork;
   endtask
 
-  // ---- Golden model functions ----
+  // ---- Golden model functions (use real for golden) ----
 
-  // Simple 2x2 matmul: C = A * B (fixed size, no dynamic arrays)
   function automatic void golden_matmul_2x2(
-    input  shortreal a00, a01, a10, a11,
-    input  shortreal b00, b01, b10, b11,
-    output shortreal c00, c01, c10, c11
+    input  real a00, a01, a10, a11,
+    input  real b00, b01, b10, b11,
+    output real c00, c01, c10, c11
   );
     c00 = a00*b00 + a01*b10;
     c01 = a00*b01 + a01*b11;
@@ -112,36 +120,18 @@ module tb_accel_top;
     c11 = a10*b01 + a11*b11;
   endfunction
 
-  // Simple GELU
-  function automatic shortreal golden_gelu(shortreal x);
-    shortreal t;
+  function automatic real golden_gelu(input real x);
+    real t;
     t = $tanh(0.7978845608 * (x + 0.044715 * x * x * x));
     return 0.5 * x * (1.0 + t);
-  endfunction
-
-  // Simple softmax
-  function automatic void golden_softmax(
-    input shortreal s[], output shortreal p[], input int len
-  );
-    shortreal mx, sm;
-    mx = s[0];
-    for (int i = 1; i < len; i++)
-      if (s[i] > mx) mx = s[i];
-    sm = 0.0;
-    for (int i = 0; i < len; i++) begin
-      p[i] = $exp(s[i] - mx);
-      sm += p[i];
-    end
-    for (int i = 0; i < len; i++)
-      p[i] = p[i] / sm;
   endfunction
 
   // ---- Main test sequence ----
   initial begin : main_test
     // All declarations at top of block
-    shortreal golden_fwd [4];
-    shortreal c00, c01, c10, c11;
-    shortreal result [4];
+    real golden_fwd [4];
+    real c00, c01, c10, c11;
+    real result [4];
     int fwd_pass;
     int nonzero;
     real err;

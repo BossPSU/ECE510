@@ -1,6 +1,5 @@
-// tb_systolic_array.sv — Unit TB for systolic array
-// Uses a small 4x4 subarray, feeds skewed inputs for proper systolic flow
-// Tests C = A * B where B = identity, so C should equal A
+// tb_systolic_array.sv — Unit TB for Q16.16 systolic array (4x4 subarray)
+// Tests C = A * I = A using skewed input feeding
 `timescale 1ns/1ps
 
 module tb_systolic_array;
@@ -8,10 +7,10 @@ module tb_systolic_array;
 
   localparam int N = 4;
 
-  logic        clk, rst_n, en, clear_acc;
-  logic [31:0] a_in  [N];
-  logic [31:0] b_in  [N];
-  logic [31:0] c_out [N][N];
+  logic                clk, rst_n, en, clear_acc;
+  logic signed [31:0]  a_in  [N];
+  logic signed [31:0]  b_in  [N];
+  logic signed [31:0]  c_out [N][N];
 
   systolic_array_64x64 #(
     .ROWS       (N),
@@ -21,40 +20,42 @@ module tb_systolic_array;
 
   always #1 clk = ~clk;
 
-  function automatic shortreal fp32(logic [31:0] bits);
-    return $bitstoshortreal(bits);
+  function automatic logic signed [31:0] to_q(input real x);
+    return $signed(int'(x * 65536.0));
   endfunction
 
-  // Test matrices
-  // A = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]]
-  // B = identity
-  shortreal A_mat [N][N];
-  shortreal B_mat [N][N];
-  shortreal C_expected [N][N];
+  function automatic real from_q(input logic signed [31:0] q);
+    return $itor(q) / 65536.0;
+  endfunction
+
+  // Test matrices (in real domain, then convert to Q16.16 when feeding)
+  real A_mat [N][N];
+  real B_mat [N][N];
+  real C_expected [N][N];
 
   initial begin
     int pass_cnt, fail_cnt;
     $display("=== tb_systolic_array: START ===");
     clk = 0; rst_n = 0; en = 0; clear_acc = 0;
-    pass_cnt = 0;
-    fail_cnt = 0;
+    pass_cnt = 0; fail_cnt = 0;
 
     for (int i = 0; i < N; i++) begin
       a_in[i] = '0;
       b_in[i] = '0;
     end
 
-    // Init matrices
+    // A = sequential 1..16
+    // B = identity
     for (int i = 0; i < N; i++)
       for (int j = 0; j < N; j++) begin
-        A_mat[i][j] = shortreal'(i * N + j + 1);
-        B_mat[i][j] = (i == j) ? shortreal'(1.0) : shortreal'(0.0);
+        A_mat[i][j] = real'(i * N + j + 1);
+        B_mat[i][j] = (i == j) ? 1.0 : 0.0;
       end
 
     // Golden: C = A * I = A
     for (int i = 0; i < N; i++)
       for (int j = 0; j < N; j++) begin
-        C_expected[i][j] = shortreal'(0.0);
+        C_expected[i][j] = 0.0;
         for (int k = 0; k < N; k++)
           C_expected[i][j] = C_expected[i][j] + A_mat[i][k] * B_mat[k][j];
       end
@@ -65,23 +66,16 @@ module tb_systolic_array;
 
     // Clear accumulators
     en = 1; clear_acc = 1;
-    for (int i = 0; i < N; i++) begin
-      a_in[i] = '0;
-      b_in[i] = '0;
-    end
     @(posedge clk); #1;
     clear_acc = 0;
 
-    // Feed data with systolic skew:
-    // At cycle k, row i gets A[i][k-i] (if k-i is in range)
-    //             col j gets B[k-j][j] (if k-j is in range)
-    // Total cycles needed: N + N - 1 = 2*N - 1
+    // Skewed feeding for systolic dataflow
     for (int cyc = 0; cyc < 2*N - 1; cyc++) begin
       for (int i = 0; i < N; i++) begin
         int k_a;
         k_a = cyc - i;
         if (k_a >= 0 && k_a < N)
-          a_in[i] = $shortrealtobits(A_mat[i][k_a]);
+          a_in[i] = to_q(A_mat[i][k_a]);
         else
           a_in[i] = '0;
       end
@@ -89,7 +83,7 @@ module tb_systolic_array;
         int k_b;
         k_b = cyc - j;
         if (k_b >= 0 && k_b < N)
-          b_in[j] = $shortrealtobits(B_mat[k_b][j]);
+          b_in[j] = to_q(B_mat[k_b][j]);
         else
           b_in[j] = '0;
       end
@@ -109,11 +103,13 @@ module tb_systolic_array;
     for (int i = 0; i < N; i++) begin
       $display("  Row %0d: [%6.1f, %6.1f, %6.1f, %6.1f]  expect [%6.1f, %6.1f, %6.1f, %6.1f]",
                i,
-               fp32(c_out[i][0]), fp32(c_out[i][1]), fp32(c_out[i][2]), fp32(c_out[i][3]),
-               C_expected[i][0], C_expected[i][1], C_expected[i][2], C_expected[i][3]);
+               from_q(c_out[i][0]), from_q(c_out[i][1]),
+               from_q(c_out[i][2]), from_q(c_out[i][3]),
+               C_expected[i][0], C_expected[i][1],
+               C_expected[i][2], C_expected[i][3]);
       for (int j = 0; j < N; j++) begin
         real err;
-        err = fp32(c_out[i][j]) - C_expected[i][j];
+        err = from_q(c_out[i][j]) - C_expected[i][j];
         if (err < 0) err = -err;
         if (err < 0.1) pass_cnt++;
         else           fail_cnt++;

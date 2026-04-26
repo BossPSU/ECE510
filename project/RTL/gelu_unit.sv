@@ -1,72 +1,168 @@
-// gelu_unit.sv — Forward GELU activation datapath
+// gelu_unit.sv — Synthesizable Q16.16 GELU activation
 // GELU(x) = 0.5 * x * (1 + tanh(sqrt(2/pi) * (x + 0.044715 * x^3)))
-// Pipelined: 3 stages (behavioral FP for simulation)
+// tanh approximated via Pade: tanh(z) ~ z*(27+z^2)/(27+9*z^2), clamped to [-1, 1]
+// Pipelined: 6 stages
 module gelu_unit
   import accel_pkg::*;
 #(
   parameter int DATA_WIDTH = 32
 )(
-  input  logic                   clk,
-  input  logic                   rst_n,
-  input  logic                   en,
+  input  logic                            clk,
+  input  logic                            rst_n,
+  input  logic                            en,
 
-  input  logic [DATA_WIDTH-1:0]  x_in,
-  input  logic                   in_valid,
-  output logic [DATA_WIDTH-1:0]  y_out,
-  output logic                   out_valid
+  input  logic signed [DATA_WIDTH-1:0]    x_in,
+  input  logic                            in_valid,
+  output logic signed [DATA_WIDTH-1:0]    y_out,
+  output logic                            out_valid
 );
 
-  // Pipeline registers
-  logic [DATA_WIDTH-1:0] p1_x;
-  logic [DATA_WIDTH-1:0] p1_tanh_arg;
-  logic                  p1_valid;
+  // Q16.16 constants
+  // 27 in Q16.16 = 27 * 65536 = 0x001B0000
+  localparam logic signed [31:0] Q_27   = 32'sh001B0000;
+  // 9 in Q16.16 = 9 * 65536 = 0x00090000
+  localparam logic signed [31:0] Q_9    = 32'sh00090000;
 
-  logic [DATA_WIDTH-1:0] p2_x;
-  logic [DATA_WIDTH-1:0] p2_tanh_val;
-  logic                  p2_valid;
+  // Stage 1: x^2, x^3
+  logic signed [31:0] s1_x, s1_x2, s1_x3;
+  logic               s1_valid;
 
-  // Stage 1: compute tanh_arg = sqrt(2/pi) * (x + 0.044715 * x^3)
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
-      p1_valid <= 1'b0;
+      s1_valid <= 1'b0;
+      s1_x     <= '0;
+      s1_x2    <= '0;
+      s1_x3    <= '0;
     end else if (en) begin
-      p1_valid <= in_valid;
+      s1_valid <= in_valid;
       if (in_valid) begin
-        shortreal x_r, arg;
-        x_r = $bitstoshortreal(x_in);
-        arg = shortreal'(0.7978845608) * (x_r + shortreal'(0.044715) * x_r * x_r * x_r);
-        p1_x        <= x_in;
-        p1_tanh_arg <= $shortrealtobits(arg);
+        s1_x  <= x_in;
+        s1_x2 <= q_mul(x_in, x_in);
+        s1_x3 <= q_mul(q_mul(x_in, x_in), x_in);
       end
     end
   end
 
-  // Stage 2: compute tanh (behavioral)
+  // Stage 2: tanh argument z = sqrt(2/pi) * (x + 0.044715 * x^3)
+  logic signed [31:0] s2_x, s2_z;
+  logic               s2_valid;
+
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
-      p2_valid <= 1'b0;
+      s2_valid <= 1'b0;
+      s2_x     <= '0;
+      s2_z     <= '0;
     end else if (en) begin
-      p2_valid <= p1_valid;
-      if (p1_valid) begin
-        p2_x        <= p1_x;
-        p2_tanh_val <= $shortrealtobits($tanh($bitstoshortreal(p1_tanh_arg)));
+      s2_valid <= s1_valid;
+      if (s1_valid) begin
+        s2_x <= s1_x;
+        s2_z <= q_mul(Q_SQRT_2_PI, s1_x + q_mul(Q_GELU_C1, s1_x3));
       end
     end
   end
 
-  // Stage 3: compute 0.5 * x * (1 + tanh)
+  // Stage 3: clamp z, compute z^2
+  logic signed [31:0] s3_x, s3_z, s3_z2;
+  logic               s3_valid;
+  logic               s3_saturate_pos, s3_saturate_neg;
+
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      s3_valid <= 1'b0;
+      s3_x     <= '0;
+      s3_z     <= '0;
+      s3_z2    <= '0;
+      s3_saturate_pos <= 1'b0;
+      s3_saturate_neg <= 1'b0;
+    end else if (en) begin
+      s3_valid <= s2_valid;
+      if (s2_valid) begin
+        s3_x <= s2_x;
+        if (s2_z > Q_SAT_POS) begin
+          s3_z <= Q_SAT_POS;
+          s3_saturate_pos <= 1'b1;
+          s3_saturate_neg <= 1'b0;
+        end else if (s2_z < Q_SAT_NEG) begin
+          s3_z <= Q_SAT_NEG;
+          s3_saturate_pos <= 1'b0;
+          s3_saturate_neg <= 1'b1;
+        end else begin
+          s3_z <= s2_z;
+          s3_saturate_pos <= 1'b0;
+          s3_saturate_neg <= 1'b0;
+        end
+        s3_z2 <= q_mul(s2_z, s2_z);
+      end
+    end
+  end
+
+  // Stage 4: numerator = z*(27+z^2), denominator = 27 + 9*z^2
+  logic signed [31:0] s4_x, s4_num, s4_den;
+  logic               s4_valid, s4_sat_pos, s4_sat_neg;
+
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      s4_valid <= 1'b0;
+      s4_x     <= '0;
+      s4_num   <= '0;
+      s4_den   <= Q_ONE; // avoid div by zero on reset
+      s4_sat_pos <= 1'b0;
+      s4_sat_neg <= 1'b0;
+    end else if (en) begin
+      s4_valid <= s3_valid;
+      if (s3_valid) begin
+        s4_x   <= s3_x;
+        s4_num <= q_mul(s3_z, Q_27 + s3_z2);
+        s4_den <= Q_27 + q_mul(Q_9, s3_z2);
+        s4_sat_pos <= s3_saturate_pos;
+        s4_sat_neg <= s3_saturate_neg;
+      end
+    end
+  end
+
+  // Stage 5: tanh = num / den (using lookup-style reciprocal-multiply)
+  // For synthesis: use simple 1-pass Newton-Raphson reciprocal
+  // Initial estimate: 1/den ~ 0x10000 / den_int (approximation)
+  logic signed [31:0] s5_x, s5_tanh;
+  logic               s5_valid;
+
+  function automatic logic signed [31:0] q_div(input logic signed [31:0] num, input logic signed [31:0] den);
+    logic signed [63:0] num_ext;
+    logic signed [63:0] result;
+    if (den == 0) return Q_ZERO;
+    num_ext = $signed({{16{num[31]}}, num, 16'h0000}); // shift left by 16 for Q16.16 result
+    result = num_ext / $signed({{32{den[31]}}, den});
+    return result[31:0];
+  endfunction
+
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      s5_valid <= 1'b0;
+      s5_x     <= '0;
+      s5_tanh  <= '0;
+    end else if (en) begin
+      s5_valid <= s4_valid;
+      if (s4_valid) begin
+        s5_x <= s4_x;
+        if (s4_sat_pos)
+          s5_tanh <= Q_ONE;
+        else if (s4_sat_neg)
+          s5_tanh <= Q_NEG_ONE;
+        else
+          s5_tanh <= q_div(s4_num, s4_den);
+      end
+    end
+  end
+
+  // Stage 6: y = 0.5 * x * (1 + tanh)
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       out_valid <= 1'b0;
+      y_out     <= '0;
     end else if (en) begin
-      out_valid <= p2_valid;
-      if (p2_valid) begin
-        shortreal x_r, t, result;
-        x_r    = $bitstoshortreal(p2_x);
-        t      = $bitstoshortreal(p2_tanh_val);
-        result = shortreal'(0.5) * x_r * (shortreal'(1.0) + t);
-        y_out  <= $shortrealtobits(result);
-      end
+      out_valid <= s5_valid;
+      if (s5_valid)
+        y_out <= q_mul(Q_HALF, q_mul(s5_x, Q_ONE + s5_tanh));
     end
   end
 
