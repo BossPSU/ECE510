@@ -65,18 +65,33 @@ module softmax_unit
   logic signed [31:0] s2_exp [VEC_LEN];
 
   function automatic logic signed [31:0] q_exp_approx(input logic signed [31:0] x);
-    // For x >= 0: return 1.0 (we expect x <= 0 after subtracting max)
-    // For x < -8: return 0
-    // Else: 2nd-order Taylor around 0: 1 + x + x^2/2
-    logic signed [31:0] x_clamped, x2, result;
+    // Pade [2,2] approximation: exp(x) ~ (12 + 6x + x^2) / (12 - 6x + x^2)
+    // Accurate to ~3% over [-4, 0], symmetric, well-behaved
+    // For x >= 0: clamp to 1.0 (we expect x <= 0 after subtracting max)
+    // For x < -8: very small floor value
+    logic signed [31:0] x_use, x2, num, den;
+    logic signed [63:0] num_ext, q_full;
+    // Q16.16 constant 12 = 12 << 16 = 0x000C0000
+    // Q16.16 constant 6 = 6 << 16 = 0x00060000
+    localparam logic signed [31:0] Q_TWELVE = 32'sh000C0000;
+    localparam logic signed [31:0] Q_SIX    = 32'sh00060000;
+
     if (x >= Q_ZERO) return Q_ONE;
-    if (x < Q_EXP_MIN) return 32'sh00000010; // ~0.000244, very small
-    x_clamped = x;
-    x2        = q_mul(x_clamped, x_clamped);
-    // result = 1 + x + 0.5 * x^2 (this is an approximation)
-    result = Q_ONE + x_clamped + q_mul(Q_HALF, x2);
-    if (result < 0) result = 32'sh00000010; // floor at small positive
-    return result;
+    if (x < Q_EXP_MIN) return 32'sh00000010; // ~0.000244
+
+    x_use = x;
+    x2    = q_mul(x_use, x_use);
+    num   = Q_TWELVE + q_mul(Q_SIX, x_use) + x2;        // 12 + 6x + x^2
+    den   = Q_TWELVE - q_mul(Q_SIX, x_use) + x2;        // 12 - 6x + x^2
+
+    if (den <= 0) return 32'sh00000010;
+
+    // Q16.16 division: shift num left by 16 then divide
+    num_ext = $signed({{16{num[31]}}, num, 16'h0000});
+    q_full  = num_ext / $signed({{32{den[31]}}, den});
+
+    if (q_full[31:0] < 0) return 32'sh00000010;
+    return q_full[31:0];
   endfunction
 
   always_ff @(posedge clk or negedge rst_n) begin

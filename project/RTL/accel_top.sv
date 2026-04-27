@@ -72,14 +72,14 @@ module accel_top
   logic [31:0] dma_sram_wdata, dma_sram_rdata;
   logic        dma_sram_rvalid;
 
-  // Systolic array I/O
-  logic [31:0] a_in  [ARRAY_ROWS];
-  logic [31:0] b_in  [ARRAY_COLS];
-  logic [31:0] c_out [ARRAY_ROWS][ARRAY_COLS];
+  // Systolic array I/O — signed Q16.16
+  logic signed [31:0] a_in  [ARRAY_ROWS];
+  logic signed [31:0] b_in  [ARRAY_COLS];
+  logic signed [31:0] c_out [ARRAY_ROWS][ARRAY_COLS];
 
-  // Fused post-proc
-  logic [31:0] fused_data_in, fused_data_out, fused_aux_in;
-  logic        fused_in_valid, fused_out_valid;
+  // Fused post-proc — signed Q16.16
+  logic signed [31:0] fused_data_in, fused_data_out, fused_aux_in;
+  logic               fused_in_valid, fused_out_valid;
 
   // ---- Controller ----
   accel_controller u_ctrl (
