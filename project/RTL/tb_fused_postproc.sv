@@ -22,27 +22,36 @@ module tb_fused_postproc;
   endfunction
 
   // Capture output when out_valid pulses (so we don't miss a 1-cycle pulse)
+  // Use a reset_pulse signal so the always_ff is the only driver
   logic signed [31:0] captured;
   logic               got_out;
+  logic               capture_clear;
 
-  task automatic reset_capture;
-    captured = '0;
-    got_out  = 1'b0;
-  endtask
-
-  always_ff @(posedge clk) begin
-    if (out_valid && !got_out) begin
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      captured <= '0;
+      got_out  <= 1'b0;
+    end else if (capture_clear) begin
+      captured <= '0;
+      got_out  <= 1'b0;
+    end else if (out_valid && !got_out) begin
       captured <= data_out;
       got_out  <= 1'b1;
     end
   end
+
+  task automatic reset_capture;
+    capture_clear = 1'b1;
+    @(posedge clk); #1;
+    capture_clear = 1'b0;
+  endtask
 
   initial begin
     $display("=== tb_fused_postproc: START ===");
     clk = 0; rst_n = 0; en = 1; in_valid = 0;
     op_sel  = FUSED_BYPASS;
     data_in = '0; aux_in = '0;
-    captured = '0; got_out = 1'b0;
+    capture_clear = 1'b0;
 
     #10 rst_n = 1;
     #2;

@@ -28,8 +28,12 @@ module tb_softmax_unit;
   logic signed [31:0]  captured [VEC];
   logic                got_output;
 
-  always_ff @(posedge clk) begin
-    if (out_valid && !got_output) begin
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      got_output <= 1'b0;
+      for (int i = 0; i < VEC; i++)
+        captured[i] <= '0;
+    end else if (out_valid && !got_output) begin
       for (int i = 0; i < VEC; i++)
         captured[i] <= probs_out[i];
       got_output <= 1'b1;
@@ -39,11 +43,8 @@ module tb_softmax_unit;
   initial begin
     $display("=== tb_softmax_unit: START ===");
     clk = 0; rst_n = 0; en = 1; start = 0; in_valid = 0;
-    got_output = 1'b0;
-    for (int i = 0; i < VEC; i++) begin
+    for (int i = 0; i < VEC; i++)
       scores_in[i] = '0;
-      captured[i]  = '0;
-    end
 
     #10 rst_n = 1;
     #2;
