@@ -7,6 +7,7 @@ module tb_softmax_unit;
   localparam int VEC = 4;
 
   logic                clk, rst_n, en, start;
+  logic [7:0]          vec_len;
   logic signed [31:0]  scores_in [VEC];
   logic                in_valid;
   logic signed [31:0]  probs_out [VEC];
@@ -43,6 +44,7 @@ module tb_softmax_unit;
   initial begin
     $display("=== tb_softmax_unit: START ===");
     clk = 0; rst_n = 0; en = 1; start = 0; in_valid = 0;
+    vec_len = 8'(VEC);
     for (int i = 0; i < VEC; i++)
       scores_in[i] = '0;
 

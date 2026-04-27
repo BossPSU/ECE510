@@ -11,6 +11,11 @@ module softmax_unit
   input  logic                            en,
   input  logic                            start,
 
+  // Active length: only first vec_len slots participate in max/sum/divide.
+  // Slots [vec_len .. VEC_LEN-1] are masked out (probs forced to 0).
+  // Drive equal to VEC_LEN for full-vector operation.
+  input  logic [7:0]                      vec_len,
+
   input  logic signed [DATA_WIDTH-1:0]    scores_in [VEC_LEN],
   input  logic                            in_valid,
 
@@ -31,7 +36,10 @@ module softmax_unit
   // Pipeline valids
   logic s1_valid, s2_valid, s3_valid;
 
-  // Stage 1: latch + find max
+  // Pipelined vec_len — keeps the active length aligned with each row of data.
+  logic [7:0] s1_len, s2_len, s3_len;
+
+  // Stage 1: latch + find max (only over first vec_len slots)
   logic signed [31:0] s1_scores [VEC_LEN];
   logic signed [31:0] s1_max;
 
@@ -39,15 +47,17 @@ module softmax_unit
     if (!rst_n) begin
       s1_valid <= 1'b0;
       s1_max   <= '0;
+      s1_len   <= '0;
       for (int i = 0; i < VEC_LEN; i++)
         s1_scores[i] <= '0;
     end else if (en && in_valid) begin
       logic signed [31:0] mx;
       s1_valid <= 1'b1;
+      s1_len   <= vec_len;
       mx = scores_in[0];
       s1_scores[0] <= scores_in[0];
       for (int i = 1; i < VEC_LEN; i++) begin
-        if (scores_in[i] > mx) mx = scores_in[i];
+        if ((i < int'(vec_len)) && (scores_in[i] > mx)) mx = scores_in[i];
         s1_scores[i] <= scores_in[i];
       end
       s1_max <= mx;
@@ -97,15 +107,21 @@ module softmax_unit
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       s2_valid <= 1'b0;
+      s2_len   <= '0;
       for (int i = 0; i < VEC_LEN; i++)
         s2_exp[i] <= '0;
     end else if (en) begin
       s2_valid <= s1_valid;
+      s2_len   <= s1_len;
       if (s1_valid) begin
         for (int i = 0; i < VEC_LEN; i++) begin
           logic signed [31:0] diff;
           diff = s1_scores[i] - s1_max;
-          s2_exp[i] <= q_exp_approx(diff);
+          // Mask out unused slots (force to 0 contribution)
+          if (i < int'(s1_len))
+            s2_exp[i] <= q_exp_approx(diff);
+          else
+            s2_exp[i] <= '0;
         end
       end
     end
@@ -119,15 +135,19 @@ module softmax_unit
     if (!rst_n) begin
       s3_valid <= 1'b0;
       s3_sum   <= '0;
+      s3_len   <= '0;
       for (int i = 0; i < VEC_LEN; i++)
         s3_exp[i] <= '0;
     end else if (en) begin
       s3_valid <= s2_valid;
+      s3_len   <= s2_len;
       if (s2_valid) begin
         logic signed [31:0] acc;
         acc = '0;
+        // Sum only the active slots (others are 0 anyway, but be explicit)
         for (int i = 0; i < VEC_LEN; i++) begin
-          acc = acc + s2_exp[i];
+          if (i < int'(s2_len))
+            acc = acc + s2_exp[i];
           s3_exp[i] <= s2_exp[i];
         end
         s3_sum <= acc;
@@ -145,13 +165,24 @@ module softmax_unit
       out_valid <= s3_valid;
       if (s3_valid) begin
         if (s3_sum > 0) begin
-          for (int i = 0; i < VEC_LEN; i++)
-            probs_out[i] <= q_div(s3_exp[i], s3_sum);
+          for (int i = 0; i < VEC_LEN; i++) begin
+            if (i < int'(s3_len))
+              probs_out[i] <= q_div(s3_exp[i], s3_sum);
+            else
+              probs_out[i] <= '0;
+          end
         end else begin
-          // Uniform fallback: 1/VEC_LEN in Q16.16
-          // VEC_LEN as Q16.16 = VEC_LEN << FRAC_BITS
-          for (int i = 0; i < VEC_LEN; i++)
-            probs_out[i] <= q_div(Q_ONE, 32'(VEC_LEN) <<< FRAC_BITS);
+          // Uniform fallback: 1/s3_len in Q16.16, padded with zeros.
+          // Q16.16 representation of integer s3_len = s3_len << FRAC_BITS,
+          // i.e., s3_len placed in bits [23:16] with zeros below.
+          logic signed [31:0] uniform_p;
+          uniform_p = (s3_len == 0) ? '0 : q_div(Q_ONE, {8'd0, s3_len, 16'd0});
+          for (int i = 0; i < VEC_LEN; i++) begin
+            if (i < int'(s3_len))
+              probs_out[i] <= uniform_p;
+            else
+              probs_out[i] <= '0;
+          end
         end
       end
     end

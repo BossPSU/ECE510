@@ -1,23 +1,33 @@
-// accel_top.sv — Top integration module for the accelerator chiplet
-// Instantiates: datapath, control, SRAM, fused post-processing
+// accel_top.sv — Streaming fused accelerator chiplet top
+//
+// Architecture:
+//   FSM (controller) handles only LOAD/WRITE phases (boundary I/O)
+//   stream_pipeline runs autonomously between START and DONE,
+//   with no intermediate FSM states. This is true fusion: matmul output
+//   flows directly to activation to output buffer with no SRAM round-trips.
+//
+// Buffer interconnect:
+//   tile_buffer exposes its full memory (mem_out) so stream_pipeline can
+//   issue parallel reads for the systolic feeder. The FSM still uses the
+//   linear write port to load tiles row by row.
 module accel_top
   import accel_pkg::*;
 (
   input  logic        clk,
   input  logic        rst_n,
 
-  // Host command interface (from CSR or UCIe adapter)
+  // Host command interface
   input  cmd_pkt_t    cmd_in,
   input  logic        cmd_valid,
   output logic        cmd_ready,
 
-  // DMA: host writes data to scratchpad
+  // DMA: host writes data to scratchpad (BEFORE running)
   input  logic        dma_wr_valid,
   input  logic [15:0] dma_wr_addr,
   input  logic [31:0] dma_wr_data,
   output logic        dma_wr_ready,
 
-  // DMA: host reads data from scratchpad
+  // DMA: host reads data from scratchpad (AFTER running)
   input  logic        dma_rd_req,
   input  logic [15:0] dma_rd_addr,
   output logic [31:0] dma_rd_data,
@@ -34,54 +44,56 @@ module accel_top
   output logic [31:0] perf_tiles_completed
 );
 
-  // ---- Internal signals ----
+  localparam int TILE_DIM = 64;
 
-  // Controller outputs: latched command dimensions
+  // ====================================================================
+  // Internal signals
+  // ====================================================================
+
   logic [7:0]  ctrl_tile_m, ctrl_tile_n, ctrl_tile_k;
-  logic [15:0] ctrl_addr_a, ctrl_addr_b, ctrl_addr_out;
+  fused_op_t   fused_sel;
 
-  // Controller <-> Scheduler
-  logic       sched_start, sched_done, sched_tile_start;
-  logic       sched_active;
-  logic [7:0] sched_tile_m, sched_tile_n, sched_tile_k;
+  // Controller <-> SRAM port
+  logic        ctrl_sram_req, ctrl_sram_we;
+  logic [15:0] ctrl_sram_addr;
+  logic [31:0] ctrl_sram_wdata, ctrl_sram_rdata;
+  logic        ctrl_sram_rvalid;
 
-  // Controller <-> Loader/Writer
-  logic       loader_a_start, loader_b_start;
-  logic       loader_a_done, loader_b_done;
-  logic       writer_start, writer_done;
-  logic [15:0] loader_a_base, loader_b_base, writer_base;
+  // Controller <-> input buffers (linear write)
+  logic        buf_a_wr_en, buf_b_wr_en;
+  logic [11:0] buf_wr_idx;
+  logic [31:0] buf_wr_data;
 
-  // Controller <-> Array
-  logic       array_en, array_clear_acc;
-  fused_op_t  fused_sel;
+  // Pipeline <-> input buffers (parallel read via mem_out)
+  logic signed [31:0] a_mem [TILE_DIM][TILE_DIM];
+  logic signed [31:0] b_mem [TILE_DIM][TILE_DIM];
 
-  // Loader <-> Scratchpad
-  logic        load_a_req;
-  logic [15:0] load_a_addr;
-  logic [31:0] load_a_rdata;
-  logic        load_a_rvalid;
+  // Pipeline <-> output buffer (write)
+  logic               out_wr_en;
+  logic [11:0]        out_wr_idx;
+  logic signed [31:0] out_wr_data;
+  // Output buffer drain (FSM linear read)
+  logic [11:0]        out_rd_idx;
+  logic signed [31:0] out_rd_data;
 
-  // Writer <-> Scratchpad
-  logic        write_req, write_we;
-  logic [15:0] write_addr;
-  logic [31:0] write_wdata;
+  // Unused tile_buffer ports (tied off)
+  logic signed [31:0] unused_buf_a_2d, unused_buf_b_2d;
+  logic signed [31:0] unused_buf_a_lin, unused_buf_b_lin;
+  logic signed [31:0] unused_out_2d;
+  logic signed [31:0] unused_out_mem [TILE_DIM][TILE_DIM];
 
-  // DMA <-> Scratchpad
+  // Pipeline boundary
+  logic pipeline_start, pipeline_done;
+
+  // DMA <-> SRAM
   logic        dma_sram_req, dma_sram_we;
   logic [15:0] dma_sram_addr;
   logic [31:0] dma_sram_wdata, dma_sram_rdata;
   logic        dma_sram_rvalid;
 
-  // Systolic array I/O — signed Q16.16
-  logic signed [31:0] a_in  [ARRAY_ROWS];
-  logic signed [31:0] b_in  [ARRAY_COLS];
-  logic signed [31:0] c_out [ARRAY_ROWS][ARRAY_COLS];
-
-  // Fused post-proc — signed Q16.16
-  logic signed [31:0] fused_data_in, fused_data_out, fused_aux_in;
-  logic               fused_in_valid, fused_out_valid;
-
-  // ---- Controller ----
+  // ====================================================================
+  // Controller (minimal FSM)
+  // ====================================================================
   accel_controller u_ctrl (
     .clk            (clk),
     .rst_n          (rst_n),
@@ -91,135 +103,98 @@ module accel_top
     .cmd_tile_m     (ctrl_tile_m),
     .cmd_tile_n     (ctrl_tile_n),
     .cmd_tile_k     (ctrl_tile_k),
-    .cmd_addr_a     (ctrl_addr_a),
-    .cmd_addr_b     (ctrl_addr_b),
-    .cmd_addr_out   (ctrl_addr_out),
-    .sched_start    (sched_start),
-    .sched_done     (sched_done),
-    .sched_tile_start(sched_tile_start),
-    .sched_tile_m   (sched_tile_m),
-    .sched_tile_n   (sched_tile_n),
-    .sched_tile_k   (sched_tile_k),
-    .loader_a_start (loader_a_start),
-    .loader_b_start (loader_b_start),
-    .loader_a_done  (loader_a_done),
-    .loader_b_done  (loader_b_done),
-    .writer_start   (writer_start),
-    .writer_done    (writer_done),
-    .array_en       (array_en),
-    .array_clear_acc(array_clear_acc),
     .fused_sel      (fused_sel),
-    .loader_a_base  (loader_a_base),
-    .loader_b_base  (loader_b_base),
-    .writer_base    (writer_base),
+    .sram_req       (ctrl_sram_req),
+    .sram_we        (ctrl_sram_we),
+    .sram_addr      (ctrl_sram_addr),
+    .sram_wdata     (ctrl_sram_wdata),
+    .sram_rdata     (ctrl_sram_rdata),
+    .sram_rvalid    (ctrl_sram_rvalid),
+    .buf_a_wr_en    (buf_a_wr_en),
+    .buf_b_wr_en    (buf_b_wr_en),
+    .buf_wr_idx     (buf_wr_idx),
+    .buf_wr_data    (buf_wr_data),
+    .out_rd_idx     (out_rd_idx),
+    .out_rd_data    (out_rd_data),
+    .pipeline_start (pipeline_start),
+    .pipeline_done  (pipeline_done),
     .busy           (busy),
     .done           (done)
   );
 
-  // ---- Tile Scheduler ----
-  // Uses LATCHED dimensions from controller, not cmd_in directly
-  tile_scheduler u_sched (
+  // ====================================================================
+  // Input buffer A (FSM linear write, pipeline parallel read via mem_out)
+  // ====================================================================
+  tile_buffer #(.DATA_WIDTH(32), .TILE_DIM(TILE_DIM)) u_buf_a (
     .clk         (clk),
     .rst_n       (rst_n),
-    .start       (sched_start),
-    .tile_done   (writer_done),
-    .dim_m       (ctrl_tile_m),
-    .dim_n       (ctrl_tile_n),
-    .dim_k       (ctrl_tile_k),
-    .tile_m_idx  (sched_tile_m),
-    .tile_n_idx  (sched_tile_n),
-    .tile_k_idx  (sched_tile_k),
-    .tile_start  (sched_tile_start),
-    .all_done    (sched_done),
-    .active      (sched_active)
+    .wr_en       (buf_a_wr_en),
+    .wr_idx      (buf_wr_idx),
+    .wr_data     ($signed(buf_wr_data)),
+    .rd_row      (8'd0),
+    .rd_col      (8'd0),
+    .rd_data     (unused_buf_a_2d),
+    .rd_lin_idx  (12'd0),
+    .rd_lin_data (unused_buf_a_lin),
+    .mem_out     (a_mem)
   );
 
-  // ---- Tile Loaders ----
-  // Use LATCHED tile dimensions, not hardcoded TILE_SIZE
-  tile_loader u_loader_a (
-    .clk        (clk),
-    .rst_n      (rst_n),
-    .start      (loader_a_start),
-    .en         (1'b1),
-    .base_addr  (loader_a_base),
-    .stride     ({8'b0, ctrl_tile_k}),
-    .tile_rows  (ctrl_tile_m),
-    .tile_cols  (ctrl_tile_k),
-    .sram_req   (load_a_req),
-    .sram_addr  (load_a_addr),
-    .sram_rdata (load_a_rdata),
-    .sram_rvalid(load_a_rvalid),
-    .data_out   (),
-    .data_valid (),
-    .done       (loader_a_done)
+  // ====================================================================
+  // Input buffer B
+  // ====================================================================
+  tile_buffer #(.DATA_WIDTH(32), .TILE_DIM(TILE_DIM)) u_buf_b (
+    .clk         (clk),
+    .rst_n       (rst_n),
+    .wr_en       (buf_b_wr_en),
+    .wr_idx      (buf_wr_idx),
+    .wr_data     ($signed(buf_wr_data)),
+    .rd_row      (8'd0),
+    .rd_col      (8'd0),
+    .rd_data     (unused_buf_b_2d),
+    .rd_lin_idx  (12'd0),
+    .rd_lin_data (unused_buf_b_lin),
+    .mem_out     (b_mem)
   );
 
-  tile_loader u_loader_b (
-    .clk        (clk),
-    .rst_n      (rst_n),
-    .start      (loader_b_start),
-    .en         (1'b1),
-    .base_addr  (loader_b_base),
-    .stride     ({8'b0, ctrl_tile_n}),
-    .tile_rows  (ctrl_tile_k),
-    .tile_cols  (ctrl_tile_n),
-    .sram_req   (),
-    .sram_addr  (),
-    .sram_rdata ('0),
-    .sram_rvalid(1'b1),  // Simplified: assume B always ready
-    .data_out   (),
-    .data_valid (),
-    .done       (loader_b_done)
+  // ====================================================================
+  // Streaming compute pipeline (the fused part)
+  // ====================================================================
+  stream_pipeline #(.DATA_WIDTH(32), .ARRAY_DIM(TILE_DIM)) u_pipe (
+    .clk         (clk),
+    .rst_n       (rst_n),
+    .start       (pipeline_start),
+    .done        (pipeline_done),
+    .tile_m      (ctrl_tile_m),
+    .tile_n      (ctrl_tile_n),
+    .tile_k      (ctrl_tile_k),
+    .op_sel      (fused_sel),
+    .a_mem       (a_mem),
+    .b_mem       (b_mem),
+    .out_wr_en   (out_wr_en),
+    .out_wr_idx  (out_wr_idx),
+    .out_wr_data (out_wr_data)
   );
 
-  // ---- Tile Writer ----
-  tile_writer u_writer (
-    .clk        (clk),
-    .rst_n      (rst_n),
-    .start      (writer_start),
-    .en         (1'b1),
-    .base_addr  (writer_base),
-    .stride     ({8'b0, ctrl_tile_n}),
-    .tile_rows  (ctrl_tile_m),
-    .tile_cols  (ctrl_tile_n),
-    .data_in    (fused_data_out),
-    .data_valid (fused_out_valid),
-    .sram_req   (write_req),
-    .sram_we    (write_we),
-    .sram_addr  (write_addr),
-    .sram_wdata (write_wdata),
-    .done       (writer_done)
+  // ====================================================================
+  // Output buffer (pipeline writes, FSM drains during WRITE phase)
+  // ====================================================================
+  tile_buffer #(.DATA_WIDTH(32), .TILE_DIM(TILE_DIM)) u_buf_out (
+    .clk         (clk),
+    .rst_n       (rst_n),
+    .wr_en       (out_wr_en),
+    .wr_idx      (out_wr_idx),
+    .wr_data     (out_wr_data),
+    .rd_row      (8'd0),
+    .rd_col      (8'd0),
+    .rd_data     (unused_out_2d),
+    .rd_lin_idx  (out_rd_idx),
+    .rd_lin_data (out_rd_data),
+    .mem_out     (unused_out_mem)
   );
 
-  // ---- Systolic Array ----
-  systolic_array_64x64 u_array (
-    .clk       (clk),
-    .rst_n     (rst_n),
-    .en        (array_en),
-    .clear_acc (array_clear_acc),
-    .a_in      (a_in),
-    .b_in      (b_in),
-    .c_out     (c_out)
-  );
-
-  // ---- Fused Post-Processing ----
-  assign fused_data_in  = c_out[0][0];
-  assign fused_in_valid = array_en;
-  assign fused_aux_in   = '0;
-
-  fused_postproc_unit u_fused (
-    .clk       (clk),
-    .rst_n     (rst_n),
-    .en        (1'b1),
-    .op_sel    (fused_sel),
-    .data_in   (fused_data_in),
-    .in_valid  (fused_in_valid),
-    .aux_in    (fused_aux_in),
-    .data_out  (fused_data_out),
-    .out_valid (fused_out_valid)
-  );
-
-  // ---- DMA Engine ----
+  // ====================================================================
+  // DMA engine (host I/O before/after pipeline runs)
+  // ====================================================================
   dma_engine u_dma (
     .clk           (clk),
     .rst_n         (rst_n),
@@ -239,18 +214,20 @@ module accel_top
     .sram_rvalid   (dma_sram_rvalid)
   );
 
-  // ---- Scratchpad ----
+  // ====================================================================
+  // Scratchpad (shared between controller load/write phases and DMA)
+  // ====================================================================
   scratchpad_ctrl u_scratchpad (
     .clk     (clk),
     .rst_n   (rst_n),
-    .a_req   (load_a_req),
-    .a_addr  (load_a_addr),
-    .a_rdata (load_a_rdata),
-    .a_rvalid(load_a_rvalid),
-    .b_req   (write_req),
-    .b_we    (write_we),
-    .b_addr  (write_addr),
-    .b_wdata (write_wdata),
+    .a_req   (ctrl_sram_req && !ctrl_sram_we),  // controller reads
+    .a_addr  (ctrl_sram_addr),
+    .a_rdata (ctrl_sram_rdata),
+    .a_rvalid(ctrl_sram_rvalid),
+    .b_req   (ctrl_sram_req && ctrl_sram_we),   // controller writes
+    .b_we    (ctrl_sram_we),
+    .b_addr  (ctrl_sram_addr),
+    .b_wdata (ctrl_sram_wdata),
     .c_req   (dma_sram_req),
     .c_we    (dma_sram_we),
     .c_addr  (dma_sram_addr),
@@ -259,14 +236,16 @@ module accel_top
     .c_rvalid(dma_sram_rvalid)
   );
 
-  // ---- Performance Counters ----
+  // ====================================================================
+  // Performance counters
+  // ====================================================================
   perf_counter_block u_perf (
     .clk            (clk),
     .rst_n          (rst_n),
     .clear          (!rst_n),
-    .array_active   (array_en),
-    .array_stall    (busy && !array_en),
-    .tile_complete  (writer_done),
+    .array_active   (pipeline_start || u_pipe.running),
+    .array_stall    (busy && !u_pipe.running),
+    .tile_complete  (pipeline_done),
     .active_cycles  (perf_active_cycles),
     .stall_cycles   (perf_stall_cycles),
     .total_cycles   (),

@@ -1,5 +1,20 @@
-// accel_controller.sv — Top-level control FSM
-// Orchestrates tile loops, triggers loaders/writers, configures fused units
+// accel_controller.sv — Minimal FSM for streaming fused accelerator
+//
+// FSM ONLY handles boundary I/O:
+//   IDLE  -> latch command
+//   LOAD  -> read inputs from SRAM into tile buffers (row-major in buffer)
+//   STREAM -> pulse pipeline start, wait for pipeline_done
+//   WRITE -> drain output buffer to SRAM
+//   DONE  -> assert done
+//
+// Uses a 2-process FSM:
+//   - sequential block:  state, cmd_reg, counters
+//   - combinational block: outputs derived from state + counters
+//
+// Buffer layout: wr_idx = {row[5:0], col[5:0]}, so the FSM tracks
+// (load_row, load_col) and (wr_row, wr_col) separately from the linear
+// SRAM-side count. This keeps the buffer's (row, col) view consistent
+// with the streaming pipeline's parallel reads via mem_out.
 module accel_controller
   import accel_pkg::*;
 (
@@ -11,221 +26,252 @@ module accel_controller
   input  logic        cmd_valid,
   output logic        cmd_ready,
 
-  // Latched command dimensions (exposed for scheduler and loaders)
+  // Latched command (exposed to pipeline)
   output logic [7:0]  cmd_tile_m,
   output logic [7:0]  cmd_tile_n,
   output logic [7:0]  cmd_tile_k,
-  output logic [15:0] cmd_addr_a,
-  output logic [15:0] cmd_addr_b,
-  output logic [15:0] cmd_addr_out,
-
-  // Tile scheduler interface
-  output logic        sched_start,
-  input  logic        sched_done,
-  input  logic        sched_tile_start,
-  input  logic [7:0]  sched_tile_m,
-  input  logic [7:0]  sched_tile_n,
-  input  logic [7:0]  sched_tile_k,
-
-  // Tile loader/writer control
-  output logic        loader_a_start,
-  output logic        loader_b_start,
-  input  logic        loader_a_done,
-  input  logic        loader_b_done,
-  output logic        writer_start,
-  input  logic        writer_done,
-
-  // Systolic array control
-  output logic        array_en,
-  output logic        array_clear_acc,
-
-  // Fused unit control
   output fused_op_t   fused_sel,
 
-  // Address generation
-  output logic [15:0] loader_a_base,
-  output logic [15:0] loader_b_base,
-  output logic [15:0] writer_base,
+  // SRAM read/write port
+  output logic        sram_req,
+  output logic        sram_we,
+  output logic [15:0] sram_addr,
+  output logic [31:0] sram_wdata,
+  input  logic [31:0] sram_rdata,
+  input  logic        sram_rvalid,
+
+  // Input buffer write ports (FSM fills these during LOAD)
+  output logic        buf_a_wr_en,
+  output logic        buf_b_wr_en,
+  output logic [11:0] buf_wr_idx,
+  output logic [31:0] buf_wr_data,
+
+  // Output buffer read port (FSM drains during WRITE)
+  output logic [11:0] out_rd_idx,
+  input  logic [31:0] out_rd_data,
+
+  // Pipeline boundary handshake
+  output logic        pipeline_start,
+  input  logic        pipeline_done,
 
   // Status
   output logic        busy,
   output logic        done
 );
 
-  typedef enum logic [3:0] {
-    FSM_IDLE,
-    FSM_DECODE,
-    FSM_LOAD_TILES,
-    FSM_WAIT_LOAD,
-    FSM_COMPUTE,
-    FSM_WAIT_WRITE,
-    FSM_NEXT_TILE,
-    FSM_COMPLETE
-  } fsm_t;
+  typedef enum logic [2:0] {
+    S_IDLE,
+    S_LOAD_A,
+    S_LOAD_B,
+    S_STREAM_START,
+    S_STREAM_WAIT,
+    S_WRITE,
+    S_DONE
+  } state_t;
 
-  fsm_t state;
-  mode_t    current_mode;
-  logic [7:0] compute_cnt;
-  logic [7:0] total_compute_cycles;
+  state_t state;
+  cmd_pkt_t cmd_reg;
 
-  // Latch done pulses so they aren't missed
-  logic loader_a_done_r, loader_b_done_r, writer_done_r, sched_done_r;
+  // Linear counters (for SRAM addressing and exit conditions)
+  logic [11:0] load_cnt, write_cnt;
+  // 2D counters (for buffer indexing)
+  logic [7:0]  load_row, load_col;
+  logic [7:0]  wr_row,   wr_col;
 
-  always_ff @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
-      loader_a_done_r <= 1'b0;
-      loader_b_done_r <= 1'b0;
-      writer_done_r   <= 1'b0;
-      sched_done_r    <= 1'b0;
-    end else begin
-      if (loader_a_start) loader_a_done_r <= 1'b0;
-      else if (loader_a_done) loader_a_done_r <= 1'b1;
+  logic [11:0] tile_a_size, tile_b_size, tile_out_size;
+  assign tile_a_size   = {4'b0, cmd_reg.tile_m} * {4'b0, cmd_reg.tile_k};
+  assign tile_b_size   = {4'b0, cmd_reg.tile_k} * {4'b0, cmd_reg.tile_n};
+  assign tile_out_size = {4'b0, cmd_reg.tile_m} * {4'b0, cmd_reg.tile_n};
 
-      if (loader_b_start) loader_b_done_r <= 1'b0;
-      else if (loader_b_done) loader_b_done_r <= 1'b1;
+  assign cmd_tile_m = cmd_reg.tile_m;
+  assign cmd_tile_n = cmd_reg.tile_n;
+  assign cmd_tile_k = cmd_reg.tile_k;
 
-      if (writer_start) writer_done_r <= 1'b0;
-      else if (writer_done) writer_done_r <= 1'b1;
-
-      // Scheduler done is also a 1-cycle pulse — latch it
-      // Clear when starting a new sequence (sched_start)
-      if (sched_start) sched_done_r <= 1'b0;
-      else if (sched_done) sched_done_r <= 1'b1;
-    end
+  // Map mode to fused operation (combinational, derived from latched cmd)
+  always_comb begin
+    case (cmd_reg.mode)
+      MODE_FFN_FWD:  fused_sel = FUSED_GELU;
+      MODE_FFN_BWD:  fused_sel = FUSED_GELU_GRAD;
+      MODE_ATTN_FWD: fused_sel = FUSED_SOFTMAX;
+      MODE_ATTN_BWD: fused_sel = FUSED_BYPASS;
+      default:       fused_sel = FUSED_BYPASS;
+    endcase
   end
 
-  // Total compute cycles: tile_k * 2 (for systolic drain) + 10 (fused pipeline drain)
-  assign total_compute_cycles = {cmd_tile_k[6:0], 1'b0} + 8'd10;
+  // ============= Combinational outputs =============
+  always_comb begin
+    cmd_ready      = 1'b0;
+    busy           = 1'b0;
+    done           = 1'b0;
+    sram_req       = 1'b0;
+    sram_we        = 1'b0;
+    sram_addr      = '0;
+    sram_wdata     = '0;
+    buf_a_wr_en    = 1'b0;
+    buf_b_wr_en    = 1'b0;
+    buf_wr_idx     = '0;
+    buf_wr_data    = '0;
+    out_rd_idx     = '0;
+    pipeline_start = 1'b0;
 
+    case (state)
+      S_IDLE: begin
+        cmd_ready = 1'b1;
+      end
+
+      S_LOAD_A: begin
+        busy        = 1'b1;
+        sram_req    = 1'b1;
+        sram_we     = 1'b0;
+        sram_addr   = cmd_reg.addr_a + {4'b0, load_cnt};
+        buf_a_wr_en = sram_rvalid;
+        buf_wr_idx  = {load_row[5:0], load_col[5:0]};
+        buf_wr_data = sram_rdata;
+      end
+
+      S_LOAD_B: begin
+        busy        = 1'b1;
+        sram_req    = 1'b1;
+        sram_we     = 1'b0;
+        sram_addr   = cmd_reg.addr_b + {4'b0, load_cnt};
+        buf_b_wr_en = sram_rvalid;
+        buf_wr_idx  = {load_row[5:0], load_col[5:0]};
+        buf_wr_data = sram_rdata;
+      end
+
+      S_STREAM_START: begin
+        busy           = 1'b1;
+        pipeline_start = 1'b1;
+      end
+
+      S_STREAM_WAIT: begin
+        busy = 1'b1;
+      end
+
+      S_WRITE: begin
+        busy       = 1'b1;
+        sram_req   = 1'b1;
+        sram_we    = 1'b1;
+        sram_addr  = cmd_reg.addr_out + {4'b0, write_cnt};
+        out_rd_idx = {wr_row[5:0], wr_col[5:0]};
+        sram_wdata = out_rd_data;
+      end
+
+      S_DONE: begin
+        done = 1'b1;
+      end
+
+      default: ;
+    endcase
+  end
+
+  // ============= Sequential state and counters =============
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
-      state           <= FSM_IDLE;
-      busy            <= 1'b0;
-      done            <= 1'b0;
-      cmd_ready       <= 1'b1;
-      sched_start     <= 1'b0;
-      loader_a_start  <= 1'b0;
-      loader_b_start  <= 1'b0;
-      writer_start    <= 1'b0;
-      array_en        <= 1'b0;
-      array_clear_acc <= 1'b0;
-      fused_sel       <= FUSED_BYPASS;
-      current_mode    <= MODE_IDLE;
-      cmd_tile_m      <= '0;
-      cmd_tile_n      <= '0;
-      cmd_tile_k      <= '0;
-      cmd_addr_a      <= '0;
-      cmd_addr_b      <= '0;
-      cmd_addr_out    <= '0;
-      compute_cnt     <= '0;
+      state     <= S_IDLE;
+      cmd_reg   <= '0;
+      load_cnt  <= '0;
+      write_cnt <= '0;
+      load_row  <= '0;
+      load_col  <= '0;
+      wr_row    <= '0;
+      wr_col    <= '0;
     end else begin
-      // Defaults — single-cycle pulses
-      sched_start    <= 1'b0;
-      loader_a_start <= 1'b0;
-      loader_b_start <= 1'b0;
-      writer_start   <= 1'b0;
-      array_clear_acc <= 1'b0;
-      done           <= 1'b0;
-
       case (state)
-        FSM_IDLE: begin
-          cmd_ready <= 1'b1;
+        // ----------------------------------------------------
+        S_IDLE: begin
           if (cmd_valid) begin
-            // Latch entire command
-            current_mode <= cmd.mode;
-            cmd_tile_m   <= cmd.tile_m;
-            cmd_tile_n   <= cmd.tile_n;
-            cmd_tile_k   <= cmd.tile_k;
-            cmd_addr_a   <= cmd.addr_a;
-            cmd_addr_b   <= cmd.addr_b;
-            cmd_addr_out <= cmd.addr_out;
-            cmd_ready    <= 1'b0;
-            busy         <= 1'b1;
-            state        <= FSM_DECODE;
+            cmd_reg  <= cmd;
+            load_cnt <= '0;
+            load_row <= '0;
+            load_col <= '0;
+            state    <= S_LOAD_A;
           end
         end
 
-        FSM_DECODE: begin
-          // Configure fused operation based on mode
-          case (current_mode)
-            MODE_FFN_FWD:  fused_sel <= FUSED_GELU;
-            MODE_FFN_BWD:  fused_sel <= FUSED_GELU_GRAD;
-            MODE_ATTN_FWD: fused_sel <= FUSED_SOFTMAX;
-            MODE_ATTN_BWD: fused_sel <= FUSED_BYPASS;
-            default:       fused_sel <= FUSED_BYPASS;
-          endcase
-
-          // Start tile scheduler
-          sched_start <= 1'b1;
-          state       <= FSM_LOAD_TILES;
-        end
-
-        FSM_LOAD_TILES: begin
-          if (sched_tile_start) begin
-            // Compute base addresses for current tile
-            loader_a_base <= cmd_addr_a;
-            loader_b_base <= cmd_addr_b;
-
-            loader_a_start  <= 1'b1;
-            loader_b_start  <= 1'b1;
-            array_clear_acc <= 1'b1;
-            state           <= FSM_WAIT_LOAD;
-          end else if (sched_done_r) begin
-            state <= FSM_COMPLETE;
+        // ----------------------------------------------------
+        // LOAD A: tile_m rows x tile_k cols. Row-major in SRAM and buffer.
+        S_LOAD_A: begin
+          if (sram_rvalid) begin
+            if (load_cnt + 12'd1 >= tile_a_size) begin
+              load_cnt <= '0;
+              load_row <= '0;
+              load_col <= '0;
+              state    <= S_LOAD_B;
+            end else begin
+              load_cnt <= load_cnt + 12'd1;
+              if (load_col + 8'd1 >= cmd_reg.tile_k) begin
+                load_col <= '0;
+                load_row <= load_row + 8'd1;
+              end else begin
+                load_col <= load_col + 8'd1;
+              end
+            end
           end
         end
 
-        FSM_WAIT_LOAD: begin
-          // Wait for both loaders to finish
-          if (loader_a_done_r && loader_b_done_r) begin
-            compute_cnt <= '0;
-            array_en    <= 1'b1;
-            // Start writer immediately — it will capture fused output as it streams
-            writer_base  <= cmd_addr_out;
-            writer_start <= 1'b1;
-            state        <= FSM_COMPUTE;
+        // ----------------------------------------------------
+        // LOAD B: tile_k rows x tile_n cols. Row-major in SRAM and buffer.
+        S_LOAD_B: begin
+          if (sram_rvalid) begin
+            if (load_cnt + 12'd1 >= tile_b_size) begin
+              load_cnt <= '0;
+              load_row <= '0;
+              load_col <= '0;
+              state    <= S_STREAM_START;
+            end else begin
+              load_cnt <= load_cnt + 12'd1;
+              if (load_col + 8'd1 >= cmd_reg.tile_n) begin
+                load_col <= '0;
+                load_row <= load_row + 8'd1;
+              end else begin
+                load_col <= load_col + 8'd1;
+              end
+            end
           end
         end
 
-        FSM_COMPUTE: begin
-          // Array stays enabled, fused output streams to writer in real-time
-          array_en    <= 1'b1;
-          compute_cnt <= compute_cnt + 1;
+        // ----------------------------------------------------
+        // STREAM_START: pipeline_start pulses (combinational), then advance
+        S_STREAM_START: begin
+          state <= S_STREAM_WAIT;
+        end
 
-          // Run for enough cycles: systolic drain + fused pipeline drain
-          if (compute_cnt >= total_compute_cycles) begin
-            array_en    <= 1'b0;
-            compute_cnt <= '0;
-            state       <= FSM_WAIT_WRITE;
+        // ----------------------------------------------------
+        // STREAM_WAIT: pipeline runs autonomously. FSM is idle.
+        // No FSM transitions during compute -- this is fusion.
+        S_STREAM_WAIT: begin
+          if (pipeline_done) begin
+            write_cnt <= '0;
+            wr_row    <= '0;
+            wr_col    <= '0;
+            state     <= S_WRITE;
           end
         end
 
-        FSM_WAIT_WRITE: begin
-          // Writer should have captured all data during compute
-          // Give it a few more cycles, then check done
-          compute_cnt <= compute_cnt + 1;
-          if (writer_done_r || compute_cnt >= 8'd20) begin
-            compute_cnt <= '0;
-            state       <= FSM_NEXT_TILE;
-          end
-        end
-
-        FSM_NEXT_TILE: begin
-          // Check if scheduler has more tiles (use latched done)
-          if (sched_done_r) begin
-            state <= FSM_COMPLETE;
+        // ----------------------------------------------------
+        // WRITE: tile_m x tile_n cells, row-major. Read buffer at (wr_row,wr_col),
+        //   write SRAM at addr_out + write_cnt.
+        S_WRITE: begin
+          if (write_cnt + 12'd1 >= tile_out_size) begin
+            state <= S_DONE;
           end else begin
-            state <= FSM_LOAD_TILES;
+            write_cnt <= write_cnt + 12'd1;
+            if (wr_col + 8'd1 >= cmd_reg.tile_n) begin
+              wr_col <= '0;
+              wr_row <= wr_row + 8'd1;
+            end else begin
+              wr_col <= wr_col + 8'd1;
+            end
           end
         end
 
-        FSM_COMPLETE: begin
-          busy  <= 1'b0;
-          done  <= 1'b1;
-          state <= FSM_IDLE;
+        // ----------------------------------------------------
+        S_DONE: begin
+          state <= S_IDLE;
         end
 
-        default: state <= FSM_IDLE;
+        default: state <= S_IDLE;
       endcase
     end
   end

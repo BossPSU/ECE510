@@ -59,6 +59,10 @@ vlog -sv scratchpad_ctrl.sv
 vlog -sv address_gen.sv
 vlog -sv dma_engine.sv
 vlog -sv double_buffer_ctrl.sv
+vlog -sv tile_buffer.sv
+
+# Streaming pipeline (instantiates systolic + fused, runs autonomously)
+vlog -sv stream_pipeline.sv
 
 # Control
 vlog -sv mode_decoder.sv
