@@ -7,24 +7,24 @@ module systolic_array_64x64
   parameter int COLS       = ARRAY_COLS,
   parameter int DATA_WIDTH = 32
 )(
-  input  logic                    clk,
-  input  logic                    rst_n,
-  input  logic                    en,
-  input  logic                    clear_acc,
+  input  logic                            clk,
+  input  logic                            rst_n,
+  input  logic                            en,
+  input  logic                            clear_acc,
 
-  // Row inputs (A matrix tiles, fed from west)
-  input  logic [DATA_WIDTH-1:0]   a_in  [ROWS],
+  // Row inputs (A matrix tiles, fed from west) — Q16.16 signed
+  input  logic signed [DATA_WIDTH-1:0]    a_in  [ROWS],
 
-  // Column inputs (B matrix tiles, fed from north)
-  input  logic [DATA_WIDTH-1:0]   b_in  [COLS],
+  // Column inputs (B matrix tiles, fed from north) — Q16.16 signed
+  input  logic signed [DATA_WIDTH-1:0]    b_in  [COLS],
 
-  // Output: accumulated results from bottom row
-  output logic [DATA_WIDTH-1:0]   c_out [ROWS][COLS]
+  // Output: accumulated results from bottom row — Q16.16 signed
+  output logic signed [DATA_WIDTH-1:0]    c_out [ROWS][COLS]
 );
 
-  // Internal wires between PEs
-  logic [DATA_WIDTH-1:0] a_wire [ROWS][COLS+1];
-  logic [DATA_WIDTH-1:0] b_wire [ROWS+1][COLS];
+  // Internal wires between PEs — Q16.16 signed
+  logic signed [DATA_WIDTH-1:0] a_wire [ROWS][COLS+1];
+  logic signed [DATA_WIDTH-1:0] b_wire [ROWS+1][COLS];
 
   // Connect inputs
   genvar r, c;

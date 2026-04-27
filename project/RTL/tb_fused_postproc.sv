@@ -21,32 +21,53 @@ module tb_fused_postproc;
     return $itor(q) / 65536.0;
   endfunction
 
+  // Capture output when out_valid pulses (so we don't miss a 1-cycle pulse)
+  logic signed [31:0] captured;
+  logic               got_out;
+
+  task automatic reset_capture;
+    captured = '0;
+    got_out  = 1'b0;
+  endtask
+
+  always_ff @(posedge clk) begin
+    if (out_valid && !got_out) begin
+      captured <= data_out;
+      got_out  <= 1'b1;
+    end
+  end
+
   initial begin
     $display("=== tb_fused_postproc: START ===");
     clk = 0; rst_n = 0; en = 1; in_valid = 0;
     op_sel  = FUSED_BYPASS;
     data_in = '0; aux_in = '0;
+    captured = '0; got_out = 1'b0;
 
     #10 rst_n = 1;
     #2;
 
     // ---- Test 1: Bypass mode ----
     $display("  Test 1: Bypass");
+    reset_capture();
     op_sel   = FUSED_BYPASS;
     data_in  = to_q(42.0);
     in_valid = 1;
     @(posedge clk); #1;
     @(posedge clk); #1;
-    if (out_valid && from_q(data_out) > 41.5 && from_q(data_out) < 42.5)
-      $display("    PASS: bypass output = %0.1f", from_q(data_out));
-    else
-      $display("    FAIL: bypass output = %0.1f (expected 42.0)", from_q(data_out));
-
     in_valid = 0;
+    repeat (2) @(posedge clk);
+
+    if (got_out && from_q(captured) > 41.5 && from_q(captured) < 42.5)
+      $display("    PASS: bypass output = %0.1f", from_q(captured));
+    else
+      $display("    FAIL: bypass output = %0.1f (expected 42.0)", from_q(captured));
+
     repeat (2) @(posedge clk);
 
     // ---- Test 2: GELU mode ----
     $display("  Test 2: GELU forward");
+    reset_capture();
     op_sel   = FUSED_GELU;
     data_in  = to_q(1.0);
     in_valid = 1;
@@ -54,13 +75,11 @@ module tb_fused_postproc;
     @(posedge clk); #1;
     in_valid = 0;
 
-    // Wait for GELU pipeline (6 stages + margin)
     repeat (12) @(posedge clk);
 
-    if (out_valid) begin
+    if (got_out) begin
       real got;
-      got = from_q(data_out);
-      // GELU(1.0) ~ 0.84, allow looser bound for Pade approx
+      got = from_q(captured);
       if (got > 0.7 && got < 1.0)
         $display("    PASS: GELU(1.0) = %0.4f", got);
       else
@@ -72,9 +91,10 @@ module tb_fused_postproc;
 
     // ---- Test 3: GELU grad ----
     $display("  Test 3: GELU grad");
+    reset_capture();
     op_sel   = FUSED_GELU_GRAD;
-    data_in  = to_q(1.0);   // dh_act
-    aux_in   = to_q(0.5);   // pre-activation h
+    data_in  = to_q(1.0);
+    aux_in   = to_q(0.5);
     in_valid = 1;
     @(posedge clk); #1;
     @(posedge clk); #1;
@@ -82,10 +102,10 @@ module tb_fused_postproc;
 
     repeat (12) @(posedge clk);
 
-    if (out_valid)
-      $display("    PASS: GELU grad produced output = %0.4f", from_q(data_out));
+    if (got_out)
+      $display("    PASS: GELU grad produced output = %0.4f", from_q(captured));
     else
-      $display("    INFO: GELU grad path (may need more cycles)");
+      $display("    INFO: GELU grad path (no output captured)");
 
     $display("=== tb_fused_postproc: DONE ===");
     $finish;

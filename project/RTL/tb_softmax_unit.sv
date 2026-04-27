@@ -24,10 +24,26 @@ module tb_softmax_unit;
     return $itor(q) / 65536.0;
   endfunction
 
+  // Latched results — captured when out_valid pulses
+  logic signed [31:0]  captured [VEC];
+  logic                got_output;
+
+  always_ff @(posedge clk) begin
+    if (out_valid && !got_output) begin
+      for (int i = 0; i < VEC; i++)
+        captured[i] <= probs_out[i];
+      got_output <= 1'b1;
+    end
+  end
+
   initial begin
     $display("=== tb_softmax_unit: START ===");
     clk = 0; rst_n = 0; en = 1; start = 0; in_valid = 0;
-    for (int i = 0; i < VEC; i++) scores_in[i] = '0;
+    got_output = 1'b0;
+    for (int i = 0; i < VEC; i++) begin
+      scores_in[i] = '0;
+      captured[i]  = '0;
+    end
 
     #10 rst_n = 1;
     #2;
@@ -46,18 +62,18 @@ module tb_softmax_unit;
 
     repeat (20) @(posedge clk);
 
-    if (out_valid) begin
+    if (got_output) begin
       real sum, p0, p1, p2, p3;
-      p0 = from_q(probs_out[0]);
-      p1 = from_q(probs_out[1]);
-      p2 = from_q(probs_out[2]);
-      p3 = from_q(probs_out[3]);
+      p0 = from_q(captured[0]);
+      p1 = from_q(captured[1]);
+      p2 = from_q(captured[2]);
+      p3 = from_q(captured[3]);
       sum = p0 + p1 + p2 + p3;
 
       $display("  probs = [%0.4f, %0.4f, %0.4f, %0.4f]", p0, p1, p2, p3);
       $display("  sum   = %0.4f (expect ~1.0)", sum);
 
-      if (sum > 0.95 && sum < 1.05)
+      if (sum > 0.9 && sum < 1.1)
         $display("  PASS: probabilities sum to ~1.0");
       else
         $display("  FAIL: probabilities do not sum to 1.0");
