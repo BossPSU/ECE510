@@ -69,13 +69,14 @@ module accel_controller
   logic [7:0] total_compute_cycles;
 
   // Latch done pulses so they aren't missed
-  logic loader_a_done_r, loader_b_done_r, writer_done_r;
+  logic loader_a_done_r, loader_b_done_r, writer_done_r, sched_done_r;
 
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       loader_a_done_r <= 1'b0;
       loader_b_done_r <= 1'b0;
       writer_done_r   <= 1'b0;
+      sched_done_r    <= 1'b0;
     end else begin
       if (loader_a_start) loader_a_done_r <= 1'b0;
       else if (loader_a_done) loader_a_done_r <= 1'b1;
@@ -85,6 +86,11 @@ module accel_controller
 
       if (writer_start) writer_done_r <= 1'b0;
       else if (writer_done) writer_done_r <= 1'b1;
+
+      // Scheduler done is also a 1-cycle pulse — latch it
+      // Clear when starting a new sequence (sched_start)
+      if (sched_start) sched_done_r <= 1'b0;
+      else if (sched_done) sched_done_r <= 1'b1;
     end
   end
 
@@ -164,7 +170,7 @@ module accel_controller
             loader_b_start  <= 1'b1;
             array_clear_acc <= 1'b1;
             state           <= FSM_WAIT_LOAD;
-          end else if (sched_done) begin
+          end else if (sched_done_r) begin
             state <= FSM_COMPLETE;
           end
         end
@@ -205,8 +211,8 @@ module accel_controller
         end
 
         FSM_NEXT_TILE: begin
-          // Check if scheduler has more tiles
-          if (sched_done) begin
+          // Check if scheduler has more tiles (use latched done)
+          if (sched_done_r) begin
             state <= FSM_COMPLETE;
           end else begin
             state <= FSM_LOAD_TILES;
