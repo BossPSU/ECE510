@@ -67,11 +67,13 @@ vlog -sv stream_pipeline.sv
 # Control
 vlog -sv mode_decoder.sv
 vlog -sv tile_scheduler.sv
+vlog -sv tile_dispatcher.sv
 vlog -sv accel_controller.sv
 vlog -sv perf_counter_block.sv
 vlog -sv csr_block.sv
 
-# Top level
+# Per-lane engine and multi-lane top
+vlog -sv accel_engine.sv
 vlog -sv accel_top.sv
 vlog -sv accel_chiplet_wrapper.sv
 

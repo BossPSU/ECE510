@@ -92,6 +92,27 @@ package accel_pkg;
     logic       last;
   } tile_meta_t;
 
+  // Multi-tile ("macro") command — describes a full operation that the
+  // tile_dispatcher will break into per-tile cmd_pkt_t micro-commands.
+  // Output tile (m_idx, n_idx) base addresses (assuming 64x64 tiles
+  // stored contiguously per tile in row-major tile order):
+  //   addr_a_tile   = addr_a   + m_idx * (TILE_SIZE * tile_k)
+  //   addr_b_tile   = addr_b   + n_idx * (tile_k * TILE_SIZE)
+  //   addr_aux_tile = addr_aux + (m_idx*num_n_tiles + n_idx) * (TILE_SIZE^2)
+  //   addr_out_tile = addr_out + (m_idx*num_n_tiles + n_idx) * (TILE_SIZE^2)
+  typedef struct packed {
+    mode_t       mode;
+    logic [15:0] addr_a;
+    logic [15:0] addr_b;
+    logic [15:0] addr_aux;
+    logic [15:0] addr_out;
+    logic [7:0]  num_m_tiles;     // tiles along result rows (>=1)
+    logic [7:0]  num_n_tiles;     // tiles along result cols (>=1)
+    logic [7:0]  tile_m;          // rows in each output tile (<= TILE_SIZE)
+    logic [7:0]  tile_n;          // cols in each output tile
+    logic [7:0]  tile_k;          // shared dim per tile (no K-accumulation)
+  } macro_cmd_t;
+
   // Stream packet
   typedef struct packed {
     logic [DATA_WIDTH-1:0] data;

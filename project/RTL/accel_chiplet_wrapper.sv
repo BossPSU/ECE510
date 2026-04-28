@@ -29,9 +29,9 @@ module accel_chiplet_wrapper
   output logic        ucie_busy
 );
 
-  // ---- Unpack UCIe command ----
-  cmd_pkt_t cmd_unpacked;
-  assign cmd_unpacked = cmd_pkt_t'(ucie_cmd_data[$bits(cmd_pkt_t)-1:0]);
+  // ---- Unpack UCIe command (now a macro_cmd_t) ----
+  macro_cmd_t macro_unpacked;
+  assign macro_unpacked = macro_cmd_t'(ucie_cmd_data[$bits(macro_cmd_t)-1:0]);
 
   // ---- Unpack UCIe write data ----
   logic [15:0] wr_addr;
@@ -47,9 +47,9 @@ module accel_chiplet_wrapper
     .clk                  (clk_chiplet),
     .rst_n                (rst_n),
 
-    .cmd_in               (cmd_unpacked),
-    .cmd_valid            (ucie_cmd_valid),
-    .cmd_ready            (ucie_cmd_ready),
+    .macro_cmd_in         (macro_unpacked),
+    .macro_cmd_valid      (ucie_cmd_valid),
+    .macro_cmd_ready      (ucie_cmd_ready),
 
     .dma_wr_valid         (ucie_wr_valid),
     .dma_wr_addr          (wr_addr),

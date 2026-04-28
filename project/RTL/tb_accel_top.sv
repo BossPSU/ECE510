@@ -7,8 +7,8 @@ module tb_accel_top;
   import accel_pkg::*;
 
   logic        clk, rst_n;
-  cmd_pkt_t    cmd_in;
-  logic        cmd_valid, cmd_ready;
+  macro_cmd_t  macro_cmd_in;
+  logic        macro_cmd_valid, macro_cmd_ready;
   logic        dma_wr_valid, dma_wr_ready;
   logic [15:0] dma_wr_addr;
   logic [31:0] dma_wr_data;
@@ -21,9 +21,9 @@ module tb_accel_top;
   accel_top dut (
     .clk                  (clk),
     .rst_n                (rst_n),
-    .cmd_in               (cmd_in),
-    .cmd_valid            (cmd_valid),
-    .cmd_ready            (cmd_ready),
+    .macro_cmd_in         (macro_cmd_in),
+    .macro_cmd_valid      (macro_cmd_valid),
+    .macro_cmd_ready      (macro_cmd_ready),
     .dma_wr_valid         (dma_wr_valid),
     .dma_wr_addr          (dma_wr_addr),
     .dma_wr_data          (dma_wr_data),
@@ -77,24 +77,33 @@ module tb_accel_top;
     val = from_q($signed(dma_rd_data));
   endtask
 
-  // Issue a command and wait for done.
-  // addr_aux is only consumed for FFN_BWD (h_pre); pass 0 for other modes.
+  // Issue a single-tile macro command (num_m_tiles = num_n_tiles = 1).
+  // For multi-tile use issue_macro directly.
   task automatic issue_cmd(input mode_t mode,
                            input logic [15:0] a, b, aux, o,
                            input logic [7:0] tm, tn, tk);
+    issue_macro(mode, a, b, aux, o, 8'd1, 8'd1, tm, tn, tk);
+  endtask
+
+  // Issue a multi-tile macro command and wait for done.
+  task automatic issue_macro(input mode_t mode,
+                             input logic [15:0] a, b, aux, o,
+                             input logic [7:0] num_m, num_n,
+                             input logic [7:0] tm, tn, tk);
     @(posedge clk);
-    cmd_in.mode     <= mode;
-    cmd_in.addr_a   <= a;
-    cmd_in.addr_b   <= b;
-    cmd_in.addr_aux <= aux;
-    cmd_in.addr_out <= o;
-    cmd_in.tile_m   <= tm;
-    cmd_in.tile_n   <= tn;
-    cmd_in.tile_k   <= tk;
-    cmd_in.seq_len  <= 8'd4;
-    cmd_valid       <= 1'b1;
+    macro_cmd_in.mode        <= mode;
+    macro_cmd_in.addr_a      <= a;
+    macro_cmd_in.addr_b      <= b;
+    macro_cmd_in.addr_aux    <= aux;
+    macro_cmd_in.addr_out    <= o;
+    macro_cmd_in.num_m_tiles <= num_m;
+    macro_cmd_in.num_n_tiles <= num_n;
+    macro_cmd_in.tile_m      <= tm;
+    macro_cmd_in.tile_n      <= tn;
+    macro_cmd_in.tile_k      <= tk;
+    macro_cmd_valid          <= 1'b1;
     @(posedge clk);
-    cmd_valid <= 1'b0;
+    macro_cmd_valid <= 1'b0;
 
     // Wait for done or timeout
     fork
@@ -102,8 +111,8 @@ module tb_accel_top;
         wait (done);
       end
       begin
-        repeat (10000) @(posedge clk);
-        $display("    TIMEOUT waiting for done (10000 cycles)");
+        repeat (20000) @(posedge clk);
+        $display("    TIMEOUT waiting for done (20000 cycles)");
       end
     join_any
     disable fork;
@@ -140,13 +149,13 @@ module tb_accel_top;
 
     $display("=== tb_accel_top: START ===");
     clk = 0; rst_n = 0;
-    cmd_valid    = 0;
-    dma_wr_valid = 0;
-    dma_rd_req   = 0;
-    cmd_in       = '0;
-    dma_wr_addr  = '0;
-    dma_wr_data  = '0;
-    dma_rd_addr  = '0;
+    macro_cmd_valid = 0;
+    dma_wr_valid    = 0;
+    dma_rd_req      = 0;
+    macro_cmd_in    = '0;
+    dma_wr_addr     = '0;
+    dma_wr_data     = '0;
+    dma_rd_addr     = '0;
 
     #20 rst_n = 1;
     #4;
@@ -329,14 +338,117 @@ module tb_accel_top;
     $display("  Perf: active=%0d stall=%0d tiles=%0d",
              perf_active, perf_stall, perf_tiles);
 
+    repeat (5) @(posedge clk);
+
+    // ===========================================================
+    // Test 4: Multi-tile FFN forward (data-parallel across 2 lanes)
+    //   X (2x2)  ·  [W1_0 | W1_1] (2x4)  =  [out_0 | out_1] (2x4)
+    //   Two output tiles. Tile 0 goes to lane 0, tile 1 goes to lane 1.
+    //   Lane 0 bank: X at local 0x0000, W1_0 at local 0x0100, out at 0x0200
+    //   Lane 1 bank: X at local 0x0000, W1_1 at local 0x0180, out at 0x0200
+    //     (W1_1 sits at addr_b + tile_k*64 = 0x100 + 0x80 = 0x180 because
+    //      the dispatcher computes tile_b = addr_b + n_idx * tile_k * 64.)
+    // ===========================================================
+    $display("");
+    $display("--- Test 4: Multi-tile FFN Forward (2 tiles, 2 lanes parallel) ---");
+    begin : test4_block
+      real bm00, bm01, bm10, bm11;
+      real golden_t0 [4];
+      real golden_t1 [4];
+      real result0   [4];
+      real result1   [4];
+      int  pass0, pass1;
+      real e;
+
+      // Lane 0 bank (DMA addr < 0x1000):
+      //   X at 0x0000-0x0003
+      dma_write(16'h0000, 1.0); dma_write(16'h0001, 2.0);
+      dma_write(16'h0002, 3.0); dma_write(16'h0003, 4.0);
+      //   W1_0 = [[5,6],[7,8]] at 0x0100-0x0103
+      dma_write(16'h0100, 5.0); dma_write(16'h0101, 6.0);
+      dma_write(16'h0102, 7.0); dma_write(16'h0103, 8.0);
+
+      // Lane 1 bank (DMA addr bit 12 = 1 -> 0x1xxx):
+      //   X duplicated at 0x1000-0x1003
+      dma_write(16'h1000, 1.0); dma_write(16'h1001, 2.0);
+      dma_write(16'h1002, 3.0); dma_write(16'h1003, 4.0);
+      //   W1_1 = [[9,10],[11,12]] at 0x1180-0x1183
+      //   (lane 1 local 0x180 = addr_b + tile_k*64 from dispatcher)
+      dma_write(16'h1180, 9.0);  dma_write(16'h1181, 10.0);
+      dma_write(16'h1182, 11.0); dma_write(16'h1183, 12.0);
+
+      // Golden tile 0: X * W1_0
+      golden_matmul_2x2(1.0, 2.0, 3.0, 4.0,
+                        5.0, 6.0, 7.0, 8.0,
+                        c00, c01, c10, c11);
+      golden_t0[0] = golden_gelu(c00); golden_t0[1] = golden_gelu(c01);
+      golden_t0[2] = golden_gelu(c10); golden_t0[3] = golden_gelu(c11);
+
+      // Golden tile 1: X * W1_1
+      bm00 = 9.0; bm01 = 10.0; bm10 = 11.0; bm11 = 12.0;
+      golden_matmul_2x2(1.0, 2.0, 3.0, 4.0,
+                        bm00, bm01, bm10, bm11,
+                        c00, c01, c10, c11);
+      golden_t1[0] = golden_gelu(c00); golden_t1[1] = golden_gelu(c01);
+      golden_t1[2] = golden_gelu(c10); golden_t1[3] = golden_gelu(c11);
+
+      $display("  Golden tile 0: [%0.2f, %0.2f, %0.2f, %0.2f]",
+               golden_t0[0], golden_t0[1], golden_t0[2], golden_t0[3]);
+      $display("  Golden tile 1: [%0.2f, %0.2f, %0.2f, %0.2f]",
+               golden_t1[0], golden_t1[1], golden_t1[2], golden_t1[3]);
+
+      issue_macro(MODE_FFN_FWD,
+                  16'h0000,   // addr_a
+                  16'h0100,   // addr_b
+                  16'h0000,   // addr_aux (unused)
+                  16'h0200,   // addr_out
+                  8'd1,       // num_m_tiles
+                  8'd2,       // num_n_tiles
+                  8'd2, 8'd2, 8'd2);
+
+      if (done) $display("  PASS: macro completed (done asserted)");
+      else      $display("  FAIL: macro did not complete");
+
+      // Read tile 0 from lane 0 bank
+      for (int i = 0; i < 4; i++)
+        dma_read(16'h0200 + i[15:0], result0[i]);
+      // Read tile 1 from lane 1 bank
+      // dispatcher addr_out for tile (m=0, n=1) = 0x0200 + 1 * (64*64) = 0x1200
+      for (int i = 0; i < 4; i++)
+        dma_read(16'h1200 + i[15:0], result1[i]);
+
+      $display("  Tile 0 read: [%0.2f, %0.2f, %0.2f, %0.2f]",
+               result0[0], result0[1], result0[2], result0[3]);
+      $display("  Tile 1 read: [%0.2f, %0.2f, %0.2f, %0.2f]",
+               result1[0], result1[1], result1[2], result1[3]);
+
+      pass0 = 0; pass1 = 0;
+      for (int i = 0; i < 4; i++) begin
+        e = result0[i] - golden_t0[i]; if (e < 0) e = -e;
+        if (e < 1.0) pass0++;
+      end
+      for (int i = 0; i < 4; i++) begin
+        e = result1[i] - golden_t1[i]; if (e < 0) e = -e;
+        if (e < 1.0) pass1++;
+      end
+      if (pass0 == 4) $display("  PASS: tile 0 matches golden (4/4)");
+      else            $display("  FAIL: tile 0 only %0d/4 match", pass0);
+      if (pass1 == 4) $display("  PASS: tile 1 matches golden (4/4)");
+      else            $display("  FAIL: tile 1 only %0d/4 match", pass1);
+
+      $display("  Perf: active=%0d stall=%0d tiles=%0d",
+               perf_active, perf_stall, perf_tiles);
+    end
+
     // ===========================================================
     // Summary
     // ===========================================================
     $display("");
     $display("=== tb_accel_top: ALL TESTS DONE ===");
-    $display("  Test 1 (FFN fwd):  golden model comparison");
-    $display("  Test 2 (FFN bwd):  non-zero output check");
-    $display("  Test 3 (Attn fwd): non-zero output check");
+    $display("  Test 1 (FFN fwd):    golden model comparison");
+    $display("  Test 2 (FFN bwd):    fused dh*GELU'(h_pre)");
+    $display("  Test 3 (Attn fwd):   non-zero output check");
+    $display("  Test 4 (Multi-tile): 2 lanes data-parallel");
     $display("  Check waveforms for detailed signal activity.");
     $finish;
   end

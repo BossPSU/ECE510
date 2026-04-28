@@ -1,33 +1,43 @@
-// accel_top.sv — Streaming fused accelerator chiplet top
+// accel_top.sv — Multi-tile, data-parallel accelerator chiplet top.
 //
 // Architecture:
-//   FSM (controller) handles only LOAD/WRITE phases (boundary I/O)
-//   stream_pipeline runs autonomously between START and DONE,
-//   with no intermediate FSM states. This is true fusion: matmul output
-//   flows directly to activation to output buffer with no SRAM round-trips.
+//   * tile_dispatcher walks the (m_tiles, n_tiles) output grid and issues
+//     per-tile cmd_pkt_t micro-commands to whichever lane is idle.
+//   * N_LANES accel_engine instances run in parallel. Each preserves the
+//     intra-tile fusion (LOAD -> autonomous matmul+activation -> WRITE) and
+//     owns a private scratchpad bank.
+//   * Host DMA addresses are routed to the right lane via address bit
+//     [LANE_ADDR_BIT]: 0 -> lane 0 bank, 1 -> lane 1 bank. Lower bits are
+//     the per-bank offset.
+//   * For shared input data (e.g., X used by all output tiles in FFN fwd),
+//     the host duplicates the write into both banks. This keeps the
+//     per-bank SRAM single-ported and avoids cross-lane arbitration.
 //
-// Buffer interconnect:
-//   tile_buffer exposes its full memory (mem_out) so stream_pipeline can
-//   issue parallel reads for the systolic feeder. The FSM still uses the
-//   linear write port to load tiles row by row.
+// Macro-command interface (cmd_pkt_t single-tile path is gone — wrap with
+// num_m_tiles=num_n_tiles=1 if you need single-tile behavior).
 module accel_top
   import accel_pkg::*;
-(
+#(
+  parameter int N_LANES       = 2,
+  // Bit of the DMA address that selects the lane bank.
+  // SRAM_DEPTH is 4096 entries -> 12-bit per-bank offset, lane bit at [12].
+  parameter int LANE_ADDR_BIT = 12
+)(
   input  logic        clk,
   input  logic        rst_n,
 
-  // Host command interface
-  input  cmd_pkt_t    cmd_in,
-  input  logic        cmd_valid,
-  output logic        cmd_ready,
+  // Host macro-command interface
+  input  macro_cmd_t  macro_cmd_in,
+  input  logic        macro_cmd_valid,
+  output logic        macro_cmd_ready,
 
-  // DMA: host writes data to scratchpad (BEFORE running)
+  // DMA: host writes / reads scratchpad. Address bit [LANE_ADDR_BIT]
+  // selects which lane bank the access goes to.
   input  logic        dma_wr_valid,
   input  logic [15:0] dma_wr_addr,
   input  logic [31:0] dma_wr_data,
   output logic        dma_wr_ready,
 
-  // DMA: host reads data from scratchpad (AFTER running)
   input  logic        dma_rd_req,
   input  logic [15:0] dma_rd_addr,
   output logic [31:0] dma_rd_data,
@@ -38,183 +48,60 @@ module accel_top
   output logic        done,
   output logic        irq,
 
-  // Performance counters
+  // Aggregate performance counters (sum across lanes)
   output logic [31:0] perf_active_cycles,
   output logic [31:0] perf_stall_cycles,
   output logic [31:0] perf_tiles_completed
 );
 
-  localparam int TILE_DIM = 64;
+  // ====================================================================
+  // Dispatcher <-> lanes
+  // ====================================================================
+  cmd_pkt_t lane_cmd       [N_LANES];
+  logic     lane_cmd_valid [N_LANES];
+  logic     lane_cmd_ready [N_LANES];
+  logic     lane_done      [N_LANES];
+  logic     lane_busy      [N_LANES];
+
+  // Per-lane SRAM ports
+  logic        lane_sram_req   [N_LANES];
+  logic        lane_sram_we    [N_LANES];
+  logic [15:0] lane_sram_addr  [N_LANES];
+  logic [31:0] lane_sram_wdata [N_LANES];
+  logic [31:0] lane_sram_rdata [N_LANES];
+  logic        lane_sram_rvalid[N_LANES];
+
+  // Per-lane perf
+  logic [31:0] lane_perf_active [N_LANES];
+  logic [31:0] lane_perf_stall  [N_LANES];
+  logic [31:0] lane_perf_tiles  [N_LANES];
 
   // ====================================================================
-  // Internal signals
+  // Tile dispatcher
   // ====================================================================
+  logic dispatcher_done;
 
-  logic [7:0]  ctrl_tile_m, ctrl_tile_n, ctrl_tile_k;
-  fused_op_t   fused_sel;
+  tile_dispatcher #(.N_LANES(N_LANES), .TILE_DIM(64)) u_dispatcher (
+    .clk            (clk),
+    .rst_n          (rst_n),
+    .macro_cmd      (macro_cmd_in),
+    .macro_valid    (macro_cmd_valid),
+    .macro_ready    (macro_cmd_ready),
+    .macro_done     (dispatcher_done),
+    .lane_cmd       (lane_cmd),
+    .lane_cmd_valid (lane_cmd_valid),
+    .lane_cmd_ready (lane_cmd_ready),
+    .lane_done      (lane_done)
+  );
 
-  // Controller <-> SRAM port
-  logic        ctrl_sram_req, ctrl_sram_we;
-  logic [15:0] ctrl_sram_addr;
-  logic [31:0] ctrl_sram_wdata, ctrl_sram_rdata;
-  logic        ctrl_sram_rvalid;
-
-  // Controller <-> input buffers (linear write)
-  logic        buf_a_wr_en, buf_b_wr_en, buf_aux_wr_en;
-  logic [11:0] buf_wr_idx;
-  logic [31:0] buf_wr_data;
-
-  // Pipeline <-> input buffers (parallel read via mem_out)
-  logic signed [31:0] a_mem   [TILE_DIM][TILE_DIM];
-  logic signed [31:0] b_mem   [TILE_DIM][TILE_DIM];
-  logic signed [31:0] aux_mem [TILE_DIM][TILE_DIM];   // h_pre for FFN_BWD
-
-  // Pipeline <-> output buffer (write)
-  logic               out_wr_en;
-  logic [11:0]        out_wr_idx;
-  logic signed [31:0] out_wr_data;
-  // Output buffer drain (FSM linear read)
-  logic [11:0]        out_rd_idx;
-  logic signed [31:0] out_rd_data;
-
-  // Unused tile_buffer ports (tied off)
-  logic signed [31:0] unused_buf_a_2d, unused_buf_b_2d, unused_buf_aux_2d;
-  logic signed [31:0] unused_buf_a_lin, unused_buf_b_lin, unused_buf_aux_lin;
-  logic signed [31:0] unused_out_2d;
-  logic signed [31:0] unused_out_mem [TILE_DIM][TILE_DIM];
-
-  // Pipeline boundary
-  logic pipeline_start, pipeline_done;
-
-  // DMA <-> SRAM
+  // ====================================================================
+  // DMA engine (single, address-routed to per-lane scratchpad)
+  // ====================================================================
   logic        dma_sram_req, dma_sram_we;
   logic [15:0] dma_sram_addr;
   logic [31:0] dma_sram_wdata, dma_sram_rdata;
   logic        dma_sram_rvalid;
 
-  // ====================================================================
-  // Controller (minimal FSM)
-  // ====================================================================
-  accel_controller u_ctrl (
-    .clk            (clk),
-    .rst_n          (rst_n),
-    .cmd            (cmd_in),
-    .cmd_valid      (cmd_valid),
-    .cmd_ready      (cmd_ready),
-    .cmd_tile_m     (ctrl_tile_m),
-    .cmd_tile_n     (ctrl_tile_n),
-    .cmd_tile_k     (ctrl_tile_k),
-    .fused_sel      (fused_sel),
-    .sram_req       (ctrl_sram_req),
-    .sram_we        (ctrl_sram_we),
-    .sram_addr      (ctrl_sram_addr),
-    .sram_wdata     (ctrl_sram_wdata),
-    .sram_rdata     (ctrl_sram_rdata),
-    .sram_rvalid    (ctrl_sram_rvalid),
-    .buf_a_wr_en    (buf_a_wr_en),
-    .buf_b_wr_en    (buf_b_wr_en),
-    .buf_aux_wr_en  (buf_aux_wr_en),
-    .buf_wr_idx     (buf_wr_idx),
-    .buf_wr_data    (buf_wr_data),
-    .out_rd_idx     (out_rd_idx),
-    .out_rd_data    (out_rd_data),
-    .pipeline_start (pipeline_start),
-    .pipeline_done  (pipeline_done),
-    .busy           (busy),
-    .done           (done)
-  );
-
-  // ====================================================================
-  // Input buffer A (FSM linear write, pipeline parallel read via mem_out)
-  // ====================================================================
-  tile_buffer #(.DATA_WIDTH(32), .TILE_DIM(TILE_DIM)) u_buf_a (
-    .clk         (clk),
-    .rst_n       (rst_n),
-    .wr_en       (buf_a_wr_en),
-    .wr_idx      (buf_wr_idx),
-    .wr_data     ($signed(buf_wr_data)),
-    .rd_row      (8'd0),
-    .rd_col      (8'd0),
-    .rd_data     (unused_buf_a_2d),
-    .rd_lin_idx  (12'd0),
-    .rd_lin_data (unused_buf_a_lin),
-    .mem_out     (a_mem)
-  );
-
-  // ====================================================================
-  // Input buffer B
-  // ====================================================================
-  tile_buffer #(.DATA_WIDTH(32), .TILE_DIM(TILE_DIM)) u_buf_b (
-    .clk         (clk),
-    .rst_n       (rst_n),
-    .wr_en       (buf_b_wr_en),
-    .wr_idx      (buf_wr_idx),
-    .wr_data     ($signed(buf_wr_data)),
-    .rd_row      (8'd0),
-    .rd_col      (8'd0),
-    .rd_data     (unused_buf_b_2d),
-    .rd_lin_idx  (12'd0),
-    .rd_lin_data (unused_buf_b_lin),
-    .mem_out     (b_mem)
-  );
-
-  // ====================================================================
-  // Auxiliary buffer (h_pre for FFN_BWD; shape tile_m x tile_n)
-  // ====================================================================
-  tile_buffer #(.DATA_WIDTH(32), .TILE_DIM(TILE_DIM)) u_buf_aux (
-    .clk         (clk),
-    .rst_n       (rst_n),
-    .wr_en       (buf_aux_wr_en),
-    .wr_idx      (buf_wr_idx),
-    .wr_data     ($signed(buf_wr_data)),
-    .rd_row      (8'd0),
-    .rd_col      (8'd0),
-    .rd_data     (unused_buf_aux_2d),
-    .rd_lin_idx  (12'd0),
-    .rd_lin_data (unused_buf_aux_lin),
-    .mem_out     (aux_mem)
-  );
-
-  // ====================================================================
-  // Streaming compute pipeline (the fused part)
-  // ====================================================================
-  stream_pipeline #(.DATA_WIDTH(32), .ARRAY_DIM(TILE_DIM)) u_pipe (
-    .clk         (clk),
-    .rst_n       (rst_n),
-    .start       (pipeline_start),
-    .done        (pipeline_done),
-    .tile_m      (ctrl_tile_m),
-    .tile_n      (ctrl_tile_n),
-    .tile_k      (ctrl_tile_k),
-    .op_sel      (fused_sel),
-    .a_mem       (a_mem),
-    .b_mem       (b_mem),
-    .aux_mem     (aux_mem),
-    .out_wr_en   (out_wr_en),
-    .out_wr_idx  (out_wr_idx),
-    .out_wr_data (out_wr_data)
-  );
-
-  // ====================================================================
-  // Output buffer (pipeline writes, FSM drains during WRITE phase)
-  // ====================================================================
-  tile_buffer #(.DATA_WIDTH(32), .TILE_DIM(TILE_DIM)) u_buf_out (
-    .clk         (clk),
-    .rst_n       (rst_n),
-    .wr_en       (out_wr_en),
-    .wr_idx      (out_wr_idx),
-    .wr_data     (out_wr_data),
-    .rd_row      (8'd0),
-    .rd_col      (8'd0),
-    .rd_data     (unused_out_2d),
-    .rd_lin_idx  (out_rd_idx),
-    .rd_lin_data (out_rd_data),
-    .mem_out     (unused_out_mem)
-  );
-
-  // ====================================================================
-  // DMA engine (host I/O before/after pipeline runs)
-  // ====================================================================
   dma_engine u_dma (
     .clk           (clk),
     .rst_n         (rst_n),
@@ -234,44 +121,119 @@ module accel_top
     .sram_rvalid   (dma_sram_rvalid)
   );
 
-  // ====================================================================
-  // Scratchpad (shared between controller load/write phases and DMA)
-  // ====================================================================
-  scratchpad_ctrl u_scratchpad (
-    .clk     (clk),
-    .rst_n   (rst_n),
-    .a_req   (ctrl_sram_req && !ctrl_sram_we),  // controller reads
-    .a_addr  (ctrl_sram_addr),
-    .a_rdata (ctrl_sram_rdata),
-    .a_rvalid(ctrl_sram_rvalid),
-    .b_req   (ctrl_sram_req && ctrl_sram_we),   // controller writes
-    .b_we    (ctrl_sram_we),
-    .b_addr  (ctrl_sram_addr),
-    .b_wdata (ctrl_sram_wdata),
-    .c_req   (dma_sram_req),
-    .c_we    (dma_sram_we),
-    .c_addr  (dma_sram_addr),
-    .c_wdata (dma_sram_wdata),
-    .c_rdata (dma_sram_rdata),
-    .c_rvalid(dma_sram_rvalid)
-  );
+  // Lane select on DMA address: 0 -> lane 0 bank, 1 -> lane 1 bank.
+  // Only 2 lanes for now (LANE_ADDR_BIT picks one bit).
+  logic        dma_lane_sel;
+  logic [15:0] dma_local_addr;
+  assign dma_lane_sel   = dma_sram_addr[LANE_ADDR_BIT];
+  assign dma_local_addr = {{(16-LANE_ADDR_BIT){1'b0}},
+                           dma_sram_addr[LANE_ADDR_BIT-1:0]};
 
   // ====================================================================
-  // Performance counters
+  // Lanes (each: accel_engine + private scratchpad with DMA second port)
   // ====================================================================
-  perf_counter_block u_perf (
-    .clk            (clk),
-    .rst_n          (rst_n),
-    .clear          (!rst_n),
-    .array_active   (pipeline_start || u_pipe.running),
-    .array_stall    (busy && !u_pipe.running),
-    .tile_complete  (pipeline_done),
-    .active_cycles  (perf_active_cycles),
-    .stall_cycles   (perf_stall_cycles),
-    .total_cycles   (),
-    .tiles_completed(perf_tiles_completed)
-  );
+  // Per-bank DMA-side wires (only one bank sees the DMA each cycle)
+  logic        bank_dma_req   [N_LANES];
+  logic        bank_dma_we    [N_LANES];
+  logic [15:0] bank_dma_addr  [N_LANES];
+  logic [31:0] bank_dma_wdata [N_LANES];
+  logic [31:0] bank_dma_rdata [N_LANES];
+  logic        bank_dma_rvalid[N_LANES];
 
-  assign irq = done;
+  // Route DMA to the addressed bank; other bank sees zero req
+  always_comb begin
+    for (int l = 0; l < N_LANES; l++) begin
+      bank_dma_req  [l] = 1'b0;
+      bank_dma_we   [l] = 1'b0;
+      bank_dma_addr [l] = '0;
+      bank_dma_wdata[l] = '0;
+    end
+    bank_dma_req  [dma_lane_sel] = dma_sram_req;
+    bank_dma_we   [dma_lane_sel] = dma_sram_we;
+    bank_dma_addr [dma_lane_sel] = dma_local_addr;
+    bank_dma_wdata[dma_lane_sel] = dma_sram_wdata;
+  end
+
+  // Mux DMA-side rdata/rvalid back from the addressed bank
+  // (the lane-select is registered to align with scratchpad's 1-cycle latency)
+  logic dma_lane_sel_q;
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) dma_lane_sel_q <= 1'b0;
+    else        dma_lane_sel_q <= dma_lane_sel;
+  end
+  assign dma_sram_rdata  = bank_dma_rdata [dma_lane_sel_q];
+  assign dma_sram_rvalid = bank_dma_rvalid[dma_lane_sel_q];
+
+  genvar gl;
+  generate
+    for (gl = 0; gl < N_LANES; gl++) begin : gen_lane
+      // ----- engine -----
+      accel_engine u_engine (
+        .clk                  (clk),
+        .rst_n                (rst_n),
+        .cmd_in               (lane_cmd[gl]),
+        .cmd_valid            (lane_cmd_valid[gl]),
+        .cmd_ready            (lane_cmd_ready[gl]),
+        .sram_req             (lane_sram_req[gl]),
+        .sram_we              (lane_sram_we[gl]),
+        .sram_addr            (lane_sram_addr[gl]),
+        .sram_wdata           (lane_sram_wdata[gl]),
+        .sram_rdata           (lane_sram_rdata[gl]),
+        .sram_rvalid          (lane_sram_rvalid[gl]),
+        .busy                 (lane_busy[gl]),
+        .done                 (lane_done[gl]),
+        .perf_active_cycles   (lane_perf_active[gl]),
+        .perf_stall_cycles    (lane_perf_stall[gl]),
+        .perf_tiles_completed (lane_perf_tiles[gl])
+      );
+
+      // ----- private scratchpad bank -----
+      scratchpad_ctrl u_bank (
+        .clk     (clk),
+        .rst_n   (rst_n),
+        // Engine read port
+        .a_req   (lane_sram_req[gl] && !lane_sram_we[gl]),
+        .a_addr  (lane_sram_addr[gl]),
+        .a_rdata (lane_sram_rdata[gl]),
+        .a_rvalid(lane_sram_rvalid[gl]),
+        // Engine write port
+        .b_req   (lane_sram_req[gl] && lane_sram_we[gl]),
+        .b_we    (lane_sram_we[gl]),
+        .b_addr  (lane_sram_addr[gl]),
+        .b_wdata (lane_sram_wdata[gl]),
+        // DMA port (gated by address)
+        .c_req   (bank_dma_req[gl]),
+        .c_we    (bank_dma_we[gl]),
+        .c_addr  (bank_dma_addr[gl]),
+        .c_wdata (bank_dma_wdata[gl]),
+        .c_rdata (bank_dma_rdata[gl]),
+        .c_rvalid(bank_dma_rvalid[gl])
+      );
+    end
+  endgenerate
+
+  // ====================================================================
+  // Aggregate status / perf
+  // ====================================================================
+  logic any_busy;
+  always_comb begin
+    any_busy = 1'b0;
+    for (int l = 0; l < N_LANES; l++)
+      if (lane_busy[l]) any_busy = 1'b1;
+  end
+  assign busy = any_busy || !macro_cmd_ready;
+  assign done = dispatcher_done;
+  assign irq  = dispatcher_done;
+
+  always_comb begin
+    perf_active_cycles   = '0;
+    perf_stall_cycles    = '0;
+    perf_tiles_completed = '0;
+    for (int l = 0; l < N_LANES; l++) begin
+      perf_active_cycles   = perf_active_cycles   + lane_perf_active[l];
+      perf_stall_cycles    = perf_stall_cycles    + lane_perf_stall[l];
+      perf_tiles_completed = perf_tiles_completed + lane_perf_tiles[l];
+    end
+  end
 
 endmodule
