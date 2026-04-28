@@ -18,10 +18,15 @@
 module accel_top
   import accel_pkg::*;
 #(
-  parameter int N_LANES       = 2,
-  // Bit of the DMA address that selects the lane bank.
-  // SRAM_DEPTH is 4096 entries -> 12-bit per-bank offset, lane bit at [12].
-  parameter int LANE_ADDR_BIT = 12
+  // Number of data-parallel compute lanes. UCIe x16 standard package at
+  // 16 GT/s (~32 GB/s/dir) keeps 16 lanes (~131 TOPS at 1 GHz, ~13 GB/s
+  // peak demand at AI=5 MAC/byte) fed with ~2.5x BW headroom.
+  parameter int N_LANES         = 16,
+  // Lower bits of DMA address are the per-lane local offset; upper bits
+  // are the lane id. With LANE_LOCAL_BITS=12 each lane bank is 4 KW
+  // (16 KB at 32-bit data) and ceil(log2(N_LANES)) bits select the bank.
+  parameter int LANE_LOCAL_BITS = 12,
+  parameter int LANE_BITS       = (N_LANES <= 1) ? 1 : $clog2(N_LANES)
 )(
   input  logic        clk,
   input  logic        rst_n,
@@ -81,7 +86,10 @@ module accel_top
   // ====================================================================
   logic dispatcher_done;
 
-  tile_dispatcher #(.N_LANES(N_LANES), .TILE_DIM(64)) u_dispatcher (
+  tile_dispatcher #(
+    .N_LANES (N_LANES),
+    .TILE_DIM(64)
+  ) u_dispatcher (
     .clk            (clk),
     .rst_n          (rst_n),
     .macro_cmd      (macro_cmd_in),
@@ -121,13 +129,14 @@ module accel_top
     .sram_rvalid   (dma_sram_rvalid)
   );
 
-  // Lane select on DMA address: 0 -> lane 0 bank, 1 -> lane 1 bank.
-  // Only 2 lanes for now (LANE_ADDR_BIT picks one bit).
-  logic        dma_lane_sel;
-  logic [15:0] dma_local_addr;
-  assign dma_lane_sel   = dma_sram_addr[LANE_ADDR_BIT];
-  assign dma_local_addr = {{(16-LANE_ADDR_BIT){1'b0}},
-                           dma_sram_addr[LANE_ADDR_BIT-1:0]};
+  // Lane select on DMA address: bits [LANE_LOCAL_BITS +: LANE_BITS] choose
+  // the bank, bits [LANE_LOCAL_BITS-1:0] are the per-bank offset. So a DMA
+  // write to 0x3180 with N_LANES=16 routes to lane 3 (= 0x3) at local 0x180.
+  logic [LANE_BITS-1:0] dma_lane_sel;
+  logic [15:0]          dma_local_addr;
+  assign dma_lane_sel   = dma_sram_addr[LANE_LOCAL_BITS +: LANE_BITS];
+  assign dma_local_addr = {{(16-LANE_LOCAL_BITS){1'b0}},
+                           dma_sram_addr[LANE_LOCAL_BITS-1:0]};
 
   // ====================================================================
   // Lanes (each: accel_engine + private scratchpad with DMA second port)
@@ -154,11 +163,12 @@ module accel_top
     bank_dma_wdata[dma_lane_sel] = dma_sram_wdata;
   end
 
-  // Mux DMA-side rdata/rvalid back from the addressed bank
-  // (the lane-select is registered to align with scratchpad's 1-cycle latency)
-  logic dma_lane_sel_q;
+  // Mux DMA-side rdata/rvalid back from the addressed bank.
+  // The lane-select is registered one cycle to align with the scratchpad's
+  // 1-cycle read latency.
+  logic [LANE_BITS-1:0] dma_lane_sel_q;
   always_ff @(posedge clk or negedge rst_n) begin
-    if (!rst_n) dma_lane_sel_q <= 1'b0;
+    if (!rst_n) dma_lane_sel_q <= '0;
     else        dma_lane_sel_q <= dma_lane_sel;
   end
   assign dma_sram_rdata  = bank_dma_rdata [dma_lane_sel_q];

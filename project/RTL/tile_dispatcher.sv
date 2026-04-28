@@ -19,7 +19,7 @@
 module tile_dispatcher
   import accel_pkg::*;
 #(
-  parameter int N_LANES  = 2,
+  parameter int N_LANES  = 16,
   parameter int TILE_DIM = TILE_SIZE
 )(
   input  logic        clk,
@@ -70,15 +70,16 @@ module tile_dispatcher
   end
 
   // Find first idle lane (priority encoder, lane 0 wins ties)
-  logic              dispatch_now;
-  logic [$clog2(N_LANES+1)-1:0] dispatch_lane;
+  localparam int LANE_ID_W = (N_LANES <= 1) ? 1 : $clog2(N_LANES);
+  logic                 dispatch_now;
+  logic [LANE_ID_W-1:0] dispatch_lane;
   always_comb begin
     dispatch_now  = 1'b0;
     dispatch_lane = '0;
     for (int l = 0; l < N_LANES; l++) begin
       if (!dispatch_now && !in_flight[l]) begin
         dispatch_now  = 1'b1;
-        dispatch_lane = ($clog2(N_LANES+1))'(l);
+        dispatch_lane = LANE_ID_W'(l);
       end
     end
   end
