@@ -20,6 +20,20 @@ module gelu_grad_unit
   localparam logic signed [31:0] Q_27 = 32'sh001B0000;
   localparam logic signed [31:0] Q_9  = 32'sh00090000;
 
+  // Same clamp story as gelu_unit: prevent x^3 from overflowing signed 32-bit.
+  // The polynomial saturates well before |x|=16 anyway, and grad(x_large) is
+  // determined by the saturation regime (term2 -> 0 when dtanh -> 0), so
+  // clamping the polynomial input does not change the result for large |x|.
+  localparam logic signed [31:0] Q_GELU_X_MAX = 32'sh00100000; //  16.0
+  localparam logic signed [31:0] Q_GELU_X_MIN = 32'shFFF00000; // -16.0
+
+  logic signed [31:0] x_for_poly;
+  always_comb begin
+    if (x_in > Q_GELU_X_MAX)      x_for_poly = Q_GELU_X_MAX;
+    else if (x_in < Q_GELU_X_MIN) x_for_poly = Q_GELU_X_MIN;
+    else                          x_for_poly = x_in;
+  end
+
   function automatic logic signed [31:0] q_div(input logic signed [31:0] num, input logic signed [31:0] den);
     logic signed [63:0] num_ext;
     logic signed [63:0] result;
@@ -29,20 +43,21 @@ module gelu_grad_unit
     return result[31:0];
   endfunction
 
-  // Stage 1: x^2, x^3
-  logic signed [31:0] s1_x, s1_x2, s1_x3;
+  // Stage 1: x^2, x^3 (computed from clamped value), forward original x
+  logic signed [31:0] s1_x, s1_xp, s1_x2, s1_x3;
   logic               s1_valid;
 
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       s1_valid <= 1'b0;
-      s1_x  <= '0; s1_x2 <= '0; s1_x3 <= '0;
+      s1_x  <= '0; s1_xp <= '0; s1_x2 <= '0; s1_x3 <= '0;
     end else if (en) begin
       s1_valid <= in_valid;
       if (in_valid) begin
         s1_x  <= x_in;
-        s1_x2 <= q_mul(x_in, x_in);
-        s1_x3 <= q_mul(q_mul(x_in, x_in), x_in);
+        s1_xp <= x_for_poly;
+        s1_x2 <= q_mul(x_for_poly, x_for_poly);
+        s1_x3 <= q_mul(q_mul(x_for_poly, x_for_poly), x_for_poly);
       end
     end
   end
@@ -59,7 +74,8 @@ module gelu_grad_unit
       s2_valid <= s1_valid;
       if (s1_valid) begin
         s2_x         <= s1_x;
-        s2_z         <= q_mul(Q_SQRT_2_PI, s1_x + q_mul(Q_GELU_C1, s1_x3));
+        // Use clamped x (s1_xp) for the polynomial inputs.
+        s2_z         <= q_mul(Q_SQRT_2_PI, s1_xp + q_mul(Q_GELU_C1, s1_x3));
         s2_inner_pre <= Q_ONE + q_mul(Q_GELU_C3, s1_x2);
       end
     end
