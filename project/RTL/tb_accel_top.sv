@@ -77,14 +77,16 @@ module tb_accel_top;
     val = from_q($signed(dma_rd_data));
   endtask
 
-  // Issue a command and wait for done
+  // Issue a command and wait for done.
+  // addr_aux is only consumed for FFN_BWD (h_pre); pass 0 for other modes.
   task automatic issue_cmd(input mode_t mode,
-                           input logic [15:0] a, b, o,
+                           input logic [15:0] a, b, aux, o,
                            input logic [7:0] tm, tn, tk);
     @(posedge clk);
     cmd_in.mode     <= mode;
     cmd_in.addr_a   <= a;
     cmd_in.addr_b   <= b;
+    cmd_in.addr_aux <= aux;
     cmd_in.addr_out <= o;
     cmd_in.tile_m   <= tm;
     cmd_in.tile_n   <= tn;
@@ -184,8 +186,8 @@ module tb_accel_top;
     $display("  Golden GEMM*GELU: [%0.2f, %0.2f, %0.2f, %0.2f]",
              golden_fwd[0], golden_fwd[1], golden_fwd[2], golden_fwd[3]);
 
-    // Issue FFN forward command
-    issue_cmd(MODE_FFN_FWD, 16'h0000, 16'h0100, 16'h0200, 8'd2, 8'd2, 8'd2);
+    // Issue FFN forward command (no aux for forward)
+    issue_cmd(MODE_FFN_FWD, 16'h0000, 16'h0100, 16'h0000, 16'h0200, 8'd2, 8'd2, 8'd2);
 
     if (done)
       $display("  PASS: FFN forward completed (done asserted)");
@@ -217,32 +219,79 @@ module tb_accel_top;
     repeat (5) @(posedge clk);
 
     // ===========================================================
-    // Test 2: FFN Backward smoke test
-    // Reuse same data, issue FFN_BWD
-    // Check: GEMM + GELU grad path, start/done handshake
+    // Test 2: FFN Backward smoke test (TRUE FUSED BACKWARD)
+    //   d_pre[r][c] = (A * B)[r][c] * GELU'(h_pre[r][c])
+    // We pick h_pre values in the unsaturated regime (|h| < 3) so
+    // GELU'(h_pre) is non-trivial and we can verify the multiply.
     // ===========================================================
     $display("");
-    $display("--- Test 2: FFN Backward Smoke Test ---");
+    $display("--- Test 2: FFN Backward Smoke Test (fused: dh * GELU'(h_pre)) ---");
 
-    issue_cmd(MODE_FFN_BWD, 16'h0000, 16'h0100, 16'h0300, 8'd2, 8'd2, 8'd2);
+    // Load h_pre = [[0.5, 1.0], [1.5, 2.0]] at address 0x0500
+    dma_write(16'h0500, 0.5);
+    dma_write(16'h0501, 1.0);
+    dma_write(16'h0502, 1.5);
+    dma_write(16'h0503, 2.0);
 
-    if (done)
-      $display("  PASS: FFN backward completed (done asserted)");
-    else
-      $display("  FAIL: FFN backward did not complete");
+    // Compute golden: c_out = A*B = [[19,22],[43,50]] (already known)
+    //   d_pre[i] = c_out[i] * GELU'(h_pre[i])
+    begin : golden_bwd_block
+      real golden_bwd [4];
+      real h [4];
+      real gp;
+      int  bwd_pass;
 
-    // Read back and check non-zero (basic sanity)
-    nonzero = 0;
-    for (int i = 0; i < 4; i++)
-      dma_read(16'h0300 + i[15:0], result[i]);
-    $display("  Read back: [%0.2f, %0.2f, %0.2f, %0.2f]",
-             result[0], result[1], result[2], result[3]);
-    for (int i = 0; i < 4; i++)
-      if (result[i] != 0.0) nonzero++;
-    if (nonzero > 0)
-      $display("  PASS: backward produced non-zero outputs (%0d/4)", nonzero);
-    else
-      $display("  FAIL: all outputs are zero");
+      h[0] = 0.5; h[1] = 1.0; h[2] = 1.5; h[3] = 2.0;
+      // Re-derive c_out from the matmul golden helper
+      golden_matmul_2x2(1.0, 2.0, 3.0, 4.0,
+                        5.0, 6.0, 7.0, 8.0,
+                        c00, c01, c10, c11);
+      // GELU'(x) = 0.5*(1+tanh(z)) + 0.5*x*(1-tanh^2(z))*sqrt(2/pi)*(1+3*0.044715*x^2)
+      //   simplified inline
+      for (int i = 0; i < 4; i++) begin : g_loop
+        real x, z, t, dt;
+        x  = h[i];
+        z  = 0.7978845608 * (x + 0.044715 * x * x * x);
+        t  = $tanh(z);
+        dt = 1.0 - t*t;
+        gp = 0.5*(1.0+t) + 0.5*x*dt*0.7978845608*(1.0 + 3.0*0.044715*x*x);
+        case (i)
+          0: golden_bwd[0] = c00 * gp;
+          1: golden_bwd[1] = c01 * gp;
+          2: golden_bwd[2] = c10 * gp;
+          3: golden_bwd[3] = c11 * gp;
+        endcase
+      end
+      $display("  Golden d_pre: [%0.2f, %0.2f, %0.2f, %0.2f]",
+               golden_bwd[0], golden_bwd[1], golden_bwd[2], golden_bwd[3]);
+
+      issue_cmd(MODE_FFN_BWD, 16'h0000, 16'h0100, 16'h0500, 16'h0300, 8'd2, 8'd2, 8'd2);
+
+      if (done)
+        $display("  PASS: FFN backward completed (done asserted)");
+      else
+        $display("  FAIL: FFN backward did not complete");
+
+      bwd_pass = 0;
+      for (int i = 0; i < 4; i++)
+        dma_read(16'h0300 + i[15:0], result[i]);
+      $display("  Read back:    [%0.2f, %0.2f, %0.2f, %0.2f]",
+               result[0], result[1], result[2], result[3]);
+      // Tolerate ~10% error for the chained Q16.16 approximations
+      for (int i = 0; i < 4; i++) begin : check_loop
+        real e, tol;
+        e   = result[i] - golden_bwd[i];
+        if (e < 0) e = -e;
+        tol = (golden_bwd[i] < 0 ? -golden_bwd[i] : golden_bwd[i]) * 0.10 + 1.0;
+        if (e < tol) bwd_pass++;
+        else $display("  FAIL: element %0d: got %0.2f expected %0.2f (err %0.2f)",
+                       i, result[i], golden_bwd[i], e);
+      end
+      if (bwd_pass == 4)
+        $display("  PASS: all 4 backward outputs match golden (within tolerance)");
+      else
+        $display("  PARTIAL: %0d/4 backward elements match", bwd_pass);
+    end
 
     $display("  Perf: active=%0d stall=%0d tiles=%0d",
              perf_active, perf_stall, perf_tiles);
@@ -257,7 +306,7 @@ module tb_accel_top;
     $display("");
     $display("--- Test 3: Attention Smoke Test ---");
 
-    issue_cmd(MODE_ATTN_FWD, 16'h0000, 16'h0100, 16'h0400, 8'd2, 8'd2, 8'd2);
+    issue_cmd(MODE_ATTN_FWD, 16'h0000, 16'h0100, 16'h0000, 16'h0400, 8'd2, 8'd2, 8'd2);
 
     if (done)
       $display("  PASS: Attention forward completed (done asserted)");

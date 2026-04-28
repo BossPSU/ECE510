@@ -11,7 +11,7 @@ module accel_chiplet_wrapper
   // Command channel
   input  logic        ucie_cmd_valid,
   output logic        ucie_cmd_ready,
-  input  logic [95:0] ucie_cmd_data,     // packed cmd_pkt_t
+  input  logic [127:0] ucie_cmd_data,    // packed cmd_pkt_t (zero-extended)
 
   // Data write channel (host → chiplet)
   input  logic        ucie_wr_valid,

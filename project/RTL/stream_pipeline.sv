@@ -39,8 +39,11 @@ module stream_pipeline
   input  fused_op_t                       op_sel,       // GELU / GELU' / softmax / bypass
 
   // Full input-buffer memories (combinational, for parallel feed)
-  input  logic signed [DATA_WIDTH-1:0]    a_mem [ARRAY_DIM][ARRAY_DIM],
-  input  logic signed [DATA_WIDTH-1:0]    b_mem [ARRAY_DIM][ARRAY_DIM],
+  input  logic signed [DATA_WIDTH-1:0]    a_mem   [ARRAY_DIM][ARRAY_DIM],
+  input  logic signed [DATA_WIDTH-1:0]    b_mem   [ARRAY_DIM][ARRAY_DIM],
+  // Auxiliary input (h_pre for FFN_BWD); read at the same (row, col) as
+  // the output mux walks c_out_array. Unused for non-backward modes.
+  input  logic signed [DATA_WIDTH-1:0]    aux_mem [ARRAY_DIM][ARRAY_DIM],
 
   // Write interface to output buffer ({row[5:0], col[5:0]})
   output logic                            out_wr_en,
@@ -189,7 +192,11 @@ module stream_pipeline
   end
 
   logic signed [31:0] mux_data;
+  logic signed [31:0] aux_data;
   assign mux_data = c_out_array[out_row_cnt[5:0]][out_col_cnt[5:0]];
+  // For FFN_BWD: aux_data is h_pre at the same (row, col) — paired with the
+  // matmul result that is heading into the gradient multiplier.
+  assign aux_data = aux_mem[out_row_cnt[5:0]][out_col_cnt[5:0]];
 
   // Fused activation (GELU, GELU_GRAD, BYPASS, MASK)
   logic signed [31:0] fused_out;
@@ -202,7 +209,7 @@ module stream_pipeline
     .op_sel    (op_sel),
     .data_in   (mux_data),
     .in_valid  (out_active),
-    .aux_in    (mux_data),         // pre-activation = c_out itself for GELU_GRAD
+    .aux_in    (aux_data),         // h_pre for GELU_GRAD; ignored for other ops
     .data_out  (fused_out),
     .out_valid (fused_valid)
   );

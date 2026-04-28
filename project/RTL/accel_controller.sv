@@ -43,6 +43,7 @@ module accel_controller
   // Input buffer write ports (FSM fills these during LOAD)
   output logic        buf_a_wr_en,
   output logic        buf_b_wr_en,
+  output logic        buf_aux_wr_en,   // Only pulses during FFN_BWD
   output logic [11:0] buf_wr_idx,
   output logic [31:0] buf_wr_data,
 
@@ -59,10 +60,11 @@ module accel_controller
   output logic        done
 );
 
-  typedef enum logic [2:0] {
+  typedef enum logic [3:0] {
     S_IDLE,
     S_LOAD_A,
     S_LOAD_B,
+    S_LOAD_AUX,        // Only entered for MODE_FFN_BWD
     S_STREAM_START,
     S_STREAM_WAIT,
     S_WRITE,
@@ -109,6 +111,7 @@ module accel_controller
     sram_wdata     = '0;
     buf_a_wr_en    = 1'b0;
     buf_b_wr_en    = 1'b0;
+    buf_aux_wr_en  = 1'b0;
     buf_wr_idx     = '0;
     buf_wr_data    = '0;
     out_rd_idx     = '0;
@@ -137,6 +140,18 @@ module accel_controller
         buf_b_wr_en = sram_rvalid;
         buf_wr_idx  = {load_row[5:0], load_col[5:0]};
         buf_wr_data = sram_rdata;
+      end
+
+      // Loads h_pre into the aux tile_buffer (size tile_m * tile_n).
+      // Only entered for FFN_BWD; other modes skip directly to STREAM_START.
+      S_LOAD_AUX: begin
+        busy          = 1'b1;
+        sram_req      = 1'b1;
+        sram_we       = 1'b0;
+        sram_addr     = cmd_reg.addr_aux + {4'b0, load_cnt};
+        buf_aux_wr_en = sram_rvalid;
+        buf_wr_idx    = {load_row[5:0], load_col[5:0]};
+        buf_wr_data   = sram_rdata;
       end
 
       S_STREAM_START: begin
@@ -215,6 +230,31 @@ module accel_controller
         S_LOAD_B: begin
           if (sram_rvalid) begin
             if (load_cnt + 12'd1 >= tile_b_size) begin
+              load_cnt <= '0;
+              load_row <= '0;
+              load_col <= '0;
+              // FFN_BWD needs h_pre loaded too; other modes skip aux.
+              if (cmd_reg.mode == MODE_FFN_BWD)
+                state <= S_LOAD_AUX;
+              else
+                state <= S_STREAM_START;
+            end else begin
+              load_cnt <= load_cnt + 12'd1;
+              if (load_col + 8'd1 >= cmd_reg.tile_n) begin
+                load_col <= '0;
+                load_row <= load_row + 8'd1;
+              end else begin
+                load_col <= load_col + 8'd1;
+              end
+            end
+          end
+        end
+
+        // ----------------------------------------------------
+        // LOAD AUX: tile_m rows x tile_n cols of h_pre (same shape as output).
+        S_LOAD_AUX: begin
+          if (sram_rvalid) begin
+            if (load_cnt + 12'd1 >= tile_out_size) begin
               load_cnt <= '0;
               load_row <= '0;
               load_col <= '0;

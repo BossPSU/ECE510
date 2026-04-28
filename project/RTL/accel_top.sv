@@ -60,13 +60,14 @@ module accel_top
   logic        ctrl_sram_rvalid;
 
   // Controller <-> input buffers (linear write)
-  logic        buf_a_wr_en, buf_b_wr_en;
+  logic        buf_a_wr_en, buf_b_wr_en, buf_aux_wr_en;
   logic [11:0] buf_wr_idx;
   logic [31:0] buf_wr_data;
 
   // Pipeline <-> input buffers (parallel read via mem_out)
-  logic signed [31:0] a_mem [TILE_DIM][TILE_DIM];
-  logic signed [31:0] b_mem [TILE_DIM][TILE_DIM];
+  logic signed [31:0] a_mem   [TILE_DIM][TILE_DIM];
+  logic signed [31:0] b_mem   [TILE_DIM][TILE_DIM];
+  logic signed [31:0] aux_mem [TILE_DIM][TILE_DIM];   // h_pre for FFN_BWD
 
   // Pipeline <-> output buffer (write)
   logic               out_wr_en;
@@ -77,8 +78,8 @@ module accel_top
   logic signed [31:0] out_rd_data;
 
   // Unused tile_buffer ports (tied off)
-  logic signed [31:0] unused_buf_a_2d, unused_buf_b_2d;
-  logic signed [31:0] unused_buf_a_lin, unused_buf_b_lin;
+  logic signed [31:0] unused_buf_a_2d, unused_buf_b_2d, unused_buf_aux_2d;
+  logic signed [31:0] unused_buf_a_lin, unused_buf_b_lin, unused_buf_aux_lin;
   logic signed [31:0] unused_out_2d;
   logic signed [31:0] unused_out_mem [TILE_DIM][TILE_DIM];
 
@@ -112,6 +113,7 @@ module accel_top
     .sram_rvalid    (ctrl_sram_rvalid),
     .buf_a_wr_en    (buf_a_wr_en),
     .buf_b_wr_en    (buf_b_wr_en),
+    .buf_aux_wr_en  (buf_aux_wr_en),
     .buf_wr_idx     (buf_wr_idx),
     .buf_wr_data    (buf_wr_data),
     .out_rd_idx     (out_rd_idx),
@@ -157,6 +159,23 @@ module accel_top
   );
 
   // ====================================================================
+  // Auxiliary buffer (h_pre for FFN_BWD; shape tile_m x tile_n)
+  // ====================================================================
+  tile_buffer #(.DATA_WIDTH(32), .TILE_DIM(TILE_DIM)) u_buf_aux (
+    .clk         (clk),
+    .rst_n       (rst_n),
+    .wr_en       (buf_aux_wr_en),
+    .wr_idx      (buf_wr_idx),
+    .wr_data     ($signed(buf_wr_data)),
+    .rd_row      (8'd0),
+    .rd_col      (8'd0),
+    .rd_data     (unused_buf_aux_2d),
+    .rd_lin_idx  (12'd0),
+    .rd_lin_data (unused_buf_aux_lin),
+    .mem_out     (aux_mem)
+  );
+
+  // ====================================================================
   // Streaming compute pipeline (the fused part)
   // ====================================================================
   stream_pipeline #(.DATA_WIDTH(32), .ARRAY_DIM(TILE_DIM)) u_pipe (
@@ -170,6 +189,7 @@ module accel_top
     .op_sel      (fused_sel),
     .a_mem       (a_mem),
     .b_mem       (b_mem),
+    .aux_mem     (aux_mem),
     .out_wr_en   (out_wr_en),
     .out_wr_idx  (out_wr_idx),
     .out_wr_data (out_wr_data)

@@ -111,6 +111,7 @@ module csr_block
   assign cmd_out.mode     = mode_t'(reg_mode[2:0]);
   assign cmd_out.addr_a   = reg_addr_a[15:0];
   assign cmd_out.addr_b   = reg_addr_b[15:0];
+  assign cmd_out.addr_aux = 16'h0000;     // CSR does not yet expose aux
   assign cmd_out.addr_out = reg_addr_out[15:0];
   assign cmd_out.tile_m   = reg_tile_m[7:0];
   assign cmd_out.tile_n   = reg_tile_n[7:0];

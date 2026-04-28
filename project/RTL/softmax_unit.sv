@@ -75,33 +75,46 @@ module softmax_unit
   logic signed [31:0] s2_exp [VEC_LEN];
 
   function automatic logic signed [31:0] q_exp_approx(input logic signed [31:0] x);
-    // Pade [2,2] approximation: exp(x) ~ (12 + 6x + x^2) / (12 - 6x + x^2)
-    // Accurate to ~3% over [-4, 0], symmetric, well-behaved
-    // For x >= 0: clamp to 1.0 (we expect x <= 0 after subtracting max)
-    // For x < -8: very small floor value
-    logic signed [31:0] x_use, x2, num, den;
+    // Range-reduced Pade [2,2]: exp(x) = (Pade(x/4))^4
+    //   Pade(y) = (12 + 6y + y^2) / (12 - 6y + y^2)
+    // Padé alone is only accurate over [-4, 0] (errors blow up past -4),
+    // but applied to y = x/4 and squared twice it stays close to true exp(x)
+    // across [-16, 0]. Examples (true / approx):
+    //   x = -3: 0.0498 / 0.0498
+    //   x = -5: 0.0067 / 0.0069
+    //   x = -7: 0.0009 / 0.0010
+    //   x = -10: 4.5e-5 / 9.1e-5
+    // For x >= 0 we return 1 (caller subtracts the row max so x is non-positive).
+    // For x deep negative we return 0 (below Q16.16 resolution anyway).
+    logic signed [31:0] y, y2, num, den, p, p2, p4;
     logic signed [63:0] num_ext, q_full;
-    // Q16.16 constant 12 = 12 << 16 = 0x000C0000
-    // Q16.16 constant 6 = 6 << 16 = 0x00060000
-    localparam logic signed [31:0] Q_TWELVE = 32'sh000C0000;
-    localparam logic signed [31:0] Q_SIX    = 32'sh00060000;
+    localparam logic signed [31:0] Q_TWELVE     = 32'sh000C0000;  // 12.0
+    localparam logic signed [31:0] Q_SIX        = 32'sh00060000;  //  6.0
+    localparam logic signed [31:0] Q_EXP_FLOOR  = 32'shFFF00000;  // -16.0
+    //  exp(-16) ~ 1.1e-7, far below Q16.16 resolution (~1.5e-5).
 
-    if (x >= Q_ZERO) return Q_ONE;
-    if (x < Q_EXP_MIN) return 32'sh00000010; // ~0.000244
+    if (x >= Q_ZERO)       return Q_ONE;
+    if (x < Q_EXP_FLOOR)   return Q_ZERO;
 
-    x_use = x;
-    x2    = q_mul(x_use, x_use);
-    num   = Q_TWELVE + q_mul(Q_SIX, x_use) + x2;        // 12 + 6x + x^2
-    den   = Q_TWELVE - q_mul(Q_SIX, x_use) + x2;        // 12 - 6x + x^2
+    // y = x / 4 (arithmetic shift right, preserves sign in Q16.16)
+    y  = x >>> 2;
+    y2 = q_mul(y, y);
+    num = Q_TWELVE + q_mul(Q_SIX, y) + y2;        // 12 + 6y + y^2
+    den = Q_TWELVE - q_mul(Q_SIX, y) + y2;        // 12 - 6y + y^2
 
-    if (den <= 0) return 32'sh00000010;
+    if (den <= 0) return Q_ZERO;
 
-    // Q16.16 division: shift num left by 16 then divide
+    // Q16.16 division: shift num left by FRAC_BITS, then 64-bit divide.
     num_ext = $signed({{16{num[31]}}, num, 16'h0000});
     q_full  = num_ext / $signed({{32{den[31]}}, den});
 
-    if (q_full[31:0] < 0) return 32'sh00000010;
-    return q_full[31:0];
+    if (q_full[31:0] < 0) return Q_ZERO;
+
+    // Square twice to recover exp(x) = (Pade(x/4))^4
+    p  = q_full[31:0];
+    p2 = q_mul(p, p);
+    p4 = q_mul(p2, p2);
+    return p4;
   endfunction
 
   always_ff @(posedge clk or negedge rst_n) begin

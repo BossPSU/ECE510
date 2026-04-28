@@ -65,11 +65,16 @@ package accel_pkg;
     FUSED_MASK      = 3'd4
   } fused_op_t;
 
-  // Command packet from host
+  // Command packet from host.
+  // addr_aux holds the auxiliary input buffer pointer.
+  // For MODE_FFN_BWD it points to the saved pre-activation h_pre that pairs
+  // with the upstream gradient at addr_a (see fused_postproc_unit).
+  // For other modes it is unused — load is skipped.
   typedef struct packed {
     mode_t       mode;
     logic [15:0] addr_a;
     logic [15:0] addr_b;
+    logic [15:0] addr_aux;
     logic [15:0] addr_out;
     logic [7:0]  tile_m;
     logic [7:0]  tile_n;
