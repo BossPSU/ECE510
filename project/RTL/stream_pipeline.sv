@@ -38,17 +38,30 @@ module stream_pipeline
   input  logic [7:0]                      tile_k,       // shared dim
   input  fused_op_t                       op_sel,       // GELU / GELU' / softmax / bypass
 
-  // Full input-buffer memories (combinational, for parallel feed)
-  input  logic signed [DATA_WIDTH-1:0]    a_mem   [ARRAY_DIM][ARRAY_DIM],
-  input  logic signed [DATA_WIDTH-1:0]    b_mem   [ARRAY_DIM][ARRAY_DIM],
-  // Auxiliary input (h_pre for FFN_BWD); read at the same (row, col) as
-  // the output mux walks c_out_array. Unused for non-backward modes.
-  input  logic signed [DATA_WIDTH-1:0]    aux_mem [ARRAY_DIM][ARRAY_DIM],
+  // Multi-port read interface to input-A buffer (ARRAY_DIM scattered reads
+  // per cycle — one per array row). Drives mp_rd_row/col, reads mp_rd_data.
+  output logic [7:0]                      a_rd_row  [ARRAY_DIM],
+  output logic [7:0]                      a_rd_col  [ARRAY_DIM],
+  input  logic signed [DATA_WIDTH-1:0]    a_rd_data [ARRAY_DIM],
+
+  // Same for input-B buffer (ARRAY_DIM reads/cycle, one per array column).
+  output logic [7:0]                      b_rd_row  [ARRAY_DIM],
+  output logic [7:0]                      b_rd_col  [ARRAY_DIM],
+  input  logic signed [DATA_WIDTH-1:0]    b_rd_data [ARRAY_DIM],
+
+  // Auxiliary buffer (h_pre for FFN_BWD); only one element/cycle needed
+  // — paired with the elemwise output mux's (row, col). Unused for other modes.
+  output logic [7:0]                      aux_rd_row,
+  output logic [7:0]                      aux_rd_col,
+  input  logic signed [DATA_WIDTH-1:0]    aux_rd_data,
 
   // Write interface to output buffer ({row[5:0], col[5:0]})
   output logic                            out_wr_en,
   output logic [11:0]                     out_wr_idx,
-  output logic signed [DATA_WIDTH-1:0]    out_wr_data
+  output logic signed [DATA_WIDTH-1:0]    out_wr_data,
+
+  // Status: high while internal compute is in progress (for perf counters)
+  output logic                            running_o
 );
 
   // ==========================================================
@@ -57,6 +70,7 @@ module stream_pipeline
 
   logic [15:0] cycle_cnt;
   logic        running;
+  assign running_o = running;
 
   localparam int DRAIN_CYCLES   = 4;
   localparam int FUSED_DEPTH    = 7;
@@ -130,8 +144,11 @@ module stream_pipeline
                                 (cycle_cnt > 16'(gr)) &&
                                 (16'(gr) < {8'b0, tile_m}) &&
                                 (feed_idx_a[gr] < {8'b0, tile_k});
-      assign a_in_array[gr]   = feed_valid_a[gr] ? a_mem[gr][feed_idx_a[gr][5:0]]
-                                                 : 32'sd0;
+      // Drive A buffer's read port: row = gr, col = feed_idx_a (or 0 when
+      // not feeding so we don't toggle pointlessly into the mux fabric).
+      assign a_rd_row[gr] = 8'(gr);
+      assign a_rd_col[gr] = feed_valid_a[gr] ? feed_idx_a[gr][7:0] : 8'd0;
+      assign a_in_array[gr] = feed_valid_a[gr] ? a_rd_data[gr] : 32'sd0;
     end
     for (gc = 0; gc < ARRAY_DIM; gc++) begin : gen_feed_b
       assign feed_idx_b[gc]   = cycle_cnt - 16'd1 - 16'(gc);
@@ -139,8 +156,9 @@ module stream_pipeline
                                 (cycle_cnt > 16'(gc)) &&
                                 (16'(gc) < {8'b0, tile_n}) &&
                                 (feed_idx_b[gc] < {8'b0, tile_k});
-      assign b_in_array[gc]   = feed_valid_b[gc] ? b_mem[feed_idx_b[gc][5:0]][gc]
-                                                 : 32'sd0;
+      assign b_rd_row[gc] = feed_valid_b[gc] ? feed_idx_b[gc][7:0] : 8'd0;
+      assign b_rd_col[gc] = 8'(gc);
+      assign b_in_array[gc] = feed_valid_b[gc] ? b_rd_data[gc] : 32'sd0;
     end
   endgenerate
 
@@ -194,9 +212,11 @@ module stream_pipeline
   logic signed [31:0] mux_data;
   logic signed [31:0] aux_data;
   assign mux_data = c_out_array[out_row_cnt[5:0]][out_col_cnt[5:0]];
-  // For FFN_BWD: aux_data is h_pre at the same (row, col) — paired with the
-  // matmul result that is heading into the gradient multiplier.
-  assign aux_data = aux_mem[out_row_cnt[5:0]][out_col_cnt[5:0]];
+  // For FFN_BWD: read h_pre at the same (row, col) the elemwise mux is
+  // walking. For other modes the buffer is unloaded and aux_rd_data = 0.
+  assign aux_rd_row = out_row_cnt;
+  assign aux_rd_col = out_col_cnt;
+  assign aux_data   = aux_rd_data;
 
   // Fused activation (GELU, GELU_GRAD, BYPASS, MASK)
   logic signed [31:0] fused_out;

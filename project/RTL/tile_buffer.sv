@@ -1,36 +1,46 @@
 // tile_buffer.sv — Register-based tile buffer
-// Holds a TILE_DIM x TILE_DIM tile of Q16.16 values
-// Single-port write, multi-element read (for systolic feeding)
+// Holds a TILE_DIM x TILE_DIM tile of Q16.16 values.
 //
-// Layout convention:
-//   wr_idx[11:6] = row, wr_idx[5:0] = col   (mem[row][col])
-//   rd_lin_idx interpreted same way
-//   mem_out exposes the entire memory in parallel for systolic feeding
+// Read interfaces:
+//   * single-element 2D read (rd_row, rd_col -> rd_data)
+//   * single-element linear read (rd_lin_idx -> rd_lin_data)
+//   * NUM_RD_PORTS parallel read ports — each port has its own (row, col)
+//     input and returns one element. Lets the streaming pipeline issue
+//     up to NUM_RD_PORTS scattered reads per cycle without exposing the
+//     entire 4096-cell memory at the port (which would create ~131k
+//     wires per instance and choke place-and-route).
+//
+// Layout convention for indexed addresses:
+//   wr_idx[11:6]    = row, wr_idx[5:0]    = col   (mem[row][col])
+//   rd_lin_idx same convention.
 module tile_buffer
   import accel_pkg::*;
 #(
-  parameter int DATA_WIDTH = 32,
-  parameter int TILE_DIM   = 64
+  parameter int DATA_WIDTH   = 32,
+  parameter int TILE_DIM     = 64,
+  parameter int NUM_RD_PORTS = 1
 )(
   input  logic                            clk,
   input  logic                            rst_n,
 
   // Write port
   input  logic                            wr_en,
-  input  logic [11:0]                     wr_idx,    // {row[5:0], col[5:0]}
+  input  logic [11:0]                     wr_idx,
   input  logic signed [DATA_WIDTH-1:0]    wr_data,
 
-  // 2D read access (combinational, single element)
+  // 2D single-element read
   input  logic [7:0]                      rd_row,
   input  logic [7:0]                      rd_col,
   output logic signed [DATA_WIDTH-1:0]    rd_data,
 
-  // Linear read port (FSM drains tile to SRAM)
+  // Linear single-element read
   input  logic [11:0]                     rd_lin_idx,
   output logic signed [DATA_WIDTH-1:0]    rd_lin_data,
 
-  // Full memory exposure for parallel reads (used by streaming pipeline)
-  output logic signed [DATA_WIDTH-1:0]    mem_out [TILE_DIM][TILE_DIM]
+  // Multi-port parallel read (replaces wide mem_out)
+  input  logic [7:0]                      mp_rd_row  [NUM_RD_PORTS],
+  input  logic [7:0]                      mp_rd_col  [NUM_RD_PORTS],
+  output logic signed [DATA_WIDTH-1:0]    mp_rd_data [NUM_RD_PORTS]
 );
 
   logic signed [DATA_WIDTH-1:0] mem [TILE_DIM][TILE_DIM];
@@ -45,17 +55,15 @@ module tile_buffer
     end
   end
 
-  // Combinational read (single element)
+  // Single-element reads (combinational)
   assign rd_data     = mem[rd_row[5:0]][rd_col[5:0]];
   assign rd_lin_data = mem[rd_lin_idx[11:6]][rd_lin_idx[5:0]];
 
-  // Full memory exposure
-  genvar gi, gj;
+  // Parallel read ports — each is a 4096:1 mux of the register file
+  genvar p;
   generate
-    for (gi = 0; gi < TILE_DIM; gi++) begin : gen_mem_row
-      for (gj = 0; gj < TILE_DIM; gj++) begin : gen_mem_col
-        assign mem_out[gi][gj] = mem[gi][gj];
-      end
+    for (p = 0; p < NUM_RD_PORTS; p++) begin : gen_rd_port
+      assign mp_rd_data[p] = mem[mp_rd_row[p][5:0]][mp_rd_col[p][5:0]];
     end
   endgenerate
 

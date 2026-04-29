@@ -169,6 +169,9 @@ module softmax_unit
   end
 
   // Stage 4: normalize (divide by sum)
+  // Stage 4: normalize. Compute 1/sum ONCE then multiply across the row.
+  // Previous version called q_div per-element (VEC_LEN dividers in parallel
+  // each cycle); this consolidates to a single divider plus VEC_LEN q_mul.
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       out_valid <= 1'b0;
@@ -177,22 +180,21 @@ module softmax_unit
     end else if (en) begin
       out_valid <= s3_valid;
       if (s3_valid) begin
+        logic signed [31:0] recip;  // 1/s3_sum (or 1/s3_len for uniform fallback)
         if (s3_sum > 0) begin
+          recip = q_div(Q_ONE, s3_sum);                  // single divider
           for (int i = 0; i < VEC_LEN; i++) begin
             if (i < int'(s3_len))
-              probs_out[i] <= q_div(s3_exp[i], s3_sum);
+              probs_out[i] <= q_mul(s3_exp[i], recip);   // multiplies, not divides
             else
               probs_out[i] <= '0;
           end
         end else begin
-          // Uniform fallback: 1/s3_len in Q16.16, padded with zeros.
-          // Q16.16 representation of integer s3_len = s3_len << FRAC_BITS,
-          // i.e., s3_len placed in bits [23:16] with zeros below.
-          logic signed [31:0] uniform_p;
-          uniform_p = (s3_len == 0) ? '0 : q_div(Q_ONE, {8'd0, s3_len, 16'd0});
+          // Uniform fallback: 1/s3_len in Q16.16. q_div used once.
+          recip = (s3_len == 0) ? '0 : q_div(Q_ONE, {8'd0, s3_len, 16'd0});
           for (int i = 0; i < VEC_LEN; i++) begin
             if (i < int'(s3_len))
-              probs_out[i] <= uniform_p;
+              probs_out[i] <= recip;                     // 1/N is the same for all valid slots
             else
               probs_out[i] <= '0;
           end
