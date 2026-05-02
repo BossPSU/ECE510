@@ -1,44 +1,46 @@
 # ==============================================
 #  M2 Interface Simulation
 # ==============================================
+# 0
+# 0
 # QuestaSim-64 vmap 2021.3_1 Lib Mapping Utility 2021.08 Aug 15 2021
 # vmap work work 
 # Modifying modelsim.ini
 # ../rtl
 # >>> Compiling RTL...
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 20:59:10 on May 01,2026
+# Start time: 21:13:53 on May 01,2026
 # vlog -reportprogress 300 -sv ../rtl/accel_pkg.sv 
 # -- Compiling package accel_pkg
 # 
 # Top level modules:
 # 	--none--
-# End time: 20:59:10 on May 01,2026, Elapsed time: 0:00:00
+# End time: 21:13:53 on May 01,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 20:59:10 on May 01,2026
+# Start time: 21:13:53 on May 01,2026
 # vlog -reportprogress 300 -sv ../rtl/interface.sv 
 # -- Compiling module chiplet_interface
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	chiplet_interface
-# End time: 20:59:10 on May 01,2026, Elapsed time: 0:00:00
+# End time: 21:13:53 on May 01,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # >>> Compiling testbench...
 # QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
-# Start time: 20:59:10 on May 01,2026
+# Start time: 21:13:53 on May 01,2026
 # vlog -reportprogress 300 -sv ../tb/tb_interface.sv 
 # -- Compiling module tb_interface
 # -- Importing package accel_pkg
 # 
 # Top level modules:
 # 	tb_interface
-# End time: 20:59:11 on May 01,2026, Elapsed time: 0:00:01
+# End time: 21:13:53 on May 01,2026, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # >>> Running tb_interface...
 # vsim -t 1ps -L work work.tb_interface -voptargs=""+acc"" -suppress 3839 "+nowarn3839" -onfinish stop 
-# Start time: 20:59:11 on May 01,2026
+# Start time: 21:13:53 on May 01,2026
 # ** Note: (vsim-3812) Design is being optimized...
 # Loading sv_std.std
 # Loading work.accel_pkg(fast)
@@ -55,8 +57,7 @@
 #   PASS: command unpack covered all 10 fields
 # 
 # --- Test 2: UCIe data-write channel handshake ---
-#   FAIL: wr.addr: got 0x38101 expected 0x1c080
-#   PASS: write handshake forwarded addr=0x38101 data=0xcafebabe
+#   PASS: write handshake forwarded addr=0x1c080 data=0xcafebabe
 # 
 # --- Test 3: UCIe data-read channel response ---
 #   PASS: read response forwarded data=0xdeadbeef
@@ -65,7 +66,7 @@
 #   PASS: busy and irq propagate in both directions
 # 
 # === tb_interface: ALL TESTS DONE ===
-# === TB_INTERFACE: FAIL (1 failure(s)) ===
+# === TB_INTERFACE: PASS ===
 # ** Note: $finish    : ../tb/tb_interface.sv(247)
 #    Time: 47 ns  Iteration: 1  Instance: /tb_interface
 # Break in NamedBeginStat main_test at ../tb/tb_interface.sv line 247
