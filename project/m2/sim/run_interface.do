@@ -10,7 +10,11 @@ echo "=============================================="
 echo " M2 Interface Simulation"
 echo "=============================================="
 
-if {[file exists work]} { vdel -all -lib work }
+# Robust work-library reset: vdel may abort if `work/` exists on disk
+# but is no longer a valid library. catch swallows that and file delete
+# nukes whatever directory is left so vlib starts clean.
+catch {vdel -all -lib work}
+catch {file delete -force work}
 vlib work
 vmap work work
 

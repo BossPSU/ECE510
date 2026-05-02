@@ -10,8 +10,12 @@ echo "=============================================="
 echo " M2 Compute Core Simulation"
 echo "=============================================="
 
-# Fresh work library
-if {[file exists work]} { vdel -all -lib work }
+# Fresh work library. catch swallows the case where a stale `work/`
+# directory exists on disk but is no longer a valid QuestaSim library
+# (vdel would otherwise abort with "Failed to access library 'work'").
+# `file delete -force` then removes whatever is left so vlib starts clean.
+catch {vdel -all -lib work}
+catch {file delete -force work}
 vlib work
 vmap work work
 
