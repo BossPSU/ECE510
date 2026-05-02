@@ -93,4 +93,9 @@ run -all
 echo ""
 echo "Look for the line 'TB_COMPUTE_CORE: PASS' or 'FAIL' above."
 transcript file ""
-quit -f
+
+# Sim stays loaded so you can capture the waveform:
+#   do wave.do
+#   File -> Export -> Image -> save as waveform.png
+# For an unattended batch run, uncomment the line below:
+# quit -f
