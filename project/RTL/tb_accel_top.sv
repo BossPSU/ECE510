@@ -6,17 +6,28 @@
 module tb_accel_top;
   import accel_pkg::*;
 
-  logic        clk, rst_n;
-  macro_cmd_t  macro_cmd_in;
-  logic        macro_cmd_valid, macro_cmd_ready;
-  logic        dma_wr_valid, dma_wr_ready;
-  logic [15:0] dma_wr_addr;
-  logic [31:0] dma_wr_data;
-  logic        dma_rd_req, dma_rd_valid;
-  logic [15:0] dma_rd_addr;
-  logic [31:0] dma_rd_data;
-  logic        busy, done, irq;
-  logic [31:0] perf_active, perf_stall, perf_tiles;
+  // DMA address is now wider: upper bits = lane id (LANE_BITS = 4 for
+  // N_LANES=16), lower bits = lane-local addr (LANE_LOCAL_W = 15 for
+  // N_SLOTS=2 * SLOT_STRIDE=16K). Total 19 bits.
+  localparam int LANE_BITS_TB = $clog2(16);
+  localparam int DMA_AW_TB    = LANE_LOCAL_W + LANE_BITS_TB;
+
+  // Helper: build a DMA address from lane and lane-local offset
+  function automatic logic [DMA_AW_TB-1:0] dma_addr(input int lane, input int local_off);
+    return ({LANE_BITS_TB'(lane), LANE_LOCAL_W'(local_off)});
+  endfunction
+
+  logic                  clk, rst_n;
+  macro_cmd_t            macro_cmd_in;
+  logic                  macro_cmd_valid, macro_cmd_ready;
+  logic                  dma_wr_valid, dma_wr_ready;
+  logic [DMA_AW_TB-1:0]  dma_wr_addr;
+  logic [31:0]           dma_wr_data;
+  logic                  dma_rd_req, dma_rd_valid;
+  logic [DMA_AW_TB-1:0]  dma_rd_addr;
+  logic [31:0]           dma_rd_data;
+  logic                  busy, done, irq;
+  logic [31:0]           perf_active, perf_stall, perf_tiles;
 
   accel_top dut (
     .clk                  (clk),
@@ -54,8 +65,10 @@ module tb_accel_top;
 
   // ---- Helper tasks ----
 
-  // Write one Q16.16 value to scratchpad via DMA
-  task automatic dma_write(input logic [15:0] addr, input real val);
+  // Write one Q16.16 value to scratchpad via DMA. Address is the full
+  // (lane << LANE_LOCAL_W | local) DMA address. Tests that touch only
+  // lane 0 may pass 16-bit literals — they auto-zero-extend to lane 0.
+  task automatic dma_write(input logic [DMA_AW_TB-1:0] addr, input real val);
     @(posedge clk);
     dma_wr_valid <= 1'b1;
     dma_wr_addr  <= addr;
@@ -65,8 +78,7 @@ module tb_accel_top;
     @(posedge clk);
   endtask
 
-  // Read one Q16.16 value from scratchpad via DMA
-  task automatic dma_read(input logic [15:0] addr, output real val);
+  task automatic dma_read(input logic [DMA_AW_TB-1:0] addr, output real val);
     @(posedge clk);
     dma_rd_req  <= 1'b1;
     dma_rd_addr <= addr;
@@ -343,11 +355,11 @@ module tb_accel_top;
     // ===========================================================
     // Test 4: Multi-tile FFN forward (data-parallel across 2 lanes)
     //   X (2x2)  ·  [W1_0 | W1_1] (2x4)  =  [out_0 | out_1] (2x4)
-    //   Two output tiles. Tile 0 goes to lane 0, tile 1 goes to lane 1.
-    //   Lane 0 bank: X at local 0x0000, W1_0 at local 0x0100, out at 0x0200
-    //   Lane 1 bank: X at local 0x0000, W1_1 at local 0x0180, out at 0x0200
-    //     (W1_1 sits at addr_b + tile_k*64 = 0x100 + 0x80 = 0x180 because
-    //      the dispatcher computes tile_b = addr_b + n_idx * tile_k * 64.)
+    //   Two output tiles. Static round-robin sends tile 0 to lane 0
+    //   slot 0 and tile 1 to lane 1 slot 0. Each lane bank holds its
+    //   own copy of A and the per-tile B at the same lane-local
+    //   addresses; the dispatcher's slot_offset is 0 for both since
+    //   slot_id = tile_idx div N_LANES = 0 for tiles 0 and 1.
     // ===========================================================
     $display("");
     $display("--- Test 4: Multi-tile FFN Forward (2 tiles, 2 lanes parallel) ---");
@@ -360,22 +372,19 @@ module tb_accel_top;
       int  pass0, pass1;
       real e;
 
-      // Lane 0 bank (DMA addr < 0x1000):
-      //   X at 0x0000-0x0003
-      dma_write(16'h0000, 1.0); dma_write(16'h0001, 2.0);
-      dma_write(16'h0002, 3.0); dma_write(16'h0003, 4.0);
-      //   W1_0 = [[5,6],[7,8]] at 0x0100-0x0103
-      dma_write(16'h0100, 5.0); dma_write(16'h0101, 6.0);
-      dma_write(16'h0102, 7.0); dma_write(16'h0103, 8.0);
+      // Lane 0 bank: X at local 0x0000-0x0003, W1_0 at local 0x0100-0x0103
+      dma_write(dma_addr(0, 16'h0000), 1.0); dma_write(dma_addr(0, 16'h0001), 2.0);
+      dma_write(dma_addr(0, 16'h0002), 3.0); dma_write(dma_addr(0, 16'h0003), 4.0);
+      dma_write(dma_addr(0, 16'h0100), 5.0); dma_write(dma_addr(0, 16'h0101), 6.0);
+      dma_write(dma_addr(0, 16'h0102), 7.0); dma_write(dma_addr(0, 16'h0103), 8.0);
 
-      // Lane 1 bank (DMA addr bit 12 = 1 -> 0x1xxx):
-      //   X duplicated at 0x1000-0x1003
-      dma_write(16'h1000, 1.0); dma_write(16'h1001, 2.0);
-      dma_write(16'h1002, 3.0); dma_write(16'h1003, 4.0);
-      //   W1_1 = [[9,10],[11,12]] at 0x1180-0x1183
-      //   (lane 1 local 0x180 = addr_b + tile_k*64 from dispatcher)
-      dma_write(16'h1180, 9.0);  dma_write(16'h1181, 10.0);
-      dma_write(16'h1182, 11.0); dma_write(16'h1183, 12.0);
+      // Lane 1 bank: X duplicated, W1_1 at the SAME local addr 0x0100.
+      // (Dispatcher no longer rewrites addr_b by n_idx; each lane just
+      // has its own per-tile B preloaded by the host.)
+      dma_write(dma_addr(1, 16'h0000), 1.0); dma_write(dma_addr(1, 16'h0001), 2.0);
+      dma_write(dma_addr(1, 16'h0002), 3.0); dma_write(dma_addr(1, 16'h0003), 4.0);
+      dma_write(dma_addr(1, 16'h0100), 9.0);  dma_write(dma_addr(1, 16'h0101), 10.0);
+      dma_write(dma_addr(1, 16'h0102), 11.0); dma_write(dma_addr(1, 16'h0103), 12.0);
 
       // Golden tile 0: X * W1_0
       golden_matmul_2x2(1.0, 2.0, 3.0, 4.0,
@@ -409,13 +418,13 @@ module tb_accel_top;
       if (done) $display("  PASS: macro completed (done asserted)");
       else      $display("  FAIL: macro did not complete");
 
-      // Read tile 0 from lane 0 bank
+      // Read tile 0 from lane 0 bank, tile 1 from lane 1 bank — each
+      // tile's output sits at the SAME lane-local address (slot 0 of its
+      // assigned lane).
       for (int i = 0; i < 4; i++)
-        dma_read(16'h0200 + i[15:0], result0[i]);
-      // Read tile 1 from lane 1 bank
-      // dispatcher addr_out for tile (m=0, n=1) = 0x0200 + 1 * (64*64) = 0x1200
+        dma_read(dma_addr(0, 16'h0200 + i), result0[i]);
       for (int i = 0; i < 4; i++)
-        dma_read(16'h1200 + i[15:0], result1[i]);
+        dma_read(dma_addr(1, 16'h0200 + i), result1[i]);
 
       $display("  Tile 0 read: [%0.2f, %0.2f, %0.2f, %0.2f]",
                result0[0], result0[1], result0[2], result0[3]);

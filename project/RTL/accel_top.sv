@@ -22,31 +22,33 @@ module accel_top
   // 16 GT/s (~32 GB/s/dir) keeps 16 lanes (~131 TOPS at 1 GHz, ~13 GB/s
   // peak demand at AI=5 MAC/byte) fed with ~2.5x BW headroom.
   parameter int N_LANES         = 16,
-  // Lower bits of DMA address are the per-lane local offset; upper bits
-  // are the lane id. With LANE_LOCAL_BITS=12 each lane bank is 4 KW
-  // (16 KB at 32-bit data) and ceil(log2(N_LANES)) bits select the bank.
-  parameter int LANE_LOCAL_BITS = 12,
-  parameter int LANE_BITS       = (N_LANES <= 1) ? 1 : $clog2(N_LANES)
+  // DMA address layout: [DMA_ADDR_W-1 : LANE_LOCAL_BITS] = lane id,
+  // [LANE_LOCAL_BITS-1 : 0] = per-bank local address. LANE_LOCAL_BITS is
+  // sized to cover N_SLOTS * SLOT_STRIDE entries per bank — one slot per
+  // tile in flight, so no two tiles dispatched to the same lane alias.
+  parameter int LANE_LOCAL_BITS = LANE_LOCAL_W,
+  parameter int LANE_BITS       = (N_LANES <= 1) ? 1 : $clog2(N_LANES),
+  parameter int DMA_ADDR_W      = LANE_LOCAL_BITS + LANE_BITS
 )(
-  input  logic        clk,
-  input  logic        rst_n,
+  input  logic                  clk,
+  input  logic                  rst_n,
 
   // Host macro-command interface
-  input  macro_cmd_t  macro_cmd_in,
-  input  logic        macro_cmd_valid,
-  output logic        macro_cmd_ready,
+  input  macro_cmd_t            macro_cmd_in,
+  input  logic                  macro_cmd_valid,
+  output logic                  macro_cmd_ready,
 
-  // DMA: host writes / reads scratchpad. Address bit [LANE_ADDR_BIT]
-  // selects which lane bank the access goes to.
-  input  logic        dma_wr_valid,
-  input  logic [15:0] dma_wr_addr,
-  input  logic [31:0] dma_wr_data,
-  output logic        dma_wr_ready,
+  // DMA: host writes / reads scratchpad. Address upper bits select the
+  // lane bank, lower bits index inside the bank.
+  input  logic                  dma_wr_valid,
+  input  logic [DMA_ADDR_W-1:0] dma_wr_addr,
+  input  logic [31:0]           dma_wr_data,
+  output logic                  dma_wr_ready,
 
-  input  logic        dma_rd_req,
-  input  logic [15:0] dma_rd_addr,
-  output logic [31:0] dma_rd_data,
-  output logic        dma_rd_valid,
+  input  logic                  dma_rd_req,
+  input  logic [DMA_ADDR_W-1:0] dma_rd_addr,
+  output logic [31:0]           dma_rd_data,
+  output logic                  dma_rd_valid,
 
   // Status
   output logic        busy,
@@ -105,12 +107,12 @@ module accel_top
   // ====================================================================
   // DMA engine (single, address-routed to per-lane scratchpad)
   // ====================================================================
-  logic        dma_sram_req, dma_sram_we;
-  logic [15:0] dma_sram_addr;
-  logic [31:0] dma_sram_wdata, dma_sram_rdata;
-  logic        dma_sram_rvalid;
+  logic                  dma_sram_req, dma_sram_we;
+  logic [DMA_ADDR_W-1:0] dma_sram_addr;
+  logic [31:0]           dma_sram_wdata, dma_sram_rdata;
+  logic                  dma_sram_rvalid;
 
-  dma_engine u_dma (
+  dma_engine #(.DATA_WIDTH(32), .ADDR_WIDTH(DMA_ADDR_W)) u_dma (
     .clk           (clk),
     .rst_n         (rst_n),
     .host_wr_valid (dma_wr_valid),
@@ -129,14 +131,13 @@ module accel_top
     .sram_rvalid   (dma_sram_rvalid)
   );
 
-  // Lane select on DMA address: bits [LANE_LOCAL_BITS +: LANE_BITS] choose
-  // the bank, bits [LANE_LOCAL_BITS-1:0] are the per-bank offset. So a DMA
-  // write to 0x3180 with N_LANES=16 routes to lane 3 (= 0x3) at local 0x180.
-  logic [LANE_BITS-1:0] dma_lane_sel;
-  logic [15:0]          dma_local_addr;
+  // Lane select: upper LANE_BITS pick the bank, lower LANE_LOCAL_BITS are
+  // the per-bank local address. A DMA write to (lane=3, local=0x4180) with
+  // N_LANES=16, LANE_LOCAL_BITS=15 lands at DMA addr 0x1C180.
+  logic [LANE_BITS-1:0]       dma_lane_sel;
+  logic [LANE_LOCAL_BITS-1:0] dma_local_addr;
   assign dma_lane_sel   = dma_sram_addr[LANE_LOCAL_BITS +: LANE_BITS];
-  assign dma_local_addr = {{(16-LANE_LOCAL_BITS){1'b0}},
-                           dma_sram_addr[LANE_LOCAL_BITS-1:0]};
+  assign dma_local_addr = dma_sram_addr[LANE_LOCAL_BITS-1:0];
 
   // ====================================================================
   // Lanes (each: accel_engine + private scratchpad with DMA second port)
@@ -149,7 +150,8 @@ module accel_top
   logic [31:0] bank_dma_rdata [N_LANES];
   logic        bank_dma_rvalid[N_LANES];
 
-  // Route DMA to the addressed bank; other bank sees zero req
+  // Route DMA to the addressed bank; other banks see zero req. The bank
+  // (scratchpad_ctrl) port is 16-bit, so zero-extend the 15-bit local addr.
   always_comb begin
     for (int l = 0; l < N_LANES; l++) begin
       bank_dma_req  [l] = 1'b0;
@@ -159,7 +161,7 @@ module accel_top
     end
     bank_dma_req  [dma_lane_sel] = dma_sram_req;
     bank_dma_we   [dma_lane_sel] = dma_sram_we;
-    bank_dma_addr [dma_lane_sel] = dma_local_addr;
+    bank_dma_addr [dma_lane_sel] = {{(16-LANE_LOCAL_BITS){1'b0}}, dma_local_addr};
     bank_dma_wdata[dma_lane_sel] = dma_sram_wdata;
   end
 

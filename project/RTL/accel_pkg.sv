@@ -43,6 +43,22 @@ package accel_pkg;
   parameter int SRAM_DEPTH   = 4096;
   parameter int SRAM_ADDR_W  = $clog2(SRAM_DEPTH);
 
+  // Per-lane "tile slot" architecture (fixes the address-alias bug when
+  // num_tiles > N_LANES). Each lane bank is partitioned into N_SLOTS
+  // disjoint slots. A tile dispatched to (lane, slot) gets all of its
+  // working set (A, B, aux, output) at slot_id*SLOT_STRIDE within the
+  // lane's local address space. Static round-robin dispatch maps tile k
+  // to (k mod N_LANES, k div N_LANES) so every tile has a unique slot
+  // within its assigned lane.
+  parameter int N_SLOTS      = 2;
+  // One slot must hold A + B + aux + output for one tile. With 64x64
+  // tiles in Q16.16 each region is TILE_SIZE*TILE_SIZE = 4096 entries,
+  // so a slot is 4 * 4096 = 16384 entries.
+  parameter int SLOT_STRIDE  = 4 * TILE_SIZE * TILE_SIZE;
+  // Lane-local address width: log2(N_SLOTS * SLOT_STRIDE).
+  // For defaults (2 slots * 16K = 32K) this is 15 bits.
+  parameter int LANE_LOCAL_W = $clog2(N_SLOTS * SLOT_STRIDE);
+
   // LUT sizes
   parameter int LUT_DEPTH    = 256;
   parameter int LUT_ADDR_W   = $clog2(LUT_DEPTH);

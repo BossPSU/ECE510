@@ -16,11 +16,11 @@ module accel_chiplet_wrapper
   // Data write channel (host → chiplet)
   input  logic        ucie_wr_valid,
   output logic        ucie_wr_ready,
-  input  logic [47:0] ucie_wr_data,      // {addr[15:0], data[31:0]}
+  input  logic [50:0] ucie_wr_data,      // {addr[18:0], data[31:0]}
 
   // Data read channel (chiplet → host)
   input  logic        ucie_rd_req,
-  input  logic [15:0] ucie_rd_addr,
+  input  logic [LANE_LOCAL_W + $clog2(16) - 1:0] ucie_rd_addr,
   output logic [31:0] ucie_rd_data,
   output logic        ucie_rd_valid,
 
@@ -34,9 +34,10 @@ module accel_chiplet_wrapper
   assign macro_unpacked = macro_cmd_t'(ucie_cmd_data[$bits(macro_cmd_t)-1:0]);
 
   // ---- Unpack UCIe write data ----
-  logic [15:0] wr_addr;
-  logic [31:0] wr_data;
-  assign wr_addr = ucie_wr_data[47:32];
+  localparam int DMA_AW = LANE_LOCAL_W + $clog2(16);  // 4-bit lane + LANE_LOCAL_W
+  logic [DMA_AW-1:0] wr_addr;
+  logic [31:0]       wr_data;
+  assign wr_addr = ucie_wr_data[31 +: DMA_AW];
   assign wr_data = ucie_wr_data[31:0];
 
   // ---- Performance counter outputs ----
