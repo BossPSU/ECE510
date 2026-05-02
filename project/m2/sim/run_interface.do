@@ -26,7 +26,9 @@ echo ">>> Compiling testbench..."
 vlog -sv ../tb/tb_interface.sv
 
 echo ">>> Running tb_interface..."
+# +acc keeps signals visible to add wave after vopt
 vsim -t 1ps -L work work.tb_interface \
+     -voptargs="+acc" \
      -suppress 3839 +nowarn3839 -onfinish stop
 run -all
 

@@ -86,7 +86,11 @@ vlog -sv ../tb/tb_compute_core.sv
 
 # ---- Run ----
 echo ">>> Running tb_compute_core..."
+# -voptargs="+acc" keeps every signal accessible to add wave / examine.
+# Without it, vopt optimizes internal nets to anonymous and lookups
+# fail with "No objects found matching ...".
 vsim -t 1ps -L work work.tb_compute_core \
+     -voptargs="+acc" \
      -suppress 3839 +nowarn3839 -onfinish stop
 
 # Add waveform BEFORE run -all. After $finish the design hierarchy is
