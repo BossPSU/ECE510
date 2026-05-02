@@ -1,0 +1,11 @@
+====================================================================
+ Q16.16 vs FP32 quantization-error analysis (100 samples each)
+ Seed = 0xECE510 — reproducible.
+====================================================================
+gelu  (x in [-3,3])       N=100  MAE=1.061021e-02  max=2.168076e-02  meanRelErr=13.5838%
+gelu  (x in [-50,50])     N=100  MAE=1.138390e-03  max=2.123098e-02  meanRelErr=7.2269%
+gelu_grad  (x in [-3,3])  N=100  MAE=1.952307e-02  max=4.235300e-02  meanRelErr=22.7768%
+softmax row in [-4,4]     N=100  MAE=8.176113e-05  max=3.400419e-04  meanRelErr=1.1042%
+softmax row in [-8,0]     N=100  MAE=7.399940e-05  max=3.541770e-04  meanRelErr=0.9617%
+gemm 2x2x2 in [-2,2]      N=100  MAE=2.485613e-05  max=7.783882e-05  meanRelErr=0.0036%
+====================================================================
