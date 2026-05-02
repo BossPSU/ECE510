@@ -1,0 +1,96 @@
+m255
+K4
+z2
+!s99 nomlopt
+!s11f vlog 2021.3_1 2021.08, Aug 15 2021
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 d/home/dboss/common/Documents/ECE510/ECE510/project/m2/sim
+T_opt
+Z1 !s110 1777694351
+Vk<@BEjLKUImi@`Hkg@da_0
+04 12 4 work tb_interface fast 0
+=1-000ae431a4f1-69f5768f-4f3b4-b4f3a
+!s124 OEM100
+o-quiet -auto_acc_if_foreign -work work -L work -suppress 3839 +acc
+Z2 tCvgOpt 0
+n@_opt
+OL;O;2021.3_1;73
+Xaccel_pkg
+Z3 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+Z4 !s110 1777694350
+!i10b 1
+!s100 XH6e<LY31;@FeZJ7if1FM0
+I:O7^S1e4Q7MGCV7dSl[l_1
+S1
+R0
+Z5 w1777690957
+8../rtl/accel_pkg.sv
+F../rtl/accel_pkg.sv
+!i122 0
+L0 2 0
+V:O7^S1e4Q7MGCV7dSl[l_1
+Z6 OL;L;2021.3_1;73
+r1
+!s85 0
+31
+Z7 !s108 1777694350.000000
+!s107 ../rtl/accel_pkg.sv|
+!s90 -reportprogress|300|-sv|../rtl/accel_pkg.sv|
+!i113 0
+Z8 o-sv -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+R2
+vchiplet_interface
+R3
+Z9 DXx4 work 9 accel_pkg 0 22 :O7^S1e4Q7MGCV7dSl[l_1
+R4
+!i10b 1
+!s100 =NF5cbYaF2DO2TDIb616G3
+IboB8OmnAe6iPAO2gR[Wjf3
+S1
+R0
+R5
+8../rtl/interface.sv
+F../rtl/interface.sv
+!i122 1
+L0 61 71
+Z10 VDg1SIo80bB@j0V0VzS_@n1
+R6
+r1
+!s85 0
+31
+R7
+!s107 ../rtl/interface.sv|
+!s90 -reportprogress|300|-sv|../rtl/interface.sv|
+!i113 0
+R8
+R2
+vtb_interface
+R3
+R9
+R1
+!i10b 1
+!s100 ^P4H:=`lXYGdCk2U0CbHS3
+I0OcQj`YZWGGl1W`2B`kZ41
+S1
+R0
+w1777690958
+8../tb/tb_interface.sv
+F../tb/tb_interface.sv
+!i122 2
+L0 20 239
+R10
+R6
+r1
+!s85 0
+31
+R7
+!s107 ../tb/tb_interface.sv|
+!s90 -reportprogress|300|-sv|../tb/tb_interface.sv|
+!i113 0
+R8
+R2
