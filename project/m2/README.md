@@ -49,6 +49,28 @@ grep -E '^=== TB_(COMPUTE_CORE|INTERFACE):' compute_core_run.log interface_run.l
 
 You should see exactly one `: PASS` line per file.
 
+### Generating the waveform image
+
+`run_compute_core.do` ends with `quit -f` so it produces a clean log in
+batch mode. To capture `waveform.png` instead, leave the simulation
+loaded and run [`wave.do`](sim/wave.do):
+
+1. Open `run_compute_core.do` and **comment out the final `quit -f`**
+   (or skip it interactively).
+2. After the simulation finishes, in the QuestaSim console:
+   ```tcl
+   do wave.do
+   ```
+   This adds top-level handshake, DMA traffic, lane-0 pipeline internals
+   (`pipeline_start/done/running_o`, feed/out activity, output write
+   bus), the controller FSM state, and perf counters. It then zooms to
+   a window that captures input load → compute fusion → output capture
+   for Test 1.
+3. From the menu: **File → Export → Image…**, save as
+   `project/m2/sim/waveform.png`.
+
+Re-enable the `quit -f` afterward so the script stays batch-friendly.
+
 ## What each testbench covers
 
 ### `tb_compute_core.sv` (driving `compute_core`)
