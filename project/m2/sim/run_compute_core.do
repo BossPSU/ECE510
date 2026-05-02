@@ -98,6 +98,7 @@ vsim -t 1ps -L work work.tb_compute_core \
 # objects found matching ...". By doing it now, the wave window records
 # all traces during the run and stays viewable after the sim ends.
 echo ">>> Configuring wave window..."
+set ::wave_tb /tb_compute_core
 do wave.do
 
 run -all

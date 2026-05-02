@@ -36,6 +36,7 @@ vsim -t 1ps -L work work.tb_interface \
 # resolve paths -- doing it now is what keeps the wave window viewable
 # after the sim ends.
 echo ">>> Configuring wave window..."
+set ::wave_tb /tb_interface
 do wave.do
 
 run -all
