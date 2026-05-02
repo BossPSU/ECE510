@@ -21,7 +21,8 @@ set tb /tb_compute_core
 # set tb /tb_interface
 
 # Idempotent: nuke any existing waves so re-sourcing this is clean
-catch {delete wave -all}
+# (QuestaSim wants `*`, not `-all`, here)
+catch {delete wave *}
 
 # === Top-level handshake (host-facing) ===
 add wave -group "Top"  $tb/clk
