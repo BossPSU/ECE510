@@ -113,8 +113,10 @@ module chiplet_interface
   assign ucie_cmd_ready       = core_macro_cmd_ready;
 
   // ---- Write channel: split packed {addr, data} ----
+  // Address sits ABOVE the 32-bit data field (data is [31:0], so addr
+  // starts at bit 32 -- not bit 31, which would overlap data's MSB).
   assign core_dma_wr_valid = ucie_wr_valid;
-  assign core_dma_wr_addr  = ucie_wr_data[31 +: DMA_ADDR_W];
+  assign core_dma_wr_addr  = ucie_wr_data[32 +: DMA_ADDR_W];
   assign core_dma_wr_data  = ucie_wr_data[31:0];
   assign ucie_wr_ready     = core_dma_wr_ready;
 
