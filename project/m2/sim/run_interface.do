@@ -26,13 +26,27 @@ echo ">>> Compiling testbench..."
 vlog -sv ../tb/tb_interface.sv
 
 echo ">>> Running tb_interface..."
-# +acc keeps signals visible to add wave after vopt
+# +acc keeps signals visible to add wave / examine after vopt.
 vsim -t 1ps -L work work.tb_interface \
      -voptargs="+acc" \
      -suppress 3839 +nowarn3839 -onfinish stop
+
+# Add waveform BEFORE run -all so signal traces record during the run.
+# After $finish the design hierarchy unloads and add wave can no longer
+# resolve paths -- doing it now is what keeps the wave window viewable
+# after the sim ends.
+echo ">>> Configuring wave window..."
+do wave.do
+
 run -all
+
+# Now that traces exist, zoom to the full ~50 ns window of activity.
+catch {wave zoom full}
 
 echo ""
 echo "Look for the line 'TB_INTERFACE: PASS' or 'FAIL' above."
+echo "Wave window populated; save via File -> Export -> Image -> waveform.png"
 transcript file ""
-quit -f
+# (Sim stays loaded for image capture. For unattended batch use,
+#  uncomment the line below.)
+# quit -f
