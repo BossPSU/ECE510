@@ -88,14 +88,23 @@ vlog -sv ../tb/tb_compute_core.sv
 echo ">>> Running tb_compute_core..."
 vsim -t 1ps -L work work.tb_compute_core \
      -suppress 3839 +nowarn3839 -onfinish stop
+
+# Add waveform BEFORE run -all. After $finish the design hierarchy is
+# unloaded, so any add wave commands afterward would fail with "No
+# objects found matching ...". By doing it now, the wave window records
+# all traces during the run and stays viewable after the sim ends.
+echo ">>> Configuring wave window..."
+do wave.do
+
 run -all
+
+# Now that traces exist, zoom to the most informative slice (Test 1).
+catch {wave zoom range 0ns 150ns}
 
 echo ""
 echo "Look for the line 'TB_COMPUTE_CORE: PASS' or 'FAIL' above."
+echo "Wave window populated; save via File -> Export -> Image -> waveform.png"
 transcript file ""
-
-# Sim stays loaded so you can capture the waveform:
-#   do wave.do
-#   File -> Export -> Image -> save as waveform.png
-# For an unattended batch run, uncomment the line below:
+# (Sim stays loaded for image capture. For unattended batch use,
+#  uncomment the line below.)
 # quit -f

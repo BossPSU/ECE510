@@ -51,25 +51,21 @@ You should see exactly one `: PASS` line per file.
 
 ### Generating the waveform image
 
-`run_compute_core.do` ends with `quit -f` so it produces a clean log in
-batch mode. To capture `waveform.png` instead, leave the simulation
-loaded and run [`wave.do`](sim/wave.do):
+`run_compute_core.do` already sources [`wave.do`](sim/wave.do) **before**
+`run -all`, so signal traces are recorded during the run and the wave
+window is fully populated when the sim finishes. After
+`=== TB_COMPUTE_CORE: PASS ===` appears in the transcript:
 
-1. Open `run_compute_core.do` and **comment out the final `quit -f`**
-   (or skip it interactively).
-2. After the simulation finishes, in the QuestaSim console:
-   ```tcl
-   do wave.do
-   ```
-   This adds top-level handshake, DMA traffic, lane-0 pipeline internals
-   (`pipeline_start/done/running_o`, feed/out activity, output write
-   bus), the controller FSM state, and perf counters. It then zooms to
-   a window that captures input load → compute fusion → output capture
-   for Test 1.
-3. From the menu: **File → Export → Image…**, save as
+1. The wave window already shows top-level handshake, DMA traffic,
+   lane-0 pipeline internals (`pipeline_start/done/running_o`, feed/out
+   activity, output write bus), the controller FSM state, and perf
+   counters, zoomed to the Test 1 window (0–150 ns).
+2. From the menu: **File → Export → Image…**, save as
    `project/m2/sim/waveform.png`.
 
-Re-enable the `quit -f` afterward so the script stays batch-friendly.
+If you need to re-add the signals manually, do it BEFORE `run -all` —
+after `$finish` the design hierarchy is unloaded and `add wave` will
+report "No objects found matching …".
 
 ## What each testbench covers
 
