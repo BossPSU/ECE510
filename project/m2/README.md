@@ -193,3 +193,95 @@ project/m2/
 ├── precision.md                <- numeric format choice + error analysis
 └── README.md                   <- this file
 ```
+
+## Supporting RTL files
+
+Beyond the two top-level deliverables (`compute_core.sv`, `interface.sv`),
+[`rtl/`](rtl/) contains 39 supporting SystemVerilog files plus 2 ROM
+init files. Grouped by role:
+
+### Package and shared types
+
+| File | Description |
+|---|---|
+| [`accel_pkg.sv`](rtl/accel_pkg.sv) | Global parameter package — Q16.16 constants, array dims (64×64), tile sizes, model dims (D_MODEL, D_FF, SEQ_LEN), enums (`mode_t`, `fused_op_t`), and `cmd_pkt_t` / `macro_cmd_t` typedefs. Imported by every other file. |
+
+### Top-of-hierarchy wrappers
+
+| File | Description |
+|---|---|
+| [`accel_chiplet_wrapper.sv`](rtl/accel_chiplet_wrapper.sv) | Outer chiplet wrapper. Models the UCIe-style host link (cmd / wr / rd / status channels) on the outside and instantiates `accel_top` on the inside. Used as a reference UCIe binding before `interface.sv` was split out as the M2 deliverable. |
+| [`accel_top.sv`](rtl/accel_top.sv) | Multi-tile, data-parallel top. Holds the `tile_dispatcher`, N_LANES `accel_engine` instances, per-lane scratchpad banks, and the lane-id address router. This is what `compute_core.sv` wraps. |
+| [`accel_engine.sv`](rtl/accel_engine.sv) | Single compute lane. Pairs `accel_controller` + 4 tile buffers + `stream_pipeline` + per-lane perf counters. Consumes one `cmd_pkt_t` per output tile (LOAD → autonomous compute → WRITE). |
+
+### Control plane
+
+| File | Description |
+|---|---|
+| [`accel_controller.sv`](rtl/accel_controller.sv) | Per-lane FSM (IDLE → LOAD → STREAM → WRITE → DONE). Handles only boundary I/O between SRAM and tile buffers; the matmul+activation runs autonomously inside `stream_pipeline`. |
+| [`tile_dispatcher.sv`](rtl/tile_dispatcher.sv) | Multi-lane orchestrator. Walks the (m_tiles × n_tiles) output grid and statically maps `tile_idx → (lane = idx mod N_LANES, slot = idx div N_LANES)`, baking `slot * SLOT_STRIDE` into per-tile addresses to prevent cross-tile aliasing. |
+| [`tile_scheduler.sv`](rtl/tile_scheduler.sv) | Inner traversal helper — iterates (m,n,k) tile coordinates given matrix dimensions and a `tile_done` pulse. |
+| [`mode_decoder.sv`](rtl/mode_decoder.sv) | Decodes a host `cmd_pkt_t` into local enables / dims / addresses / `fused_sel`. |
+| [`csr_block.sv`](rtl/csr_block.sv) | Configuration / status registers — host-visible window for issuing commands and reading status. |
+| [`perf_counter_block.sv`](rtl/perf_counter_block.sv) | Hardware perf counters (active cycles, stall cycles, tiles completed). One block per lane. |
+
+### Datapath leaf cells
+
+| File | Description |
+|---|---|
+| [`mac_pe.sv`](rtl/mac_pe.sv) | Q16.16 multiply-accumulate processing element with truncating mul, saturating add, west/north pass-through for systolic dataflow. |
+| [`systolic_array_64x64.sv`](rtl/systolic_array_64x64.sv) | 64×64 grid of `mac_pe`s, output-stationary, with skewed feeding. The GEMM workhorse. |
+| [`adder_tree.sv`](rtl/adder_tree.sv) | Pipelined Q16.16 reduction tree (parameterized `NUM_INPUTS`). Used inside softmax for sum-of-exps. |
+| [`gelu_lut.sv`](rtl/gelu_lut.sv) | tanh ROM (256 entries, Q16.16) loaded from `gelu_tanh_lut.mem`; covers input range [-4, 4]. |
+| [`gelu_tanh_lut.mem`](rtl/gelu_tanh_lut.mem) | tanh LUT contents in `$readmemh` format. |
+| [`exp_lut.sv`](rtl/exp_lut.sv) | exp ROM (256 entries, Q16.16) loaded from `exp_lut.mem`; covers [-8, 0] (post max-subtract for softmax). |
+| [`exp_lut.mem`](rtl/exp_lut.mem) | exp LUT contents in `$readmemh` format. |
+| [`gelu_unit.sv`](rtl/gelu_unit.sv) | GELU activation in Q16.16 using a clamped Padé-tanh approximation; pipelined 6 stages, input clamped to ±16 to prevent x³ overflow. |
+| [`gelu_grad_unit.sv`](rtl/gelu_grad_unit.sv) | GELU gradient `gelu'(x)` for fused FFN-backward. Same clamped-Padé tanh kernel as `gelu_unit`. |
+| [`softmax_unit.sv`](rtl/softmax_unit.sv) | Numerically stable softmax — max-reduce → subtract+exp → sum → single-reciprocal × 64-multiply normalization. Supports active-length masking. |
+| [`causal_mask_unit.sv`](rtl/causal_mask_unit.sv) | Applies a causal mask: forces upper-triangle elements (col > row) to a large negative value before softmax. |
+| [`divider_or_reciprocal_unit.sv`](rtl/divider_or_reciprocal_unit.sv) | Q16.16 signed division (registered in/out). Synthesis tools infer a sequential divider. |
+| [`fused_postproc_unit.sv`](rtl/fused_postproc_unit.sv) | The fused-activation MUX — selects bypass / GELU / GELU′ / softmax / mask based on `fused_sel`, used per-element after the systolic array. |
+
+### Streaming pipeline / flow control
+
+| File | Description |
+|---|---|
+| [`stream_pipeline.sv`](rtl/stream_pipeline.sv) | The intra-tile fusion pipeline. After `start`, runs feeder → systolic → (elemwise OR softmax path) → output buffer fully autonomously; intermediates never touch SRAM. Drives `pipeline_done` at the boundary. |
+| [`pipeline_stage.sv`](rtl/pipeline_stage.sv) | Generic valid/ready register slice (data + handshake). Building block for the streaming path. |
+| [`skid_buffer.sv`](rtl/skid_buffer.sv) | Two-entry buffer that absorbs one cycle of backpressure without losing throughput. |
+| [`stream_mux.sv`](rtl/stream_mux.sv) | Selects between fused-output streams (used at the post-processing boundary). |
+
+### Tile movers
+
+| File | Description |
+|---|---|
+| [`tile_loader.sv`](rtl/tile_loader.sv) | Reads A/B tiles from SRAM into the per-lane tile buffers, address-generated row-major. |
+| [`tile_writer.sv`](rtl/tile_writer.sv) | Drains the output tile buffer back to SRAM. |
+| [`tile_buffer.sv`](rtl/tile_buffer.sv) | Register-based 64×64 Q16.16 tile store. Exposes 2D, linear, and `NUM_RD_PORTS` parallel-port reads — the parallel ports are how the streaming pipeline issues scattered reads without exporting all 4096 cells at the module boundary. |
+
+### Memory subsystem
+
+| File | Description |
+|---|---|
+| [`sram_bank.sv`](rtl/sram_bank.sv) | Single-port behavioral SRAM bank (synthesizable inferred BRAM). |
+| [`scratchpad_ctrl.sv`](rtl/scratchpad_ctrl.sv) | Multi-bank scratchpad controller with per-port arbitration over `NUM_BANKS` `sram_bank` instances. |
+| [`address_gen.sv`](rtl/address_gen.sv) | Reusable row-stride address generator for tile traversal. |
+| [`dma_engine.sv`](rtl/dma_engine.sv) | Host-to-chiplet bulk movement — bridges the UCIe wr/rd channels to the scratchpad ports. |
+| [`double_buffer_ctrl.sv`](rtl/double_buffer_ctrl.sv) | Ping-pong base-address controller (load region vs compute region) for future load/compute overlap. |
+
+### SystemVerilog interfaces (modports)
+
+| File | Description |
+|---|---|
+| [`stream_if.sv`](rtl/stream_if.sv) | Generic `valid/ready/data/last/op_mode` streaming interface with `src` / `dst` modports. |
+| [`sram_if.sv`](rtl/sram_if.sv) | Scratchpad SRAM port (`req/we/addr/wdata/rdata/rvalid`), `master` / `slave` modports. |
+| [`cmd_if.sv`](rtl/cmd_if.sv) | Host command channel (`cmd_valid/ready` + `cmd_pkt_t`), `host` / `device` modports. |
+| [`tile_if.sv`](rtl/tile_if.sv) | Structured tile-transfer interface carrying `tile_meta_t`. |
+| [`ctrl_if.sv`](rtl/ctrl_if.sv) | Scheduler-to-subblock control (`start/flush/mode/fused_sel/tile_boundary/done`). |
+| [`status_if.sv`](rtl/status_if.sv) | Completion / busy / error / counters interface. |
+
+These interface files are compiled by `run_compute_core.do` for type
+visibility; the M2 testbenches drive ports directly rather than via
+modports, but the interfaces remain part of the synthesizable block
+inventory.
