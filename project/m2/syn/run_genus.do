@@ -40,30 +40,45 @@ set_db information_level 7
 # -----------------------------------------------------------------------------
 # 2. Technology libraries
 #
-# Point LIB_PATH at the directory containing your standard-cell .lib files,
-# e.g. NanGate 45nm Open Cell Library, SkyWater 130 (sky130_fd_sc_hd), or
-# whichever PDK the course/lab provides. The script picks up everything
-# matching *_tt_*.lib (typical-typical corner) by default; edit the glob
-# below to target a specific PV corner.
+# Default target: Synopsys SAED32 EDK (32/28nm), RVT std cells, TT corner
+# at 0.85V / 25C — the standard PSU ECE academic PDK. Override via env:
+#   export LIB_PATH=/path/to/lib/dir
+#   export LIB_FILE=name_of_corner.lib
+# Or set just LIB_PATH and the script will glob *tt0p85v25c*.lib (TT corner).
 # -----------------------------------------------------------------------------
 if { ![info exists env(LIB_PATH)] } {
-    puts "WARNING: LIB_PATH env var is unset. Set it to your PDK lib dir,"
-    puts "         e.g. setenv LIB_PATH /opt/pdk/nangate45/lib  (csh)"
-    puts "         or  export LIB_PATH=/opt/pdk/nangate45/lib  (bash)"
-    puts "         Falling back to ./libs/  -- edit the glob if needed."
-    set env(LIB_PATH) "./libs"
+    set env(LIB_PATH) "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm"
+    puts "INFO: LIB_PATH unset; defaulting to SAED32 RVT @ $env(LIB_PATH)"
 }
 
-set lib_files [glob -nocomplain $env(LIB_PATH)/*_tt_*.lib]
-if { [llength $lib_files] == 0 } {
-    set lib_files [glob -nocomplain $env(LIB_PATH)/*.lib]
+if { [info exists env(LIB_FILE)] } {
+    # User pinned an exact .lib file
+    set lib_files [list $env(LIB_PATH)/$env(LIB_FILE)]
+} else {
+    # Pull the single TT-corner main std-cell lib. Avoid level-shifter
+    # (dlvl/ulvl) and power-gating (pg) variants — they don't add cells
+    # we need for basic synthesis and just bloat the build.
+    set lib_files [glob -nocomplain $env(LIB_PATH)/saed32rvt_tt0p85v25c.lib]
+
+    # Generic fallbacks for non-SAED32 PDKs
+    if { [llength $lib_files] == 0 } {
+        set lib_files [glob -nocomplain $env(LIB_PATH)/*tt0p85v25c.lib]
+    }
+    if { [llength $lib_files] == 0 } {
+        set lib_files [glob -nocomplain $env(LIB_PATH)/*_tt_*.lib]
+    }
+    if { [llength $lib_files] == 0 } {
+        set lib_files [glob -nocomplain $env(LIB_PATH)/*.lib]
+    }
 }
+
 if { [llength $lib_files] == 0 } {
     error "No .lib files found in $env(LIB_PATH). Cannot proceed."
 }
 
 set_db library $lib_files
-puts ">>> Loaded [llength $lib_files] standard-cell library files"
+puts ">>> Loaded [llength $lib_files] standard-cell library file(s):"
+foreach f $lib_files { puts "      $f" }
 
 # Optional LEF for physically-aware synthesis. Uncomment + set LEF_PATH.
 # if { [info exists env(LEF_PATH)] } {
