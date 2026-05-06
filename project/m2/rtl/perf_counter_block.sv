@@ -19,8 +19,16 @@ module perf_counter_block
   output logic [31:0] tiles_completed
 );
 
+  // Async reset branches only on rst_n. Synchronous clear is moved into
+  // the else branch so Genus accepts the always_ff (a posedge-clk /
+  // negedge-rst_n block can only test the async signal in the reset arm).
   always_ff @(posedge clk or negedge rst_n) begin
-    if (!rst_n || clear) begin
+    if (!rst_n) begin
+      active_cycles   <= '0;
+      stall_cycles    <= '0;
+      total_cycles    <= '0;
+      tiles_completed <= '0;
+    end else if (clear) begin
       active_cycles   <= '0;
       stall_cycles    <= '0;
       total_cycles    <= '0;
