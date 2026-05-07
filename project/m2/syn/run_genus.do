@@ -188,8 +188,13 @@ set_input_delay  $IO_DELAY -clock clk [remove_from_collection \
     [all_inputs] [get_ports [list $CLK_PORT $RST_PORT]]]
 set_output_delay $IO_DELAY -clock clk [all_outputs]
 
-# Drive / load — generic INV / FF estimates if no PDK-specific data
-set_driving_cell -lib_cell [lindex [get_lib_cells */INV*] 0] [all_inputs]
+# Drive / load — try SAED32 RVT 1x inverter as the input driver.
+# Wrapped in catch so a missing cell (different PDK) doesn't abort
+# the run; inputs would just be treated as ideal sources.
+if { [catch {set_driving_cell -lib_cell INVX1_RVT [all_inputs]} err] } {
+    puts "WARNING: set_driving_cell INVX1_RVT failed ($err);"
+    puts "         inputs will be modeled as ideal sources."
+}
 set_load 0.05 [all_outputs]
 
 # Optional external SDC override (drop a hand-tuned compute_core.sdc next
