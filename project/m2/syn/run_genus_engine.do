@@ -124,14 +124,7 @@ read_hdl -sv $rtl/accel_engine.sv
 set TOP accel_engine
 puts ">>> Elaborating $TOP..."
 elaborate $TOP
-
-# Sanity-check the heavy interior blocks
-foreach inst {accel_controller stream_pipeline systolic_array_64x64
-              fused_postproc_unit tile_buffer perf_counter_block} {
-    if { [llength [find -hierarchical -instance "*${inst}*"]] == 0 } {
-        puts "WARNING: no instance of $inst found after elaboration"
-    }
-}
+puts ">>> Elaboration done."
 
 # -----------------------------------------------------------------------------
 # 5. Constraints

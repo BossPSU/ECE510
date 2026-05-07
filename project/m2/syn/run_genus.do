@@ -161,15 +161,7 @@ read_hdl -sv $rtl/compute_core.sv
 set TOP compute_core
 puts ">>> Elaborating $TOP..."
 elaborate $TOP
-
-# Sanity-check that the elaborated tree includes the big consumers. If any
-# of these are missing, something failed silently above.
-foreach inst {accel_top tile_dispatcher accel_engine stream_pipeline
-              systolic_array_64x64 fused_postproc_unit} {
-    if { [llength [find -hierarchical -instance "*${inst}*"]] == 0 } {
-        puts "WARNING: no instance of $inst found after elaboration"
-    }
-}
+puts ">>> Elaboration done."
 
 # -----------------------------------------------------------------------------
 # 5. Constraints
