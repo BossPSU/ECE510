@@ -37,7 +37,8 @@ module accel_chiplet_wrapper
   localparam int DMA_AW = LANE_LOCAL_W + $clog2(16);  // 4-bit lane + LANE_LOCAL_W
   logic [DMA_AW-1:0] wr_addr;
   logic [31:0]       wr_data;
-  assign wr_addr = ucie_wr_data[31 +: DMA_AW];
+  // Address sits ABOVE the 32-bit data; start at bit 32, not bit 31.
+  assign wr_addr = ucie_wr_data[32 +: DMA_AW];
   assign wr_data = ucie_wr_data[31:0];
 
   // ---- Performance counter outputs ----
