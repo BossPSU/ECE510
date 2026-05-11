@@ -1,0 +1,7 @@
+# Cadence Genus(TM) Synthesis Solution, Version 21.12-s068_1, built Mar  4 2022 14:12:46
+
+# Date: Wed May 06 17:54:59 2026
+# Host: phobos.ece.pdx.edu (x86_64 w/Linux 5.14.0-611.34.1.el9_7.x86_64) (1core*32cpus*32physical cpus*Intel Xeon Processor (Cascadelake) 16384KB)
+# OS:   Rocky Linux release 9.7 (Blue Onyx)
+
+source run_genus_engine.do

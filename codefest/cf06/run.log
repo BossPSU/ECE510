@@ -1,0 +1,70 @@
+# ==============================================
+#  4x4 Binary-Weight Crossbar MAC Simulation
+# ==============================================
+# ** Error (suppressible): (vdel-19) Failed to access library 'work' at "work".
+# No such file or directory. (errno = ENOENT)
+# ** Warning: (vdel-57) Library 'work' is missing or is not a valid QuestaSim library.
+# 1
+# 0
+# QuestaSim-64 vmap 2021.3_1 Lib Mapping Utility 2021.08 Aug 15 2021
+# vmap work work 
+# Copying /pkgs/mentor/questa/2021.3_1/questasim/linux_x86_64/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# hdl
+# >>> Compiling RTL...
+# QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+# Start time: 22:28:13 on May 10,2026
+# vlog -reportprogress 300 -sv hdl/crossbar_mac.sv 
+# -- Compiling module crossbar_mac
+# ** Warning: hdl/crossbar_mac.sv(22): (vlog-13314) Defaulting port 'w_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: hdl/crossbar_mac.sv(25): (vlog-13314) Defaulting port 'in_data' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# 
+# Top level modules:
+# 	crossbar_mac
+# End time: 22:28:14 on May 10,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 2
+# >>> Compiling testbench...
+# QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+# Start time: 22:28:14 on May 10,2026
+# vlog -reportprogress 300 -sv hdl/crossbar_tb.sv 
+# -- Compiling module crossbar_tb
+# 
+# Top level modules:
+# 	crossbar_tb
+# End time: 22:28:14 on May 10,2026, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# >>> Running crossbar_tb...
+# vsim -t 1ps -L work work.crossbar_tb -voptargs=""+acc"" -onfinish stop 
+# Start time: 22:28:14 on May 10,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: hdl/crossbar_mac.sv(22): (vopt-13314) Defaulting port 'w_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: hdl/crossbar_mac.sv(25): (vopt-13314) Defaulting port 'in_data' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=2.
+# Loading sv_std.std
+# Loading work.crossbar_tb(fast)
+# Loading work.crossbar_mac(fast)
+# 0
+# ---------------------------------------------------
+#  4x4 Binary-Weight Crossbar MAC — simulation result
+# ---------------------------------------------------
+#  Inputs:  [10, 20, 30, 40]
+#  Weights (1 = +1, 0 = -1):
+#    row 0: [1 0 1 0]
+#    row 1: [1 1 0 0]
+#    row 2: [0 1 1 0]
+#    row 3: [0 0 0 1]
+#  Outputs:
+#    out[0] = -40   expected = -40   PASS
+#    out[1] = 0   expected = 0   PASS
+#    out[2] = -20   expected = -20   PASS
+#    out[3] = -20   expected = -20   PASS
+# ---------------------------------------------------
+#  *** TEST PASSED ***
+# ---------------------------------------------------
+# ** Note: $finish    : hdl/crossbar_tb.sv(139)
+#    Time: 56 ns  Iteration: 0  Instance: /crossbar_tb
+# Break in Module crossbar_tb at hdl/crossbar_tb.sv line 139
+# 0
+# 
+# Look for the line '*** TEST PASSED ***' or '*** TEST FAILED ***' above.
+# Wave window populated; export via File -> Export -> Image.

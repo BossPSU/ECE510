@@ -1,0 +1,80 @@
+Cadence Genus(TM) Synthesis Solution.
+Copyright 2022 Cadence Design Systems, Inc. All rights reserved worldwide.
+Cadence and the Cadence logo are registered trademarks and Genus is a trademark
+of Cadence Design Systems, Inc. in the United States and other countries.
+
+[15:57:21.346537] Configured Lic search path (20.02-s004): 5280@cadence-lic.cecs.pdx.edu
+
+Version: 21.12-s068_1, built Fri Mar 04 14:12:46 PST 2022
+Options: -files run_genus.do -log genus.log 
+Date:    Wed May 06 15:57:21 2026
+Host:    phobos.ece.pdx.edu (x86_64 w/Linux 5.14.0-611.34.1.el9_7.x86_64) (1core*32cpus*32physical cpus*Intel Xeon Processor (Cascadelake) 16384KB) (65312296KB)
+PID:     1597748
+OS:      Rocky Linux release 9.7 (Blue Onyx)
+
+
+[15:57:21.508402] Periodic Lic check successful
+[15:57:21.508419] Feature usage summary:
+[15:57:21.508419] Genus_Synthesis
+Checking out license: Genus_Synthesis
+
+
+***********************************************************************************************************
+***********************************************************************************************************
+
+
+
+Loading tool scripts...
+Finished loading tool scripts (14 seconds elapsed).
+
+#@ Processing -files option
+@genus 1> source run_genus.do
+#@ Begin verbose source ./run_genus.do
+@file(run_genus.do) 27: set_db init_lib_search_path { . $env(LIB_PATH) }
+  Setting attribute of root '/': 'init_lib_search_path' =  . $env(LIB_PATH) 
+@file(run_genus.do) 28: set_db init_hdl_search_path { ../rtl }
+  Setting attribute of root '/': 'init_hdl_search_path' =  ../rtl 
+@file(run_genus.do) 31: set_db max_cpus_per_server 8
+  Setting attribute of root '/': 'max_cpus_per_server' = 8
+@file(run_genus.do) 32: set_db super_thread_servers "localhost"
+  Setting attribute of root '/': 'super_thread_servers' = localhost
+@file(run_genus.do) 36: set_db hdl_error_on_blackbox  true
+  Setting attribute of root '/': 'hdl_error_on_blackbox' = true
+@file(run_genus.do) 37: set_db hdl_track_filename_row_col true
+Info   : Enabled hdl_track_filename_row_col attribute.
+       : Setting this attribute to 'true' can have an impact on the run time. Use this attribute only when filename, line number, and column information are needed in reports.
+  Setting attribute of root '/': 'hdl_track_filename_row_col' = true
+@file(run_genus.do) 38: set_db information_level 7
+  Setting attribute of root '/': 'information_level' = 7
+@file(run_genus.do) 49: if { ![info exists env(LIB_PATH)] } {
+    puts "WARNING: LIB_PATH env var is unset. Set it to your PDK lib dir,"
+    puts "         e.g. setenv LIB_PATH /opt/pdk/nangate45/lib  (csh)"
+    puts "         or  export LIB_PATH=/opt/pdk/nangate45/lib  (bash)"
+    puts "         Falling back to ./libs/  -- edit the glob if needed."
+    set env(LIB_PATH) "./libs"
+}
+WARNING: LIB_PATH env var is unset. Set it to your PDK lib dir,
+         e.g. setenv LIB_PATH /opt/pdk/nangate45/lib  (csh)
+         or  export LIB_PATH=/opt/pdk/nangate45/lib  (bash)
+         Falling back to ./libs/  -- edit the glob if needed.
+@file(run_genus.do) 57: set lib_files [glob -nocomplain $env(LIB_PATH)/*_tt_*.lib]
+@file(run_genus.do) 58: if { [llength $lib_files] == 0 } {
+    set lib_files [glob -nocomplain $env(LIB_PATH)/*.lib]
+}
+@file(run_genus.do) 61: if { [llength $lib_files] == 0 } {
+    error "No .lib files found in $env(LIB_PATH). Cannot proceed."
+}
+#@ End verbose source ./run_genus.do
+No .lib files found in ./libs. Cannot proceed.
+Encountered problems processing file: run_genus.do
+WARNING: This version of the tool is 1524 days old.
+
+Another Ctrl-C within 1 second will terminate the tool.
+CURRENT RESOURCES: RT {elapsed: 35s, ST: 11s, FG: 11s, CPU: 9.2%}, MEM {curr: 0.6G, peak: 0.6G, phys curr: 0.3G, phys peak: 0.3G}, SYS {load: 0.3, cpu: 32, total: 62.3G, free: 56.6G}
+
+Another Ctrl-C within 1 second will terminate the tool.
+CURRENT RESOURCES: RT {elapsed: 36s, ST: 11s, FG: 11s, CPU: 9.2%}, MEM {curr: 0.6G, peak: 0.6G, phys curr: 0.3G, phys peak: 0.3G}, SYS {load: 0.3, cpu: 32, total: 62.3G, free: 56.6G}
+
+Another Ctrl-C within 1 second will terminate the tool.
+CURRENT RESOURCES: RT {elapsed: 38s, ST: 11s, FG: 11s, CPU: 9.2%}, MEM {curr: 0.6G, peak: 0.6G, phys curr: 0.3G, phys peak: 0.3G}, SYS {load: 0.3, cpu: 32, total: 62.3G, free: 56.6G}
+Abnormal exit.

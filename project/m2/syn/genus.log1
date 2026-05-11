@@ -1,0 +1,36 @@
+Cadence Genus(TM) Synthesis Solution.
+Copyright 2022 Cadence Design Systems, Inc. All rights reserved worldwide.
+Cadence and the Cadence logo are registered trademarks and Genus is a trademark
+of Cadence Design Systems, Inc. in the United States and other countries.
+
+[16:00:56.346513] Configured Lic search path (20.02-s004): 5280@cadence-lic.cecs.pdx.edu
+
+Version: 21.12-s068_1, built Fri Mar 04 14:12:46 PST 2022
+Options: 
+Date:    Wed May 06 16:00:56 2026
+Host:    phobos.ece.pdx.edu (x86_64 w/Linux 5.14.0-611.34.1.el9_7.x86_64) (1core*32cpus*32physical cpus*Intel Xeon Processor (Cascadelake) 16384KB) (65312296KB)
+PID:     1602284
+OS:      Rocky Linux release 9.7 (Blue Onyx)
+
+
+[16:00:56.056184] Periodic Lic check successful
+[16:00:56.056201] Feature usage summary:
+[16:00:56.056202] Genus_Synthesis
+Checking out license: Genus_Synthesis
+
+
+***********************************************************************************************************
+***********************************************************************************************************
+
+
+
+Loading tool scripts...
+Finished loading tool scripts (9 seconds elapsed).
+
+WARNING: This version of the tool is 1524 days old.
+@genus:root: 1> module avail | grep -i pdk
+invalid command name "module"
+
+Another Ctrl-C within 1 second will terminate the tool.
+CURRENT RESOURCES: RT {elapsed: 70s, ST: 11s, FG: 11s, CPU: 9.7%}, MEM {curr: 0.6G, peak: 0.6G, phys curr: 0.3G, phys peak: 0.3G}, SYS {load: 0.3, cpu: 32, total: 62.3G, free: 56.7G}
+Abnormal exit.

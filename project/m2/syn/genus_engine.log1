@@ -1,0 +1,803 @@
+Cadence Genus(TM) Synthesis Solution.
+Copyright 2022 Cadence Design Systems, Inc. All rights reserved worldwide.
+Cadence and the Cadence logo are registered trademarks and Genus is a trademark
+of Cadence Design Systems, Inc. in the United States and other countries.
+
+[17:34:03.346513] Configured Lic search path (20.02-s004): 5280@cadence-lic.cecs.pdx.edu
+
+Version: 21.12-s068_1, built Fri Mar 04 14:12:46 PST 2022
+Options: -files run_genus_engine.do -log genus_engine.log 
+Date:    Wed May 06 17:34:03 2026
+Host:    phobos.ece.pdx.edu (x86_64 w/Linux 5.14.0-611.34.1.el9_7.x86_64) (1core*32cpus*32physical cpus*Intel Xeon Processor (Cascadelake) 16384KB) (65312296KB)
+PID:     1706971
+OS:      Rocky Linux release 9.7 (Blue Onyx)
+
+
+[17:34:03.470395] Periodic Lic check successful
+[17:34:03.470417] Feature usage summary:
+[17:34:03.470418] Genus_Synthesis
+Checking out license: Genus_Synthesis
+
+
+***********************************************************************************************************
+***********************************************************************************************************
+
+
+
+Loading tool scripts...
+Finished loading tool scripts (9 seconds elapsed).
+
+#@ Processing -files option
+@genus 1> source run_genus_engine.do
+#@ Begin verbose source ./run_genus_engine.do
+@file(run_genus_engine.do) 26: set_db init_lib_search_path { . $env(LIB_PATH) }
+  Setting attribute of root '/': 'init_lib_search_path' =  . $env(LIB_PATH) 
+@file(run_genus_engine.do) 27: set_db init_hdl_search_path { ../rtl }
+  Setting attribute of root '/': 'init_hdl_search_path' =  ../rtl 
+@file(run_genus_engine.do) 29: set_db max_cpus_per_server 8
+  Setting attribute of root '/': 'max_cpus_per_server' = 8
+@file(run_genus_engine.do) 30: set_db super_thread_servers "localhost"
+  Setting attribute of root '/': 'super_thread_servers' = localhost
+@file(run_genus_engine.do) 32: set_db hdl_error_on_blackbox  true
+  Setting attribute of root '/': 'hdl_error_on_blackbox' = true
+@file(run_genus_engine.do) 33: set_db hdl_track_filename_row_col true
+Info   : Enabled hdl_track_filename_row_col attribute.
+       : Setting this attribute to 'true' can have an impact on the run time. Use this attribute only when filename, line number, and column information are needed in reports.
+  Setting attribute of root '/': 'hdl_track_filename_row_col' = true
+@file(run_genus_engine.do) 34: set_db information_level 7
+  Setting attribute of root '/': 'information_level' = 7
+@file(run_genus_engine.do) 39: if { ![info exists env(LIB_PATH)] } {
+    set env(LIB_PATH) "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm"
+    puts "INFO: LIB_PATH unset; defaulting to SAED32 RVT @ $env(LIB_PATH)"
+}
+INFO: LIB_PATH unset; defaulting to SAED32 RVT @ /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm
+@file(run_genus_engine.do) 44: if { [info exists env(LIB_FILE)] } {
+    set lib_files [list $env(LIB_PATH)/$env(LIB_FILE)]
+} else {
+    set lib_files [glob -nocomplain $env(LIB_PATH)/saed32rvt_tt0p85v25c.lib]
+    if { [llength $lib_files] == 0 } {
+        set lib_files [glob -nocomplain $env(LIB_PATH)/*tt0p85v25c.lib]
+    }
+    if { [llength $lib_files] == 0 } {
+        set lib_files [glob -nocomplain $env(LIB_PATH)/*_tt_*.lib]
+    }
+    if { [llength $lib_files] == 0 } {
+        set lib_files [glob -nocomplain $env(LIB_PATH)/*.lib]
+    }
+}
+@file(run_genus_engine.do) 59: if { [llength $lib_files] == 0 } {
+    error "No .lib files found in $env(LIB_PATH). Cannot proceed."
+}
+@file(run_genus_engine.do) 63: set_db library $lib_files
+
+Threads Configured:3
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 51)
+        : Check to see if this construct is really needed for synthesis. Many liberty constructs are not actually required.
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 52)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 53)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 54)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 55)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 56)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'library_features' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 83)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'library_features' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'library_features' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 85)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'INOUT1' for the cell 'BSLEX1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 32766)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'INOUT1' for the cell 'BSLEX2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 33102)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'INOUT1' for the cell 'BSLEX4_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 33438)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 57701)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 57717)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 57737)
+Warning : Missing clock pin in the sequential cell. [LBR-525]
+        : Clock pin absent in sequential cell(s) 'LNANDX1_RVT' (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 75612)
+        : Sequential timing checks, such as 'setup_rising' or 'hold_rising', on flop and latch cells require a clock pin. Verify that the 'clock' attribute of the clock pin is set to 'true' or that the clock pin has a 'clocked_on' attribute.
+Warning : Missing clock pin in the sequential cell. [LBR-525]
+        : Clock pin absent in sequential cell(s) 'LNANDX2_RVT' (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 75949)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'D' for the cell 'NMT1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84601)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'S' for the cell 'NMT1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84614)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'D' for the cell 'NMT2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84652)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'S' for the cell 'NMT2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84665)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'D' for the cell 'NMT3_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84703)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'S' for the cell 'NMT3_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84716)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'INOUT1' for the cell 'PGX1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 118732)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'INOUT1' for the cell 'PGX2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 119167)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'INOUT1' for the cell 'PGX4_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 119602)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'D' for the cell 'PMT1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120041)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'S' for the cell 'PMT1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120054)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'D' for the cell 'PMT2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120092)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'S' for the cell 'PMT2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120105)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'D' for the cell 'PMT3_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120143)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'S' for the cell 'PMT3_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120156)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'QN' for the cell 'RSDFFARX1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 145385)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'QN' for the cell 'RSDFFARX2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 146400)
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'LBR-518'.
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 219376)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 219392)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 219407)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 219423)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 219440)
+Warning : An attribute is used before it is defined. [LBR-511]
+        : The library level attribute default_operating_conditions on line 226626 is defined after at least one cell definition. The attribute will be ignored. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib)
+Warning : An attribute is used before it is defined. [LBR-511]
+        : The library level attribute default_wire_load on line 226627 is defined after at least one cell definition. The attribute will be ignored. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib)
+Warning : An attribute is used before it is defined. [LBR-511]
+        : The library level attribute default_wire_load_selection on line 226628 is defined after at least one cell definition. The attribute will be ignored. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib)
+
+  Message Summary for Library saed32rvt_tt0p85v25c.lib:
+  *****************************************************
+  Missing clock pin in the sequential cell. [LBR-525]: 2
+  Missing a function attribute in the output pin definition. [LBR-518]: 64
+  An attribute is used before it is defined. [LBR-511]: 3
+  An unsupported construct was detected in this library. [LBR-40]: 17
+  *****************************************************
+ 
+            Reading file '/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib'
+Info    : Created nominal operating condition. [LBR-412]
+        : Operating condition '_nominal_' was created for the PVT values (1.000000, 0.850000, 25.000000) in library 'saed32rvt_tt0p85v25c.lib'.
+        : The nominal operating condition is represented, either by the nominal PVT values specified in the library source (via nom_process,nom_voltage and nom_temperature respectively), or by the default PVT values (1.0,1.0,1.0).
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'ANTENNA_RVT' must have an output pin.
+        : Add the missing output pin(s), then reload the library. Else the library cell will be marked as timing model i.e. unusable. Timing_model means that the cell does not have any defined function. If there is no output pin, Genus will mark library cell as unusable i.e. the attribute 'usable' will be marked to 'false' on the libcell. Therefore, the cell is not used for mapping and it will not be picked up from the library for synthesis. If you query the attribute 'unusable_reason' on the libcell; result will be: 'Library cell has no output pins.'Note: The message LBR-9 is only for the logical pins and not for the power_ground pins. Genus will depend upon the output function defined in the pin group (output pin) of the cell, to use it for mapping. The pg_pin will not have any function defined.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'ANTENNA_RVT' must have an output pin.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'BSLEX1_RVT/INOUT1' has no function.
+        : If the remainder of this library cell's semantic checks are successful, it will be considered as a timing-model (because one of its outputs does not have a valid function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'BSLEX2_RVT/INOUT1' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'BSLEX4_RVT/INOUT1' has no function.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'BUSKP_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'BUSKP_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'CLOAD1_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'CLOAD1_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DCAP_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DCAP_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DHFILLH2_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DHFILLH2_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DHFILLHL2_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DHFILLHL2_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DHFILLHLHLS11_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DHFILLHLHLS11_RVT' must have an output pin.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'NMT1_RVT/D' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'NMT1_RVT/S' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'NMT2_RVT/D' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'NMT2_RVT/S' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'NMT3_RVT/D' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'NMT3_RVT/S' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PGX1_RVT/INOUT1' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PGX2_RVT/INOUT1' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PGX4_RVT/INOUT1' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PMT1_RVT/D' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PMT1_RVT/S' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PMT2_RVT/D' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PMT2_RVT/S' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PMT3_RVT/D' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PMT3_RVT/S' has no function.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFNSRARX1_RVT'.  Ignoring the test_cell.
+        : Review the definition of the test_cell's function or its parent library-cell's function.  An inconsistency between the two may exist.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFNSRARX2_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFNSRASX1_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFNSRASX2_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFNSRX1_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFNSRX2_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRARX1_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRARX2_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRASX1_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRASX2_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRSSRX1_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRSSRX2_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRX1_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRX2_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'SDFFSSRX1_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'SDFFSSRX2_RVT'.  Ignoring the test_cell.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'SHFILL128_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'SHFILL128_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'SHFILL1_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'SHFILL1_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'SHFILL2_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'SHFILL2_RVT' must have an output pin.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'LBR-9'.
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'positive_unate' for library pin 'DFFSSRX1_RVT/Q' is ignored.
+        : Timing sense should never be set with 'rising_edge' or 'falling_edge' timing type.
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'negative_unate' for library pin 'DFFSSRX1_RVT/QN' is ignored.
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'positive_unate' for library pin 'DFFSSRX2_RVT/Q' is ignored.
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'negative_unate' for library pin 'DFFSSRX2_RVT/QN' is ignored.
+  Setting attribute of root '/': 'library' = /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib
+@file(run_genus_engine.do) 64: puts ">>> Loaded [llength $lib_files] standard-cell library file(s):"
+>>> Loaded 1 standard-cell library file(s):
+@file(run_genus_engine.do) 65: foreach f $lib_files { puts "      $f" }
+      /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib
+@file(run_genus_engine.do) 76: puts ">>> Reading RTL (accel_engine subset)..."
+>>> Reading RTL (accel_engine subset)...
+@file(run_genus_engine.do) 77: set rtl ../rtl
+@file(run_genus_engine.do) 80: read_hdl -sv $rtl/accel_pkg.sv
+            Reading Verilog file '../rtl/../rtl/accel_pkg.sv'
+@file(run_genus_engine.do) 83: read_hdl -sv $rtl/stream_if.sv
+            Reading Verilog file '../rtl/../rtl/stream_if.sv'
+@file(run_genus_engine.do) 84: read_hdl -sv $rtl/sram_if.sv
+            Reading Verilog file '../rtl/../rtl/sram_if.sv'
+@file(run_genus_engine.do) 85: read_hdl -sv $rtl/cmd_if.sv
+            Reading Verilog file '../rtl/../rtl/cmd_if.sv'
+@file(run_genus_engine.do) 86: read_hdl -sv $rtl/tile_if.sv
+            Reading Verilog file '../rtl/../rtl/tile_if.sv'
+@file(run_genus_engine.do) 87: read_hdl -sv $rtl/ctrl_if.sv
+            Reading Verilog file '../rtl/../rtl/ctrl_if.sv'
+@file(run_genus_engine.do) 88: read_hdl -sv $rtl/status_if.sv
+            Reading Verilog file '../rtl/../rtl/status_if.sv'
+@file(run_genus_engine.do) 91: read_hdl -sv $rtl/mac_pe.sv
+            Reading Verilog file '../rtl/../rtl/mac_pe.sv'
+@file(run_genus_engine.do) 92: read_hdl -sv $rtl/systolic_array_64x64.sv
+            Reading Verilog file '../rtl/../rtl/systolic_array_64x64.sv'
+@file(run_genus_engine.do) 93: read_hdl -sv $rtl/gelu_lut.sv
+            Reading Verilog file '../rtl/../rtl/gelu_lut.sv'
+  (* rom_style = "block" *) logic signed [DATA_WIDTH-1:0] lut_mem [DEPTH];
+     |
+Warning : Unused attribute. [VLOGPT-506]
+        : Attribute 'rom_style' in file '../rtl/../rtl/gelu_lut.sv' on line 17, column 6.
+  initial begin
+        |
+Warning : Ignoring unsynthesizable construct. [VLOGPT-37]
+        : Initial in file '../rtl/../rtl/gelu_lut.sv' on line 19, column 9.
+        : For example, the following constructs will be ignored:
+    - initial block
+    - final block
+    - program block
+    - property block
+    - sequence block
+    - covergroup
+    - checker block
+    - gate drive strength
+    - system task enable
+    - reg declaration with initial value
+    - specify block.
+@file(run_genus_engine.do) 94: read_hdl -sv $rtl/exp_lut.sv
+            Reading Verilog file '../rtl/../rtl/exp_lut.sv'
+  (* rom_style = "block" *) logic signed [DATA_WIDTH-1:0] lut_mem [DEPTH];
+     |
+Warning : Unused attribute. [VLOGPT-506]
+        : Attribute 'rom_style' in file '../rtl/../rtl/exp_lut.sv' on line 16, column 6.
+  initial begin
+        |
+Warning : Ignoring unsynthesizable construct. [VLOGPT-37]
+        : Initial in file '../rtl/../rtl/exp_lut.sv' on line 18, column 9.
+@file(run_genus_engine.do) 95: read_hdl -sv $rtl/adder_tree.sv
+            Reading Verilog file '../rtl/../rtl/adder_tree.sv'
+@file(run_genus_engine.do) 96: read_hdl -sv $rtl/gelu_unit.sv
+            Reading Verilog file '../rtl/../rtl/gelu_unit.sv'
+@file(run_genus_engine.do) 97: read_hdl -sv $rtl/gelu_grad_unit.sv
+            Reading Verilog file '../rtl/../rtl/gelu_grad_unit.sv'
+@file(run_genus_engine.do) 98: read_hdl -sv $rtl/softmax_unit.sv
+            Reading Verilog file '../rtl/../rtl/softmax_unit.sv'
+@file(run_genus_engine.do) 99: read_hdl -sv $rtl/causal_mask_unit.sv
+            Reading Verilog file '../rtl/../rtl/causal_mask_unit.sv'
+@file(run_genus_engine.do) 100: read_hdl -sv $rtl/divider_or_reciprocal_unit.sv
+            Reading Verilog file '../rtl/../rtl/divider_or_reciprocal_unit.sv'
+@file(run_genus_engine.do) 101: read_hdl -sv $rtl/fused_postproc_unit.sv
+            Reading Verilog file '../rtl/../rtl/fused_postproc_unit.sv'
+@file(run_genus_engine.do) 104: read_hdl -sv $rtl/pipeline_stage.sv
+            Reading Verilog file '../rtl/../rtl/pipeline_stage.sv'
+@file(run_genus_engine.do) 105: read_hdl -sv $rtl/skid_buffer.sv
+            Reading Verilog file '../rtl/../rtl/skid_buffer.sv'
+@file(run_genus_engine.do) 106: read_hdl -sv $rtl/stream_mux.sv
+            Reading Verilog file '../rtl/../rtl/stream_mux.sv'
+@file(run_genus_engine.do) 109: read_hdl -sv $rtl/tile_buffer.sv
+            Reading Verilog file '../rtl/../rtl/tile_buffer.sv'
+@file(run_genus_engine.do) 112: read_hdl -sv $rtl/stream_pipeline.sv
+            Reading Verilog file '../rtl/../rtl/stream_pipeline.sv'
+@file(run_genus_engine.do) 115: read_hdl -sv $rtl/accel_controller.sv
+            Reading Verilog file '../rtl/../rtl/accel_controller.sv'
+@file(run_genus_engine.do) 116: read_hdl -sv $rtl/perf_counter_block.sv
+            Reading Verilog file '../rtl/../rtl/perf_counter_block.sv'
+@file(run_genus_engine.do) 119: read_hdl -sv $rtl/accel_engine.sv
+            Reading Verilog file '../rtl/../rtl/accel_engine.sv'
+@file(run_genus_engine.do) 124: set TOP accel_engine
+@file(run_genus_engine.do) 125: puts ">>> Elaborating $TOP..."
+>>> Elaborating accel_engine...
+@file(run_genus_engine.do) 126: elaborate $TOP
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'positive_unate' for library pin 'DFFSSRX1_RVT/Q' is ignored.
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'negative_unate' for library pin 'DFFSSRX1_RVT/QN' is ignored.
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'positive_unate' for library pin 'DFFSSRX2_RVT/Q' is ignored.
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'negative_unate' for library pin 'DFFSSRX2_RVT/QN' is ignored.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'CI' and 'S' in libcell 'FADDX1_RVT' is 'pos_unate', but unateness determined from function is 'non_unate'.
+        : The 'timing_sense' attribute will be respected.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'CI' and 'S' in libcell 'FADDX1_RVT' is 'neg_unate', but unateness determined from function is 'non_unate'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'CI' and 'S' in libcell 'FADDX1_RVT'.
+        : Setting the 'timing_sense' to non_unate.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'B' and 'S' in libcell 'FADDX1_RVT' is 'pos_unate', but unateness determined from function is 'non_unate'.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'B' and 'S' in libcell 'FADDX1_RVT' is 'neg_unate', but unateness determined from function is 'non_unate'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'B' and 'S' in libcell 'FADDX1_RVT'.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'A' and 'S' in libcell 'FADDX1_RVT' is 'pos_unate', but unateness determined from function is 'non_unate'.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'A' and 'S' in libcell 'FADDX1_RVT' is 'neg_unate', but unateness determined from function is 'non_unate'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A' and 'S' in libcell 'FADDX1_RVT'.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'CI' and 'S' in libcell 'FADDX2_RVT' is 'pos_unate', but unateness determined from function is 'non_unate'.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'CI' and 'S' in libcell 'FADDX2_RVT' is 'neg_unate', but unateness determined from function is 'non_unate'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'CI' and 'S' in libcell 'FADDX2_RVT'.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'B' and 'S' in libcell 'FADDX2_RVT' is 'pos_unate', but unateness determined from function is 'non_unate'.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'B' and 'S' in libcell 'FADDX2_RVT' is 'neg_unate', but unateness determined from function is 'non_unate'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'B' and 'S' in libcell 'FADDX2_RVT'.
+Info    : Setting the maximum print count of this message to 10 if information_level is less than 9. [LBR-161]
+        : To print all the warning messages, set the information_level to 9.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A' and 'S' in libcell 'FADDX2_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'B0' and 'SO' in libcell 'HADDX1_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A0' and 'SO' in libcell 'HADDX1_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'B0' and 'SO' in libcell 'HADDX2_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A0' and 'SO' in libcell 'HADDX2_RVT'.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RDFFNX1_RVT/D' has no incoming setup arc.
+        : Pin used in a next_state function must have an incoming setup timing arc. Otherwise, the library cell will be treated as a timing model.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RDFFNX2_RVT/D' has no incoming setup arc.
+Info    : Promoting a hold arc to removal. [LBR-31]
+        : The asynchronous input pin is RDFFSRSSRX2_RVT/RSTB
+        : Hold arcs to asynchronous input pins are not supported.
+Info    : Promoting a setup arc to recovery. [LBR-30]
+        : The asynchronous input pin is RDFFSRSSRX2_RVT/RSTB
+        : Setup arcs to asynchronous input pins are not supported.
+Info    : Promoting a hold arc to removal. [LBR-31]
+        : The asynchronous input pin is RDFFSRSSRX2_RVT/SETB
+Info    : Promoting a setup arc to recovery. [LBR-30]
+        : The asynchronous input pin is RDFFSRSSRX2_RVT/SETB
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RDFFX1_RVT/D' has no incoming setup arc.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RDFFX2_RVT/D' has no incoming setup arc.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RSDFFNSRX1_RVT/D' has no incoming setup arc.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RSDFFNSRX1_RVT/SE' has no incoming setup arc.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RSDFFNSRX1_RVT/SI' has no incoming setup arc.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RSDFFNSRX2_RVT/D' has no incoming setup arc.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RSDFFNSRX2_RVT/SE' has no incoming setup arc.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RSDFFNSRX2_RVT/SI' has no incoming setup arc.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A2' and 'Y' in libcell 'XNOR2X1_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A1' and 'Y' in libcell 'XNOR2X1_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A2' and 'Y' in libcell 'XNOR2X2_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A1' and 'Y' in libcell 'XNOR2X2_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A3' and 'Y' in libcell 'XNOR3X1_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A2' and 'Y' in libcell 'XNOR3X1_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A1' and 'Y' in libcell 'XNOR3X1_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A3' and 'Y' in libcell 'XNOR3X2_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A2' and 'Y' in libcell 'XNOR3X2_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A1' and 'Y' in libcell 'XNOR3X2_RVT'.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'LBR-162'.
+  Library has 130 usable logic and 108 usable sequential lib-cells.
+Info    : Elaborating Design. [ELAB-1]
+        : Elaborating top-level block 'accel_engine' from file '../rtl/../rtl/accel_engine.sv'.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'a_rd_row' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 55.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'a_rd_col' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 56.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'a_rd_data' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 57.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'b_rd_row' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 58.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'b_rd_col' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 59.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'b_rd_data' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 60.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'unused_out_mp_row' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 80.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'unused_out_mp_col' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 81.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'unused_out_mp_data' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 82.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'aux_mp_row' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 136.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'aux_mp_col' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 137.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'aux_mp_data' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 138.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'accel_controller' from file '../rtl/../rtl/accel_controller.sv'.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_IDLE' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 64.
+        : Review and make sure the mismatch is unintentional. Genus can possibly issue bitwidth mismatch warning for explicit assignments present in RTL as-well-as for implicit assignments inferred by the tool. For example, in case of enum declaration without value, the tool will implicitly assign value to the enum variables. It also issues the warning for any bitwidth mismatch that appears in this implicit assignment.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_LOAD_A' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 65.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_LOAD_B' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 66.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_LOAD_AUX' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 67.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_STREAM_START' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 68.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_STREAM_WAIT' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 69.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_WRITE' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 70.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_DONE' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 72.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_IDLE' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 64.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_LOAD_A' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 65.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_LOAD_B' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 66.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_LOAD_AUX' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 67.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_STREAM_START' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 68.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_STREAM_WAIT' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 69.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_WRITE' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 70.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_DONE' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 72.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused flip-flop register 'cmd_reg[seq_len]' in module 'accel_controller' in file '../rtl/../rtl/accel_controller.sv' on line 75.
+        : Genus removes the flip-flop or latch inferred for an unused signal or variable. To preserve the flip-flop or latch, set the hdl_preserve_unused_registers attribute to true or use a pragma in the RTL.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '%bit-concat%' in file '../rtl/../rtl/accel_controller.sv' on line 139.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '%bit-concat%' in file '../rtl/../rtl/accel_controller.sv' on line 129.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '%bit-concat%' in file '../rtl/../rtl/accel_controller.sv' on line 151.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '%bit-concat%' in file '../rtl/../rtl/accel_controller.sv' on line 129.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 141.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 131.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 153.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 131.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 141.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 131.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 153.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 131.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 232.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 211.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 257.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 211.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 217.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 211.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 242.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 211.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 263.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 211.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 299.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 296.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 243.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 218.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 264.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 218.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 222.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 218.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 247.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 218.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 268.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 218.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 245.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 220.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 266.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 220.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 304.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 300.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'CDFG-738'.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'CDFG-739'.
+Info    : Identified sum-of-products logic to be optimized during syn_generic. [CDFG-769]
+        : Sum-of-products logic in module 'accel_controller' in file '../rtl/../rtl/accel_controller.sv' on line 120.
+Info    : Identified sum-of-products logic to be optimized during syn_generic. [CDFG-769]
+        : Sum-of-products logic in module 'accel_controller' in file '../rtl/../rtl/accel_controller.sv' on line 94.
+Info    : Unused module input port. [CDFG-500]
+        : Input port 'cmd[seq_len]' is not used in module 'accel_controller' in file '../rtl/../rtl/accel_controller.sv' on line 25.
+        : (In port definition within the module, the input port is not used in any assignment statements or conditional expressions for decision statements.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS64' from file '../rtl/../rtl/tile_buffer.sv'.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mp_rd_row' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS64' in file '../rtl/../rtl/tile_buffer.sv' on line 41.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mp_rd_col' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS64' in file '../rtl/../rtl/tile_buffer.sv' on line 42.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mp_rd_data' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS64' in file '../rtl/../rtl/tile_buffer.sv' on line 44.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mem' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS64' in file '../rtl/../rtl/tile_buffer.sv' on line 46.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS1' from file '../rtl/../rtl/tile_buffer.sv'.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mp_rd_row' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS1' in file '../rtl/../rtl/tile_buffer.sv' on line 41.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mp_rd_col' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS1' in file '../rtl/../rtl/tile_buffer.sv' on line 42.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mp_rd_data' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS1' in file '../rtl/../rtl/tile_buffer.sv' on line 44.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mem' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS1' in file '../rtl/../rtl/tile_buffer.sv' on line 46.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'stream_pipeline_DATA_WIDTH32_ARRAY_DIM64' from file '../rtl/../rtl/stream_pipeline.sv'.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'CDFG-250'.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[0]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[1]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[2]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[3]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[4]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[5]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[6]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[7]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[8]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[9]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[10]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[11]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[12]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[13]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[14]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[15]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[16]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[17]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[18]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[19]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'CDFG-373'.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'systolic_array_64x64_ROWS64_COLS64_DATA_WIDTH32' from file '../rtl/../rtl/systolic_array_64x64.sv'.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'mac_pe_DATA_WIDTH32' from file '../rtl/../rtl/mac_pe.sv'.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'product' [64] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/mac_pe.sv' on line 31.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'fused_postproc_unit_DATA_WIDTH32' from file '../rtl/../rtl/fused_postproc_unit.sv'.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'gelu_unit_DATA_WIDTH32' from file '../rtl/../rtl/gelu_unit.sv'.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'product' [64] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_pkg.sv' on line 156.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'product' [64] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_pkg.sv' on line 156.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'product' [64] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_pkg.sv' on line 156.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'CDFG-372'.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused flip-flop register 's1_x2' in module 'gelu_unit_DATA_WIDTH32' in file '../rtl/../rtl/gelu_unit.sv' on line 43.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'gelu_grad_unit_DATA_WIDTH32' from file '../rtl/../rtl/gelu_grad_unit.sv'.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'softmax_unit_DATA_WIDTH32_VEC_LEN64' from file '../rtl/../rtl/softmax_unit.sv'.
+Info    : Constant relational expression. [CDFG-479]
+        : The '<' operation evaluates to 'false' in file '../rtl/../rtl/softmax_unit.sv' on line 111.
+        : A relational expression can evaluate to a constant when a variable is compared to a value which is outside the bounds of the variable.
+Info    : Constant relational expression. [CDFG-479]
+        : The boolean operation evaluates to 'false' in file '../rtl/../rtl/softmax_unit.sv' on line 111.
+Info    : Skip related conditional write and read sequence. [CDFG-773]
+        : For variable 'q_exp_approx' in Module 'softmax_unit_DATA_WIDTH32_VEC_LEN64_softmax_unit_q_exp_approx_softmax_unit_DATA_WIDTH_32'sh00000020_VEC_LEN_32'sh00000040' in file '../rtl/../rtl/softmax_unit.sv' on line 96.
+Info    : Skip related conditional write and read sequence. [CDFG-773]
+        : For variable 'q_exp_approx' in Module 'softmax_unit_DATA_WIDTH32_VEC_LEN64_softmax_unit_q_exp_approx_softmax_unit_DATA_WIDTH_32'sh00000020_VEC_LEN_32'sh00000040' in file '../rtl/../rtl/softmax_unit.sv' on line 97.
+Info    : Skip related conditional write and read sequence. [CDFG-773]
+        : For variable '__enable_main_body_1' in Module 'softmax_unit_DATA_WIDTH32_VEC_LEN64_softmax_unit_q_exp_approx_softmax_unit_DATA_WIDTH_32'sh00000020_VEC_LEN_32'sh00000040' in file '../rtl/../rtl/softmax_unit.sv' on line 97.
+Info    : Skip related conditional write and read sequence. [CDFG-773]
+        : For variable '__enable_main_body_1' in Module 'softmax_unit_DATA_WIDTH32_VEC_LEN64_softmax_unit_q_exp_approx_softmax_unit_DATA_WIDTH_32'sh00000020_VEC_LEN_32'sh00000040' in file '../rtl/../rtl/softmax_unit.sv' on line 105.
+Info    : Unused module input port. [CDFG-500]
+        : Input port 'start' is not used in module 'softmax_unit_DATA_WIDTH32_VEC_LEN64' in file '../rtl/../rtl/softmax_unit.sv' on line 12.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'perf_counter_block' from file '../rtl/../rtl/perf_counter_block.sv'.
+Info    : Unused instance port. [ELABUTL-132]
+        : Unused Port 'total_cycles' of instance 'u_perf' of module 'perf_counter_block' inside module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 184.
+        : Please check the reported scenario of unconnected instance port to ensure that it matches the design intent.
+Info    : Done Elaborating Design. [ELAB-3]
+        : Done elaborating 'accel_engine'.
+Checking for analog nets...
+Check completed for analog nets.
+Checking for source RTL...
+Check completed for source RTL.
+Running Unified Mux Engine Tricks...
+Completed Unified Mux Engine Tricks
+--------------------------------------------------------
+| Trick             | Accepts | Rejects | Runtime (ms) | 
+--------------------------------------------------------
+| ume_constant_bmux |       0 |       0 |        55.00 | 
+--------------------------------------------------------
+Starting clip mux common data inputs [v1.0] (stage: post_elab, startdef: accel_engine, recur: true)
+Completed clip mux common data inputs (accepts: 0, rejects: 0, runtime: 0.933s)
+Starting clip the non-user hierarchies [v2.0] (stage: post_elab, startdef: accel_engine, recur: true)
+Completed clip the non-user hierarchies (accepts: 0, rejects: 0, runtime: 0.042s)
+        Applying wireload models.
+        Computing net loads.
+UM:   flow.cputime  flow.realtime  timing.setup.tns  timing.setup.wns  snapshot
+UM:*                                                                   elaborate
+@file(run_genus_engine.do) 127: puts ">>> Elaboration done."
+>>> Elaboration done.
+@file(run_genus_engine.do) 132: puts ">>> Applying constraints..."
+>>> Applying constraints...
+@file(run_genus_engine.do) 133: set CLK_PORT  clk
+@file(run_genus_engine.do) 134: set RST_PORT  rst_n
+@file(run_genus_engine.do) 135: set CLK_PER   1.0
+@file(run_genus_engine.do) 136: set IO_DELAY  [expr {$CLK_PER * 0.3}]
+@file(run_genus_engine.do) 138: create_clock -name clk -period $CLK_PER [get_ports $CLK_PORT]
+@file(run_genus_engine.do) 139: set_clock_uncertainty 0.05 [get_clocks clk]
+@file(run_genus_engine.do) 140: set_clock_transition  0.05 [get_clocks clk]
+@file(run_genus_engine.do) 142: set_false_path -from [get_ports $RST_PORT]
+@file(run_genus_engine.do) 144: set_input_delay  $IO_DELAY -clock clk [remove_from_collection \
+    [all_inputs] [get_ports [list $CLK_PORT $RST_PORT]]]
+@file(run_genus_engine.do) 146: set_output_delay $IO_DELAY -clock clk [all_outputs]
+@file(run_genus_engine.do) 148: set_driving_cell -lib_cell [lindex [get_lib_cells */INV*] 0] [all_inputs]
+Error   : Invalid SDC command option combination. [SDC-204] [set_driving_cell]
+        : The set_driving_cell command cannot find a lib_cell named '0x9' in library 'library:default_emulate_libset_max/saed32rvt_tt0p85v25c' specified with the '-libcell' or '-cell' option.
+        : This option is not valid for the indicated SDC command. Check the SDC command and contact Cadence customer support if you believe this option combination should be supported.
+#@ End verbose source ./run_genus_engine.do
+1
+Encountered problems processing file: run_genus_engine.do
+WARNING: This version of the tool is 1524 days old.
