@@ -1,6 +1,14 @@
-// tb_accel_top.sv — Top-level smoke test TB
-// 3 directed tests: FFN forward, FFN backward, Attention
-// All tiny data, no randomization, golden model inline
+// tb_accel_top.sv -- Top-level smoke test TB
+// 4 directed tests: FFN forward, FFN backward, Attention, Multi-tile
+// All tiny data, no randomization, golden model inline.
+//
+// Operand range note (mixed-precision MAC):
+//   The MAC PE quantizes its operands to Q4.4 (range +/-7.9375) before
+//   each multiply. All matrix elements below are kept inside [-8, +8)
+//   and aligned to multiples of 0.0625 so no saturation kicks in and
+//   the Q4.4 multiplier produces exactly the real-arithmetic result.
+//   Tolerances are wide enough (1.0 absolute for fwd, 10% for bwd) to
+//   cover any small accumulator rounding.
 `timescale 1ns/1ps
 
 module tb_accel_top;
@@ -180,25 +188,25 @@ module tb_accel_top;
     $display("");
     $display("--- Test 1: FFN Forward Smoke Test ---");
 
-    // Write A = [[1, 2], [3, 4]] at address 0x0000
-    dma_write(16'h0000, 1.0);
-    dma_write(16'h0001, 2.0);
-    dma_write(16'h0002, 3.0);
-    dma_write(16'h0003, 4.0);
+    // Write A = [[0.5, 1.0], [1.5, 2.0]] at address 0x0000
+    dma_write(16'h0000, 0.5);
+    dma_write(16'h0001, 1.0);
+    dma_write(16'h0002, 1.5);
+    dma_write(16'h0003, 2.0);
 
-    // Write B = [[5, 6], [7, 8]] at address 0x0100
-    dma_write(16'h0100, 5.0);
-    dma_write(16'h0101, 6.0);
-    dma_write(16'h0102, 7.0);
-    dma_write(16'h0103, 8.0);
+    // Write B = [[2.5, 3.0], [3.5, 4.0]] at address 0x0100
+    dma_write(16'h0100, 2.5);
+    dma_write(16'h0101, 3.0);
+    dma_write(16'h0102, 3.5);
+    dma_write(16'h0103, 4.0);
 
     $display("  Data loaded to SRAM");
 
     // Compute golden result: C = GELU(A * B)
-    // A = [[1,2],[3,4]], B = [[5,6],[7,8]]
-    // A*B = [[19,22],[43,50]]
-    golden_matmul_2x2(1.0, 2.0, 3.0, 4.0,
-                       5.0, 6.0, 7.0, 8.0,
+    // A = [[0.5, 1.0], [1.5, 2.0]], B = [[2.5, 3.0], [3.5, 4.0]]
+    // A*B = [[4.75, 5.5], [10.75, 12.5]]   (all operands Q4.4 exact)
+    golden_matmul_2x2(0.5, 1.0, 1.5, 2.0,
+                       2.5, 3.0, 3.5, 4.0,
                        c00, c01, c10, c11);
     golden_fwd[0] = golden_gelu(c00);
     golden_fwd[1] = golden_gelu(c01);
@@ -263,9 +271,9 @@ module tb_accel_top;
       int  bwd_pass;
 
       h[0] = 0.5; h[1] = 1.0; h[2] = 1.5; h[3] = 2.0;
-      // Re-derive c_out from the matmul golden helper
-      golden_matmul_2x2(1.0, 2.0, 3.0, 4.0,
-                        5.0, 6.0, 7.0, 8.0,
+      // Re-derive c_out from the matmul golden helper (same scaled A,B as Test 1)
+      golden_matmul_2x2(0.5, 1.0, 1.5, 2.0,
+                        2.5, 3.0, 3.5, 4.0,
                         c00, c01, c10, c11);
       // GELU'(x) = 0.5*(1+tanh(z)) + 0.5*x*(1-tanh^2(z))*sqrt(2/pi)*(1+3*0.044715*x^2)
       //   simplified inline
@@ -372,30 +380,30 @@ module tb_accel_top;
       int  pass0, pass1;
       real e;
 
-      // Lane 0 bank: X at local 0x0000-0x0003, W1_0 at local 0x0100-0x0103
-      dma_write(dma_addr(0, 16'h0000), 1.0); dma_write(dma_addr(0, 16'h0001), 2.0);
-      dma_write(dma_addr(0, 16'h0002), 3.0); dma_write(dma_addr(0, 16'h0003), 4.0);
-      dma_write(dma_addr(0, 16'h0100), 5.0); dma_write(dma_addr(0, 16'h0101), 6.0);
-      dma_write(dma_addr(0, 16'h0102), 7.0); dma_write(dma_addr(0, 16'h0103), 8.0);
+      // Lane 0 bank: X at local 0x0000-0x0003, W1_0 at local 0x0100-0x0103.
+      // Values scaled to fit Q4.4 (multiples of 0.0625, max +/-7.9375).
+      dma_write(dma_addr(0, 16'h0000), 0.5); dma_write(dma_addr(0, 16'h0001), 1.0);
+      dma_write(dma_addr(0, 16'h0002), 1.5); dma_write(dma_addr(0, 16'h0003), 2.0);
+      dma_write(dma_addr(0, 16'h0100), 2.5); dma_write(dma_addr(0, 16'h0101), 3.0);
+      dma_write(dma_addr(0, 16'h0102), 3.5); dma_write(dma_addr(0, 16'h0103), 4.0);
 
       // Lane 1 bank: X duplicated, W1_1 at the SAME local addr 0x0100.
-      // (Dispatcher no longer rewrites addr_b by n_idx; each lane just
-      // has its own per-tile B preloaded by the host.)
-      dma_write(dma_addr(1, 16'h0000), 1.0); dma_write(dma_addr(1, 16'h0001), 2.0);
-      dma_write(dma_addr(1, 16'h0002), 3.0); dma_write(dma_addr(1, 16'h0003), 4.0);
-      dma_write(dma_addr(1, 16'h0100), 9.0);  dma_write(dma_addr(1, 16'h0101), 10.0);
-      dma_write(dma_addr(1, 16'h0102), 11.0); dma_write(dma_addr(1, 16'h0103), 12.0);
+      // W1_1 also scaled to fit Q4.4 (no saturation in the multiplier).
+      dma_write(dma_addr(1, 16'h0000), 0.5); dma_write(dma_addr(1, 16'h0001), 1.0);
+      dma_write(dma_addr(1, 16'h0002), 1.5); dma_write(dma_addr(1, 16'h0003), 2.0);
+      dma_write(dma_addr(1, 16'h0100), 4.5); dma_write(dma_addr(1, 16'h0101), 5.0);
+      dma_write(dma_addr(1, 16'h0102), 5.5); dma_write(dma_addr(1, 16'h0103), 6.0);
 
       // Golden tile 0: X * W1_0
-      golden_matmul_2x2(1.0, 2.0, 3.0, 4.0,
-                        5.0, 6.0, 7.0, 8.0,
+      golden_matmul_2x2(0.5, 1.0, 1.5, 2.0,
+                        2.5, 3.0, 3.5, 4.0,
                         c00, c01, c10, c11);
       golden_t0[0] = golden_gelu(c00); golden_t0[1] = golden_gelu(c01);
       golden_t0[2] = golden_gelu(c10); golden_t0[3] = golden_gelu(c11);
 
       // Golden tile 1: X * W1_1
-      bm00 = 9.0; bm01 = 10.0; bm10 = 11.0; bm11 = 12.0;
-      golden_matmul_2x2(1.0, 2.0, 3.0, 4.0,
+      bm00 = 4.5; bm01 = 5.0; bm10 = 5.5; bm11 = 6.0;
+      golden_matmul_2x2(0.5, 1.0, 1.5, 2.0,
                         bm00, bm01, bm10, bm11,
                         c00, c01, c10, c11);
       golden_t1[0] = golden_gelu(c00); golden_t1[1] = golden_gelu(c01);

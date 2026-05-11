@@ -1,5 +1,12 @@
-// tb_systolic_array.sv — Unit TB for Q16.16 systolic array (4x4 subarray)
-// Tests C = A * I = A using skewed input feeding
+// tb_systolic_array.sv -- Unit TB for the systolic array (4x4 subarray)
+// Tests C = A * I = A using skewed input feeding.
+//
+// Operand range note (mixed-precision MAC):
+//   The PE now quantizes operands to Q4.4 (range +/-7.9375) before the
+//   multiplier. A_mat values are scaled to land in [0.25, 4.0] so every
+//   element is exactly representable in Q4.4 (multiples of 0.0625) and
+//   no saturation kicks in. Tolerance is kept loose (0.1) to cover any
+//   small accumulator-path rounding.
 `timescale 1ns/1ps
 
 module tb_systolic_array;
@@ -44,11 +51,11 @@ module tb_systolic_array;
       b_in[i] = '0;
     end
 
-    // A = sequential 1..16
+    // A = sequential 1..16 scaled by 0.25 -> values 0.25..4.0 (Q4.4 exact)
     // B = identity
     for (int i = 0; i < N; i++)
       for (int j = 0; j < N; j++) begin
-        A_mat[i][j] = real'(i * N + j + 1);
+        A_mat[i][j] = real'(i * N + j + 1) * 0.25;
         B_mat[i][j] = (i == j) ? 1.0 : 0.0;
       end
 
@@ -101,7 +108,7 @@ module tb_systolic_array;
     en = 0;
     $display("  Result C (expect C = A * I = A):");
     for (int i = 0; i < N; i++) begin
-      $display("  Row %0d: [%6.1f, %6.1f, %6.1f, %6.1f]  expect [%6.1f, %6.1f, %6.1f, %6.1f]",
+      $display("  Row %0d: [%6.3f, %6.3f, %6.3f, %6.3f]  expect [%6.3f, %6.3f, %6.3f, %6.3f]",
                i,
                from_q(c_out[i][0]), from_q(c_out[i][1]),
                from_q(c_out[i][2]), from_q(c_out[i][3]),

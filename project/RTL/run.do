@@ -9,10 +9,11 @@ echo " Accelerator TB Suite — QuestaSim"
 echo " Date: [clock format [clock seconds]]"
 echo "=============================================="
 
-# Create work library
-if {[file exists work]} {
-    vdel -all -lib work
-}
+# Create work library. catch + file delete handles the case where a stale
+# work/ dir exists but is no longer a valid QuestaSim library (in which
+# case vdel would otherwise abort with "Failed to access library 'work'").
+catch {vdel -all -lib work}
+catch {file delete -force work}
 vlib work
 vmap work work
 
@@ -102,8 +103,12 @@ proc run_tb {tb_name} {
     echo " Running: $tb_name"
     echo "=============================="
 
+    # -voptargs="+acc" keeps every signal visible to add wave / examine
+    # after vopt. Without it, vopt strips internal nets to anonymous and
+    # any post-mortem signal lookup fails with "No objects found matching ...".
     if {[catch {
         vsim -t 1ps -L work work.$tb_name \
+             -voptargs="+acc" \
              -suppress 3839 \
              +nowarn3839 \
              -onfinish stop

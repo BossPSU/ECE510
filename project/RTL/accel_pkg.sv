@@ -12,6 +12,33 @@ package accel_pkg;
   parameter int FRAC_BITS    = 16;
   parameter int INT_BITS     = 16;
 
+  // ----- Mixed-precision MAC multiplier (NVFP4-style) -----
+  // The systolic-array MAC PE quantizes its Q16.16 inputs down to Q4.4
+  // (8-bit signed, range [-8, +7.9375], resolution 0.0625) immediately
+  // before the multiplier, performs an 8x8 -> 16-bit Q8.8 multiply, and
+  // promotes the product back to Q16.16 for accumulation. The Q16.16
+  // accumulator retains full headroom across long dot products; only
+  // the multiplier shrinks (area scales as O(MULT_W^2), so 32x32 -> 8x8
+  // gives ~16x smaller multiplier hardware per PE).
+  //
+  // Conversion path (in mac_pe):
+  //   q44(x)  = saturate( arith_shift_right(x, FRAC_BITS - MULT_FRAC) )
+  //   prod_88 = q44(a) * q44(b)                  -- Q4.4 * Q4.4 -> Q8.8
+  //   acc    += sign_extend(prod_88) << (FRAC_BITS - 2*MULT_FRAC)
+  //                                              -- Q8.8 -> Q16.16
+  parameter int MULT_W       = 8;             // multiplier-input bit width
+  parameter int MULT_INT     = 4;             // integer bits in Q4.4
+  parameter int MULT_FRAC    = 4;             // fractional bits in Q4.4
+  // Right-shift amount for Q16.16 -> Q4.4 (= 12 with defaults).
+  parameter int Q44_ALIGN_SH = FRAC_BITS - MULT_FRAC;
+  // Left-shift amount for Q8.8 -> Q16.16 (= 8 with defaults).
+  parameter int Q88_PROMOTE_SH = FRAC_BITS - 2*MULT_FRAC;
+  // Q4.4 saturation bounds expressed in Q16.16 (used by precision study).
+  // +7.9375 = 127/16, in Q16.16 = 127 * 4096 = 0x0007F000
+  parameter logic signed [31:0] Q44_MAX_Q16 = 32'sh0007F000;
+  // -8.0, in Q16.16 = -524288 = 0xFFF80000
+  parameter logic signed [31:0] Q44_MIN_Q16 = 32'shFFF80000;
+
   // Common Q16.16 constants (sign-extended hex literals)
   parameter logic signed [31:0] Q_ZERO     = 32'sh00000000; // 0.0
   parameter logic signed [31:0] Q_ONE      = 32'sh00010000; // 1.0
