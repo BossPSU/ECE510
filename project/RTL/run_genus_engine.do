@@ -33,7 +33,7 @@
 set_db init_lib_search_path { . $env(LIB_PATH) }
 set_db init_hdl_search_path { . }
 
-set_db max_cpus_per_server 8
+set_db max_cpus_per_server 4
 set_db super_thread_servers "localhost"
 
 set_db hdl_error_on_blackbox  true
