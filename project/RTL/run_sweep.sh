@@ -32,6 +32,19 @@ ABORT_ON_FAIL="${ABORT_ON_FAIL:-1}"
 cd "$(dirname "$0")"
 mkdir -p logs_sweep out_sweep
 
+# Tee everything (banners + every Genus run's stdout) into a single
+# combined transcript while still printing live to the terminal. The
+# per-point logs at logs_sweep/<tag>.log are unaffected -- this is an
+# additional, global record. Appends across re-runs; a session marker
+# below makes restarts easy to find.
+exec > >(tee -a logs_sweep/sweep_all.log) 2>&1
+echo ""
+echo "##################################################################"
+echo "## run_sweep.sh session start: $(date -Iseconds)"
+echo "## host: $(hostname)  cwd: $(pwd)"
+echo "## args: $*"
+echo "##################################################################"
+
 # Confirm Genus is on PATH (phobos: `addpkg -l cadence-2022-09` first).
 if ! command -v genus >/dev/null 2>&1; then
     echo "ERROR: 'genus' not on PATH. On phobos run:  addpkg -l cadence-2022-09" >&2
