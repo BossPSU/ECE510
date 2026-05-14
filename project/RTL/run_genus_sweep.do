@@ -234,3 +234,8 @@ puts " ARRAY_N:   $N    BUF_NRD: $NRD"
 puts " Clock:     ${CLK_PER} ns (1 GHz)"
 puts " Outdir:    $outdir/"
 puts "=============================================="
+
+# Exit Genus cleanly so the shell driver advances to the next sweep
+# point. Without this, `genus -files run_genus_sweep.do` drops into an
+# interactive prompt after the source completes and the shell loop hangs.
+exit
