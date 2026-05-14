@@ -181,11 +181,21 @@ Files:
 Run end-to-end on phobos:
 
 ```sh
+addpkg -l cadence-2022-09       # enable Genus on PATH (per shell)
 cd project/RTL
+chmod +x run_sweep.sh           # one-time: git on Windows drops the +x bit
 ./run_sweep.sh                  # ~10-15 hr wall time (serial)
 python3 collect_sweep_csv.py    # -> sweep_results.csv
 python3 analyze_sweep.py        # -> sweep_metrics.txt, sweep_figure.pdf
 ```
+
+- `addpkg -l cadence-2022-09` only lasts for the current shell — re-run
+  it in any new terminal before `genus` is callable.
+- `chmod +x` is sticky once set, but re-apply if `./run_sweep.sh` ever
+  reports "Permission denied" after a fresh `git pull`.
+- The driver tees a combined transcript to `logs_sweep/sweep_all.log`
+  and a per-point log to `logs_sweep/<tag>.log`. From a second shell,
+  `tail -f logs_sweep/sweep_all.log` to watch progress live.
 
 Every individual Genus run is under 2 hr wall time and under 40 GB
 peak memory — comfortably below CAT-team admin thresholds.
