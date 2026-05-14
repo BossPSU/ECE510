@@ -1,0 +1,1259 @@
+Cadence Genus(TM) Synthesis Solution.
+Copyright 2022 Cadence Design Systems, Inc. All rights reserved worldwide.
+Cadence and the Cadence logo are registered trademarks and Genus is a trademark
+of Cadence Design Systems, Inc. in the United States and other countries.
+
+[16:28:13.346537] Configured Lic search path (20.02-s004): 5280@cadence-lic.cecs.pdx.edu
+
+Version: 21.12-s068_1, built Fri Mar 04 14:12:46 PST 2022
+Options: -files run_genus_engine.do -log accel_engine.log 
+Date:    Mon May 11 16:28:13 2026
+Host:    phobos.ece.pdx.edu (x86_64 w/Linux 5.14.0-611.34.1.el9_7.x86_64) (1core*32cpus*32physical cpus*Intel Xeon Processor (Cascadelake) 16384KB) (65312296KB)
+PID:     3281415
+OS:      Rocky Linux release 9.7 (Blue Onyx)
+
+
+[16:28:13.436627] Periodic Lic check successful
+[16:28:13.436648] Feature usage summary:
+[16:28:13.436649] Genus_Synthesis
+Checking out license: Genus_Synthesis
+
+
+***********************************************************************************************************
+***********************************************************************************************************
+
+
+
+Loading tool scripts...
+Finished loading tool scripts (11 seconds elapsed).
+
+#@ Processing -files option
+@genus 1> source run_genus_engine.do
+#@ Begin verbose source ./run_genus_engine.do
+@file(run_genus_engine.do) 33: set_db init_lib_search_path { . $env(LIB_PATH) }
+  Setting attribute of root '/': 'init_lib_search_path' =  . $env(LIB_PATH) 
+@file(run_genus_engine.do) 34: set_db init_hdl_search_path { . }
+  Setting attribute of root '/': 'init_hdl_search_path' =  . 
+@file(run_genus_engine.do) 36: set_db max_cpus_per_server 8
+  Setting attribute of root '/': 'max_cpus_per_server' = 8
+@file(run_genus_engine.do) 37: set_db super_thread_servers "localhost"
+  Setting attribute of root '/': 'super_thread_servers' = localhost
+@file(run_genus_engine.do) 39: set_db hdl_error_on_blackbox  true
+  Setting attribute of root '/': 'hdl_error_on_blackbox' = true
+@file(run_genus_engine.do) 40: set_db hdl_track_filename_row_col true
+Info   : Enabled hdl_track_filename_row_col attribute.
+       : Setting this attribute to 'true' can have an impact on the run time. Use this attribute only when filename, line number, and column information are needed in reports.
+  Setting attribute of root '/': 'hdl_track_filename_row_col' = true
+@file(run_genus_engine.do) 41: set_db information_level 7
+  Setting attribute of root '/': 'information_level' = 7
+@file(run_genus_engine.do) 46: if { ![info exists env(LIB_PATH)] } {
+    set env(LIB_PATH) "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm"
+    puts "INFO: LIB_PATH unset; defaulting to SAED32 RVT @ $env(LIB_PATH)"
+}
+INFO: LIB_PATH unset; defaulting to SAED32 RVT @ /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm
+@file(run_genus_engine.do) 51: if { [info exists env(LIB_FILE)] } {
+    set lib_files [list $env(LIB_PATH)/$env(LIB_FILE)]
+} else {
+    set lib_files [glob -nocomplain $env(LIB_PATH)/saed32rvt_tt0p85v25c.lib]
+    if { [llength $lib_files] == 0 } {
+        set lib_files [glob -nocomplain $env(LIB_PATH)/*tt0p85v25c.lib]
+    }
+    if { [llength $lib_files] == 0 } {
+        set lib_files [glob -nocomplain $env(LIB_PATH)/*.lib]
+    }
+}
+@file(run_genus_engine.do) 62: if { [llength $lib_files] == 0 } {
+    error "No .lib files found in $env(LIB_PATH). Cannot proceed."
+}
+@file(run_genus_engine.do) 65: set_db library $lib_files
+
+Threads Configured:3
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 51)
+        : Check to see if this construct is really needed for synthesis. Many liberty constructs are not actually required.
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 52)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 53)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 54)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 55)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 56)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'library_features' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 83)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'library_features' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'library_features' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 85)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'INOUT1' for the cell 'BSLEX1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 32766)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'INOUT1' for the cell 'BSLEX2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 33102)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'INOUT1' for the cell 'BSLEX4_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 33438)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 57701)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 57717)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 57737)
+Warning : Missing clock pin in the sequential cell. [LBR-525]
+        : Clock pin absent in sequential cell(s) 'LNANDX1_RVT' (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 75612)
+        : Sequential timing checks, such as 'setup_rising' or 'hold_rising', on flop and latch cells require a clock pin. Verify that the 'clock' attribute of the clock pin is set to 'true' or that the clock pin has a 'clocked_on' attribute.
+Warning : Missing clock pin in the sequential cell. [LBR-525]
+        : Clock pin absent in sequential cell(s) 'LNANDX2_RVT' (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 75949)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'D' for the cell 'NMT1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84601)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'S' for the cell 'NMT1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84614)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'D' for the cell 'NMT2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84652)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'S' for the cell 'NMT2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84665)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'D' for the cell 'NMT3_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84703)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'S' for the cell 'NMT3_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84716)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'INOUT1' for the cell 'PGX1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 118732)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'INOUT1' for the cell 'PGX2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 119167)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'INOUT1' for the cell 'PGX4_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 119602)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'D' for the cell 'PMT1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120041)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'S' for the cell 'PMT1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120054)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'D' for the cell 'PMT2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120092)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'S' for the cell 'PMT2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120105)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'D' for the cell 'PMT3_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120143)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'S' for the cell 'PMT3_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120156)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'QN' for the cell 'RSDFFARX1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 145385)
+Info    : Missing a function attribute in the output pin definition. [LBR-518]
+        : Functionality is missing at pin 'QN' for the cell 'RSDFFARX2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 146400)
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'LBR-518'.
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 219376)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 219392)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 219407)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 219423)
+Info    : An unsupported construct was detected in this library. [LBR-40]
+        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 219440)
+Warning : An attribute is used before it is defined. [LBR-511]
+        : The library level attribute default_operating_conditions on line 226626 is defined after at least one cell definition. The attribute will be ignored. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib)
+Warning : An attribute is used before it is defined. [LBR-511]
+        : The library level attribute default_wire_load on line 226627 is defined after at least one cell definition. The attribute will be ignored. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib)
+Warning : An attribute is used before it is defined. [LBR-511]
+        : The library level attribute default_wire_load_selection on line 226628 is defined after at least one cell definition. The attribute will be ignored. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib)
+
+  Message Summary for Library saed32rvt_tt0p85v25c.lib:
+  *****************************************************
+  Missing clock pin in the sequential cell. [LBR-525]: 2
+  Missing a function attribute in the output pin definition. [LBR-518]: 64
+  An attribute is used before it is defined. [LBR-511]: 3
+  An unsupported construct was detected in this library. [LBR-40]: 17
+  *****************************************************
+ 
+            Reading file '/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib'
+Info    : Created nominal operating condition. [LBR-412]
+        : Operating condition '_nominal_' was created for the PVT values (1.000000, 0.850000, 25.000000) in library 'saed32rvt_tt0p85v25c.lib'.
+        : The nominal operating condition is represented, either by the nominal PVT values specified in the library source (via nom_process,nom_voltage and nom_temperature respectively), or by the default PVT values (1.0,1.0,1.0).
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'ANTENNA_RVT' must have an output pin.
+        : Add the missing output pin(s), then reload the library. Else the library cell will be marked as timing model i.e. unusable. Timing_model means that the cell does not have any defined function. If there is no output pin, Genus will mark library cell as unusable i.e. the attribute 'usable' will be marked to 'false' on the libcell. Therefore, the cell is not used for mapping and it will not be picked up from the library for synthesis. If you query the attribute 'unusable_reason' on the libcell; result will be: 'Library cell has no output pins.'Note: The message LBR-9 is only for the logical pins and not for the power_ground pins. Genus will depend upon the output function defined in the pin group (output pin) of the cell, to use it for mapping. The pg_pin will not have any function defined.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'ANTENNA_RVT' must have an output pin.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'BSLEX1_RVT/INOUT1' has no function.
+        : If the remainder of this library cell's semantic checks are successful, it will be considered as a timing-model (because one of its outputs does not have a valid function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'BSLEX2_RVT/INOUT1' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'BSLEX4_RVT/INOUT1' has no function.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'BUSKP_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'BUSKP_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'CLOAD1_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'CLOAD1_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DCAP_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DCAP_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DHFILLH2_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DHFILLH2_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DHFILLHL2_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DHFILLHL2_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DHFILLHLHLS11_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'DHFILLHLHLS11_RVT' must have an output pin.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'NMT1_RVT/D' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'NMT1_RVT/S' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'NMT2_RVT/D' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'NMT2_RVT/S' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'NMT3_RVT/D' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'NMT3_RVT/S' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PGX1_RVT/INOUT1' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PGX2_RVT/INOUT1' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PGX4_RVT/INOUT1' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PMT1_RVT/D' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PMT1_RVT/S' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PMT2_RVT/D' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PMT2_RVT/S' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PMT3_RVT/D' has no function.
+Info    : An output library pin lacks a function attribute. [LBR-41]
+        : Output pin 'PMT3_RVT/S' has no function.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFNSRARX1_RVT'.  Ignoring the test_cell.
+        : Review the definition of the test_cell's function or its parent library-cell's function.  An inconsistency between the two may exist.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFNSRARX2_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFNSRASX1_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFNSRASX2_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFNSRX1_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFNSRX2_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRARX1_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRARX2_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRASX1_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRASX2_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRSSRX1_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRSSRX2_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRX1_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'RSDFFSRX2_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'SDFFSSRX1_RVT'.  Ignoring the test_cell.
+Warning : Malformed test_cell. [LBR-64]
+        : Unusable test_cell in 'SDFFSSRX2_RVT'.  Ignoring the test_cell.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'SHFILL128_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'SHFILL128_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'SHFILL1_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'SHFILL1_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'SHFILL2_RVT' must have an output pin.
+Warning : Library cell has no output pins defined. [LBR-9]
+        : Library cell 'SHFILL2_RVT' must have an output pin.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'LBR-9'.
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'positive_unate' for library pin 'DFFSSRX1_RVT/Q' is ignored.
+        : Timing sense should never be set with 'rising_edge' or 'falling_edge' timing type.
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'negative_unate' for library pin 'DFFSSRX1_RVT/QN' is ignored.
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'positive_unate' for library pin 'DFFSSRX2_RVT/Q' is ignored.
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'negative_unate' for library pin 'DFFSSRX2_RVT/QN' is ignored.
+  Setting attribute of root '/': 'library' = /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib
+@file(run_genus_engine.do) 66: puts ">>> Loaded [llength $lib_files] standard-cell library file(s):"
+>>> Loaded 1 standard-cell library file(s):
+@file(run_genus_engine.do) 67: foreach f $lib_files { puts "      $f" }
+      /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib
+@file(run_genus_engine.do) 78: puts ">>> Reading RTL (accel_engine subset)..."
+>>> Reading RTL (accel_engine subset)...
+@file(run_genus_engine.do) 81: read_hdl -sv accel_pkg.sv
+            Reading Verilog file 'accel_pkg.sv'
+@file(run_genus_engine.do) 82: read_hdl -sv stream_if.sv
+            Reading Verilog file 'stream_if.sv'
+@file(run_genus_engine.do) 83: read_hdl -sv sram_if.sv
+            Reading Verilog file 'sram_if.sv'
+@file(run_genus_engine.do) 84: read_hdl -sv cmd_if.sv
+            Reading Verilog file 'cmd_if.sv'
+@file(run_genus_engine.do) 85: read_hdl -sv tile_if.sv
+            Reading Verilog file 'tile_if.sv'
+@file(run_genus_engine.do) 86: read_hdl -sv ctrl_if.sv
+            Reading Verilog file 'ctrl_if.sv'
+@file(run_genus_engine.do) 87: read_hdl -sv status_if.sv
+            Reading Verilog file 'status_if.sv'
+@file(run_genus_engine.do) 90: read_hdl -sv mac_pe.sv
+            Reading Verilog file 'mac_pe.sv'
+@file(run_genus_engine.do) 91: read_hdl -sv systolic_array_64x64.sv
+            Reading Verilog file 'systolic_array_64x64.sv'
+@file(run_genus_engine.do) 92: read_hdl -sv gelu_lut.sv
+            Reading Verilog file 'gelu_lut.sv'
+  (* rom_style = "block" *) logic signed [DATA_WIDTH-1:0] lut_mem [DEPTH];
+     |
+Warning : Unused attribute. [VLOGPT-506]
+        : Attribute 'rom_style' in file 'gelu_lut.sv' on line 17, column 6.
+  initial begin
+        |
+Warning : Ignoring unsynthesizable construct. [VLOGPT-37]
+        : Initial in file 'gelu_lut.sv' on line 19, column 9.
+        : For example, the following constructs will be ignored:
+    - initial block
+    - final block
+    - program block
+    - property block
+    - sequence block
+    - covergroup
+    - checker block
+    - gate drive strength
+    - system task enable
+    - reg declaration with initial value
+    - specify block.
+@file(run_genus_engine.do) 93: read_hdl -sv exp_lut.sv
+            Reading Verilog file 'exp_lut.sv'
+  (* rom_style = "block" *) logic signed [DATA_WIDTH-1:0] lut_mem [DEPTH];
+     |
+Warning : Unused attribute. [VLOGPT-506]
+        : Attribute 'rom_style' in file 'exp_lut.sv' on line 16, column 6.
+  initial begin
+        |
+Warning : Ignoring unsynthesizable construct. [VLOGPT-37]
+        : Initial in file 'exp_lut.sv' on line 18, column 9.
+@file(run_genus_engine.do) 94: read_hdl -sv adder_tree.sv
+            Reading Verilog file 'adder_tree.sv'
+@file(run_genus_engine.do) 95: read_hdl -sv gelu_unit.sv
+            Reading Verilog file 'gelu_unit.sv'
+@file(run_genus_engine.do) 96: read_hdl -sv gelu_grad_unit.sv
+            Reading Verilog file 'gelu_grad_unit.sv'
+@file(run_genus_engine.do) 97: read_hdl -sv softmax_unit.sv
+            Reading Verilog file 'softmax_unit.sv'
+@file(run_genus_engine.do) 98: read_hdl -sv causal_mask_unit.sv
+            Reading Verilog file 'causal_mask_unit.sv'
+@file(run_genus_engine.do) 99: read_hdl -sv divider_or_reciprocal_unit.sv
+            Reading Verilog file 'divider_or_reciprocal_unit.sv'
+@file(run_genus_engine.do) 100: read_hdl -sv fused_postproc_unit.sv
+            Reading Verilog file 'fused_postproc_unit.sv'
+@file(run_genus_engine.do) 103: read_hdl -sv pipeline_stage.sv
+            Reading Verilog file 'pipeline_stage.sv'
+@file(run_genus_engine.do) 104: read_hdl -sv skid_buffer.sv
+            Reading Verilog file 'skid_buffer.sv'
+@file(run_genus_engine.do) 105: read_hdl -sv stream_mux.sv
+            Reading Verilog file 'stream_mux.sv'
+@file(run_genus_engine.do) 108: read_hdl -sv tile_buffer.sv
+            Reading Verilog file 'tile_buffer.sv'
+@file(run_genus_engine.do) 111: read_hdl -sv stream_pipeline.sv
+            Reading Verilog file 'stream_pipeline.sv'
+@file(run_genus_engine.do) 114: read_hdl -sv accel_controller.sv
+            Reading Verilog file 'accel_controller.sv'
+@file(run_genus_engine.do) 115: read_hdl -sv perf_counter_block.sv
+            Reading Verilog file 'perf_counter_block.sv'
+@file(run_genus_engine.do) 118: read_hdl -sv accel_engine.sv
+            Reading Verilog file 'accel_engine.sv'
+@file(run_genus_engine.do) 123: set TOP accel_engine
+@file(run_genus_engine.do) 124: puts ">>> Elaborating $TOP..."
+>>> Elaborating accel_engine...
+@file(run_genus_engine.do) 125: elaborate $TOP
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'positive_unate' for library pin 'DFFSSRX1_RVT/Q' is ignored.
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'negative_unate' for library pin 'DFFSSRX1_RVT/QN' is ignored.
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'positive_unate' for library pin 'DFFSSRX2_RVT/Q' is ignored.
+Info    : Ignoring specified timing sense. [LBR-170]
+        : The 'timing_sense' definition 'negative_unate' for library pin 'DFFSSRX2_RVT/QN' is ignored.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'CI' and 'S' in libcell 'FADDX1_RVT' is 'pos_unate', but unateness determined from function is 'non_unate'.
+        : The 'timing_sense' attribute will be respected.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'CI' and 'S' in libcell 'FADDX1_RVT' is 'neg_unate', but unateness determined from function is 'non_unate'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'CI' and 'S' in libcell 'FADDX1_RVT'.
+        : Setting the 'timing_sense' to non_unate.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'B' and 'S' in libcell 'FADDX1_RVT' is 'pos_unate', but unateness determined from function is 'non_unate'.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'B' and 'S' in libcell 'FADDX1_RVT' is 'neg_unate', but unateness determined from function is 'non_unate'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'B' and 'S' in libcell 'FADDX1_RVT'.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'A' and 'S' in libcell 'FADDX1_RVT' is 'pos_unate', but unateness determined from function is 'non_unate'.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'A' and 'S' in libcell 'FADDX1_RVT' is 'neg_unate', but unateness determined from function is 'non_unate'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A' and 'S' in libcell 'FADDX1_RVT'.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'CI' and 'S' in libcell 'FADDX2_RVT' is 'pos_unate', but unateness determined from function is 'non_unate'.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'CI' and 'S' in libcell 'FADDX2_RVT' is 'neg_unate', but unateness determined from function is 'non_unate'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'CI' and 'S' in libcell 'FADDX2_RVT'.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'B' and 'S' in libcell 'FADDX2_RVT' is 'pos_unate', but unateness determined from function is 'non_unate'.
+Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
+        : 'timing_sense' attribute between pin 'B' and 'S' in libcell 'FADDX2_RVT' is 'neg_unate', but unateness determined from function is 'non_unate'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'B' and 'S' in libcell 'FADDX2_RVT'.
+Info    : Setting the maximum print count of this message to 10 if information_level is less than 9. [LBR-161]
+        : To print all the warning messages, set the information_level to 9.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A' and 'S' in libcell 'FADDX2_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'B0' and 'SO' in libcell 'HADDX1_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A0' and 'SO' in libcell 'HADDX1_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'B0' and 'SO' in libcell 'HADDX2_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A0' and 'SO' in libcell 'HADDX2_RVT'.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RDFFNX1_RVT/D' has no incoming setup arc.
+        : Pin used in a next_state function must have an incoming setup timing arc. Otherwise, the library cell will be treated as a timing model.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RDFFNX2_RVT/D' has no incoming setup arc.
+Info    : Promoting a hold arc to removal. [LBR-31]
+        : The asynchronous input pin is RDFFSRSSRX2_RVT/RSTB
+        : Hold arcs to asynchronous input pins are not supported.
+Info    : Promoting a setup arc to recovery. [LBR-30]
+        : The asynchronous input pin is RDFFSRSSRX2_RVT/RSTB
+        : Setup arcs to asynchronous input pins are not supported.
+Info    : Promoting a hold arc to removal. [LBR-31]
+        : The asynchronous input pin is RDFFSRSSRX2_RVT/SETB
+Info    : Promoting a setup arc to recovery. [LBR-30]
+        : The asynchronous input pin is RDFFSRSSRX2_RVT/SETB
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RDFFX1_RVT/D' has no incoming setup arc.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RDFFX2_RVT/D' has no incoming setup arc.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RSDFFNSRX1_RVT/D' has no incoming setup arc.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RSDFFNSRX1_RVT/SE' has no incoming setup arc.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RSDFFNSRX1_RVT/SI' has no incoming setup arc.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RSDFFNSRX2_RVT/D' has no incoming setup arc.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RSDFFNSRX2_RVT/SE' has no incoming setup arc.
+Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
+        : Library pin 'RSDFFNSRX2_RVT/SI' has no incoming setup arc.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A2' and 'Y' in libcell 'XNOR2X1_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A1' and 'Y' in libcell 'XNOR2X1_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A2' and 'Y' in libcell 'XNOR2X2_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A1' and 'Y' in libcell 'XNOR2X2_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A3' and 'Y' in libcell 'XNOR3X1_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A2' and 'Y' in libcell 'XNOR3X1_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A1' and 'Y' in libcell 'XNOR3X1_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A3' and 'Y' in libcell 'XNOR3X2_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A2' and 'Y' in libcell 'XNOR3X2_RVT'.
+Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
+        : Non_unate 'timing_sense' inferred between pin 'A1' and 'Y' in libcell 'XNOR3X2_RVT'.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'LBR-162'.
+  Library has 130 usable logic and 108 usable sequential lib-cells.
+Info    : Elaborating Design. [ELAB-1]
+        : Elaborating top-level block 'accel_engine' from file 'accel_engine.sv'.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'a_rd_row' in module 'accel_engine' in file 'accel_engine.sv' on line 55.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'a_rd_col' in module 'accel_engine' in file 'accel_engine.sv' on line 56.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'a_rd_data' in module 'accel_engine' in file 'accel_engine.sv' on line 57.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'b_rd_row' in module 'accel_engine' in file 'accel_engine.sv' on line 58.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'b_rd_col' in module 'accel_engine' in file 'accel_engine.sv' on line 59.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'b_rd_data' in module 'accel_engine' in file 'accel_engine.sv' on line 60.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'unused_out_mp_row' in module 'accel_engine' in file 'accel_engine.sv' on line 80.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'unused_out_mp_col' in module 'accel_engine' in file 'accel_engine.sv' on line 81.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'unused_out_mp_data' in module 'accel_engine' in file 'accel_engine.sv' on line 82.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'aux_mp_row' in module 'accel_engine' in file 'accel_engine.sv' on line 136.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'aux_mp_col' in module 'accel_engine' in file 'accel_engine.sv' on line 137.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'aux_mp_data' in module 'accel_engine' in file 'accel_engine.sv' on line 138.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'accel_controller' from file 'accel_controller.sv'.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_IDLE' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 64.
+        : Review and make sure the mismatch is unintentional. Genus can possibly issue bitwidth mismatch warning for explicit assignments present in RTL as-well-as for implicit assignments inferred by the tool. For example, in case of enum declaration without value, the tool will implicitly assign value to the enum variables. It also issues the warning for any bitwidth mismatch that appears in this implicit assignment.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_LOAD_A' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 65.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_LOAD_B' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 66.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_LOAD_AUX' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 67.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_STREAM_START' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 68.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_STREAM_WAIT' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 69.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_WRITE' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 70.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_DONE' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 72.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_IDLE' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 64.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_LOAD_A' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 65.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_LOAD_B' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 66.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_LOAD_AUX' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 67.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_STREAM_START' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 68.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_STREAM_WAIT' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 69.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_WRITE' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 70.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'S_DONE' [4] doesn't match the width of right hand side [32] in assignment in file 'accel_controller.sv' on line 72.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused flip-flop register 'cmd_reg[seq_len]' in module 'accel_controller' in file 'accel_controller.sv' on line 75.
+        : Genus removes the flip-flop or latch inferred for an unused signal or variable. To preserve the flip-flop or latch, set the hdl_preserve_unused_registers attribute to true or use a pragma in the RTL.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '%bit-concat%' in file 'accel_controller.sv' on line 139.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '%bit-concat%' in file 'accel_controller.sv' on line 129.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '%bit-concat%' in file 'accel_controller.sv' on line 151.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '%bit-concat%' in file 'accel_controller.sv' on line 129.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '%bit-select%' in file 'accel_controller.sv' on line 141.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '%bit-select%' in file 'accel_controller.sv' on line 131.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '%bit-select%' in file 'accel_controller.sv' on line 153.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '%bit-select%' in file 'accel_controller.sv' on line 131.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '%bit-select%' in file 'accel_controller.sv' on line 141.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '%bit-select%' in file 'accel_controller.sv' on line 131.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '%bit-select%' in file 'accel_controller.sv' on line 153.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '%bit-select%' in file 'accel_controller.sv' on line 131.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file 'accel_controller.sv' on line 232.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file 'accel_controller.sv' on line 211.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file 'accel_controller.sv' on line 257.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file 'accel_controller.sv' on line 211.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file 'accel_controller.sv' on line 217.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file 'accel_controller.sv' on line 211.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file 'accel_controller.sv' on line 242.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file 'accel_controller.sv' on line 211.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file 'accel_controller.sv' on line 263.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file 'accel_controller.sv' on line 211.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file 'accel_controller.sv' on line 299.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file 'accel_controller.sv' on line 296.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file 'accel_controller.sv' on line 243.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file 'accel_controller.sv' on line 218.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file 'accel_controller.sv' on line 264.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file 'accel_controller.sv' on line 218.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file 'accel_controller.sv' on line 222.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file 'accel_controller.sv' on line 218.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file 'accel_controller.sv' on line 247.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file 'accel_controller.sv' on line 218.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file 'accel_controller.sv' on line 268.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file 'accel_controller.sv' on line 218.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file 'accel_controller.sv' on line 245.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file 'accel_controller.sv' on line 220.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file 'accel_controller.sv' on line 266.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file 'accel_controller.sv' on line 220.
+Info    : Common subexpression eliminated. [CDFG-738]
+        : Eliminated '+' in file 'accel_controller.sv' on line 304.
+Info    : Common subexpression kept. [CDFG-739]
+        : Kept '+' in file 'accel_controller.sv' on line 300.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'CDFG-738'.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'CDFG-739'.
+Info    : Identified sum-of-products logic to be optimized during syn_generic. [CDFG-769]
+        : Sum-of-products logic in module 'accel_controller' in file 'accel_controller.sv' on line 120.
+Info    : Identified sum-of-products logic to be optimized during syn_generic. [CDFG-769]
+        : Sum-of-products logic in module 'accel_controller' in file 'accel_controller.sv' on line 94.
+Info    : Unused module input port. [CDFG-500]
+        : Input port 'cmd[seq_len]' is not used in module 'accel_controller' in file 'accel_controller.sv' on line 25.
+        : (In port definition within the module, the input port is not used in any assignment statements or conditional expressions for decision statements.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS64' from file 'tile_buffer.sv'.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mp_rd_row' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS64' in file 'tile_buffer.sv' on line 41.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mp_rd_col' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS64' in file 'tile_buffer.sv' on line 42.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mp_rd_data' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS64' in file 'tile_buffer.sv' on line 44.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mem' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS64' in file 'tile_buffer.sv' on line 46.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS1' from file 'tile_buffer.sv'.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mp_rd_row' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS1' in file 'tile_buffer.sv' on line 41.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mp_rd_col' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS1' in file 'tile_buffer.sv' on line 42.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mp_rd_data' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS1' in file 'tile_buffer.sv' on line 44.
+Info    : Processing multi-dimensional arrays. [CDFG-250]
+        : Variable 'mem' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS1' in file 'tile_buffer.sv' on line 46.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'stream_pipeline_DATA_WIDTH32_ARRAY_DIM64' from file 'stream_pipeline.sv'.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'CDFG-250'.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[0]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[1]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[2]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[3]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[4]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[5]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[6]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[7]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[8]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[9]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[10]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[11]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[12]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[13]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[14]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[15]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[16]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[17]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[18]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Info    : Sign mismatch in assignment. [CDFG-373]
+        : Assignment has unsigned left hand side 'a_rd_row[19]' and signed right hand side in file 'stream_pipeline.sv' on line 149.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'CDFG-373'.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'systolic_array_64x64_ROWS64_COLS64_DATA_WIDTH32' from file 'systolic_array_64x64.sv'.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'mac_pe_DATA_WIDTH32' from file 'mac_pe.sv'.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'product_q88' [16] doesn't match the width of right hand side [8] in assignment in file 'mac_pe.sv' on line 67.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'fused_postproc_unit_DATA_WIDTH32' from file 'fused_postproc_unit.sv'.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'gelu_unit_DATA_WIDTH32' from file 'gelu_unit.sv'.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'product' [64] doesn't match the width of right hand side [32] in assignment in file 'accel_pkg.sv' on line 183.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'product' [64] doesn't match the width of right hand side [32] in assignment in file 'accel_pkg.sv' on line 183.
+Info    : Bitwidth mismatch in assignment. [CDFG-372]
+        : Width of left hand side 'product' [64] doesn't match the width of right hand side [32] in assignment in file 'accel_pkg.sv' on line 183.
+Warning : Maximum message print count reached. [MESG-11]
+        : Maximum print count of '20' reached for message 'CDFG-372'.
+Warning : Removing unused register. [CDFG-508]
+        : Removing unused flip-flop register 's1_x2' in module 'gelu_unit_DATA_WIDTH32' in file 'gelu_unit.sv' on line 43.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'gelu_grad_unit_DATA_WIDTH32' from file 'gelu_grad_unit.sv'.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'softmax_unit_DATA_WIDTH32_VEC_LEN64' from file 'softmax_unit.sv'.
+Info    : Constant relational expression. [CDFG-479]
+        : The '<' operation evaluates to 'false' in file 'softmax_unit.sv' on line 111.
+        : A relational expression can evaluate to a constant when a variable is compared to a value which is outside the bounds of the variable.
+Info    : Constant relational expression. [CDFG-479]
+        : The boolean operation evaluates to 'false' in file 'softmax_unit.sv' on line 111.
+Info    : Skip related conditional write and read sequence. [CDFG-773]
+        : For variable 'q_exp_approx' in Module 'softmax_unit_DATA_WIDTH32_VEC_LEN64_softmax_unit_q_exp_approx_softmax_unit_DATA_WIDTH_32'sh00000020_VEC_LEN_32'sh00000040' in file 'softmax_unit.sv' on line 96.
+Info    : Skip related conditional write and read sequence. [CDFG-773]
+        : For variable 'q_exp_approx' in Module 'softmax_unit_DATA_WIDTH32_VEC_LEN64_softmax_unit_q_exp_approx_softmax_unit_DATA_WIDTH_32'sh00000020_VEC_LEN_32'sh00000040' in file 'softmax_unit.sv' on line 97.
+Info    : Skip related conditional write and read sequence. [CDFG-773]
+        : For variable '__enable_main_body_1' in Module 'softmax_unit_DATA_WIDTH32_VEC_LEN64_softmax_unit_q_exp_approx_softmax_unit_DATA_WIDTH_32'sh00000020_VEC_LEN_32'sh00000040' in file 'softmax_unit.sv' on line 97.
+Info    : Skip related conditional write and read sequence. [CDFG-773]
+        : For variable '__enable_main_body_1' in Module 'softmax_unit_DATA_WIDTH32_VEC_LEN64_softmax_unit_q_exp_approx_softmax_unit_DATA_WIDTH_32'sh00000020_VEC_LEN_32'sh00000040' in file 'softmax_unit.sv' on line 105.
+Info    : Unused module input port. [CDFG-500]
+        : Input port 'start' is not used in module 'softmax_unit_DATA_WIDTH32_VEC_LEN64' in file 'softmax_unit.sv' on line 12.
+Info    : Elaborating Subdesign. [ELAB-2]
+        : Elaborating block 'perf_counter_block' from file 'perf_counter_block.sv'.
+Info    : Unused instance port. [ELABUTL-132]
+        : Unused Port 'total_cycles' of instance 'u_perf' of module 'perf_counter_block' inside module 'accel_engine' in file 'accel_engine.sv' on line 184.
+        : Please check the reported scenario of unconnected instance port to ensure that it matches the design intent.
+Info    : Done Elaborating Design. [ELAB-3]
+        : Done elaborating 'accel_engine'.
+Checking for analog nets...
+Check completed for analog nets.
+Checking for source RTL...
+Check completed for source RTL.
+Running Unified Mux Engine Tricks...
+Completed Unified Mux Engine Tricks
+--------------------------------------------------------
+| Trick             | Accepts | Rejects | Runtime (ms) | 
+--------------------------------------------------------
+| ume_constant_bmux |       0 |       0 |        30.00 | 
+--------------------------------------------------------
+Starting clip mux common data inputs [v1.0] (stage: post_elab, startdef: accel_engine, recur: true)
+Completed clip mux common data inputs (accepts: 0, rejects: 0, runtime: 0.755s)
+Starting clip the non-user hierarchies [v2.0] (stage: post_elab, startdef: accel_engine, recur: true)
+Completed clip the non-user hierarchies (accepts: 0, rejects: 0, runtime: 0.036s)
+        Applying wireload models.
+        Computing net loads.
+UM:   flow.cputime  flow.realtime  timing.setup.tns  timing.setup.wns  snapshot
+UM:*                                                                   elaborate
+@file(run_genus_engine.do) 126: puts ">>> Elaboration done."
+>>> Elaboration done.
+@file(run_genus_engine.do) 131: puts ">>> Applying constraints..."
+>>> Applying constraints...
+@file(run_genus_engine.do) 132: set CLK_PORT  clk
+@file(run_genus_engine.do) 133: set RST_PORT  rst_n
+@file(run_genus_engine.do) 134: set CLK_PER   1.0
+@file(run_genus_engine.do) 135: set IO_DELAY  [expr {$CLK_PER * 0.3}]
+@file(run_genus_engine.do) 137: create_clock -name clk -period $CLK_PER [get_ports $CLK_PORT]
+@file(run_genus_engine.do) 138: set_clock_uncertainty 0.05 [get_clocks clk]
+@file(run_genus_engine.do) 139: set_clock_transition  0.05 [get_clocks clk]
+@file(run_genus_engine.do) 142: set_false_path -from [get_ports $RST_PORT]
+@file(run_genus_engine.do) 145: set_input_delay  $IO_DELAY -clock clk [remove_from_collection \
+    [all_inputs] [get_ports [list $CLK_PORT $RST_PORT]]]
+@file(run_genus_engine.do) 147: set_output_delay $IO_DELAY -clock clk [all_outputs]
+@file(run_genus_engine.do) 149: if { [catch {set_driving_cell -lib_cell INVX1_RVT [all_inputs]} err] } {
+    puts "WARNING: set_driving_cell INVX1_RVT failed ($err);"
+    puts "         inputs will be modeled as ideal sources."
+}
+@file(run_genus_engine.do) 153: set_load 0.05 [all_outputs]
+@file(run_genus_engine.do) 155: if { [file exists accel_engine.sdc] } {
+    puts ">>> Sourcing additional constraints from accel_engine.sdc"
+    read_sdc accel_engine.sdc
+}
+@file(run_genus_engine.do) 163: file mkdir out_engine
+@file(run_genus_engine.do) 164: file mkdir out_engine/reports
+@file(run_genus_engine.do) 166: puts ">>> Generic synthesis (RTL -> generic gates)..."
+>>> Generic synthesis (RTL -> generic gates)...
+@file(run_genus_engine.do) 167: syn_generic
+      Running additional step before syn_gen...
+
+##Generic Timing Info for library domain: _default_ typical gate delay: 79.9 ps std_slew: 13.9 ps std_load: 1.0 fF
+Starting mux data reorder optimization [v1.0] (stage: pre_to_gen_setup, startdef: accel_engine, recur: true)
+Completed mux data reorder optimization (accepts: 0, rejects: 0, runtime: 0.212s)
+Warning : Message truncated because it exceeds the maximum length of 4096 characters. [MESG-6]
+        : Info portion of message 'GLO-32' truncated to length 4096 from 5983315
+        : By default messages are limited to 4096 characters. All characters after the 4096 character limit are truncated. To remove this limit, set the message attribute 'truncate' to 'false'. However, this may dramatically increase the size of the log file.
+Info    : Deleting sequential instances not driving any primary outputs. [GLO-32]
+        : Deleting 98336 sequential instances. 
+Following instances are deleted as they do not drive any primary output:
+'u_perf/total_cycles_reg[0]', 'u_perf/total_cycles_reg[1]', 
+'u_perf/total_cycles_reg[2]', 'u_perf/total_cycles_reg[3]', 
+'u_perf/total_cycles_reg[4]', 'u_perf/total_cycles_reg[5]', 
+'u_perf/total_cycles_reg[6]', 'u_perf/total_cycles_reg[7]', 
+'u_perf/total_cycles_reg[8]', 'u_perf/total_cycles_reg[9]', 
+'u_perf/total_cycles_reg[10]', 'u_perf/total_cycles_reg[11]', 
+'u_perf/total_cycles_reg[12]', 'u_perf/total_cycles_reg[13]', 
+'u_perf/total_cycles_reg[14]', 'u_perf/total_cycles_reg[15]', 
+'u_perf/total_cycles_reg[16]', 'u_perf/total_cycles_reg[17]', 
+'u_perf/total_cycles_reg[18]', 'u_perf/total_cycles_reg[19]', 
+'u_perf/total_cycles_reg[20]', 'u_perf/total_cycles_reg[21]', 
+'u_perf/total_cycles_reg[22]', 'u_perf/total_cycles_reg[23]', 
+'u_perf/total_cycles_reg[24]', 'u_perf/total_cycles_reg[25]', 
+'u_perf/total_cycles_reg[26]', 'u_perf/total_cycles_reg[27]', 
+'u_perf/total_cycles_reg[28]', 'u_perf/total_cycles_reg[29]', 
+'u_perf/total_cycles_reg[30]', 'u_perf/total_cycles_reg[31]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/a_out_reg[0]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/a_out_reg[1]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/a_out_reg[2]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/a_out_reg[3]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/a_out_reg[4]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/a_out_reg[5]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/a_out_reg[6]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/a_out_reg[7]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/a_out_reg[8]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/a_out_reg[9]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/a_out_reg[10]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/a_out_reg[11]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/b_out_reg[0]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/b_out_reg[1]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/b_out_reg[2]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/b_out_reg[3]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/b_out_reg[4]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/b_out_reg[5]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/b_out_reg[6]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/b_out_reg[7]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/b_out_reg[8]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/b_out_reg[9]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/b_out_reg[10]', 
+'u_pipe/u_array/gen_row[0].gen_col[0].u_pe/b_out_reg[11]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/a_out_reg[0]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/a_out_reg[1]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/a_out_reg[2]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/a_out_reg[3]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/a_out_reg[4]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/a_out_reg[5]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/a_out_reg[6]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/a_out_reg[7]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/a_out_reg[8]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/a_out_reg[9]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/a_out_reg[10]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/a_out_reg[11]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/b_out_reg[0]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/b_out_reg[1]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/b_out_reg[2]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/b_out_reg[3]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/b_out_reg[4]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/b_out_reg[5]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/b_out_reg[6]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/b_out_reg[7]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/b_out_reg[8]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/b_out_reg[9]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/b_out_reg[10]', 
+'u_pipe/u_array/gen_row[0].gen_col[1].u_pe/b_out_reg[11]', 
+'u_pipe/u_array/gen_row[0].gen_col[2].u_pe/a_out_reg[0]', 
+'u_pipe/u_array/gen_row[0].gen_col[2].u_pe/a_out_reg[1]', 
+'u_pipe/u_array/gen_row[0].g
+        : Optimizations such as constant propagation or redundancy removal could change the connections so an instance does not drive any primary outputs anymore. To see the list of deleted sequential, set the 'information_level' attribute to 2 or above. If the message is truncated set the message attribute 'truncate' to false to see the complete list.
+Warning : Message truncated because it exceeds the maximum length of 4096 characters. [MESG-6]
+        : Info portion of message 'GLO-34' truncated to length 4096 from 15612
+Info    : Deleting instances not driving any primary outputs. [GLO-34]
+        : Deleting 391 hierarchical instances. 
+Following instances are deleted as they do not drive any primary output:
+'u_buf_a/mux_mem[0][rd_col]_59_24', 'u_buf_a/mux_mem[0][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[1][rd_col]_59_24', 'u_buf_a/mux_mem[1][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[2][rd_col]_59_24', 'u_buf_a/mux_mem[2][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[3][rd_col]_59_24', 'u_buf_a/mux_mem[3][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[4][rd_col]_59_24', 'u_buf_a/mux_mem[4][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[5][rd_col]_59_24', 'u_buf_a/mux_mem[5][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[6][rd_col]_59_24', 'u_buf_a/mux_mem[6][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[7][rd_col]_59_24', 'u_buf_a/mux_mem[7][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[8][rd_col]_59_24', 'u_buf_a/mux_mem[8][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[9][rd_col]_59_24', 'u_buf_a/mux_mem[9][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[10][rd_col]_59_24', 
+'u_buf_a/mux_mem[10][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[11][rd_col]_59_24', 
+'u_buf_a/mux_mem[11][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[12][rd_col]_59_24', 
+'u_buf_a/mux_mem[12][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[13][rd_col]_59_24', 
+'u_buf_a/mux_mem[13][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[14][rd_col]_59_24', 
+'u_buf_a/mux_mem[14][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[15][rd_col]_59_24', 
+'u_buf_a/mux_mem[15][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[16][rd_col]_59_24', 
+'u_buf_a/mux_mem[16][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[17][rd_col]_59_24', 
+'u_buf_a/mux_mem[17][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[18][rd_col]_59_24', 
+'u_buf_a/mux_mem[18][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[19][rd_col]_59_24', 
+'u_buf_a/mux_mem[19][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[20][rd_col]_59_24', 
+'u_buf_a/mux_mem[20][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[21][rd_col]_59_24', 
+'u_buf_a/mux_mem[21][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[22][rd_col]_59_24', 
+'u_buf_a/mux_mem[22][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[23][rd_col]_59_24', 
+'u_buf_a/mux_mem[23][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[24][rd_col]_59_24', 
+'u_buf_a/mux_mem[24][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[25][rd_col]_59_24', 
+'u_buf_a/mux_mem[25][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[26][rd_col]_59_24', 
+'u_buf_a/mux_mem[26][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[27][rd_col]_59_24', 
+'u_buf_a/mux_mem[27][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[28][rd_col]_59_24', 
+'u_buf_a/mux_mem[28][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[29][rd_col]_59_24', 
+'u_buf_a/mux_mem[29][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[30][rd_col]_59_24', 
+'u_buf_a/mux_mem[30][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[31][rd_col]_59_24', 
+'u_buf_a/mux_mem[31][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[32][rd_col]_59_24', 
+'u_buf_a/mux_mem[32][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[33][rd_col]_59_24', 
+'u_buf_a/mux_mem[33][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[34][rd_col]_59_24', 
+'u_buf_a/mux_mem[34][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[35][rd_col]_59_24', 
+'u_buf_a/mux_mem[35][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[36][rd_col]_59_24', 
+'u_buf_a/mux_mem[36][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[37][rd_col]_59_24', 
+'u_buf_a/mux_mem[37][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[38][rd_col]_59_24', 
+'u_buf_a/mux_mem[38][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[39][rd_col]_59_24', 
+'u_buf_a/mux_mem[39][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[40][rd_col]_59_24', 
+'u_buf_a/mux_mem[40][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[41][rd_col]_59_24', 
+'u_buf_a/mux_mem[41][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[42][rd_col]_59_24', 
+'u_buf_a/mux_mem[42][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[43][rd_col]_59_24', 
+'u_buf_a/mux_mem[43][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[44][rd_col]_59_24', 
+'u_buf_a/mux_mem[44][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[45][rd_col]_59_24', 
+'u_buf_a/mux_mem[45][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[46][rd_col]_59_24', 
+'u_buf_a/mux_mem[46][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[47][rd_col]_59_24', 
+'u_buf_a/mux_mem[47][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[48][rd_col]_59_24', 
+'u_buf_a/mux_mem[48][rd_lin_idx]_60_24', 
+'u_buf_a/mux_mem[49][rd_col]_59_24', 
+'u_buf_a/mux_mem[49][rd_lin_idx]_60_24', 
+'u_buf_a/mux_m
+        : Optimizations such as constant propagation or redundancy removal could change the connections so a hierarchical instance does not drive any primary outputs anymore. To see the list of deleted hierarchical instances, set the 'information_level' attribute to 2 or above. If the message is truncated set the message attribute 'truncate' to false to see the complete list. To prevent this optimization, set the 'delete_unloaded_insts' root/subdesign attribute to 'false' or 'preserve' instance attribute to 'true'.
+Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
+        : The instance is 'u_ctrl/state_reg[3]'.
+        : To prevent this optimization, set the 'optimize_constant_0_flops' root attribute to 'false' or 'optimize_constant_0_seq' instance attribute to 'false'. You can also see the complete list of deleted sequential with command "report sequential -deleted" (on Reason "constant0").
+Info    : Deleting sequential instances not driving any primary outputs. [GLO-32]
+        : Deleting 1 sequential instance. 
+Following instance is deleted as they do not drive any primary output:
+'u_ctrl/state_reg[3]'.
+Info    : Deleting instances not driving any primary outputs. [GLO-34]
+        : Deleting 64 hierarchical instances. 
+Following instances are deleted as they do not drive any primary output:
+'u_ctrl/mux_load_col_264_35', 'u_pipe/sub_142_51_I2', 
+'u_pipe/sub_142_51_I3', 'u_pipe/sub_142_51_I4', 'u_pipe/sub_142_51_I5', 
+'u_pipe/sub_142_51_I6', 'u_pipe/sub_142_51_I7', 'u_pipe/sub_142_51_I8', 
+'u_pipe/sub_142_51_I9', 'u_pipe/sub_142_51_I10', 'u_pipe/sub_142_51_I11', 
+'u_pipe/sub_142_51_I12', 'u_pipe/sub_142_51_I13', 'u_pipe/sub_142_51_I14', 
+'u_pipe/sub_142_51_I15', 'u_pipe/sub_142_51_I16', 'u_pipe/sub_142_51_I17', 
+'u_pipe/sub_142_51_I18', 'u_pipe/sub_142_51_I19', 'u_pipe/sub_142_51_I20', 
+'u_pipe/sub_142_51_I21', 'u_pipe/sub_142_51_I22', 'u_pipe/sub_142_51_I23', 
+'u_pipe/sub_142_51_I24', 'u_pipe/sub_142_51_I25', 'u_pipe/sub_142_51_I26', 
+'u_pipe/sub_142_51_I27', 'u_pipe/sub_142_51_I28', 'u_pipe/sub_142_51_I29', 
+'u_pipe/sub_142_51_I30', 'u_pipe/sub_142_51_I31', 'u_pipe/sub_142_51_I32', 
+'u_pipe/sub_142_51_I33', 'u_pipe/sub_142_51_I34', 'u_pipe/sub_142_51_I35', 
+'u_pipe/sub_142_51_I36', 'u_pipe/sub_142_51_I37', 'u_pipe/sub_142_51_I38', 
+'u_pipe/sub_142_51_I39', 'u_pipe/sub_142_51_I40', 'u_pipe/sub_142_51_I41', 
+'u_pipe/sub_142_51_I42', 'u_pipe/sub_142_51_I43', 'u_pipe/sub_142_51_I44', 
+'u_pipe/sub_142_51_I45', 'u_pipe/sub_142_51_I46', 'u_pipe/sub_142_51_I47', 
+'u_pipe/sub_142_51_I48', 'u_pipe/sub_142_51_I49', 'u_pipe/sub_142_51_I50', 
+'u_pipe/sub_142_51_I51', 'u_pipe/sub_142_51_I52', 'u_pipe/sub_142_51_I53', 
+'u_pipe/sub_142_51_I54', 'u_pipe/sub_142_51_I55', 'u_pipe/sub_142_51_I56', 
+'u_pipe/sub_142_51_I57', 'u_pipe/sub_142_51_I58', 'u_pipe/sub_142_51_I59', 
+'u_pipe/sub_142_51_I60', 'u_pipe/sub_142_51_I61', 'u_pipe/sub_142_51_I62', 
+'u_pipe/sub_142_51_I63', 'u_pipe/sub_142_51_I64'.
+Info    : Multimode clock gating check is disabled. [TIM-1000]
+Info    : Synthesizing. [SYNTH-1]
+        : Synthesizing 'accel_engine' to generic gates using 'medium' effort.
+PBS_Generic-Start - Elapsed_Time 0, CPU_Time 0.0
+stamp 'PBS_Generic-Start' being created for table 'pbs_debug'
+
+  Total Time (Wall) |  Stage Time (Wall)  |   % (Wall)   |    Date - Time     |  Memory   | Stage
+--------------------+---------------------+--------------+--------------------+-----------+----------------------
+ 00:19:55(00:20:22) |  00:00:00(00:00:00) |   0.0(  0.0) |   16:48:42 (May11) |  23.02 GB | PBS_Generic-Start
+--------------------+---------------------+--------------+--------------------+-----------+----------------------
+Number of threads: 8 * 1   (id: pbs_debug, time_info v1.57)
+Info: (*N*) indicates data that was populated from previously saved time_info database
+Info: CPU time includes time of parent + longest thread
+        Applying wireload models.
+        Computing net loads.
+TNS Restructuring config: no_value at stage: generic applied.
+Info    : Enabling Partition Based Synthesis. [PBS-1]
+        : Starting distributed generic optimization.
+Info    : Attempting to launch a super-threading server. [ST-120]
+        : Attempting to Launch server 1 of 8.
+        : The tool is entering super-threading mode and is launching a CPU server process.  This is enabled by the root attribute 'super_thread_servers' or 'auto_super_thread'.
+            : The server is process '3320253' on this host.
+Info    : Connection established with super-threading server. [ST-110]
+        : The server 'localhost_1_0' is process '3320253' on this host.
+        : The tool is entering super-threading mode and has established a connection with a CPU server process.  This is enabled by the root attributes 'super_thread_servers' or 'auto_super_thread'.
+Info    : Super thread servers are launched successfully. [ST-128]
+        : 8 out of 8 super thread servers are launched. Minimum 1 active super thread server is required.
+     Generating lib_script file: /home/dboss/common/Documents/ECE510/ECE510/project/RTL/.pbs_phobos.ece.pdx.edu_3281415/lib_script
+Start partitioning.  Summary: MEM {curr: 23.4G, peak: 29.2G, phys curr: 23.1G, phys peak: 28.8G}
+Start partitioning design accel_engine for generic optimization.
+Total generic instances for partitioning: 14243094
+	Generic partition 0: size 3680
+	Generic partition 1: size 278300
+	Generic partition 2: size 147260
+	Generic partition 3: size 278300
+	Generic partition 4: size 147260
+	Generic partition 5: size 185083
+	Generic partition 6: size 103880
+	Generic partition 7: size 98315
+	Generic partition 8: size 107590
+	Generic partition 9: size 109445
+	Generic partition 10: size 107590
+	Generic partition 11: size 107590
+	Generic partition 12: size 66780
+	Generic partition 13: size 105735
+	Generic partition 14: size 107590
+	Generic partition 15: size 85330
+	Generic partition 16: size 107590
+	Generic partition 17: size 109445
+	Generic partition 18: size 107590
+	Generic partition 19: size 90895
+	Generic partition 20: size 90895
+	Generic partition 21: size 98315
+	Generic partition 22: size 105735
+	Generic partition 23: size 109445
+	Generic partition 24: size 105735
+	Generic partition 25: size 102025
+	Generic partition 26: size 96460
+	Generic partition 27: size 105735
+	Generic partition 28: size 81620
+	Generic partition 29: size 109445
+	Generic partition 30: size 85330
+	Generic partition 31: size 105735
+	Generic partition 32: size 109445
+	Generic partition 33: size 105735
+	Generic partition 34: size 50085
+	Generic partition 35: size 109445
+	Generic partition 36: size 105735
+	Generic partition 37: size 109445
+	Generic partition 38: size 102025
+	Generic partition 39: size 102025
+	Generic partition 40: size 103880
+	Generic partition 41: size 103880
+	Generic partition 42: size 109445
+	Generic partition 43: size 107590
+	Generic partition 44: size 103880
+	Generic partition 45: size 102025
+	Generic partition 46: size 96460
+	Generic partition 47: size 100170
+	Generic partition 48: size 109445
+	Generic partition 49: size 96460
+	Generic partition 50: size 103880
+	Generic partition 51: size 109445
+	Generic partition 52: size 96460
+	Generic partition 53: size 109445
+	Generic partition 54: size 98315
+	Generic partition 55: size 89040
+	Generic partition 56: size 50085
+	Generic partition 57: size 102025
+	Generic partition 58: size 107590
+	Generic partition 59: size 109445
+	Generic partition 60: size 77910
+	Generic partition 61: size 109445
+	Generic partition 62: size 105735
+	Generic partition 63: size 109445
+	Generic partition 64: size 109445
+	Generic partition 65: size 109445
+	Generic partition 66: size 109445
+	Generic partition 67: size 109445
+	Generic partition 68: size 107590
+	Generic partition 69: size 109445
+	Generic partition 70: size 107590
+	Generic partition 71: size 107590
+	Generic partition 72: size 107590
+	Generic partition 73: size 107590
+	Generic partition 74: size 107590
+	Generic partition 75: size 100170
+	Generic partition 76: size 109445
+	Generic partition 77: size 109445
+	Generic partition 78: size 81620
+	Generic partition 79: size 79765
+	Generic partition 80: size 107590
+	Generic partition 81: size 98746
+	Generic partition 82: size 5385243
+	Generic partition 83: size 121142
+Done partitioning.  Summary: RT {elapsed: 8s, ST: 8s}, MEM {curr: 23.4G, peak: 29.2G, phys curr: 23.3G, phys peak: 28.8G}
+Start creating partition netlists.  Summary: MEM {curr: 23.4G, peak: 29.2G, phys curr: 23.3G, phys peak: 28.8G}
+Done creating partition netlists.  Summary: RT {elapsed: 152s, ST: 140s}, MEM {curr: 35.9G, peak: 35.9G, phys curr: 35.7G, phys peak: 35.7G}
+Start budgeting timing for partitions.  Summary: MEM {curr: 35.9G, peak: 35.9G, phys curr: 35.7G, phys peak: 35.7G}
+Done budgeting timing for partitions.  Summary: RT {elapsed: 1089s, ST: 1200s}, MEM {curr: 61.7G, peak: 61.7G, phys curr: 55.4G, phys peak: 55.8G}
+Start deriving partition netlists.  Summary: MEM {curr: 61.7G, peak: 61.7G, phys curr: 55.4G, phys peak: 55.8G}
+The inst 'pbs_genopt_0' is selected as pbs candidate. The instance cnt is: '3680'.
+The inst 'pbs_genopt_1' is selected as pbs candidate. The instance cnt is: '278300'.
+The inst 'pbs_genopt_2' is selected as pbs candidate. The instance cnt is: '147260'.
+The inst 'pbs_genopt_3' is selected as pbs candidate. The instance cnt is: '278300'.
+The inst 'pbs_genopt_4' is selected as pbs candidate. The instance cnt is: '147260'.
+The inst 'pbs_genopt_5' is selected as pbs candidate. The instance cnt is: '185083'.
+The inst 'pbs_genopt_6' is selected as pbs candidate. The instance cnt is: '103880'.
+The inst 'pbs_genopt_7' is selected as pbs candidate. The instance cnt is: '98315'.
+The inst 'pbs_genopt_8' is selected as pbs candidate. The instance cnt is: '107590'.
+The inst 'pbs_genopt_9' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_10' is selected as pbs candidate. The instance cnt is: '107590'.
+The inst 'pbs_genopt_11' is selected as pbs candidate. The instance cnt is: '107590'.
+The inst 'pbs_genopt_12' is selected as pbs candidate. The instance cnt is: '66780'.
+The inst 'pbs_genopt_13' is selected as pbs candidate. The instance cnt is: '105735'.
+The inst 'pbs_genopt_14' is selected as pbs candidate. The instance cnt is: '107590'.
+The inst 'pbs_genopt_15' is selected as pbs candidate. The instance cnt is: '85330'.
+The inst 'pbs_genopt_16' is selected as pbs candidate. The instance cnt is: '107590'.
+The inst 'pbs_genopt_17' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_18' is selected as pbs candidate. The instance cnt is: '107590'.
+The inst 'pbs_genopt_19' is selected as pbs candidate. The instance cnt is: '90895'.
+The inst 'pbs_genopt_20' is selected as pbs candidate. The instance cnt is: '90895'.
+The inst 'pbs_genopt_21' is selected as pbs candidate. The instance cnt is: '98315'.
+The inst 'pbs_genopt_22' is selected as pbs candidate. The instance cnt is: '105735'.
+The inst 'pbs_genopt_23' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_24' is selected as pbs candidate. The instance cnt is: '105735'.
+The inst 'pbs_genopt_25' is selected as pbs candidate. The instance cnt is: '102025'.
+The inst 'pbs_genopt_26' is selected as pbs candidate. The instance cnt is: '96460'.
+The inst 'pbs_genopt_27' is selected as pbs candidate. The instance cnt is: '105735'.
+The inst 'pbs_genopt_28' is selected as pbs candidate. The instance cnt is: '81620'.
+The inst 'pbs_genopt_29' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_30' is selected as pbs candidate. The instance cnt is: '85330'.
+The inst 'pbs_genopt_31' is selected as pbs candidate. The instance cnt is: '105735'.
+The inst 'pbs_genopt_32' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_33' is selected as pbs candidate. The instance cnt is: '105735'.
+The inst 'pbs_genopt_34' is selected as pbs candidate. The instance cnt is: '50085'.
+The inst 'pbs_genopt_35' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_36' is selected as pbs candidate. The instance cnt is: '105735'.
+The inst 'pbs_genopt_37' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_38' is selected as pbs candidate. The instance cnt is: '102025'.
+The inst 'pbs_genopt_39' is selected as pbs candidate. The instance cnt is: '102025'.
+The inst 'pbs_genopt_40' is selected as pbs candidate. The instance cnt is: '103880'.
+The inst 'pbs_genopt_41' is selected as pbs candidate. The instance cnt is: '103880'.
+The inst 'pbs_genopt_42' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_43' is selected as pbs candidate. The instance cnt is: '107590'.
+The inst 'pbs_genopt_44' is selected as pbs candidate. The instance cnt is: '103880'.
+The inst 'pbs_genopt_45' is selected as pbs candidate. The instance cnt is: '102025'.
+The inst 'pbs_genopt_46' is selected as pbs candidate. The instance cnt is: '96460'.
+The inst 'pbs_genopt_47' is selected as pbs candidate. The instance cnt is: '100170'.
+The inst 'pbs_genopt_48' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_49' is selected as pbs candidate. The instance cnt is: '96460'.
+The inst 'pbs_genopt_50' is selected as pbs candidate. The instance cnt is: '103880'.
+The inst 'pbs_genopt_51' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_52' is selected as pbs candidate. The instance cnt is: '96460'.
+The inst 'pbs_genopt_53' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_54' is selected as pbs candidate. The instance cnt is: '98315'.
+The inst 'pbs_genopt_55' is selected as pbs candidate. The instance cnt is: '89040'.
+The inst 'pbs_genopt_56' is selected as pbs candidate. The instance cnt is: '50085'.
+The inst 'pbs_genopt_57' is selected as pbs candidate. The instance cnt is: '102025'.
+The inst 'pbs_genopt_58' is selected as pbs candidate. The instance cnt is: '107590'.
+The inst 'pbs_genopt_59' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_60' is selected as pbs candidate. The instance cnt is: '77910'.
+The inst 'pbs_genopt_61' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_62' is selected as pbs candidate. The instance cnt is: '105735'.
+The inst 'pbs_genopt_63' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_64' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_65' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_66' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_67' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_68' is selected as pbs candidate. The instance cnt is: '107590'.
+The inst 'pbs_genopt_69' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_70' is selected as pbs candidate. The instance cnt is: '107590'.
+The inst 'pbs_genopt_71' is selected as pbs candidate. The instance cnt is: '107590'.
+The inst 'pbs_genopt_72' is selected as pbs candidate. The instance cnt is: '107590'.
+The inst 'pbs_genopt_73' is selected as pbs candidate. The instance cnt is: '107590'.
+The inst 'pbs_genopt_74' is selected as pbs candidate. The instance cnt is: '107590'.
+The inst 'pbs_genopt_75' is selected as pbs candidate. The instance cnt is: '100170'.
+The inst 'pbs_genopt_76' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_77' is selected as pbs candidate. The instance cnt is: '109445'.
+The inst 'pbs_genopt_78' is selected as pbs candidate. The instance cnt is: '81620'.
+The inst 'pbs_genopt_79' is selected as pbs candidate. The instance cnt is: '79765'.
+The inst 'pbs_genopt_80' is selected as pbs candidate. The instance cnt is: '107590'.
+The inst 'pbs_genopt_81' is selected as pbs candidate. The instance cnt is: '98746'.
+The inst 'pbs_genopt_82' is selected as pbs candidate. The instance cnt is: '5385243'.
+The inst 'pbs_genopt_83' is selected as pbs candidate. The instance cnt is: '121142'.
+Done deriving partition netlists.  Summary: RT {elapsed: 544s, ST: 542s}, MEM {curr: 61.7G, peak: 61.8G, phys curr: 55.4G, phys peak: 55.8G}
+Wait for super-thread servers to finish loading libraries.
+Start super thread servers forking.  Summary: MEM {curr: 37.5G, peak: 61.8G, phys curr: 41.7G, phys peak: 55.8G}
+                  Library loading done successfully on server 'localhost_1_0'.
+Info    : Connection established with super-threading server. [ST-110]
+        : The server 'localhost_1_1' is forked process '3375253' on this host.
+Info    : Connection established with super-threading server. [ST-110]
+        : The server 'localhost_1_2' is forked process '3375297' on this host.
+Info    : Connection established with super-threading server. [ST-110]
+        : The server 'localhost_1_3' is forked process '3375299' on this host.
+Info    : Connection established with super-threading server. [ST-110]
+        : The server 'localhost_1_4' is forked process '3375301' on this host.
+Info    : Connection established with super-threading server. [ST-110]
+        : The server 'localhost_1_5' is forked process '3375305' on this host.
+Info    : Connection established with super-threading server. [ST-110]
+        : The server 'localhost_1_6' is forked process '3375308' on this host.
+Info    : Connection established with super-threading server. [ST-110]
+        : The server 'localhost_1_7' is forked process '3375339' on this host.
+Info    : Super thread servers are launched successfully. [ST-128]
+        : 8 out of 8 super thread servers are launched. Minimum 1 active super thread server is required.
+Done super thread servers forking.  Summary: RT {elapsed: 3s, ST: 0s}, MEM {curr: 37.5G, peak: 61.8G, phys curr: 41.7G, phys peak: 55.8G}
+        Distributing super-thread jobs: {pbs_genopt_82 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_82.etf} {pbs_genopt_1 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_1.etf} {pbs_genopt_3 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_3.etf} {pbs_genopt_5 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_5.etf} {pbs_genopt_2 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_2.etf} {pbs_genopt_4 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_4.etf} {pbs_genopt_83 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_83.etf} {pbs_genopt_64 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_64.etf} {pbs_genopt_17 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_17.etf} {pbs_genopt_77 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_77.etf} {pbs_genopt_76 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_76.etf} {pbs_genopt_59 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_59.etf} {pbs_genopt_23 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_23.etf} {pbs_genopt_61 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_61.etf} {pbs_genopt_53 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_53.etf} {pbs_genopt_29 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_29.etf} {pbs_genopt_51 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_51.etf} {pbs_genopt_32 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_32.etf} {pbs_genopt_63 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_63.etf} {pbs_genopt_69 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_69.etf} {pbs_genopt_35 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_35.etf} {pbs_genopt_48 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_48.etf} {pbs_genopt_37 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_37.etf} {pbs_genopt_67 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_67.etf} {pbs_genopt_42 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_42.etf} {pbs_genopt_66 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_66.etf} {pbs_genopt_65 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_65.etf} {pbs_genopt_9 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_9.etf} {pbs_genopt_70 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_70.etf} {pbs_genopt_18 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_18.etf} {pbs_genopt_11 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_11.etf} {pbs_genopt_8 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_8.etf} {pbs_genopt_74 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_74.etf} {pbs_genopt_58 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_58.etf} {pbs_genopt_14 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_14.etf} {pbs_genopt_80 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_80.etf} {pbs_genopt_68 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_68.etf} {pbs_genopt_73 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_73.etf} {pbs_genopt_72 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_72.etf} {pbs_genopt_43 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_43.etf} {pbs_genopt_16 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_16.etf} {pbs_genopt_71 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_71.etf} {pbs_genopt_10 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_10.etf} {pbs_genopt_27 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_27.etf} {pbs_genopt_33 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_33.etf} {pbs_genopt_62 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_62.etf} {pbs_genopt_31 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_31.etf} {pbs_genopt_36 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_36.etf} {pbs_genopt_24 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_24.etf} {pbs_genopt_22 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_22.etf} {pbs_genopt_13 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_13.etf} {pbs_genopt_40 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_40.etf} {pbs_genopt_44 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_44.etf} {pbs_genopt_41 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_41.etf} {pbs_genopt_50 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_50.etf} {pbs_genopt_6 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_6.etf} {pbs_genopt_57 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_57.etf} {pbs_genopt_25 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_25.etf} {pbs_genopt_38 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_38.etf} {pbs_genopt_39 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_39.etf} {pbs_genopt_45 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_45.etf} {pbs_genopt_47 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_47.etf} {pbs_genopt_75 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_75.etf} {pbs_genopt_81 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_81.etf} {pbs_genopt_7 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_7.etf} {pbs_genopt_54 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_54.etf} {pbs_genopt_21 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_21.etf} {pbs_genopt_26 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_26.etf} {pbs_genopt_52 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_52.etf} {pbs_genopt_49 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_49.etf} {pbs_genopt_46 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_46.etf} {pbs_genopt_19 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_19.etf} {pbs_genopt_20 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_20.etf} {pbs_genopt_55 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_55.etf} {pbs_genopt_30 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_30.etf} {pbs_genopt_15 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_15.etf} {pbs_genopt_78 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_78.etf} {pbs_genopt_28 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_28.etf} {pbs_genopt_79 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_79.etf} {pbs_genopt_60 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_60.etf} {pbs_genopt_12 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_12.etf} {pbs_genopt_34 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_34.etf} {pbs_genopt_56 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_56.etf} {pbs_genopt_0 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_0.etf}
+          Sending 'pbs_genopt_82 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_82.etf' to server 'localhost_1_7'...
+            Sent 'pbs_genopt_82 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_82.etf' to server 'localhost_1_7'.
+          Sending 'pbs_genopt_1 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_1.etf' to server 'localhost_1_5'...
+            Sent 'pbs_genopt_1 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_1.etf' to server 'localhost_1_5'.
+          Sending 'pbs_genopt_3 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_3.etf' to server 'localhost_1_1'...
+            Sent 'pbs_genopt_3 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_3.etf' to server 'localhost_1_1'.
+          Sending 'pbs_genopt_5 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_5.etf' to server 'localhost_1_2'...
+            Sent 'pbs_genopt_5 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_5.etf' to server 'localhost_1_2'.
+          Sending 'pbs_genopt_2 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_2.etf' to server 'localhost_1_0'...
+            Sent 'pbs_genopt_2 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_2.etf' to server 'localhost_1_0'.
+          Sending 'pbs_genopt_4 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_4.etf' to server 'localhost_1_6'...
+            Sent 'pbs_genopt_4 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_4.etf' to server 'localhost_1_6'.
+          Sending 'pbs_genopt_83 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_83.etf' to server 'localhost_1_4'...
+            Sent 'pbs_genopt_83 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_83.etf' to server 'localhost_1_4'.
+          Sending 'pbs_genopt_64 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_64.etf' to server 'localhost_1_3'...
+            Sent 'pbs_genopt_64 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_64.etf' to server 'localhost_1_3'.
+          Received 'pbs_genopt_83 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_83.etf' from server 'localhost_1_4'. (116546 ms elapsed)
+          Sending 'pbs_genopt_17 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_17.etf' to server 'localhost_1_4'...
+            Sent 'pbs_genopt_17 ./.pbs_phobos.ece.pdx.edu_3281415/pbs_genopt_17.etf' to server 'localhost_1_4'.

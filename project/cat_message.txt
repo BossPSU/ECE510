@@ -1,0 +1,46 @@
+The runaway processes:
+
+phobos.ece.pdx.edu | dboss | PID: 197103 | CPU: 30.0% | Memory: 44.4% | Time:
+744.683 minutes | Process Name: genus
+phobos.ece.pdx.edu | dboss | PID: 212760 | CPU: 81.0% | Memory: 2.6% | Time:
+720.75 minutes | Process Name: genus
+phobos.ece.pdx.edu | dboss | PID: 590983 | CPU: 98.4% | Memory: 2.1% | Time:
+179.1 minutes | Process Name: genus
+phobos.ece.pdx.edu | dboss | PID: 590995 | CPU: 99.2% | Memory: 2.1% | Time:
+179.1 minutes | Process Name: genus
+phobos.ece.pdx.edu | dboss | PID: 591027 | CPU: 99.9% | Memory: 6.9% | Time:
+179.1 minutes | Process Name: genus
+
+on phobos.ece.pdx.edu have been terminated. They were found to be long running
+and
+consuming resources to the detriment of other users of this system.
+
+If you are running complex tools or testing your code, please make
+sure that you check for runaway processes. Running the command:
+
+        ps -ef | grep $USER
+
+should get you a list of everything you have going on the system. If
+you have no other way to terminate a process, you can use:
+
+        kill -9 PID
+
+where PID is the process ID found from running ps as above. You can
+also lower the priority (and thus the system impact) of a process
+with this command:
+
+        renice 15 PID
+
+If you need to run a long running background job, send email to
+
+        support@cat.pdx.edu
+
+    letting us know when and where it is going to be run and its purpose.
+
+For more information of running long background jobs see:
+
+https://cat.pdx.edu/platforms/linux/administrivia/long-running-jobs-vs-runaways/
+
+--
+The Computer Action Team
+support@cat.pdx.edu

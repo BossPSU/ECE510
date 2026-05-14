@@ -158,6 +158,38 @@ The full accelerator (`accel_top`) and even a single lane
 synthesis because the flat netlist hits ~33 M generic gates. Leaf
 block synthesis is the only path that reliably fits.
 
+### Characterization sweep (M3)
+
+For a higher-confidence chip-area estimate than naive
+single-MAC × 65,536, the sweep workflow in
+[`Claude_sweep.md`](Claude_sweep.md) synthesizes the systolic array
+and `stream_pipeline` at several sizes (N ∈ {1, 2, 4, 8, 16, 32}),
+plus every fusion leaf block, then fits `area(N) = a + b·N² + c·N`
+and extrapolates to 64×64 with a confidence band.
+
+Files:
+- [`run_genus_sweep.do`](run_genus_sweep.do) — parameterized Genus
+  driver (takes `SYNTH_TOP`, `ARRAY_N`, `BUF_NRD` env vars; writes
+  to `out_sweep/<tag>/`).
+- [`run_sweep.sh`](run_sweep.sh) — phobos shell driver:
+  `./run_sweep.sh [all|phase1|phase2|phase3|point <top> [n]]`.
+- [`collect_sweep_csv.py`](collect_sweep_csv.py) — walks
+  `out_sweep/*/reports/` and emits `sweep_results.csv`.
+- [`analyze_sweep.py`](analyze_sweep.py) — fits the curve, prints
+  `sweep_metrics.txt`, plots `sweep_figure.pdf`.
+
+Run end-to-end on phobos:
+
+```sh
+cd project/RTL
+./run_sweep.sh                  # ~10-15 hr wall time (serial)
+python3 collect_sweep_csv.py    # -> sweep_results.csv
+python3 analyze_sweep.py        # -> sweep_metrics.txt, sweep_figure.pdf
+```
+
+Every individual Genus run is under 2 hr wall time and under 40 GB
+peak memory — comfortably below CAT-team admin thresholds.
+
 ## File map
 
 ```

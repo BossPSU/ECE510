@@ -1,1274 +1,555 @@
-Cadence Genus(TM) Synthesis Solution.
-Copyright 2022 Cadence Design Systems, Inc. All rights reserved worldwide.
-Cadence and the Cadence logo are registered trademarks and Genus is a trademark
-of Cadence Design Systems, Inc. in the United States and other countries.
-
-[17:54:59.346617] Configured Lic search path (20.02-s004): 5280@cadence-lic.cecs.pdx.edu
-
-Version: 21.12-s068_1, built Fri Mar 04 14:12:46 PST 2022
-Options: -files run_genus_engine.do -log genus_engine.log 
-Date:    Wed May 06 17:54:59 2026
-Host:    phobos.ece.pdx.edu (x86_64 w/Linux 5.14.0-611.34.1.el9_7.x86_64) (1core*32cpus*32physical cpus*Intel Xeon Processor (Cascadelake) 16384KB) (65312296KB)
-PID:     1726286
-OS:      Rocky Linux release 9.7 (Blue Onyx)
-
-
-[17:55:00.045619] Periodic Lic check successful
-[17:55:00.045635] Feature usage summary:
-[17:55:00.045635] Genus_Synthesis
-Checking out license: Genus_Synthesis
-
-
-***********************************************************************************************************
-***********************************************************************************************************
-
-
-
-Loading tool scripts...
-Finished loading tool scripts (8 seconds elapsed).
-
-#@ Processing -files option
-@genus 1> source run_genus_engine.do
-#@ Begin verbose source ./run_genus_engine.do
-@file(run_genus_engine.do) 26: set_db init_lib_search_path { . $env(LIB_PATH) }
-  Setting attribute of root '/': 'init_lib_search_path' =  . $env(LIB_PATH) 
-@file(run_genus_engine.do) 27: set_db init_hdl_search_path { ../rtl }
-  Setting attribute of root '/': 'init_hdl_search_path' =  ../rtl 
-@file(run_genus_engine.do) 29: set_db max_cpus_per_server 8
-  Setting attribute of root '/': 'max_cpus_per_server' = 8
-@file(run_genus_engine.do) 30: set_db super_thread_servers "localhost"
-  Setting attribute of root '/': 'super_thread_servers' = localhost
-@file(run_genus_engine.do) 32: set_db hdl_error_on_blackbox  true
-  Setting attribute of root '/': 'hdl_error_on_blackbox' = true
-@file(run_genus_engine.do) 33: set_db hdl_track_filename_row_col true
-Info   : Enabled hdl_track_filename_row_col attribute.
-       : Setting this attribute to 'true' can have an impact on the run time. Use this attribute only when filename, line number, and column information are needed in reports.
-  Setting attribute of root '/': 'hdl_track_filename_row_col' = true
-@file(run_genus_engine.do) 34: set_db information_level 7
-  Setting attribute of root '/': 'information_level' = 7
-@file(run_genus_engine.do) 39: if { ![info exists env(LIB_PATH)] } {
-    set env(LIB_PATH) "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm"
-    puts "INFO: LIB_PATH unset; defaulting to SAED32 RVT @ $env(LIB_PATH)"
-}
-INFO: LIB_PATH unset; defaulting to SAED32 RVT @ /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm
-@file(run_genus_engine.do) 44: if { [info exists env(LIB_FILE)] } {
-    set lib_files [list $env(LIB_PATH)/$env(LIB_FILE)]
-} else {
-    set lib_files [glob -nocomplain $env(LIB_PATH)/saed32rvt_tt0p85v25c.lib]
-    if { [llength $lib_files] == 0 } {
-        set lib_files [glob -nocomplain $env(LIB_PATH)/*tt0p85v25c.lib]
-    }
-    if { [llength $lib_files] == 0 } {
-        set lib_files [glob -nocomplain $env(LIB_PATH)/*_tt_*.lib]
-    }
-    if { [llength $lib_files] == 0 } {
-        set lib_files [glob -nocomplain $env(LIB_PATH)/*.lib]
-    }
-}
-@file(run_genus_engine.do) 59: if { [llength $lib_files] == 0 } {
-    error "No .lib files found in $env(LIB_PATH). Cannot proceed."
-}
-@file(run_genus_engine.do) 63: set_db library $lib_files
-
-Threads Configured:3
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 51)
-        : Check to see if this construct is really needed for synthesis. Many liberty constructs are not actually required.
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 52)
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 53)
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 54)
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 55)
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'define' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 56)
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'library_features' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 83)
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'library_features' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84)
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'library_features' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 85)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'INOUT1' for the cell 'BSLEX1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 32766)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'INOUT1' for the cell 'BSLEX2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 33102)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'INOUT1' for the cell 'BSLEX4_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 33438)
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 57701)
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 57717)
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 57737)
-Warning : Missing clock pin in the sequential cell. [LBR-525]
-        : Clock pin absent in sequential cell(s) 'LNANDX1_RVT' (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 75612)
-        : Sequential timing checks, such as 'setup_rising' or 'hold_rising', on flop and latch cells require a clock pin. Verify that the 'clock' attribute of the clock pin is set to 'true' or that the clock pin has a 'clocked_on' attribute.
-Warning : Missing clock pin in the sequential cell. [LBR-525]
-        : Clock pin absent in sequential cell(s) 'LNANDX2_RVT' (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 75949)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'D' for the cell 'NMT1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84601)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'S' for the cell 'NMT1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84614)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'D' for the cell 'NMT2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84652)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'S' for the cell 'NMT2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84665)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'D' for the cell 'NMT3_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84703)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'S' for the cell 'NMT3_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 84716)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'INOUT1' for the cell 'PGX1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 118732)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'INOUT1' for the cell 'PGX2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 119167)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'INOUT1' for the cell 'PGX4_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 119602)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'D' for the cell 'PMT1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120041)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'S' for the cell 'PMT1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120054)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'D' for the cell 'PMT2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120092)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'S' for the cell 'PMT2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120105)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'D' for the cell 'PMT3_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120143)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'S' for the cell 'PMT3_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 120156)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'QN' for the cell 'RSDFFARX1_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 145385)
-Info    : Missing a function attribute in the output pin definition. [LBR-518]
-        : Functionality is missing at pin 'QN' for the cell 'RSDFFARX2_RVT'. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 146400)
-Warning : Maximum message print count reached. [MESG-11]
-        : Maximum print count of '20' reached for message 'LBR-518'.
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 219376)
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 219392)
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 219407)
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 219423)
-Info    : An unsupported construct was detected in this library. [LBR-40]
-        : Unknown Liberty attribute 'is_filler_cell' encountered. Ignoring (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib, Line 219440)
-Warning : An attribute is used before it is defined. [LBR-511]
-        : The library level attribute default_operating_conditions on line 226626 is defined after at least one cell definition. The attribute will be ignored. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib)
-Warning : An attribute is used before it is defined. [LBR-511]
-        : The library level attribute default_wire_load on line 226627 is defined after at least one cell definition. The attribute will be ignored. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib)
-Warning : An attribute is used before it is defined. [LBR-511]
-        : The library level attribute default_wire_load_selection on line 226628 is defined after at least one cell definition. The attribute will be ignored. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib)
-
-  Message Summary for Library saed32rvt_tt0p85v25c.lib:
-  *****************************************************
-  Missing clock pin in the sequential cell. [LBR-525]: 2
-  Missing a function attribute in the output pin definition. [LBR-518]: 64
-  An attribute is used before it is defined. [LBR-511]: 3
-  An unsupported construct was detected in this library. [LBR-40]: 17
-  *****************************************************
- 
-            Reading file '/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib'
-Info    : Created nominal operating condition. [LBR-412]
-        : Operating condition '_nominal_' was created for the PVT values (1.000000, 0.850000, 25.000000) in library 'saed32rvt_tt0p85v25c.lib'.
-        : The nominal operating condition is represented, either by the nominal PVT values specified in the library source (via nom_process,nom_voltage and nom_temperature respectively), or by the default PVT values (1.0,1.0,1.0).
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'ANTENNA_RVT' must have an output pin.
-        : Add the missing output pin(s), then reload the library. Else the library cell will be marked as timing model i.e. unusable. Timing_model means that the cell does not have any defined function. If there is no output pin, Genus will mark library cell as unusable i.e. the attribute 'usable' will be marked to 'false' on the libcell. Therefore, the cell is not used for mapping and it will not be picked up from the library for synthesis. If you query the attribute 'unusable_reason' on the libcell; result will be: 'Library cell has no output pins.'Note: The message LBR-9 is only for the logical pins and not for the power_ground pins. Genus will depend upon the output function defined in the pin group (output pin) of the cell, to use it for mapping. The pg_pin will not have any function defined.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'ANTENNA_RVT' must have an output pin.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'BSLEX1_RVT/INOUT1' has no function.
-        : If the remainder of this library cell's semantic checks are successful, it will be considered as a timing-model (because one of its outputs does not have a valid function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'BSLEX2_RVT/INOUT1' has no function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'BSLEX4_RVT/INOUT1' has no function.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'BUSKP_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'BUSKP_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'CLOAD1_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'CLOAD1_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'DCAP_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'DCAP_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'DHFILLH2_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'DHFILLH2_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'DHFILLHL2_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'DHFILLHL2_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'DHFILLHLHLS11_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'DHFILLHLHLS11_RVT' must have an output pin.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'NMT1_RVT/D' has no function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'NMT1_RVT/S' has no function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'NMT2_RVT/D' has no function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'NMT2_RVT/S' has no function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'NMT3_RVT/D' has no function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'NMT3_RVT/S' has no function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'PGX1_RVT/INOUT1' has no function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'PGX2_RVT/INOUT1' has no function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'PGX4_RVT/INOUT1' has no function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'PMT1_RVT/D' has no function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'PMT1_RVT/S' has no function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'PMT2_RVT/D' has no function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'PMT2_RVT/S' has no function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'PMT3_RVT/D' has no function.
-Info    : An output library pin lacks a function attribute. [LBR-41]
-        : Output pin 'PMT3_RVT/S' has no function.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'RSDFFNSRARX1_RVT'.  Ignoring the test_cell.
-        : Review the definition of the test_cell's function or its parent library-cell's function.  An inconsistency between the two may exist.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'RSDFFNSRARX2_RVT'.  Ignoring the test_cell.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'RSDFFNSRASX1_RVT'.  Ignoring the test_cell.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'RSDFFNSRASX2_RVT'.  Ignoring the test_cell.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'RSDFFNSRX1_RVT'.  Ignoring the test_cell.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'RSDFFNSRX2_RVT'.  Ignoring the test_cell.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'RSDFFSRARX1_RVT'.  Ignoring the test_cell.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'RSDFFSRARX2_RVT'.  Ignoring the test_cell.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'RSDFFSRASX1_RVT'.  Ignoring the test_cell.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'RSDFFSRASX2_RVT'.  Ignoring the test_cell.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'RSDFFSRSSRX1_RVT'.  Ignoring the test_cell.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'RSDFFSRSSRX2_RVT'.  Ignoring the test_cell.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'RSDFFSRX1_RVT'.  Ignoring the test_cell.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'RSDFFSRX2_RVT'.  Ignoring the test_cell.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'SDFFSSRX1_RVT'.  Ignoring the test_cell.
-Warning : Malformed test_cell. [LBR-64]
-        : Unusable test_cell in 'SDFFSSRX2_RVT'.  Ignoring the test_cell.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'SHFILL128_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'SHFILL128_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'SHFILL1_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'SHFILL1_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'SHFILL2_RVT' must have an output pin.
-Warning : Library cell has no output pins defined. [LBR-9]
-        : Library cell 'SHFILL2_RVT' must have an output pin.
-Warning : Maximum message print count reached. [MESG-11]
-        : Maximum print count of '20' reached for message 'LBR-9'.
-Info    : Ignoring specified timing sense. [LBR-170]
-        : The 'timing_sense' definition 'positive_unate' for library pin 'DFFSSRX1_RVT/Q' is ignored.
-        : Timing sense should never be set with 'rising_edge' or 'falling_edge' timing type.
-Info    : Ignoring specified timing sense. [LBR-170]
-        : The 'timing_sense' definition 'negative_unate' for library pin 'DFFSSRX1_RVT/QN' is ignored.
-Info    : Ignoring specified timing sense. [LBR-170]
-        : The 'timing_sense' definition 'positive_unate' for library pin 'DFFSSRX2_RVT/Q' is ignored.
-Info    : Ignoring specified timing sense. [LBR-170]
-        : The 'timing_sense' definition 'negative_unate' for library pin 'DFFSSRX2_RVT/QN' is ignored.
-  Setting attribute of root '/': 'library' = /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib
-@file(run_genus_engine.do) 64: puts ">>> Loaded [llength $lib_files] standard-cell library file(s):"
->>> Loaded 1 standard-cell library file(s):
-@file(run_genus_engine.do) 65: foreach f $lib_files { puts "      $f" }
-      /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib
-@file(run_genus_engine.do) 76: puts ">>> Reading RTL (accel_engine subset)..."
->>> Reading RTL (accel_engine subset)...
-@file(run_genus_engine.do) 77: set rtl ../rtl
-@file(run_genus_engine.do) 80: read_hdl -sv $rtl/accel_pkg.sv
-            Reading Verilog file '../rtl/../rtl/accel_pkg.sv'
-@file(run_genus_engine.do) 83: read_hdl -sv $rtl/stream_if.sv
-            Reading Verilog file '../rtl/../rtl/stream_if.sv'
-@file(run_genus_engine.do) 84: read_hdl -sv $rtl/sram_if.sv
-            Reading Verilog file '../rtl/../rtl/sram_if.sv'
-@file(run_genus_engine.do) 85: read_hdl -sv $rtl/cmd_if.sv
-            Reading Verilog file '../rtl/../rtl/cmd_if.sv'
-@file(run_genus_engine.do) 86: read_hdl -sv $rtl/tile_if.sv
-            Reading Verilog file '../rtl/../rtl/tile_if.sv'
-@file(run_genus_engine.do) 87: read_hdl -sv $rtl/ctrl_if.sv
-            Reading Verilog file '../rtl/../rtl/ctrl_if.sv'
-@file(run_genus_engine.do) 88: read_hdl -sv $rtl/status_if.sv
-            Reading Verilog file '../rtl/../rtl/status_if.sv'
-@file(run_genus_engine.do) 91: read_hdl -sv $rtl/mac_pe.sv
-            Reading Verilog file '../rtl/../rtl/mac_pe.sv'
-@file(run_genus_engine.do) 92: read_hdl -sv $rtl/systolic_array_64x64.sv
-            Reading Verilog file '../rtl/../rtl/systolic_array_64x64.sv'
-@file(run_genus_engine.do) 93: read_hdl -sv $rtl/gelu_lut.sv
-            Reading Verilog file '../rtl/../rtl/gelu_lut.sv'
-  (* rom_style = "block" *) logic signed [DATA_WIDTH-1:0] lut_mem [DEPTH];
-     |
-Warning : Unused attribute. [VLOGPT-506]
-        : Attribute 'rom_style' in file '../rtl/../rtl/gelu_lut.sv' on line 17, column 6.
-  initial begin
-        |
-Warning : Ignoring unsynthesizable construct. [VLOGPT-37]
-        : Initial in file '../rtl/../rtl/gelu_lut.sv' on line 19, column 9.
-        : For example, the following constructs will be ignored:
-    - initial block
-    - final block
-    - program block
-    - property block
-    - sequence block
-    - covergroup
-    - checker block
-    - gate drive strength
-    - system task enable
-    - reg declaration with initial value
-    - specify block.
-@file(run_genus_engine.do) 94: read_hdl -sv $rtl/exp_lut.sv
-            Reading Verilog file '../rtl/../rtl/exp_lut.sv'
-  (* rom_style = "block" *) logic signed [DATA_WIDTH-1:0] lut_mem [DEPTH];
-     |
-Warning : Unused attribute. [VLOGPT-506]
-        : Attribute 'rom_style' in file '../rtl/../rtl/exp_lut.sv' on line 16, column 6.
-  initial begin
-        |
-Warning : Ignoring unsynthesizable construct. [VLOGPT-37]
-        : Initial in file '../rtl/../rtl/exp_lut.sv' on line 18, column 9.
-@file(run_genus_engine.do) 95: read_hdl -sv $rtl/adder_tree.sv
-            Reading Verilog file '../rtl/../rtl/adder_tree.sv'
-@file(run_genus_engine.do) 96: read_hdl -sv $rtl/gelu_unit.sv
-            Reading Verilog file '../rtl/../rtl/gelu_unit.sv'
-@file(run_genus_engine.do) 97: read_hdl -sv $rtl/gelu_grad_unit.sv
-            Reading Verilog file '../rtl/../rtl/gelu_grad_unit.sv'
-@file(run_genus_engine.do) 98: read_hdl -sv $rtl/softmax_unit.sv
-            Reading Verilog file '../rtl/../rtl/softmax_unit.sv'
-@file(run_genus_engine.do) 99: read_hdl -sv $rtl/causal_mask_unit.sv
-            Reading Verilog file '../rtl/../rtl/causal_mask_unit.sv'
-@file(run_genus_engine.do) 100: read_hdl -sv $rtl/divider_or_reciprocal_unit.sv
-            Reading Verilog file '../rtl/../rtl/divider_or_reciprocal_unit.sv'
-@file(run_genus_engine.do) 101: read_hdl -sv $rtl/fused_postproc_unit.sv
-            Reading Verilog file '../rtl/../rtl/fused_postproc_unit.sv'
-@file(run_genus_engine.do) 104: read_hdl -sv $rtl/pipeline_stage.sv
-            Reading Verilog file '../rtl/../rtl/pipeline_stage.sv'
-@file(run_genus_engine.do) 105: read_hdl -sv $rtl/skid_buffer.sv
-            Reading Verilog file '../rtl/../rtl/skid_buffer.sv'
-@file(run_genus_engine.do) 106: read_hdl -sv $rtl/stream_mux.sv
-            Reading Verilog file '../rtl/../rtl/stream_mux.sv'
-@file(run_genus_engine.do) 109: read_hdl -sv $rtl/tile_buffer.sv
-            Reading Verilog file '../rtl/../rtl/tile_buffer.sv'
-@file(run_genus_engine.do) 112: read_hdl -sv $rtl/stream_pipeline.sv
-            Reading Verilog file '../rtl/../rtl/stream_pipeline.sv'
-@file(run_genus_engine.do) 115: read_hdl -sv $rtl/accel_controller.sv
-            Reading Verilog file '../rtl/../rtl/accel_controller.sv'
-@file(run_genus_engine.do) 116: read_hdl -sv $rtl/perf_counter_block.sv
-            Reading Verilog file '../rtl/../rtl/perf_counter_block.sv'
-@file(run_genus_engine.do) 119: read_hdl -sv $rtl/accel_engine.sv
-            Reading Verilog file '../rtl/../rtl/accel_engine.sv'
-@file(run_genus_engine.do) 124: set TOP accel_engine
-@file(run_genus_engine.do) 125: puts ">>> Elaborating $TOP..."
->>> Elaborating accel_engine...
-@file(run_genus_engine.do) 126: elaborate $TOP
-Info    : Ignoring specified timing sense. [LBR-170]
-        : The 'timing_sense' definition 'positive_unate' for library pin 'DFFSSRX1_RVT/Q' is ignored.
-Info    : Ignoring specified timing sense. [LBR-170]
-        : The 'timing_sense' definition 'negative_unate' for library pin 'DFFSSRX1_RVT/QN' is ignored.
-Info    : Ignoring specified timing sense. [LBR-170]
-        : The 'timing_sense' definition 'positive_unate' for library pin 'DFFSSRX2_RVT/Q' is ignored.
-Info    : Ignoring specified timing sense. [LBR-170]
-        : The 'timing_sense' definition 'negative_unate' for library pin 'DFFSSRX2_RVT/QN' is ignored.
-Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
-        : 'timing_sense' attribute between pin 'CI' and 'S' in libcell 'FADDX1_RVT' is 'pos_unate', but unateness determined from function is 'non_unate'.
-        : The 'timing_sense' attribute will be respected.
-Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
-        : 'timing_sense' attribute between pin 'CI' and 'S' in libcell 'FADDX1_RVT' is 'neg_unate', but unateness determined from function is 'non_unate'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'CI' and 'S' in libcell 'FADDX1_RVT'.
-        : Setting the 'timing_sense' to non_unate.
-Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
-        : 'timing_sense' attribute between pin 'B' and 'S' in libcell 'FADDX1_RVT' is 'pos_unate', but unateness determined from function is 'non_unate'.
-Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
-        : 'timing_sense' attribute between pin 'B' and 'S' in libcell 'FADDX1_RVT' is 'neg_unate', but unateness determined from function is 'non_unate'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'B' and 'S' in libcell 'FADDX1_RVT'.
-Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
-        : 'timing_sense' attribute between pin 'A' and 'S' in libcell 'FADDX1_RVT' is 'pos_unate', but unateness determined from function is 'non_unate'.
-Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
-        : 'timing_sense' attribute between pin 'A' and 'S' in libcell 'FADDX1_RVT' is 'neg_unate', but unateness determined from function is 'non_unate'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'A' and 'S' in libcell 'FADDX1_RVT'.
-Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
-        : 'timing_sense' attribute between pin 'CI' and 'S' in libcell 'FADDX2_RVT' is 'pos_unate', but unateness determined from function is 'non_unate'.
-Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
-        : 'timing_sense' attribute between pin 'CI' and 'S' in libcell 'FADDX2_RVT' is 'neg_unate', but unateness determined from function is 'non_unate'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'CI' and 'S' in libcell 'FADDX2_RVT'.
-Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
-        : 'timing_sense' attribute between pin 'B' and 'S' in libcell 'FADDX2_RVT' is 'pos_unate', but unateness determined from function is 'non_unate'.
-Info    : Mismatch in unateness between 'timing_sense' attribute and the function. [LBR-155]
-        : 'timing_sense' attribute between pin 'B' and 'S' in libcell 'FADDX2_RVT' is 'neg_unate', but unateness determined from function is 'non_unate'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'B' and 'S' in libcell 'FADDX2_RVT'.
-Info    : Setting the maximum print count of this message to 10 if information_level is less than 9. [LBR-161]
-        : To print all the warning messages, set the information_level to 9.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'A' and 'S' in libcell 'FADDX2_RVT'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'B0' and 'SO' in libcell 'HADDX1_RVT'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'A0' and 'SO' in libcell 'HADDX1_RVT'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'B0' and 'SO' in libcell 'HADDX2_RVT'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'A0' and 'SO' in libcell 'HADDX2_RVT'.
-Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
-        : Library pin 'RDFFNX1_RVT/D' has no incoming setup arc.
-        : Pin used in a next_state function must have an incoming setup timing arc. Otherwise, the library cell will be treated as a timing model.
-Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
-        : Library pin 'RDFFNX2_RVT/D' has no incoming setup arc.
-Info    : Promoting a hold arc to removal. [LBR-31]
-        : The asynchronous input pin is RDFFSRSSRX2_RVT/RSTB
-        : Hold arcs to asynchronous input pins are not supported.
-Info    : Promoting a setup arc to recovery. [LBR-30]
-        : The asynchronous input pin is RDFFSRSSRX2_RVT/RSTB
-        : Setup arcs to asynchronous input pins are not supported.
-Info    : Promoting a hold arc to removal. [LBR-31]
-        : The asynchronous input pin is RDFFSRSSRX2_RVT/SETB
-Info    : Promoting a setup arc to recovery. [LBR-30]
-        : The asynchronous input pin is RDFFSRSSRX2_RVT/SETB
-Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
-        : Library pin 'RDFFX1_RVT/D' has no incoming setup arc.
-Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
-        : Library pin 'RDFFX2_RVT/D' has no incoming setup arc.
-Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
-        : Library pin 'RSDFFNSRX1_RVT/D' has no incoming setup arc.
-Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
-        : Library pin 'RSDFFNSRX1_RVT/SE' has no incoming setup arc.
-Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
-        : Library pin 'RSDFFNSRX1_RVT/SI' has no incoming setup arc.
-Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
-        : Library pin 'RSDFFNSRX2_RVT/D' has no incoming setup arc.
-Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
-        : Library pin 'RSDFFNSRX2_RVT/SE' has no incoming setup arc.
-Warning : Missing an incoming setup timing arc for next_state library pin. [LBR-34]
-        : Library pin 'RSDFFNSRX2_RVT/SI' has no incoming setup arc.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'A2' and 'Y' in libcell 'XNOR2X1_RVT'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'A1' and 'Y' in libcell 'XNOR2X1_RVT'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'A2' and 'Y' in libcell 'XNOR2X2_RVT'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'A1' and 'Y' in libcell 'XNOR2X2_RVT'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'A3' and 'Y' in libcell 'XNOR3X1_RVT'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'A2' and 'Y' in libcell 'XNOR3X1_RVT'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'A1' and 'Y' in libcell 'XNOR3X1_RVT'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'A3' and 'Y' in libcell 'XNOR3X2_RVT'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'A2' and 'Y' in libcell 'XNOR3X2_RVT'.
-Info    : Both 'pos_unate' and 'neg_unate' timing_sense arcs have been processed. [LBR-162]
-        : Non_unate 'timing_sense' inferred between pin 'A1' and 'Y' in libcell 'XNOR3X2_RVT'.
-Warning : Maximum message print count reached. [MESG-11]
-        : Maximum print count of '20' reached for message 'LBR-162'.
-  Library has 130 usable logic and 108 usable sequential lib-cells.
-Info    : Elaborating Design. [ELAB-1]
-        : Elaborating top-level block 'accel_engine' from file '../rtl/../rtl/accel_engine.sv'.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'a_rd_row' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 55.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'a_rd_col' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 56.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'a_rd_data' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 57.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'b_rd_row' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 58.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'b_rd_col' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 59.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'b_rd_data' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 60.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'unused_out_mp_row' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 80.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'unused_out_mp_col' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 81.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'unused_out_mp_data' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 82.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'aux_mp_row' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 136.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'aux_mp_col' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 137.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'aux_mp_data' in module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 138.
-Info    : Elaborating Subdesign. [ELAB-2]
-        : Elaborating block 'accel_controller' from file '../rtl/../rtl/accel_controller.sv'.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_IDLE' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 64.
-        : Review and make sure the mismatch is unintentional. Genus can possibly issue bitwidth mismatch warning for explicit assignments present in RTL as-well-as for implicit assignments inferred by the tool. For example, in case of enum declaration without value, the tool will implicitly assign value to the enum variables. It also issues the warning for any bitwidth mismatch that appears in this implicit assignment.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_LOAD_A' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 65.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_LOAD_B' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 66.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_LOAD_AUX' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 67.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_STREAM_START' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 68.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_STREAM_WAIT' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 69.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_WRITE' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 70.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_DONE' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 72.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_IDLE' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 64.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_LOAD_A' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 65.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_LOAD_B' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 66.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_LOAD_AUX' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 67.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_STREAM_START' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 68.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_STREAM_WAIT' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 69.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_WRITE' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 70.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'S_DONE' [4] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_controller.sv' on line 72.
-Warning : Removing unused register. [CDFG-508]
-        : Removing unused flip-flop register 'cmd_reg[seq_len]' in module 'accel_controller' in file '../rtl/../rtl/accel_controller.sv' on line 75.
-        : Genus removes the flip-flop or latch inferred for an unused signal or variable. To preserve the flip-flop or latch, set the hdl_preserve_unused_registers attribute to true or use a pragma in the RTL.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '%bit-concat%' in file '../rtl/../rtl/accel_controller.sv' on line 139.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '%bit-concat%' in file '../rtl/../rtl/accel_controller.sv' on line 129.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '%bit-concat%' in file '../rtl/../rtl/accel_controller.sv' on line 151.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '%bit-concat%' in file '../rtl/../rtl/accel_controller.sv' on line 129.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 141.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 131.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 153.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 131.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 141.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 131.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 153.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '%bit-select%' in file '../rtl/../rtl/accel_controller.sv' on line 131.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 232.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 211.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 257.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 211.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 217.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 211.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 242.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 211.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 263.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 211.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 299.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 296.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 243.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 218.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 264.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 218.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 222.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 218.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 247.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 218.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 268.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 218.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 245.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 220.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 266.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 220.
-Info    : Common subexpression eliminated. [CDFG-738]
-        : Eliminated '+' in file '../rtl/../rtl/accel_controller.sv' on line 304.
-Info    : Common subexpression kept. [CDFG-739]
-        : Kept '+' in file '../rtl/../rtl/accel_controller.sv' on line 300.
-Warning : Maximum message print count reached. [MESG-11]
-        : Maximum print count of '20' reached for message 'CDFG-738'.
-Warning : Maximum message print count reached. [MESG-11]
-        : Maximum print count of '20' reached for message 'CDFG-739'.
-Info    : Identified sum-of-products logic to be optimized during syn_generic. [CDFG-769]
-        : Sum-of-products logic in module 'accel_controller' in file '../rtl/../rtl/accel_controller.sv' on line 120.
-Info    : Identified sum-of-products logic to be optimized during syn_generic. [CDFG-769]
-        : Sum-of-products logic in module 'accel_controller' in file '../rtl/../rtl/accel_controller.sv' on line 94.
-Info    : Unused module input port. [CDFG-500]
-        : Input port 'cmd[seq_len]' is not used in module 'accel_controller' in file '../rtl/../rtl/accel_controller.sv' on line 25.
-        : (In port definition within the module, the input port is not used in any assignment statements or conditional expressions for decision statements.
-Info    : Elaborating Subdesign. [ELAB-2]
-        : Elaborating block 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS64' from file '../rtl/../rtl/tile_buffer.sv'.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'mp_rd_row' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS64' in file '../rtl/../rtl/tile_buffer.sv' on line 41.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'mp_rd_col' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS64' in file '../rtl/../rtl/tile_buffer.sv' on line 42.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'mp_rd_data' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS64' in file '../rtl/../rtl/tile_buffer.sv' on line 44.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'mem' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS64' in file '../rtl/../rtl/tile_buffer.sv' on line 46.
-Info    : Elaborating Subdesign. [ELAB-2]
-        : Elaborating block 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS1' from file '../rtl/../rtl/tile_buffer.sv'.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'mp_rd_row' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS1' in file '../rtl/../rtl/tile_buffer.sv' on line 41.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'mp_rd_col' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS1' in file '../rtl/../rtl/tile_buffer.sv' on line 42.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'mp_rd_data' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS1' in file '../rtl/../rtl/tile_buffer.sv' on line 44.
-Info    : Processing multi-dimensional arrays. [CDFG-250]
-        : Variable 'mem' in module 'tile_buffer_DATA_WIDTH32_TILE_DIM64_NUM_RD_PORTS1' in file '../rtl/../rtl/tile_buffer.sv' on line 46.
-Info    : Elaborating Subdesign. [ELAB-2]
-        : Elaborating block 'stream_pipeline_DATA_WIDTH32_ARRAY_DIM64' from file '../rtl/../rtl/stream_pipeline.sv'.
-Warning : Maximum message print count reached. [MESG-11]
-        : Maximum print count of '20' reached for message 'CDFG-250'.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[0]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[1]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[2]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[3]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[4]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[5]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[6]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[7]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[8]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[9]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[10]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[11]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[12]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[13]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[14]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[15]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[16]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[17]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[18]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Info    : Sign mismatch in assignment. [CDFG-373]
-        : Assignment has unsigned left hand side 'a_rd_row[19]' and signed right hand side in file '../rtl/../rtl/stream_pipeline.sv' on line 149.
-Warning : Maximum message print count reached. [MESG-11]
-        : Maximum print count of '20' reached for message 'CDFG-373'.
-Info    : Elaborating Subdesign. [ELAB-2]
-        : Elaborating block 'systolic_array_64x64_ROWS64_COLS64_DATA_WIDTH32' from file '../rtl/../rtl/systolic_array_64x64.sv'.
-Info    : Elaborating Subdesign. [ELAB-2]
-        : Elaborating block 'mac_pe_DATA_WIDTH32' from file '../rtl/../rtl/mac_pe.sv'.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'product' [64] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/mac_pe.sv' on line 31.
-Info    : Elaborating Subdesign. [ELAB-2]
-        : Elaborating block 'fused_postproc_unit_DATA_WIDTH32' from file '../rtl/../rtl/fused_postproc_unit.sv'.
-Info    : Elaborating Subdesign. [ELAB-2]
-        : Elaborating block 'gelu_unit_DATA_WIDTH32' from file '../rtl/../rtl/gelu_unit.sv'.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'product' [64] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_pkg.sv' on line 156.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'product' [64] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_pkg.sv' on line 156.
-Info    : Bitwidth mismatch in assignment. [CDFG-372]
-        : Width of left hand side 'product' [64] doesn't match the width of right hand side [32] in assignment in file '../rtl/../rtl/accel_pkg.sv' on line 156.
-Warning : Maximum message print count reached. [MESG-11]
-        : Maximum print count of '20' reached for message 'CDFG-372'.
-Warning : Removing unused register. [CDFG-508]
-        : Removing unused flip-flop register 's1_x2' in module 'gelu_unit_DATA_WIDTH32' in file '../rtl/../rtl/gelu_unit.sv' on line 43.
-Info    : Elaborating Subdesign. [ELAB-2]
-        : Elaborating block 'gelu_grad_unit_DATA_WIDTH32' from file '../rtl/../rtl/gelu_grad_unit.sv'.
-Info    : Elaborating Subdesign. [ELAB-2]
-        : Elaborating block 'softmax_unit_DATA_WIDTH32_VEC_LEN64' from file '../rtl/../rtl/softmax_unit.sv'.
-Info    : Constant relational expression. [CDFG-479]
-        : The '<' operation evaluates to 'false' in file '../rtl/../rtl/softmax_unit.sv' on line 111.
-        : A relational expression can evaluate to a constant when a variable is compared to a value which is outside the bounds of the variable.
-Info    : Constant relational expression. [CDFG-479]
-        : The boolean operation evaluates to 'false' in file '../rtl/../rtl/softmax_unit.sv' on line 111.
-Info    : Skip related conditional write and read sequence. [CDFG-773]
-        : For variable 'q_exp_approx' in Module 'softmax_unit_DATA_WIDTH32_VEC_LEN64_softmax_unit_q_exp_approx_softmax_unit_DATA_WIDTH_32'sh00000020_VEC_LEN_32'sh00000040' in file '../rtl/../rtl/softmax_unit.sv' on line 96.
-Info    : Skip related conditional write and read sequence. [CDFG-773]
-        : For variable 'q_exp_approx' in Module 'softmax_unit_DATA_WIDTH32_VEC_LEN64_softmax_unit_q_exp_approx_softmax_unit_DATA_WIDTH_32'sh00000020_VEC_LEN_32'sh00000040' in file '../rtl/../rtl/softmax_unit.sv' on line 97.
-Info    : Skip related conditional write and read sequence. [CDFG-773]
-        : For variable '__enable_main_body_1' in Module 'softmax_unit_DATA_WIDTH32_VEC_LEN64_softmax_unit_q_exp_approx_softmax_unit_DATA_WIDTH_32'sh00000020_VEC_LEN_32'sh00000040' in file '../rtl/../rtl/softmax_unit.sv' on line 97.
-Info    : Skip related conditional write and read sequence. [CDFG-773]
-        : For variable '__enable_main_body_1' in Module 'softmax_unit_DATA_WIDTH32_VEC_LEN64_softmax_unit_q_exp_approx_softmax_unit_DATA_WIDTH_32'sh00000020_VEC_LEN_32'sh00000040' in file '../rtl/../rtl/softmax_unit.sv' on line 105.
-Info    : Unused module input port. [CDFG-500]
-        : Input port 'start' is not used in module 'softmax_unit_DATA_WIDTH32_VEC_LEN64' in file '../rtl/../rtl/softmax_unit.sv' on line 12.
-Info    : Elaborating Subdesign. [ELAB-2]
-        : Elaborating block 'perf_counter_block' from file '../rtl/../rtl/perf_counter_block.sv'.
-Info    : Unused instance port. [ELABUTL-132]
-        : Unused Port 'total_cycles' of instance 'u_perf' of module 'perf_counter_block' inside module 'accel_engine' in file '../rtl/../rtl/accel_engine.sv' on line 184.
-        : Please check the reported scenario of unconnected instance port to ensure that it matches the design intent.
-Info    : Done Elaborating Design. [ELAB-3]
-        : Done elaborating 'accel_engine'.
-Checking for analog nets...
-Check completed for analog nets.
-Checking for source RTL...
-Check completed for source RTL.
-Running Unified Mux Engine Tricks...
-Completed Unified Mux Engine Tricks
---------------------------------------------------------
-| Trick             | Accepts | Rejects | Runtime (ms) | 
---------------------------------------------------------
-| ume_constant_bmux |       0 |       0 |        27.00 | 
---------------------------------------------------------
-Starting clip mux common data inputs [v1.0] (stage: post_elab, startdef: accel_engine, recur: true)
-Completed clip mux common data inputs (accepts: 0, rejects: 0, runtime: 0.643s)
-Starting clip the non-user hierarchies [v2.0] (stage: post_elab, startdef: accel_engine, recur: true)
-Completed clip the non-user hierarchies (accepts: 0, rejects: 0, runtime: 0.034s)
+     2612      2652      2612      2532
+##>--------------------------------------------------------------------------------------------------------------------
+##>POST_WNS            -32169    -13244      -337      -463    -13008    -13013      -907     -1223      -907      -907
+##>POST_TNS         124278138 130394164  13272524  13433958   8149416  50721862   1363973   1404494   1371399   1359643
+##>POST_CNT           3962079    285995    278064    278064    274981    274981     56522     57201     56522     56522
+##>POST_PORT_CNT         4108    142750      2479      2479        91        91      2612      2652      2612      2532
+##>POST_AREA         10478797   3084761   2347018   2347018   2343089   2343089    188131    189857    188131    188131
+##>POST_LEAK_PWR    130612153  55202494  46836275  46836275  46846520  46846520   2884003   2905437   2884003   2884003
+##>POST_EX_DEL_CNT       4108    142750      1711      1711        91        91      2612      2652      2612      2532
+##>--------------------------------------------------------------------------------------------------------------------
+##>R:Read DB               16         9        20        10         2         2         0         0         1         0
+##>R:Mux Opto              95       500       143       164       175       156         6         4         4         4
+##>R:Generic             3244       722       724       446       186       178       410       399       399       395
+##>R:Retime                 0         0         0         0         0         0         0         0         0         0
+##>R:Clk Gate               0         0         0         0         0         0         0         0         0         0
+##>R:Const Prop            33      1020        65        76        71        62         2         2         2         3
+##>R:Gobble                 9         1         0         0         0         1         0         0         0         1
+##>R:Set Targets            0         0         0         0         0         0         0         0         0         0
+##>R:Write DB             344        69        36        39        44        39         5         5         4         4
+##>R:Misc                   0         0         0         0         0         0         0         0         0         0
+##>Total Elapsed         3742      2322       989       736       479       439       424       411       411       408
+##>====================================================================================================================
+##>====================================== Cadence Confidential (Generic-Logical) ======================================
+##>ST Summary (95 partitions in total):
+##>--------------------------------------------------------------------------------------------------------------------
+##>PARTITION               14        11        96         7        93        69         1        62         5        77
+##>--------------------------------------------------------------------------------------------------------------------
+##>PRE_WNS             -12960    -12375    -30247      -413    -31780    -31780      -413    -31780    -12325    -31780
+##>PRE_TNS           45887970   6958189   1933818   4077075   2024512   2073239   4082352   2072995   1907961   2072995
+##>PRE_CNT             104411    100826    105550    178992    107124    107578    178992    107578    100826    107578
+##>PRE_PORT_CNT        111559     86076       284      1699       269       301      1699       301     86076       301
+##>PRE_AREA           1318557   1072843    275312   1479264    278886    279935   1479264    279935   1072843    279935
+##>PRE_LEAK_PWR      21364944  19659512   3423940  29398922   3468275   3480924  29398922   3480924  19659512   3480924
+##>PRE_EX_DEL_CNT      111558     86076       284      1699       269       301      1699       301     86076       301
+##>--------------------------------------------------------------------------------------------------------------------
+##>POST_WNS             -1478      -168    -22296      -311    -23619    -23619      -311    -23619      -186    -23619
+##>POST_TNS          50907647   5118469   1427407    362761   1514807   1568997    368038   1568714    528938   1568714
+##>POST_CNT            258535    181620     32439    228697     32991     33315    228697     33315    186511     33315
+##>POST_PORT_CNT       111559     86076       284      1699       269       301      1699       301     86076       301
+##>POST_AREA          1485586   1124156    108795   1434920    110430    111473   1434920    111473   1130798    111473
+##>POST_LEAK_PWR     15562643  15393878    603116  23970324    608994    615631  23970324    615631  15013971    615631
+##>POST_EX_DEL_CNT     111558     86076       284      1699       269       301      1699       301     86076       301
+##>--------------------------------------------------------------------------------------------------------------------
+##>F:Read DB                4         3         0         3         1         1         3         0         3         0
+##>F:Mux Opto               0         0         0         0         0         0         0         0         0         0
+##>F:Generic               21        14         4        15         3         4        16         4        15         5
+##>F:Retime                 0         0         0         0         0         0         0         0         0         0
+##>F:Clk Gate               0         0         0         0         0         0         0         0         0         0
+##>F:Const Prop            55        34         2        30         2         1        26         1        37         1
+##>F:Gobble                 1         1         0         0         0         0         1         0         1         0
+##>F:Set Targets         2153      1334      1163      1070      1135      1107      1028      1090      1001      1083
+##>F:Write DB              45        35         2        34         2         2        30         3        35         3
+##>F:Misc                   0         0         0         0         0         0         0         0         0         0
+##>Total Elapsed         2279      1421      1171      1152      1143      1115      1104      1098      1092      1092
+##>====================================================================================================================
+##>Main Thread Summary:
+##>----------------------------------------------------------------------------------------
+##>STEP                           Elapsed       WNS       TNS     Insts      Area    Memory
+##>----------------------------------------------------------------------------------------
+##>G:Initial                          664         -         -  14243094  90848727     23015
+##>G:Setup                             79         -         -         -         -     63190
+##>G:Launch ST                         14         -         -         -         -     63190
+##>G:Design Partition                  32         -         -         -         -     63190
+##>G:Create Partition Netlists        230         -         -         -         -     63190
+##>G:Init Power                         0         -         -         -         -     63190
+##>G:Budgeting                        932         -         -         -         -     63190
+##>G:Derenv-DB                        445         -         -         -         -     63190
+##>G:Debug Outputs                      0         -         -         -         -         -
+##>G:ST loading                         2         -         -         -         -     63190
+##>G:Distributed                    24215         -         -         -         -     63190
+##>G:Timer                            533         -         -         -         -     63190
+##>G:Assembly                          16         -         -         -         -     63190
+##>G:DFT                              171         -         -         -         -     63190
+##>G:Const Prop                       112         -         -   5366634  24691356     26768
+##>G:Misc                             711
+##>----------------------------------------------------------------------------------------
+##>Total Elapsed                    28156
+##>========================================================================================
+Info    : Done synthesizing. [SYNTH-2]
+        : Done synthesizing 'accel_engine' to generic gates.
         Applying wireload models.
         Computing net loads.
-UM:   flow.cputime  flow.realtime  timing.setup.tns  timing.setup.wns  snapshot
-UM:*                                                                   elaborate
-@file(run_genus_engine.do) 127: puts ">>> Elaboration done."
->>> Elaboration done.
-@file(run_genus_engine.do) 132: puts ">>> Applying constraints..."
->>> Applying constraints...
-@file(run_genus_engine.do) 133: set CLK_PORT  clk
-@file(run_genus_engine.do) 134: set RST_PORT  rst_n
-@file(run_genus_engine.do) 135: set CLK_PER   1.0
-@file(run_genus_engine.do) 136: set IO_DELAY  [expr {$CLK_PER * 0.3}]
-@file(run_genus_engine.do) 138: create_clock -name clk -period $CLK_PER [get_ports $CLK_PORT]
-@file(run_genus_engine.do) 139: set_clock_uncertainty 0.05 [get_clocks clk]
-@file(run_genus_engine.do) 140: set_clock_transition  0.05 [get_clocks clk]
-@file(run_genus_engine.do) 142: set_false_path -from [get_ports $RST_PORT]
-@file(run_genus_engine.do) 144: set_input_delay  $IO_DELAY -clock clk [remove_from_collection \
-    [all_inputs] [get_ports [list $CLK_PORT $RST_PORT]]]
-@file(run_genus_engine.do) 146: set_output_delay $IO_DELAY -clock clk [all_outputs]
-@file(run_genus_engine.do) 151: if { [catch {set_driving_cell -lib_cell INVX1_RVT [all_inputs]} err] } {
-    puts "WARNING: set_driving_cell INVX1_RVT failed ($err);"
-    puts "         inputs will be modeled as ideal sources."
-}
-@file(run_genus_engine.do) 155: set_load 0.05 [all_outputs]
-@file(run_genus_engine.do) 157: if { [file exists accel_engine.sdc] } {
-    puts ">>> Sourcing additional constraints from accel_engine.sdc"
-    read_sdc accel_engine.sdc
-}
-@file(run_genus_engine.do) 165: file mkdir out_engine
-@file(run_genus_engine.do) 166: file mkdir out_engine/reports
-@file(run_genus_engine.do) 168: puts ">>> Generic synthesis (RTL -> generic gates)..."
->>> Generic synthesis (RTL -> generic gates)...
-@file(run_genus_engine.do) 169: syn_generic
-      Running additional step before syn_gen...
-
+      flow.cputime  flow.realtime  timing.setup.tns  timing.setup.wns  snapshot
+UM:*                                                                   syn_gen
+@file(run_genus_engine.do) 169: puts ">>> Mapping to standard cells..."
+>>> Mapping to standard cells...
+@file(run_genus_engine.do) 170: syn_map
 ##Generic Timing Info for library domain: _default_ typical gate delay: 79.9 ps std_slew: 13.9 ps std_load: 1.0 fF
-Starting mux data reorder optimization [v1.0] (stage: pre_to_gen_setup, startdef: accel_engine, recur: true)
-Completed mux data reorder optimization (accepts: 0, rejects: 0, runtime: 0.213s)
-Info    : Deleting sequential instances not driving any primary outputs. [GLO-32]
-        : Deleting 32 sequential instances. 
-Following instances are deleted as they do not drive any primary output:
-'u_perf/total_cycles_reg[0]', 'u_perf/total_cycles_reg[1]', 
-'u_perf/total_cycles_reg[2]', 'u_perf/total_cycles_reg[3]', 
-'u_perf/total_cycles_reg[4]', 'u_perf/total_cycles_reg[5]', 
-'u_perf/total_cycles_reg[6]', 'u_perf/total_cycles_reg[7]', 
-'u_perf/total_cycles_reg[8]', 'u_perf/total_cycles_reg[9]', 
-'u_perf/total_cycles_reg[10]', 'u_perf/total_cycles_reg[11]', 
-'u_perf/total_cycles_reg[12]', 'u_perf/total_cycles_reg[13]', 
-'u_perf/total_cycles_reg[14]', 'u_perf/total_cycles_reg[15]', 
-'u_perf/total_cycles_reg[16]', 'u_perf/total_cycles_reg[17]', 
-'u_perf/total_cycles_reg[18]', 'u_perf/total_cycles_reg[19]', 
-'u_perf/total_cycles_reg[20]', 'u_perf/total_cycles_reg[21]', 
-'u_perf/total_cycles_reg[22]', 'u_perf/total_cycles_reg[23]', 
-'u_perf/total_cycles_reg[24]', 'u_perf/total_cycles_reg[25]', 
-'u_perf/total_cycles_reg[26]', 'u_perf/total_cycles_reg[27]', 
-'u_perf/total_cycles_reg[28]', 'u_perf/total_cycles_reg[29]', 
-'u_perf/total_cycles_reg[30]', 'u_perf/total_cycles_reg[31]'.
-        : Optimizations such as constant propagation or redundancy removal could change the connections so an instance does not drive any primary outputs anymore. To see the list of deleted sequential, set the 'information_level' attribute to 2 or above. If the message is truncated set the message attribute 'truncate' to false to see the complete list.
-Warning : Message truncated because it exceeds the maximum length of 4096 characters. [MESG-6]
-        : Info portion of message 'GLO-34' truncated to length 4096 from 15612
-        : By default messages are limited to 4096 characters. All characters after the 4096 character limit are truncated. To remove this limit, set the message attribute 'truncate' to 'false'. However, this may dramatically increase the size of the log file.
-Info    : Deleting instances not driving any primary outputs. [GLO-34]
-        : Deleting 391 hierarchical instances. 
-Following instances are deleted as they do not drive any primary output:
-'u_buf_a/mux_mem[0][rd_col]_59_24', 'u_buf_a/mux_mem[0][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[1][rd_col]_59_24', 'u_buf_a/mux_mem[1][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[2][rd_col]_59_24', 'u_buf_a/mux_mem[2][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[3][rd_col]_59_24', 'u_buf_a/mux_mem[3][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[4][rd_col]_59_24', 'u_buf_a/mux_mem[4][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[5][rd_col]_59_24', 'u_buf_a/mux_mem[5][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[6][rd_col]_59_24', 'u_buf_a/mux_mem[6][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[7][rd_col]_59_24', 'u_buf_a/mux_mem[7][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[8][rd_col]_59_24', 'u_buf_a/mux_mem[8][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[9][rd_col]_59_24', 'u_buf_a/mux_mem[9][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[10][rd_col]_59_24', 
-'u_buf_a/mux_mem[10][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[11][rd_col]_59_24', 
-'u_buf_a/mux_mem[11][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[12][rd_col]_59_24', 
-'u_buf_a/mux_mem[12][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[13][rd_col]_59_24', 
-'u_buf_a/mux_mem[13][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[14][rd_col]_59_24', 
-'u_buf_a/mux_mem[14][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[15][rd_col]_59_24', 
-'u_buf_a/mux_mem[15][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[16][rd_col]_59_24', 
-'u_buf_a/mux_mem[16][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[17][rd_col]_59_24', 
-'u_buf_a/mux_mem[17][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[18][rd_col]_59_24', 
-'u_buf_a/mux_mem[18][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[19][rd_col]_59_24', 
-'u_buf_a/mux_mem[19][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[20][rd_col]_59_24', 
-'u_buf_a/mux_mem[20][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[21][rd_col]_59_24', 
-'u_buf_a/mux_mem[21][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[22][rd_col]_59_24', 
-'u_buf_a/mux_mem[22][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[23][rd_col]_59_24', 
-'u_buf_a/mux_mem[23][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[24][rd_col]_59_24', 
-'u_buf_a/mux_mem[24][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[25][rd_col]_59_24', 
-'u_buf_a/mux_mem[25][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[26][rd_col]_59_24', 
-'u_buf_a/mux_mem[26][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[27][rd_col]_59_24', 
-'u_buf_a/mux_mem[27][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[28][rd_col]_59_24', 
-'u_buf_a/mux_mem[28][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[29][rd_col]_59_24', 
-'u_buf_a/mux_mem[29][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[30][rd_col]_59_24', 
-'u_buf_a/mux_mem[30][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[31][rd_col]_59_24', 
-'u_buf_a/mux_mem[31][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[32][rd_col]_59_24', 
-'u_buf_a/mux_mem[32][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[33][rd_col]_59_24', 
-'u_buf_a/mux_mem[33][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[34][rd_col]_59_24', 
-'u_buf_a/mux_mem[34][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[35][rd_col]_59_24', 
-'u_buf_a/mux_mem[35][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[36][rd_col]_59_24', 
-'u_buf_a/mux_mem[36][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[37][rd_col]_59_24', 
-'u_buf_a/mux_mem[37][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[38][rd_col]_59_24', 
-'u_buf_a/mux_mem[38][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[39][rd_col]_59_24', 
-'u_buf_a/mux_mem[39][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[40][rd_col]_59_24', 
-'u_buf_a/mux_mem[40][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[41][rd_col]_59_24', 
-'u_buf_a/mux_mem[41][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[42][rd_col]_59_24', 
-'u_buf_a/mux_mem[42][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[43][rd_col]_59_24', 
-'u_buf_a/mux_mem[43][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[44][rd_col]_59_24', 
-'u_buf_a/mux_mem[44][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[45][rd_col]_59_24', 
-'u_buf_a/mux_mem[45][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[46][rd_col]_59_24', 
-'u_buf_a/mux_mem[46][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[47][rd_col]_59_24', 
-'u_buf_a/mux_mem[47][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[48][rd_col]_59_24', 
-'u_buf_a/mux_mem[48][rd_lin_idx]_60_24', 
-'u_buf_a/mux_mem[49][rd_col]_59_24', 
-'u_buf_a/mux_mem[49][rd_lin_idx]_60_24', 
-'u_buf_a/mux_m
-        : Optimizations such as constant propagation or redundancy removal could change the connections so a hierarchical instance does not drive any primary outputs anymore. To see the list of deleted hierarchical instances, set the 'information_level' attribute to 2 or above. If the message is truncated set the message attribute 'truncate' to false to see the complete list. To prevent this optimization, set the 'delete_unloaded_insts' root/subdesign attribute to 'false' or 'preserve' instance attribute to 'true'.
-Info    : Replacing a flip-flop with a logic constant 0. [GLO-12]
-        : The instance is 'u_ctrl/state_reg[3]'.
-        : To prevent this optimization, set the 'optimize_constant_0_flops' root attribute to 'false' or 'optimize_constant_0_seq' instance attribute to 'false'. You can also see the complete list of deleted sequential with command "report sequential -deleted" (on Reason "constant0").
-Info    : Deleting sequential instances not driving any primary outputs. [GLO-32]
-        : Deleting 1 sequential instance. 
-Following instance is deleted as they do not drive any primary output:
-'u_ctrl/state_reg[3]'.
-Info    : Deleting instances not driving any primary outputs. [GLO-34]
-        : Deleting 64 hierarchical instances. 
-Following instances are deleted as they do not drive any primary output:
-'u_ctrl/mux_load_col_264_35', 'u_pipe/sub_142_51_I2', 
-'u_pipe/sub_142_51_I3', 'u_pipe/sub_142_51_I4', 'u_pipe/sub_142_51_I5', 
-'u_pipe/sub_142_51_I6', 'u_pipe/sub_142_51_I7', 'u_pipe/sub_142_51_I8', 
-'u_pipe/sub_142_51_I9', 'u_pipe/sub_142_51_I10', 'u_pipe/sub_142_51_I11', 
-'u_pipe/sub_142_51_I12', 'u_pipe/sub_142_51_I13', 'u_pipe/sub_142_51_I14', 
-'u_pipe/sub_142_51_I15', 'u_pipe/sub_142_51_I16', 'u_pipe/sub_142_51_I17', 
-'u_pipe/sub_142_51_I18', 'u_pipe/sub_142_51_I19', 'u_pipe/sub_142_51_I20', 
-'u_pipe/sub_142_51_I21', 'u_pipe/sub_142_51_I22', 'u_pipe/sub_142_51_I23', 
-'u_pipe/sub_142_51_I24', 'u_pipe/sub_142_51_I25', 'u_pipe/sub_142_51_I26', 
-'u_pipe/sub_142_51_I27', 'u_pipe/sub_142_51_I28', 'u_pipe/sub_142_51_I29', 
-'u_pipe/sub_142_51_I30', 'u_pipe/sub_142_51_I31', 'u_pipe/sub_142_51_I32', 
-'u_pipe/sub_142_51_I33', 'u_pipe/sub_142_51_I34', 'u_pipe/sub_142_51_I35', 
-'u_pipe/sub_142_51_I36', 'u_pipe/sub_142_51_I37', 'u_pipe/sub_142_51_I38', 
-'u_pipe/sub_142_51_I39', 'u_pipe/sub_142_51_I40', 'u_pipe/sub_142_51_I41', 
-'u_pipe/sub_142_51_I42', 'u_pipe/sub_142_51_I43', 'u_pipe/sub_142_51_I44', 
-'u_pipe/sub_142_51_I45', 'u_pipe/sub_142_51_I46', 'u_pipe/sub_142_51_I47', 
-'u_pipe/sub_142_51_I48', 'u_pipe/sub_142_51_I49', 'u_pipe/sub_142_51_I50', 
-'u_pipe/sub_142_51_I51', 'u_pipe/sub_142_51_I52', 'u_pipe/sub_142_51_I53', 
-'u_pipe/sub_142_51_I54', 'u_pipe/sub_142_51_I55', 'u_pipe/sub_142_51_I56', 
-'u_pipe/sub_142_51_I57', 'u_pipe/sub_142_51_I58', 'u_pipe/sub_142_51_I59', 
-'u_pipe/sub_142_51_I60', 'u_pipe/sub_142_51_I61', 'u_pipe/sub_142_51_I62', 
-'u_pipe/sub_142_51_I63', 'u_pipe/sub_142_51_I64'.
-Info    : Multimode clock gating check is disabled. [TIM-1000]
-Info    : Synthesizing. [SYNTH-1]
-        : Synthesizing 'accel_engine' to generic gates using 'medium' effort.
-PBS_Generic-Start - Elapsed_Time 0, CPU_Time 0.0
-stamp 'PBS_Generic-Start' being created for table 'pbs_debug'
+Info    : Mapping. [SYNTH-4]
+        : Mapping 'accel_engine' using 'high' effort.
+Mapper: Libraries have:
+	domain _default_: 130 combo usable cells and 108 sequential usable cells
+Configuring mapper costing (none)
+TNS Restructuring config: no_value at stage: map applied.
+PBS_TechMap-Start - Elapsed_Time 0, CPU_Time 0.0
+stamp 'PBS_TechMap-Start' being created for table 'pbs_debug'
 
   Total Time (Wall) |  Stage Time (Wall)  |   % (Wall)   |    Date - Time     |  Memory   | Stage
 --------------------+---------------------+--------------+--------------------+-----------+----------------------
- 00:28:21(00:28:51) |  00:00:00(00:00:00) |   0.0(  0.0) |   18:23:56 (May06) |  32.59 GB | PBS_Generic-Start
+ 00:21:05(00:21:34) |  00:00:00(00:00:00) |   0.0(  0.0) |   20:46:30 (May12) |  23.02 GB | PBS_Generic-Start
 --------------------+---------------------+--------------+--------------------+-----------+----------------------
-Number of threads: 8 * 1   (id: pbs_debug, time_info v1.57)
+ 03:32:55(03:29:28) |  03:11:50(03:07:54) |  41.0( 40.6) |   23:54:24 (May12) |  33.26 GB | PBS_Generic-Post_Genopt
+--------------------+---------------------+--------------+--------------------+-----------+----------------------
+ 08:03:47(07:59:02) |  04:30:51(04:29:34) |  57.9( 58.3) |    4:23:58 (May13) |  28.09 GB | PBS_Generic_Opt-Post
+--------------------+---------------------+--------------+--------------------+-----------+----------------------
+ 08:05:38(08:00:54) |  00:01:51(00:01:52) |   0.4(  0.4) |    4:25:50 (May13) |  26.77 GB | PBS_Generic-Postgen HBO Optimizations
+--------------------+---------------------+--------------+--------------------+-----------+----------------------
+ 08:08:46(08:04:03) |  00:03:08(00:03:09) |   0.7(  0.7) |    4:28:59 (May13) |  26.70 GB | PBS_TechMap-Start
+--------------------+---------------------+--------------+--------------------+-----------+----------------------
+Number of threads: 4 * 1   (id: pbs_debug, time_info v1.57)
 Info: (*N*) indicates data that was populated from previously saved time_info database
 Info: CPU time includes time of parent + longest thread
         Applying wireload models.
         Computing net loads.
-TNS Restructuring config: no_value at stage: generic applied.
+PBS_TechMap-Premap HBO Optimizations - Elapsed_Time 128, CPU_Time 128.0
+stamp 'PBS_TechMap-Premap HBO Optimizations' being created for table 'pbs_debug'
+
+  Total Time (Wall) |  Stage Time (Wall)  |   % (Wall)   |    Date - Time     |  Memory   | Stage
+--------------------+---------------------+--------------+--------------------+-----------+----------------------
+ 00:21:05(00:21:34) |  00:00:00(00:00:00) |   0.0(  0.0) |   20:46:30 (May12) |  23.02 GB | PBS_Generic-Start
+--------------------+---------------------+--------------+--------------------+-----------+----------------------
+ 03:32:55(03:29:28) |  03:11:50(03:07:54) |  40.8( 40.4) |   23:54:24 (May12) |  33.26 GB | PBS_Generic-Post_Genopt
+--------------------+---------------------+--------------+--------------------+-----------+----------------------
+ 08:03:47(07:59:02) |  04:30:51(04:29:34) |  57.7( 58.0) |    4:23:58 (May13) |  28.09 GB | PBS_Generic_Opt-Post
+--------------------+---------------------+--------------+--------------------+-----------+----------------------
+ 08:05:38(08:00:54) |  00:01:51(00:01:52) |   0.4(  0.4) |    4:25:50 (May13) |  26.77 GB | PBS_Generic-Postgen HBO Optimizations
+--------------------+---------------------+--------------+--------------------+-----------+----------------------
+ 08:08:46(08:04:03) |  00:03:08(00:03:09) |   0.7(  0.7) |    4:28:59 (May13) |  26.70 GB | PBS_TechMap-Start
+--------------------+---------------------+--------------+--------------------+-----------+----------------------
+ 08:10:54(08:06:11) |  00:02:08(00:02:08) |   0.5(  0.5) |    4:31:07 (May13) |  26.70 GB | PBS_TechMap-Premap HBO Optimizations
+--------------------+---------------------+--------------+--------------------+-----------+----------------------
+Number of threads: 4 * 1   (id: pbs_debug, time_info v1.57)
+Info: (*N*) indicates data that was populated from previously saved time_info database
+Info: CPU time includes time of parent + longest thread
+Info    : The given (sub)design is already uniquified. [TUI-296]
+        : design:accel_engine.
+        : Try running the 'edit_netlist uniquify' command on the parent hierarchy of this (sub)design, if there exists any.
 Info    : Enabling Partition Based Synthesis. [PBS-1]
-        : Starting distributed generic optimization.
-Info    : Attempting to launch a super-threading server. [ST-120]
-        : Attempting to Launch server 1 of 8.
-        : The tool is entering super-threading mode and is launching a CPU server process.  This is enabled by the root attribute 'super_thread_servers' or 'auto_super_thread'.
-            : The server is process '1756884' on this host.
+        : Starting distributed mapping.
+Updating ST server settings
+     Generating lib_script file: /home/dboss/common/Documents/ECE510/ECE510/project/RTL/.pbs_phobos.ece.pdx.edu_197103/lib_script
+Warning : Genus synthesis should be run with a minimum of 8 threads. This will impact run time. [PBS-2]
+        : Synthesis is currently being run with 4 number of threads.
+Start partitioning.  Summary: MEM {curr: 30.0G, peak: 61.7G, phys curr: 26.0G, phys peak: 60.8G}
+Design 'accel_engine' is partitioned using gs_apart partitioner
+Start timing analysis.  Summary: MEM {curr: 30.0G, peak: 61.7G, phys curr: 26.0G, phys peak: 60.8G}
+Done timing analysis.  Summary: RT {elapsed: 3347s, ST: 3360s}, MEM {curr: 30.2G, peak: 61.7G, phys curr: 27.2G, phys peak: 60.8G}
+Start partitioning design accel_engine
+Gathering design stats...
+design has 5366634 leaf instances and 4752 data path operators
+Partition size: 100000 and number of partitions 54
+Partition Number 0, number of instances 50023, tns 3991089
+Partition Number 1, number of instances 52969, tns 4114961
+Partition Number 2, number of instances 53431, tns 4248419
+Partition Number 3, number of instances 43877, tns 3516301
+Partition Number 4, number of instances 53026, tns 4261521
+Partition Number 5, number of instances 50784, tns 4090135
+Partition Number 6, number of instances 51653, tns 4093428
+Partition Number 7, number of instances 48797, tns 3245895
+Partition Number 8, number of instances 84206, tns 58511642
+Partition Number 9, number of instances 58012, tns 33893179
+Partition Number 10, number of instances 75221, tns 46878005
+Partition Number 11, number of instances 121002, tns 41256704
+Partition Number 12, number of instances 101887, tns 23062691
+Partition Number 13, number of instances 1411540, tns 104534948
+Partition Number 14, number of instances 61725, tns 33011128
+Partition Number 15, number of instances 95673, tns 4657391
+Partition Number 16, number of instances 86120, tns 4683947
+Partition Number 17, number of instances 75232, tns 4796726
+Partition Number 18, number of instances 85038, tns 4909764
+Partition Number 19, number of instances 85100, tns 4804969
+Partition Number 20, number of instances 63695, tns 5079362
+Partition Number 21, number of instances 63431, tns 5132447
+Partition Number 22, number of instances 64419, tns 5176356
+Partition Number 23, number of instances 64318, tns 5145056
+Partition Number 24, number of instances 59088, tns 4701952
+Partition Number 25, number of instances 63120, tns 5029998
+Partition Number 26, number of instances 60967, tns 4889243
+Partition Number 27, number of instances 95811, tns 4715880
+Partition Number 28, number of instances 63113, tns 5033281
+Partition Number 29, number of instances 63878, tns 5139347
+Partition Number 30, number of instances 63835, tns 5120324
+Partition Number 31, number of instances 63725, tns 5091965
+Partition Number 32, number of instances 63849, tns 5131399
+Partition Number 33, number of instances 64423, tns 5170486
+Partition Number 34, number of instances 61686, tns 4854965
+Partition Number 35, number of instances 63245, tns 5071238
+Partition Number 36, number of instances 95368, tns 4754844
+Partition Number 37, number of instances 63888, tns 5144242
+Partition Number 38, number of instances 64422, tns 5166734
+Partition Number 39, number of instances 58628, tns 4681447
+Partition Number 40, number of instances 60875, tns 4864668
+Partition Number 41, number of instances 56757, tns 33901305
+Partition Number 42, number of instances 81537, tns 4879337
+Partition Number 43, number of instances 86997, tns 55799896
+Partition Number 44, number of instances 59103, tns 4710345
+Partition Number 45, number of instances 170985, tns 49652108
+Partition Number 46, number of instances 78485, tns 4301276
+Partition Number 47, number of instances 62803, tns 4929899
+Partition Number 48, number of instances 56320, tns 4502190
+Partition Number 49, number of instances 291981, tns 3194128
+Partition Number 50, number of instances 81021, tns 2345223
+Partition Number 51, number of instances 186710, tns 0
+Partition Number 52, number of instances 22835, tns 0
+Partition measurements: total insts: 5366634, number of partitions: 53, max size: 1411540, min size: 22835
+Partition measurements take CPU time 2.93 secs
+Done partitioning.  Summary: RT {elapsed: 3965s, ST: 3949s}, MEM {curr: 51.7G, peak: 61.7G, phys curr: 50.4G, phys peak: 60.8G}
+Start creating partition netlists.  Summary: MEM {curr: 51.7G, peak: 61.7G, phys curr: 50.4G, phys peak: 60.8G}
+Done creating partition netlists.  Summary: RT {elapsed: 157s, ST: 125s}, MEM {curr: 51.7G, peak: 61.7G, phys curr: 50.9G, phys peak: 60.8G}
+Start budgeting timing for partitions.  Summary: MEM {curr: 30.2G, peak: 61.7G, phys curr: 36.4G, phys peak: 60.8G}
+Done budgeting timing for partitions.  Summary: RT {elapsed: 461s, ST: 463s}, MEM {curr: 30.9G, peak: 61.7G, phys curr: 30.3G, phys peak: 60.8G}
+Start deriving partition netlists.  Summary: MEM {curr: 30.9G, peak: 61.7G, phys curr: 30.3G, phys peak: 60.8G}
+The inst 'pbs_map_46' is selected as pbs candidate. The instance cnt is: '168850'.
+The inst 'pbs_map_44' is selected as pbs candidate. The instance cnt is: '86997'.
+The inst 'pbs_map_42' is selected as pbs candidate. The instance cnt is: '56757'.
+The inst 'pbs_map_15' is selected as pbs candidate. The instance cnt is: '61725'.
+The inst 'pbs_map_10' is selected as pbs candidate. The instance cnt is: '58012'.
+The inst 'pbs_map_11' is selected as pbs candidate. The instance cnt is: '75221'.
+The inst 'pbs_map_9' is selected as pbs candidate. The instance cnt is: '84206'.
+The inst 'pbs_map_12' is selected as pbs candidate. The instance cnt is: '121002'.
+The inst 'pbs_map_13' is selected as pbs candidate. The instance cnt is: '101887'.
+The inst 'pbs_map_51' is selected as pbs candidate. The instance cnt is: '81021'.
+The inst 'pbs_map_14' is selected as pbs candidate. The instance cnt is: '1411540'.
+The inst 'pbs_map_8' is selected as pbs candidate. The instance cnt is: '48797'.
+The inst 'pbs_map_16' is selected as pbs candidate. The instance cnt is: '95673'.
+The inst 'pbs_map_17' is selected as pbs candidate. The instance cnt is: '86120'.
+The inst 'pbs_map_18' is selected as pbs candidate. The instance cnt is: '75232'.
+The inst 'pbs_map_19' is selected as pbs candidate. The instance cnt is: '85038'.
+The inst 'pbs_map_20' is selected as pbs candidate. The instance cnt is: '85100'.
+The inst 'pbs_map_7' is selected as pbs candidate. The instance cnt is: '51653'.
+The inst 'pbs_map_21' is selected as pbs candidate. The instance cnt is: '63695'.
+The inst 'pbs_map_22' is selected as pbs candidate. The instance cnt is: '63431'.
+The inst 'pbs_map_23' is selected as pbs candidate. The instance cnt is: '64419'.
+The inst 'pbs_map_24' is selected as pbs candidate. The instance cnt is: '64318'.
+The inst 'pbs_map_25' is selected as pbs candidate. The instance cnt is: '59088'.
+The inst 'pbs_map_26' is selected as pbs candidate. The instance cnt is: '63120'.
+The inst 'pbs_map_6' is selected as pbs candidate. The instance cnt is: '50784'.
+The inst 'pbs_map_27' is selected as pbs candidate. The instance cnt is: '60967'.
+The inst 'pbs_map_28' is selected as pbs candidate. The instance cnt is: '95811'.
+The inst 'pbs_map_5' is selected as pbs candidate. The instance cnt is: '53026'.
+The inst 'pbs_map_29' is selected as pbs candidate. The instance cnt is: '63113'.
+The inst 'pbs_map_30' is selected as pbs candidate. The instance cnt is: '63878'.
+The inst 'pbs_map_31' is selected as pbs candidate. The instance cnt is: '63835'.
+The inst 'pbs_map_32' is selected as pbs candidate. The instance cnt is: '63725'.
+The inst 'pbs_map_33' is selected as pbs candidate. The instance cnt is: '63849'.
+The inst 'pbs_map_34' is selected as pbs candidate. The instance cnt is: '64423'.
+The inst 'pbs_map_35' is selected as pbs candidate. The instance cnt is: '61686'.
+The inst 'pbs_map_36' is selected as pbs candidate. The instance cnt is: '63245'.
+The inst 'pbs_map_37' is selected as pbs candidate. The instance cnt is: '95368'.
+The inst 'pbs_map_4' is selected as pbs candidate. The instance cnt is: '43877'.
+The inst 'pbs_map_38' is selected as pbs candidate. The instance cnt is: '63888'.
+The inst 'pbs_map_39' is selected as pbs candidate. The instance cnt is: '64422'.
+The inst 'pbs_map_40' is selected as pbs candidate. The instance cnt is: '58628'.
+The inst 'pbs_map_41' is selected as pbs candidate. The instance cnt is: '60875'.
+The inst 'pbs_map_3' is selected as pbs candidate. The instance cnt is: '53431'.
+The inst 'pbs_map_43' is selected as pbs candidate. The instance cnt is: '81537'.
+The inst 'pbs_map_2' is selected as pbs candidate. The instance cnt is: '52969'.
+The inst 'pbs_map_45' is selected as pbs candidate. The instance cnt is: '59103'.
+The inst 'pbs_map_1' is selected as pbs candidate. The instance cnt is: '50023'.
+The inst 'pbs_map_47' is selected as pbs candidate. The instance cnt is: '78485'.
+The inst 'pbs_map_48' is selected as pbs candidate. The instance cnt is: '62803'.
+The inst 'pbs_map_49' is selected as pbs candidate. The instance cnt is: '56320'.
+The inst 'pbs_map_50' is selected as pbs candidate. The instance cnt is: '294116'.
+The inst 'pbs_map_53' is selected as pbs candidate. The instance cnt is: '22835'.
+The inst 'pbs_map_52' is selected as pbs candidate. The instance cnt is: '186710'.
+Done deriving partition netlists.  Summary: RT {elapsed: 85s, ST: 84s}, MEM {curr: 31.0G, peak: 61.7G, phys curr: 30.3G, phys peak: 60.8G}
+Wait for super-thread servers to finish loading libraries.
+Start super thread servers forking.  Summary: MEM {curr: 30.9G, peak: 61.7G, phys curr: 30.3G, phys peak: 60.8G}
 Info    : Connection established with super-threading server. [ST-110]
-        : The server 'localhost_1_0' is process '1756884' on this host.
-        : The tool is entering super-threading mode and has established a connection with a CPU server process.  This is enabled by the root attributes 'super_thread_servers' or 'auto_super_thread'.
+        : The server 'localhost_1_7' is forked process '590983' on this host.
+Info    : Connection established with super-threading server. [ST-110]
+        : The server 'localhost_1_8' is forked process '590995' on this host.
+Info    : Connection established with super-threading server. [ST-110]
+        : The server 'localhost_1_9' is forked process '591027' on this host.
 Info    : Super thread servers are launched successfully. [ST-128]
-        : 8 out of 8 super thread servers are launched. Minimum 1 active super thread server is required.
-     Generating lib_script file: /home/dboss/common/Documents/ECE510/ECE510/project/m2/syn/.pbs_phobos.ece.pdx.edu_1726286/lib_script
-Start partitioning.  Summary: MEM {curr: 38.5G, peak: 45.1G, phys curr: 38.3G, phys peak: 44.7G}
-Start partitioning design accel_engine for generic optimization.
-Total generic instances for partitioning: 32982294
-	Generic partition 0: size 3680
-	Generic partition 1: size 278300
-	Generic partition 2: size 147260
-	Generic partition 3: size 278300
-	Generic partition 4: size 147260
-	Generic partition 5: size 185083
-	Generic partition 6: size 102880
-	Generic partition 7: size 102880
-	Generic partition 8: size 96450
-	Generic partition 9: size 102880
-	Generic partition 10: size 102880
-	Generic partition 11: size 102880
-	Generic partition 12: size 102880
-	Generic partition 13: size 102880
-	Generic partition 14: size 102880
-	Generic partition 15: size 102880
-	Generic partition 16: size 102880
-	Generic partition 17: size 90020
-	Generic partition 18: size 102880
-	Generic partition 19: size 109310
-	Generic partition 20: size 109310
-	Generic partition 21: size 102880
-	Generic partition 22: size 96450
-	Generic partition 23: size 102880
-	Generic partition 24: size 109310
-	Generic partition 25: size 102880
-	Generic partition 26: size 96450
-	Generic partition 27: size 109310
-	Generic partition 28: size 109310
-	Generic partition 29: size 96450
-	Generic partition 30: size 109310
-	Generic partition 31: size 102880
-	Generic partition 32: size 102880
-	Generic partition 33: size 102880
-	Generic partition 34: size 102880
-	Generic partition 35: size 109310
-	Generic partition 36: size 102880
-	Generic partition 37: size 109310
-	Generic partition 38: size 102880
-	Generic partition 39: size 102880
-	Generic partition 40: size 77160
-	Generic partition 41: size 96450
-	Generic partition 42: size 102880
-	Generic partition 43: size 109310
-	Generic partition 44: size 77160
-	Generic partition 45: size 96450
-	Generic partition 46: size 96450
-	Generic partition 47: size 96450
-	Generic partition 48: size 109310
-	Generic partition 49: size 109310
-	Generic partition 50: size 102880
-	Generic partition 51: size 96450
-	Generic partition 52: size 109310
-	Generic partition 53: size 25720
-	Generic partition 54: size 96450
-	Generic partition 55: size 109310
-	Generic partition 56: size 109310
-	Generic partition 57: size 102880
-	Generic partition 58: size 102880
-	Generic partition 59: size 96450
-	Generic partition 60: size 109310
-	Generic partition 61: size 109310
-	Generic partition 62: size 102880
-	Generic partition 63: size 102880
-	Generic partition 64: size 109310
-	Generic partition 65: size 102880
-	Generic partition 66: size 109310
-	Generic partition 67: size 102880
-	Generic partition 68: size 96450
-	Generic partition 69: size 96450
-	Generic partition 70: size 77160
-	Generic partition 71: size 109310
-	Generic partition 72: size 109310
-	Generic partition 73: size 102880
-	Generic partition 74: size 109310
-	Generic partition 75: size 109310
-	Generic partition 76: size 102880
-	Generic partition 77: size 109310
-	Generic partition 78: size 109310
-	Generic partition 79: size 109310
-	Generic partition 80: size 102880
-	Generic partition 81: size 109310
-	Generic partition 82: size 102880
-	Generic partition 83: size 102880
-	Generic partition 84: size 109310
-	Generic partition 85: size 96450
-	Generic partition 86: size 96450
-	Generic partition 87: size 102880
-	Generic partition 88: size 102880
-	Generic partition 89: size 96450
-	Generic partition 90: size 96450
-	Generic partition 91: size 102880
-	Generic partition 92: size 102880
-	Generic partition 93: size 96450
-	Generic partition 94: size 102880
-	Generic partition 95: size 77160
-	Generic partition 96: size 102880
-	Generic partition 97: size 109310
-	Generic partition 98: size 109310
-	Generic partition 99: size 109310
-	Generic partition 100: size 102880
-	Generic partition 101: size 102880
-	Generic partition 102: size 96450
-	Generic partition 103: size 109310
-	Generic partition 104: size 109310
-	Generic partition 105: size 102880
-	Generic partition 106: size 102880
-	Generic partition 107: size 109310
-	Generic partition 108: size 109310
-	Generic partition 109: size 102880
-	Generic partition 110: size 102880
-	Generic partition 111: size 102880
-	Generic partition 112: size 109310
-	Generic partition 113: size 109310
-	Generic partition 114: size 102880
-	Generic partition 115: size 109310
-	Generic partition 116: size 109310
-	Generic partition 117: size 102880
-	Generic partition 118: size 96450
-	Generic partition 119: size 109310
-	Generic partition 120: size 109310
-	Generic partition 121: size 96450
-	Generic partition 122: size 109310
-	Generic partition 123: size 109310
-	Generic partition 124: size 109310
-	Generic partition 125: size 109310
-	Generic partition 126: size 109310
-	Generic partition 127: size 109310
-	Generic partition 128: size 109310
-	Generic partition 129: size 96450
-	Generic partition 130: size 102880
-	Generic partition 131: size 102880
-	Generic partition 132: size 109310
-	Generic partition 133: size 109310
-	Generic partition 134: size 102880
-	Generic partition 135: size 109310
-	Generic partition 136: size 102880
-	Generic partition 137: size 109310
-	Generic partition 138: size 109310
-	Generic partition 139: size 109310
-	Generic partition 140: size 96450
-	Generic partition 141: size 102880
-	Generic partition 142: size 96450
-	Generic partition 143: size 77160
-	Generic partition 144: size 102880
-	Generic partition 145: size 77160
-	Generic partition 146: size 90020
-	Generic partition 147: size 102880
-	Generic partition 148: size 102880
-	Generic partition 149: size 77160
-	Generic partition 150: size 77160
-	Generic partition 151: size 102880
-	Generic partition 152: size 77160
-	Generic partition 153: size 96450
-	Generic partition 154: size 96450
-	Generic partition 155: size 96450
-	Generic partition 156: size 96450
-	Generic partition 157: size 77160
-	Generic partition 158: size 109310
-	Generic partition 159: size 96450
-	Generic partition 160: size 57870
-	Generic partition 161: size 102880
-	Generic partition 162: size 102880
-	Generic partition 163: size 102880
-	Generic partition 164: size 102880
-	Generic partition 165: size 77160
-	Generic partition 166: size 102880
-	Generic partition 167: size 96450
-	Generic partition 168: size 102880
-	Generic partition 169: size 109310
-	Generic partition 170: size 102880
-	Generic partition 171: size 109310
-	Generic partition 172: size 96450
-	Generic partition 173: size 96450
-	Generic partition 174: size 102880
-	Generic partition 175: size 64300
-	Generic partition 176: size 96450
-	Generic partition 177: size 109310
-	Generic partition 178: size 102880
-	Generic partition 179: size 77160
-	Generic partition 180: size 83590
-	Generic partition 181: size 102880
-	Generic partition 182: size 102880
-	Generic partition 183: size 96450
-	Generic partition 184: size 96450
-	Generic partition 185: size 90020
-	Generic partition 186: size 96450
-	Generic partition 187: size 96450
-	Generic partition 188: size 102880
-	Generic partition 189: size 102880
-	Generic partition 190: size 96450
-	Generic partition 191: size 96450
-	Generic partition 192: size 96450
-	Generic partition 193: size 102880
-	Generic partition 194: size 77160
-	Generic partition 195: size 102880
-	Generic partition 196: size 109310
-	Generic partition 197: size 96450
-	Generic partition 198: size 102880
-	Generic partition 199: size 109310
-	Generic partition 200: size 102880
-	Generic partition 201: size 109310
-	Generic partition 202: size 96450
-	Generic partition 203: size 96450
-	Generic partition 204: size 96450
-	Generic partition 205: size 96450
-	Generic partition 206: size 96450
-	Generic partition 207: size 102880
-	Generic partition 208: size 102880
-	Generic partition 209: size 70730
-	Generic partition 210: size 64300
-	Generic partition 211: size 109310
-	Generic partition 212: size 109310
-	Generic partition 213: size 109310
-	Generic partition 214: size 96450
-	Generic partition 215: size 102880
-	Generic partition 216: size 109310
-	Generic partition 217: size 96450
-	Generic partition 218: size 90020
-	Generic partition 219: size 102880
-	Generic partition 220: size 102880
-	Generic partition 221: size 102880
-	Generic partition 222: size 102880
-	Generic partition 223: size 109310
-	Generic partition 224: size 102880
-	Generic partition 225: size 102880
-	Generic partition 226: size 96450
-	Generic partition 227: size 96450
-	Generic partition 228: size 102880
-	Generic partition 229: size 109310
-	Generic partition 230: size 109310
-	Generic partition 231: size 109310
-	Generic partition 232: size 96450
-	Generic partition 233: size 109310
-	Generic partition 234: size 96450
-	Generic partition 235: size 77160
-	Generic partition 236: size 102880
-	Generic partition 237: size 77160
-	Generic partition 238: size 102880
-	Generic partition 239: size 102880
-	Generic partition 240: size 102880
-	Generic partition 241: size 102880
-	Generic partition 242: size 102880
-	Generic partition 243: size 102880
-	Generic partition 244: size 102880
-	Generic partition 245: size 77160
-	Generic partition 246: size 109310
-	Generic partition 247: size 109310
-	Generic partition 248: size 96450
-	Generic partition 249: size 90020
-	Generic partition 250: size 109310
-	Generic partition 251: size 102880
-	Generic partition 252: size 96450
-	Generic partition 253: size 102880
-	Generic partition 254: size 109310
-	Generic partition 255: size 102880
-	Generic partition 256: size 96450
-	Generic partition 257: size 102880
-	Generic partition 258: size 96450
-	Generic partition 259: size 109310
-	Generic partition 260: size 109310
-	Generic partition 261: size 109310
-	Generic partition 262: size 96450
-	Generic partition 263: size 109310
-	Generic partition 264: size 90020
-	Generic partition 265: size 96450
-	Generic partition 266: size 109310
-	Generic partition 267: size 96450
-	Generic partition 268: size 98746
-	Generic partition 269: size 5385243
-	Generic partition 270: size 121142
-Done partitioning.  Summary: RT {elapsed: 9s, ST: 10s}, MEM {curr: 38.5G, peak: 45.1G, phys curr: 38.4G, phys peak: 44.7G}
-Start creating partition netlists.  Summary: MEM {curr: 38.5G, peak: 45.1G, phys curr: 38.4G, phys peak: 44.7G}
-Done creating partition netlists.  Summary: RT {elapsed: 222s, ST: 202s}, MEM {curr: 61.0G, peak: 61.0G, phys curr: 59.8G, phys peak: 59.8G}
-Start budgeting timing for partitions.  Summary: MEM {curr: 61.0G, peak: 61.0G, phys curr: 59.8G, phys peak: 59.8G}
-/icd/rc/genus21/genus_211/21.12-s068_1/build/lnx86_64_opt/src/utl_low/tcm24/core/central_freelist.cpp:352] tcmalloc: allocation failed 524288 
-No more memory.  Current memory consumption: 64974MB.
-  Requested 8192 bytes, errno=12.
-Abnormal exit.
+        : 4 out of 4 super thread servers are launched. Minimum 1 active super thread server is required.
+Done super thread servers forking.  Summary: RT {elapsed: 1s, ST: 0s}, MEM {curr: 30.9G, peak: 61.7G, phys curr: 30.3G, phys peak: 60.8G}
+        Distributing super-thread jobs: {pbs_map_14 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_14.etf} {pbs_map_50 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_50.etf} {pbs_map_52 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_52.etf} {pbs_map_46 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_46.etf} {pbs_map_12 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_12.etf} {pbs_map_13 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_13.etf} {pbs_map_28 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_28.etf} {pbs_map_16 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_16.etf} {pbs_map_37 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_37.etf} {pbs_map_44 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_44.etf} {pbs_map_17 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_17.etf} {pbs_map_20 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_20.etf} {pbs_map_19 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_19.etf} {pbs_map_9 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_9.etf} {pbs_map_43 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_43.etf} {pbs_map_51 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_51.etf} {pbs_map_47 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_47.etf} {pbs_map_18 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_18.etf} {pbs_map_11 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_11.etf} {pbs_map_34 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_34.etf} {pbs_map_39 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_39.etf} {pbs_map_23 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_23.etf} {pbs_map_24 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_24.etf} {pbs_map_38 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_38.etf} {pbs_map_30 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_30.etf} {pbs_map_33 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_33.etf} {pbs_map_31 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_31.etf} {pbs_map_32 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_32.etf} {pbs_map_21 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_21.etf} {pbs_map_22 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_22.etf} {pbs_map_36 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_36.etf} {pbs_map_26 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_26.etf} {pbs_map_29 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_29.etf} {pbs_map_48 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_48.etf} {pbs_map_15 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_15.etf} {pbs_map_35 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_35.etf} {pbs_map_27 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_27.etf} {pbs_map_41 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_41.etf} {pbs_map_45 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_45.etf} {pbs_map_25 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_25.etf} {pbs_map_40 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_40.etf} {pbs_map_10 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_10.etf} {pbs_map_42 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_42.etf} {pbs_map_49 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_49.etf} {pbs_map_3 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_3.etf} {pbs_map_5 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_5.etf} {pbs_map_2 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_2.etf} {pbs_map_7 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_7.etf} {pbs_map_6 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_6.etf} {pbs_map_1 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_1.etf} {pbs_map_8 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_8.etf} {pbs_map_4 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_4.etf} {pbs_map_53 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_53.etf}
+          Sending 'pbs_map_14 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_14.etf' to server 'localhost_1_9'...
+            Sent 'pbs_map_14 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_14.etf' to server 'localhost_1_9'.
+          Sending 'pbs_map_50 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_50.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_50 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_50.etf' to server 'localhost_1_0'.
+          Sending 'pbs_map_52 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_52.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_52 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_52.etf' to server 'localhost_1_7'.
+          Sending 'pbs_map_46 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_46.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_46 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_46.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_52 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_52.etf' from server 'localhost_1_7'. (2543239 ms elapsed)
+          Sending 'pbs_map_12 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_12.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_12 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_12.etf' to server 'localhost_1_7'.
+          Received 'pbs_map_46 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_46.etf' from server 'localhost_1_8'. (2744016 ms elapsed)
+          Sending 'pbs_map_13 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_13.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_13 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_13.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_50 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_50.etf' from server 'localhost_1_0'. (3183001 ms elapsed)
+          Sending 'pbs_map_28 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_28.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_28 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_28.etf' to server 'localhost_1_0'.
+          Received 'pbs_map_12 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_12.etf' from server 'localhost_1_7'. (852159 ms elapsed)
+          Sending 'pbs_map_16 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_16.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_16 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_16.etf' to server 'localhost_1_7'.
+          Received 'pbs_map_13 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_13.etf' from server 'localhost_1_8'. (701424 ms elapsed)
+          Sending 'pbs_map_37 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_37.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_37 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_37.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_28 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_28.etf' from server 'localhost_1_0'. (686243 ms elapsed)
+          Sending 'pbs_map_44 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_44.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_44 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_44.etf' to server 'localhost_1_0'.
+          Received 'pbs_map_16 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_16.etf' from server 'localhost_1_7'. (735788 ms elapsed)
+       Partition:  pbs_map_16 - PBS_Map-Distributed_Read_DB - Elapsed_Time 0.00, CPU_Time 0.00
+       Partition:  pbs_map_16 - PBS_Map-Distributed_Map - Elapsed_Time 724.00, CPU_Time 687.32
+       Partition:  pbs_map_16 - PBS_Map-Distributed_TNS - Elapsed_Time 0.00, CPU_Time 0.00
+       Partition: pbs_map_16:  Partitioning - Elapsed_Time 28.18, CPU_Time 28.04 
+       Partition: pbs_map_16:  Constant-Propagation - Elapsed_Time 4.03, CPU_Time 4.01 
+       Partition: pbs_map_16:  Logic Structuring - Elapsed_Time 1090.74, CPU_Time 1080.86 
+       Partition: pbs_map_16:  Virtual Mapping - Elapsed_Time 403.47, CPU_Time 413.33 
+       Partition: pbs_map_16:  Technology Mapping - Elapsed_Time 476.71, CPU_Time 474.18 
+       Partition: pbs_map_16:  Core Map - Elapsed_Time 436.14, CPU_Time 410.45 
+       Partition: pbs_map_16:  Global Incremental - Elapsed_Time 1457.00, CPU_Time 1439.38 
+       Partition: pbs_map_16:  Mapper - Elapsed_Time 111.12, CPU_Time 110.62 
+       Start - Partition: pbs_map_16 Slack: -2164.2 TNS: 2087767.3 Cell-Count: 95673 Cell-Area: 488949  
+Init-Memory: 2695.88
+       Done  - Partition: pbs_map_16 Slack: -1846.8 TNS: 3324183.3 Cell-Count: 67653 Cell-Area: 308081  
+Peak-Memory: 6041.00 Elapsed: 724
+       Partition:  pbs_map_16 - PBS_Map-Distributed_Report - Elapsed_Time 8.00, CPU_Time 11.00
+       Partition:  pbs_map_16 - PBS_Map-Distributed_Write_DB - Elapsed_Time 2.00, CPU_Time 2.00
+       pbs_map_16 - PBS_Map-Assembly - Elapsed_Time 7, CPU_Time 6.0
+       Partition:  pbs_map_16 - Runtime taken by the partition - Elapsed_Time 734.00, CPU_Time 700.32
+       Partition:  pbs_map_28 - PBS_Map-Distributed_Read_DB - Elapsed_Time 1.00, CPU_Time 0.00
+       Partition:  pbs_map_28 - PBS_Map-Distributed_Map - Elapsed_Time 675.00, CPU_Time 670.88
+       Partition:  pbs_map_28 - PBS_Map-Distributed_TNS - Elapsed_Time 0.00, CPU_Time 0.00
+       Partition: pbs_map_28:  Partitioning - Elapsed_Time 93.21, CPU_Time 92.86 
+       Partition: pbs_map_28:  Constant-Propagation - Elapsed_Time 6.41, CPU_Time 6.40 
+       Partition: pbs_map_28:  Logic Structuring - Elapsed_Time 1834.26, CPU_Time 1824.14 
+       Partition: pbs_map_28:  Virtual Mapping - Elapsed_Time 323.44, CPU_Time 327.30 
+       Partition: pbs_map_28:  Technology Mapping - Elapsed_Time 417.58, CPU_Time 418.25 
+       Partition: pbs_map_28:  Core Map - Elapsed_Time 399.07, CPU_Time 391.32 
+       Partition: pbs_map_28:  Global Incremental - Elapsed_Time 530.28, CPU_Time 525.98 
+       Partition: pbs_map_28:  Mapper - Elapsed_Time 139.11, CPU_Time 138.54 
+       Start - Partition: pbs_map_28 Slack: -2267.7 TNS: 2162126.8 Cell-Count: 95811 Cell-Area: 485436  
+Init-Memory: 2847.86
+       Done  - Partition: pbs_map_28 Slack: -1729.8 TNS: 3514952.9 Cell-Count: 67200 Cell-Area: 307322  
+Peak-Memory: 12116.76 Elapsed: 676
+       Partition:  pbs_map_28 - PBS_Map-Distributed_Report - Elapsed_Time 8.00, CPU_Time 10.00
+       Partition:  pbs_map_28 - PBS_Map-Distributed_Write_DB - Elapsed_Time 2.00, CPU_Time 2.00
+       pbs_map_28 - PBS_Map-Assembly - Elapsed_Time 4, CPU_Time 4.0
+       Partition:  pbs_map_28 - Runtime taken by the partition - Elapsed_Time 686.00, CPU_Time 682.88
+       Partition:  pbs_map_13 - PBS_Map-Distributed_Read_DB - Elapsed_Time 1.00, CPU_Time 1.00
+       Partition:  pbs_map_13 - PBS_Map-Distributed_Map - Elapsed_Time 686.00, CPU_Time 670.00
+       Partition:  pbs_map_13 - PBS_Map-Distributed_TNS - Elapsed_Time 0.00, CPU_Time 0.00
+       Partition: pbs_map_13:  Partitioning - Elapsed_Time 51.57, CPU_Time 51.34 
+       Partition: pbs_map_13:  Constant-Propagation - Elapsed_Time 14.42, CPU_Time 14.34 
+       Partition: pbs_map_13:  Logic Structuring - Elapsed_Time 2095.83, CPU_Time 2073.29 
+       Partition: pbs_map_13:  Virtual Mapping - Elapsed_Time 256.77, CPU_Time 255.90 
+       Partition: pbs_map_13:  Technology Mapping - Elapsed_Time 310.87, CPU_Time 309.46 
+       Partition: pbs_map_13:  Core Map - Elapsed_Time 287.08, CPU_Time 282.11 
+       Partition: pbs_map_13:  Global Incremental - Elapsed_Time 239.44, CPU_Time 225.04 
+       Partition: pbs_map_13:  Mapper - Elapsed_Time 93.77, CPU_Time 93.13 
+       Start - Partition: pbs_map_13 Slack: -2267.1 TNS: 2454602.6 Cell-Count: 101887 Cell-Area: 586570  
+Init-Memory: 3047.03
+       Done  - Partition: pbs_map_13 Slack: -1795.3 TNS: 3920401.6 Cell-Count: 66176 Cell-Area: 378900  
+Peak-Memory: 18896.11 Elapsed: 687
+       Partition:  pbs_map_13 - PBS_Map-Distributed_Report - Elapsed_Time 10.00, CPU_Time 13.00
+       Partition:  pbs_map_13 - PBS_Map-Distributed_Write_DB - Elapsed_Time 3.00, CPU_Time 4.00
+       pbs_map_13 - PBS_Map-Assembly - Elapsed_Time 5, CPU_Time 5.0
+       Partition:  pbs_map_13 - Runtime taken by the partition - Elapsed_Time 700.00, CPU_Time 688.00
+       Partition:  pbs_map_12 - PBS_Map-Distributed_Read_DB - Elapsed_Time 2.00, CPU_Time 1.00
+       Partition:  pbs_map_12 - PBS_Map-Distributed_Map - Elapsed_Time 834.00, CPU_Time 829.53
+       Partition:  pbs_map_12 - PBS_Map-Distributed_TNS - Elapsed_Time 0.00, CPU_Time 0.00
+       Partition: pbs_map_12:  Partitioning - Elapsed_Time 24.22, CPU_Time 24.10 
+       Partition: pbs_map_12:  Constant-Propagation - Elapsed_Time 3.30, CPU_Time 3.29 
+       Partition: pbs_map_12:  Logic Structuring - Elapsed_Time 793.96, CPU_Time 787.01 
+       Partition: pbs_map_12:  Virtual Mapping - Elapsed_Time 303.46, CPU_Time 312.72 
+       Partition: pbs_map_12:  Technology Mapping - Elapsed_Time 339.38, CPU_Time 336.81 
+       Partition: pbs_map_12:  Core Map - Elapsed_Time 335.18, CPU_Time 332.35 
+       Partition: pbs_map_12:  Global Incremental - Elapsed_Time 1397.28, CPU_Time 1389.63 
+       Partition: pbs_map_12:  Mapper - Elapsed_Time 94.90, CPU_Time 94.48 
+       Start - Partition: pbs_map_12 Slack: -2119.3 TNS: 2820018.3 Cell-Count: 121002 Cell-Area: 720287  
+Init-Memory: 2739.73
+       Done  - Partition: pbs_map_12 Slack: -1707.5 TNS: 5238422.6 Cell-Count: 73408 Cell-Area: 475482  
+Peak-Memory: 6041.00 Elapsed: 837
+       Partition:  pbs_map_12 - PBS_Map-Distributed_Report - Elapsed_Time 12.00, CPU_Time 15.00
+       Partition:  pbs_map_12 - PBS_Map-Distributed_Write_DB - Elapsed_Time 3.00, CPU_Time 3.00
+       pbs_map_12 - PBS_Map-Assembly - Elapsed_Time 7, CPU_Time 7.0
+       Partition:  pbs_map_12 - Runtime taken by the partition - Elapsed_Time 851.00, CPU_Time 848.53
+       Partition:  pbs_map_46 - PBS_Map-Distributed_Read_DB - Elapsed_Time 6.00, CPU_Time 6.00
+       Partition:  pbs_map_46 - PBS_Map-Distributed_Map - Elapsed_Time 2697.00, CPU_Time 2667.00
+       Partition:  pbs_map_46 - PBS_Map-Distributed_TNS - Elapsed_Time 0.00, CPU_Time 0.00
+       Partition: pbs_map_46:  Partitioning - Elapsed_Time 46.48, CPU_Time 46.27 
+       Partition: pbs_map_46:  Constant-Propagation - Elapsed_Time 13.52, CPU_Time 13.44 
+       Partition: pbs_map_46:  Logic Structuring - Elapsed_Time 1843.07, CPU_Time 1822.96 
+       Partition: pbs_map_46:  Virtual Mapping - Elapsed_Time 149.07, CPU_Time 148.48 
+       Partition: pbs_map_46:  Technology Mapping - Elapsed_Time 180.55, CPU_Time 179.68 
+       Partition: pbs_map_46:  Core Map - Elapsed_Time 197.13, CPU_Time 195.48 
+       Partition: pbs_map_46:  Global Incremental - Elapsed_Time 172.33, CPU_Time 166.68 
+       Partition: pbs_map_46:  Mapper - Elapsed_Time 72.05, CPU_Time 71.51 
+       Start - Partition: pbs_map_46 Slack: -1518.6 TNS: 38291567.6 Cell-Count: 168850 Cell-Area: 982070  
+Init-Memory: 2352.02
+       Done  - Partition: pbs_map_46 Slack: -1118.7 TNS: 30972530.7 Cell-Count: 163566 Cell-Area: 594921  
+Peak-Memory: 18896.11 Elapsed: 2705
+       Partition:  pbs_map_46 - PBS_Map-Distributed_Report - Elapsed_Time 28.00, CPU_Time 34.00
+       Partition:  pbs_map_46 - PBS_Map-Distributed_Write_DB - Elapsed_Time 9.00, CPU_Time 9.00
+       pbs_map_46 - PBS_Map-Assembly - Elapsed_Time 15, CPU_Time 15.0
+       Partition:  pbs_map_46 - Runtime taken by the partition - Elapsed_Time 2740.00, CPU_Time 2716.00
+       Partition:  pbs_map_52 - PBS_Map-Distributed_Read_DB - Elapsed_Time 5.00, CPU_Time 5.00
+       Partition:  pbs_map_52 - PBS_Map-Distributed_Map - Elapsed_Time 2496.00, CPU_Time 2478.64
+       Partition:  pbs_map_52 - PBS_Map-Distributed_TNS - Elapsed_Time 0.00, CPU_Time 0.00
+       Partition: pbs_map_52:  Partitioning - Elapsed_Time 18.23, CPU_Time 18.14 
+       Partition: pbs_map_52:  Constant-Propagation - Elapsed_Time 2.31, CPU_Time 2.31 
+       Partition: pbs_map_52:  Logic Structuring - Elapsed_Time 467.29, CPU_Time 463.35 
+       Partition: pbs_map_52:  Virtual Mapping - Elapsed_Time 167.73, CPU_Time 174.74 
+       Partition: pbs_map_52:  Technology Mapping - Elapsed_Time 179.17, CPU_Time 176.72 
+       Partition: pbs_map_52:  Core Map - Elapsed_Time 228.16, CPU_Time 226.10 
+       Partition: pbs_map_52:  Global Incremental - Elapsed_Time 1336.29, CPU_Time 1329.00 
+       Partition: pbs_map_52:  Mapper - Elapsed_Time 70.20, CPU_Time 69.87 
+       Start - Partition: pbs_map_52 Slack: -137.8 TNS: 11387260.1 Cell-Count: 186710 Cell-Area: 1254281  
+Init-Memory: 2339.68
+       Done  - Partition: pbs_map_52 Slack: -113.5 TNS: 13532183.9 Cell-Count: 255351 Cell-Area: 1009979  
+Peak-Memory: 6041.00 Elapsed: 2503
+       Partition:  pbs_map_52 - PBS_Map-Distributed_Report - Elapsed_Time 29.00, CPU_Time 37.00
+       Partition:  pbs_map_52 - PBS_Map-Distributed_Write_DB - Elapsed_Time 10.00, CPU_Time 9.00
+       pbs_map_52 - PBS_Map-Assembly - Elapsed_Time 16, CPU_Time 16.0
+       Partition:  pbs_map_52 - Runtime taken by the partition - Elapsed_Time 2540.00, CPU_Time 2529.64
+       Partition:  pbs_map_50 - PBS_Map-Distributed_Read_DB - Elapsed_Time 8.00, CPU_Time 8.00
+       Partition:  pbs_map_50 - PBS_Map-Distributed_Map - Elapsed_Time 3114.00, CPU_Time 3093.77
+       Partition:  pbs_map_50 - PBS_Map-Distributed_TNS - Elapsed_Time 0.00, CPU_Time 0.00
+       Partition: pbs_map_50:  Partitioning - Elapsed_Time 89.81, CPU_Time 89.48 
+       Partition: pbs_map_50:  Constant-Propagation - Elapsed_Time 5.70, CPU_Time 5.69 
+       Partition: pbs_map_50:  Logic Structuring - Elapsed_Time 1545.58, CPU_Time 1536.84 
+       Partition: pbs_map_50:  Virtual Mapping - Elapsed_Time 223.97, CPU_Time 225.80 
+       Partition: pbs_map_50:  Technology Mapping - Elapsed_Time 279.34, CPU_Time 278.57 
+       Partition: pbs_map_50:  Core Map - Elapsed_Time 324.36, CPU_Time 316.96 
+       Partition: pbs_map_50:  Global Incremental - Elapsed_Time 482.68, CPU_Time 480.15 
+       Partition: pbs_map_50:  Mapper - Elapsed_Time 124.14, CPU_Time 123.60 
+       Start - Partition: pbs_map_50 Slack: -19960.5 TNS: 2548277.3 Cell-Count: 294116 Cell-Area: 1541476  
+Init-Memory: 2462.34
+       Done  - Partition: pbs_map_50 Slack: -16791.4 TNS: 5772834.1 Cell-Count: 302743 Cell-Area: 940967  
+Peak-Memory: 12116.76 Elapsed: 3125
+       Partition:  pbs_map_50 - PBS_Map-Distributed_Report - Elapsed_Time 42.00, CPU_Time 54.00
+       Partition:  pbs_map_50 - PBS_Map-Distributed_Write_DB - Elapsed_Time 15.00, CPU_Time 14.00
+       pbs_map_50 - PBS_Map-Assembly - Elapsed_Time 23, CPU_Time 23.0
+       Partition:  pbs_map_50 - Runtime taken by the partition - Elapsed_Time 3179.00, CPU_Time 3169.77
+          Sending 'pbs_map_17 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_17.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_17 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_17.etf' to server 'localhost_1_7'.
+          Received 'pbs_map_37 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_37.etf' from server 'localhost_1_8'. (762730 ms elapsed)
+          Sending 'pbs_map_20 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_20.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_20 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_20.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_44 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_44.etf' from server 'localhost_1_0'. (678330 ms elapsed)
+          Sending 'pbs_map_19 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_19.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_19 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_19.etf' to server 'localhost_1_0'.
+          Received 'pbs_map_20 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_20.etf' from server 'localhost_1_8'. (671043 ms elapsed)
+          Sending 'pbs_map_9 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_9.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_9 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_9.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_17 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_17.etf' from server 'localhost_1_7'. (683222 ms elapsed)
+          Sending 'pbs_map_43 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_43.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_43 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_43.etf' to server 'localhost_1_7'.
+          Received 'pbs_map_19 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_19.etf' from server 'localhost_1_0'. (688761 ms elapsed)
+          Sending 'pbs_map_51 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_51.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_51 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_51.etf' to server 'localhost_1_0'.
+          Received 'pbs_map_9 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_9.etf' from server 'localhost_1_8'. (578390 ms elapsed)
+          Sending 'pbs_map_47 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_47.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_47 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_47.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_43 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_43.etf' from server 'localhost_1_7'. (686933 ms elapsed)
+          Sending 'pbs_map_18 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_18.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_18 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_18.etf' to server 'localhost_1_7'.
+          Received 'pbs_map_51 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_51.etf' from server 'localhost_1_0'. (559626 ms elapsed)
+          Sending 'pbs_map_11 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_11.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_11 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_11.etf' to server 'localhost_1_0'.
+          Received 'pbs_map_47 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_47.etf' from server 'localhost_1_8'. (612486 ms elapsed)
+          Sending 'pbs_map_34 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_34.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_34 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_34.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_18 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_18.etf' from server 'localhost_1_7'. (598940 ms elapsed)
+          Sending 'pbs_map_39 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_39.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_39 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_39.etf' to server 'localhost_1_7'.
+          Received 'pbs_map_11 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_11.etf' from server 'localhost_1_0'. (588845 ms elapsed)
+          Sending 'pbs_map_23 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_23.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_23 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_23.etf' to server 'localhost_1_0'.
+          Received 'pbs_map_34 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_34.etf' from server 'localhost_1_8'. (594762 ms elapsed)
+          Sending 'pbs_map_24 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_24.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_24 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_24.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_39 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_39.etf' from server 'localhost_1_7'. (579364 ms elapsed)
+          Sending 'pbs_map_38 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_38.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_38 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_38.etf' to server 'localhost_1_7'.
+          Received 'pbs_map_23 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_23.etf' from server 'localhost_1_0'. (591005 ms elapsed)
+          Sending 'pbs_map_30 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_30.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_30 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_30.etf' to server 'localhost_1_0'.
+          Received 'pbs_map_24 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_24.etf' from server 'localhost_1_8'. (600897 ms elapsed)
+          Sending 'pbs_map_33 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_33.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_33 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_33.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_38 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_38.etf' from server 'localhost_1_7'. (580793 ms elapsed)
+          Sending 'pbs_map_31 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_31.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_31 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_31.etf' to server 'localhost_1_7'.
+          Received 'pbs_map_30 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_30.etf' from server 'localhost_1_0'. (621920 ms elapsed)
+          Sending 'pbs_map_32 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_32.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_32 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_32.etf' to server 'localhost_1_0'.
+          Received 'pbs_map_33 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_33.etf' from server 'localhost_1_8'. (594897 ms elapsed)
+          Sending 'pbs_map_21 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_21.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_21 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_21.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_31 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_31.etf' from server 'localhost_1_7'. (569154 ms elapsed)
+          Sending 'pbs_map_22 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_22.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_22 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_22.etf' to server 'localhost_1_7'.
+          Received 'pbs_map_32 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_32.etf' from server 'localhost_1_0'. (598358 ms elapsed)
+          Sending 'pbs_map_36 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_36.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_36 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_36.etf' to server 'localhost_1_0'.
+          Received 'pbs_map_21 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_21.etf' from server 'localhost_1_8'. (577790 ms elapsed)
+          Sending 'pbs_map_26 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_26.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_26 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_26.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_22 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_22.etf' from server 'localhost_1_7'. (570203 ms elapsed)
+          Sending 'pbs_map_29 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_29.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_29 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_29.etf' to server 'localhost_1_7'.
+          Received 'pbs_map_36 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_36.etf' from server 'localhost_1_0'. (574583 ms elapsed)
+          Sending 'pbs_map_48 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_48.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_48 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_48.etf' to server 'localhost_1_0'.
+          Received 'pbs_map_26 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_26.etf' from server 'localhost_1_8'. (560939 ms elapsed)
+          Sending 'pbs_map_15 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_15.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_15 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_15.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_29 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_29.etf' from server 'localhost_1_7'. (562889 ms elapsed)
+          Sending 'pbs_map_35 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_35.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_35 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_35.etf' to server 'localhost_1_7'.
+          Received 'pbs_map_48 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_48.etf' from server 'localhost_1_0'. (568135 ms elapsed)
+          Sending 'pbs_map_27 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_27.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_27 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_27.etf' to server 'localhost_1_0'.
+          Received 'pbs_map_15 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_15.etf' from server 'localhost_1_8'. (517947 ms elapsed)
+          Sending 'pbs_map_41 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_41.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_41 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_41.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_35 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_35.etf' from server 'localhost_1_7'. (545125 ms elapsed)
+          Sending 'pbs_map_45 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_45.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_45 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_45.etf' to server 'localhost_1_7'.
+          Received 'pbs_map_27 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_27.etf' from server 'localhost_1_0'. (553786 ms elapsed)
+          Sending 'pbs_map_25 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_25.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_25 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_25.etf' to server 'localhost_1_0'.
+          Received 'pbs_map_41 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_41.etf' from server 'localhost_1_8'. (542484 ms elapsed)
+          Sending 'pbs_map_40 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_40.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_40 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_40.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_45 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_45.etf' from server 'localhost_1_7'. (534989 ms elapsed)
+          Sending 'pbs_map_10 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_10.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_10 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_10.etf' to server 'localhost_1_7'.
+          Received 'pbs_map_25 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_25.etf' from server 'localhost_1_0'. (528149 ms elapsed)
+          Sending 'pbs_map_42 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_42.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_42 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_42.etf' to server 'localhost_1_0'.
+          Received 'pbs_map_40 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_40.etf' from server 'localhost_1_8'. (530463 ms elapsed)
+          Sending 'pbs_map_49 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_49.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_49 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_49.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_10 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_10.etf' from server 'localhost_1_7'. (536367 ms elapsed)
+          Sending 'pbs_map_3 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_3.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_3 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_3.etf' to server 'localhost_1_7'.
+          Received 'pbs_map_42 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_42.etf' from server 'localhost_1_0'. (443666 ms elapsed)
+          Sending 'pbs_map_5 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_5.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_5 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_5.etf' to server 'localhost_1_0'.
+          Received 'pbs_map_49 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_49.etf' from server 'localhost_1_8'. (482526 ms elapsed)
+          Sending 'pbs_map_2 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_2.etf' to server 'localhost_1_8'...
+            Sent 'pbs_map_2 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_2.etf' to server 'localhost_1_8'.
+          Received 'pbs_map_3 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_3.etf' from server 'localhost_1_7'. (487416 ms elapsed)
+          Sending 'pbs_map_7 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_7.etf' to server 'localhost_1_7'...
+            Sent 'pbs_map_7 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_7.etf' to server 'localhost_1_7'.
+          Received 'pbs_map_5 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_5.etf' from server 'localhost_1_0'. (526072 ms elapsed)
+          Sending 'pbs_map_6 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_6.etf' to server 'localhost_1_0'...
+            Sent 'pbs_map_6 ./.pbs_phobos.ece.pdx.edu_197103/pbs_map_6.etf' to server 'localhost_1_0'.
+Terminated
