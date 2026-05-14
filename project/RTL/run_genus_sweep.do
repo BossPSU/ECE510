@@ -136,12 +136,19 @@ read_hdl -sv perf_counter_block.sv
 # -----------------------------------------------------------------------------
 puts ">>> Elaborating $TOP (tag=$tag)..."
 
+# Genus -parameters takes a POSITIONAL list of parameter VALUES (not
+# name/value pairs). The list order must match the order parameters are
+# declared in the module. Pass through current defaults for params we
+# aren't sweeping.
+#   systolic_array_64x64: parameter order = (ROWS, COLS, DATA_WIDTH)
+#   stream_pipeline     : parameter order = (DATA_WIDTH, ARRAY_DIM)
+#   tile_buffer         : parameter order = (DATA_WIDTH, TILE_DIM, NUM_RD_PORTS)
 if { $TOP eq "systolic_array_64x64" } {
-    elaborate $TOP -parameters [list ROWS $N COLS $N]
+    elaborate $TOP -parameters [list $N $N 32]
 } elseif { $TOP eq "stream_pipeline" } {
-    elaborate $TOP -parameters [list ARRAY_DIM $N]
+    elaborate $TOP -parameters [list 32 $N]
 } elseif { $TOP eq "tile_buffer" } {
-    elaborate $TOP -parameters [list NUM_RD_PORTS $NRD]
+    elaborate $TOP -parameters [list 32 64 $NRD]
 } else {
     elaborate $TOP
 }
