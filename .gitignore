@@ -20,6 +20,11 @@ transcript
 *.qpg
 *.qtl
 
+# ---- Cadence Genus ----
+# Per-run PBS scratch dir (host- and PID-specific, contains lib_script etc.)
+.pbs_*/
+**/.pbs_*/
+
 # ---- Python ----
 __pycache__/
 **/__pycache__/
