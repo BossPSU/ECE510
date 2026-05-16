@@ -16,6 +16,7 @@
 #   ./run_sweep.sh phase1         # systolic only
 #   ./run_sweep.sh phase2         # fusion blocks only
 #   ./run_sweep.sh phase2b        # tile_buffer TILE_DIM sweep only
+#   ./run_sweep.sh phase2c        # softmax_unit + adder_tree size sweep
 #   ./run_sweep.sh phase3         # stream_pipeline only
 #   ./run_sweep.sh point systolic_array_64x64 8     # one specific point
 #
@@ -134,6 +135,22 @@ phase2b() {
     done
 }
 
+phase2c() {
+    echo "### PHASE 2c: vector-leaf size sweep (softmax_unit, adder_tree) ###"
+    # softmax_unit at VEC_LEN N. Each lane has its own Padé exp+div, so area
+    # ~ N x (~4 mults + 1 divider). This is the costliest block in the design;
+    # the curve here is what lets the chip rollup say "what if we shrank
+    # softmax to N=16" instead of being stuck with the 3.66 mm^2 N=64 point.
+    for N in "${SWEEP_N[@]}"; do
+        run_point "softmax_unit_v${N}" "SYNTH_TOP=softmax_unit SOFTMAX_VEC=${N}"
+    done
+    # adder_tree at NUM_INPUTS N. N=1 is degenerate (LEVELS=$clog2(1)=0,
+    # the generate loop produces nothing), so start at N=2.
+    for N in 2 4 8 16 32; do
+        run_point "adder_tree_n${N}" "SYNTH_TOP=adder_tree ADDER_N=${N}"
+    done
+}
+
 phase3() {
     echo "### PHASE 3: stream_pipeline sweep ###"
     for N in "${SWEEP_N[@]}"; do
@@ -150,11 +167,13 @@ case "$mode" in
         phase1
         phase2
         phase2b
+        phase2c
         phase3
         ;;
     phase1)  phase1  ;;
     phase2)  phase2  ;;
     phase2b) phase2b ;;
+    phase2c) phase2c ;;
     phase3)  phase3  ;;
     point)
         # ./run_sweep.sh point <SYNTH_TOP> [<ARRAY_N> | <BUF_NRD-as-num for tile_buffer>]
@@ -176,7 +195,7 @@ case "$mode" in
         esac
         ;;
     *)
-        echo "Usage: $0 [all|phase1|phase2|phase2b|phase3|point <top> [<n>]]" >&2
+        echo "Usage: $0 [all|phase1|phase2|phase2b|phase2c|phase3|point <top> [<n>]]" >&2
         exit 2
         ;;
 esac

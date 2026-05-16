@@ -41,6 +41,12 @@ _TAG_PATTERNS = [
     # tile_buffer_p64 -> top="tile_buffer", N=64 (legacy TILE_DIM=64 default), NRD=64
     (re.compile(r"^(tile_buffer)_p(\d+)$"),
      lambda m: (m.group(1), 64, int(m.group(2)))),
+    # softmax_unit_v32 -> top="softmax_unit", N=32 (VEC_LEN), NRD=1
+    (re.compile(r"^(softmax_unit)_v(\d+)$"),
+     lambda m: (m.group(1), int(m.group(2)), 1)),
+    # adder_tree_n32 -> top="adder_tree", N=32 (NUM_INPUTS), NRD=1
+    (re.compile(r"^(adder_tree)_n(\d+)$"),
+     lambda m: (m.group(1), int(m.group(2)), 1)),
     # everything else: top is the whole tag, N=1, NRD=1
     (re.compile(r"^(.+)$"),
      lambda m: (m.group(1), 1, 1)),

@@ -8,6 +8,8 @@
 #   * any leaf fusion block (gelu_unit, softmax_unit, ...) with default params
 #   * tile_buffer at NUM_RD_PORTS in {1, 64} (TILE_DIM=64 default)
 #   * tile_buffer at TILE_DIM in {1, 2, 4, 8, 16, 32} (BUF_DIM sweep)
+#   * softmax_unit at VEC_LEN in {1, 2, 4, 8, 16, 32} (SOFTMAX_VEC sweep)
+#   * adder_tree  at NUM_INPUTS in {2, 4, 8, 16, 32} (ADDER_N sweep)
 #
 # Inputs (env vars):
 #   SYNTH_TOP    Required. Module to elaborate as the synth top.
@@ -16,14 +18,19 @@
 #   BUF_NRD      Optional, default 1. Sets NUM_RD_PORTS for tile_buffer.
 #   BUF_DIM      Optional, default 64. Sets TILE_DIM for tile_buffer. When
 #                set, output tag becomes tile_buffer_d<DIM>_p<NRD>.
+#   SOFTMAX_VEC  Optional, default 64. Sets VEC_LEN for softmax_unit. When
+#                set, output tag becomes softmax_unit_v<VEC>.
+#   ADDER_N      Optional, default 64. Sets NUM_INPUTS for adder_tree. When
+#                set, output tag becomes adder_tree_n<N>.
 #   LIB_PATH     Optional. Defaults to SAED32 RVT on phobos.
 #   LIB_FILE     Optional. Specific .lib filename in LIB_PATH.
 #
 # Output:
 #   out_sweep/<tag>/{*.v, reports/{area,timing,power,gates,qor}.rpt}
 #   where <tag> = "<TOP>_<N>x<N>" for arrays, "tile_buffer_p<NRD>" or
-#   "tile_buffer_d<DIM>_p<NRD>" for buffer variants, or just "<TOP>"
-#   for everything else.
+#   "tile_buffer_d<DIM>_p<NRD>" for buffer variants, "softmax_unit_v<V>",
+#   "adder_tree_n<N>" for sized vector leaves, or just "<TOP>" for
+#   everything else.
 #
 # Usage:
 #   SYNTH_TOP=systolic_array_64x64 ARRAY_N=8 \
@@ -66,9 +73,24 @@ if { [info exists env(BUF_DIM)] } {
     set DIM_explicit 1
 }
 
-# Choose output-dir tag from top + relevant param.
-# Legacy tile_buffer_p<NRD> tags (TILE_DIM=64) are preserved when BUF_DIM
-# is not set, so already-completed sweep points keep their directory name.
+set SMV 64
+set SMV_explicit 0
+if { [info exists env(SOFTMAX_VEC)] } {
+    set SMV $env(SOFTMAX_VEC)
+    set SMV_explicit 1
+}
+
+set ADN 64
+set ADN_explicit 0
+if { [info exists env(ADDER_N)] } {
+    set ADN $env(ADDER_N)
+    set ADN_explicit 1
+}
+
+# Choose output-dir tag from top + relevant param. Legacy tags
+# (tile_buffer_p<NRD>, softmax_unit, adder_tree) are preserved when the
+# corresponding env var is not set, so already-completed sweep points
+# keep their directory name.
 if { $TOP eq "systolic_array_64x64" || $TOP eq "stream_pipeline" } {
     set tag "${TOP}_${N}x${N}"
 } elseif { $TOP eq "tile_buffer" } {
@@ -77,11 +99,23 @@ if { $TOP eq "systolic_array_64x64" || $TOP eq "stream_pipeline" } {
     } else {
         set tag "${TOP}_p${NRD}"
     }
+} elseif { $TOP eq "softmax_unit" } {
+    if { $SMV_explicit } {
+        set tag "${TOP}_v${SMV}"
+    } else {
+        set tag "${TOP}"
+    }
+} elseif { $TOP eq "adder_tree" } {
+    if { $ADN_explicit } {
+        set tag "${TOP}_n${ADN}"
+    } else {
+        set tag "${TOP}"
+    }
 } else {
     set tag "${TOP}"
 }
 
-puts "INFO: SYNTH_TOP = $TOP, ARRAY_N = $N, BUF_DIM = $DIM, BUF_NRD = $NRD, tag = $tag"
+puts "INFO: SYNTH_TOP = $TOP, ARRAY_N = $N, BUF_DIM = $DIM, BUF_NRD = $NRD, SOFTMAX_VEC = $SMV, ADDER_N = $ADN, tag = $tag"
 
 # -----------------------------------------------------------------------------
 # 3. Technology library (SAED32 RVT TT @ 0.85V / 25C, same as other scripts)
@@ -160,12 +194,18 @@ puts ">>> Elaborating $TOP (tag=$tag)..."
 #   systolic_array_64x64: parameter order = (ROWS, COLS, DATA_WIDTH)
 #   stream_pipeline     : parameter order = (DATA_WIDTH, ARRAY_DIM)
 #   tile_buffer         : parameter order = (DATA_WIDTH, TILE_DIM, NUM_RD_PORTS)
+#   softmax_unit        : parameter order = (DATA_WIDTH, VEC_LEN)
+#   adder_tree          : parameter order = (DATA_WIDTH, NUM_INPUTS)
 if { $TOP eq "systolic_array_64x64" } {
     elaborate $TOP -parameters [list $N $N 32]
 } elseif { $TOP eq "stream_pipeline" } {
     elaborate $TOP -parameters [list 32 $N]
 } elseif { $TOP eq "tile_buffer" } {
     elaborate $TOP -parameters [list 32 $DIM $NRD]
+} elseif { $TOP eq "softmax_unit" } {
+    elaborate $TOP -parameters [list 32 $SMV]
+} elseif { $TOP eq "adder_tree" } {
+    elaborate $TOP -parameters [list 32 $ADN]
 } else {
     elaborate $TOP
 }
