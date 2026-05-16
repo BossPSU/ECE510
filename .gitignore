@@ -24,6 +24,15 @@ transcript
 # Per-run PBS scratch dir (host- and PID-specific, contains lib_script etc.)
 .pbs_*/
 **/.pbs_*/
+# Sweep netlists/SDCs are large (softmax_unit.v ~350 MB, sys_32x32 even
+# bigger) and trivially regeneratable from RTL via run_genus_sweep.do.
+# We keep the reports/ subdirs because that's the actual sweep data.
+**/out_sweep/**/*.v
+**/out_sweep/**/*.sdc
+# Per-point Genus stdout transcripts -- big, and the combined sweep_all.log
+# plus error.txt already capture what matters.
+logs_sweep/
+**/logs_sweep/
 
 # ---- Python ----
 __pycache__/
