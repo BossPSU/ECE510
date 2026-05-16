@@ -15,6 +15,7 @@
 #   ./run_sweep.sh                # run all phases serially
 #   ./run_sweep.sh phase1         # systolic only
 #   ./run_sweep.sh phase2         # fusion blocks only
+#   ./run_sweep.sh phase2b        # tile_buffer TILE_DIM sweep only
 #   ./run_sweep.sh phase3         # stream_pipeline only
 #   ./run_sweep.sh point systolic_array_64x64 8     # one specific point
 #
@@ -121,6 +122,18 @@ phase2() {
     run_point "tile_buffer_p64" "SYNTH_TOP=tile_buffer BUF_NRD=64"
 }
 
+phase2b() {
+    echo "### PHASE 2b: tile_buffer TILE_DIM sweep ###"
+    # For each TILE_DIM N, two variants:
+    #   storage-only curve  : NUM_RD_PORTS=1 isolates the NxN flop memory cost
+    #   multi-port curve    : NUM_RD_PORTS=N  matches systolic feed (worst case)
+    # The gap between the two curves is the per-port mux overhead.
+    for N in "${SWEEP_N[@]}"; do
+        run_point "tile_buffer_d${N}_p1"   "SYNTH_TOP=tile_buffer BUF_DIM=${N} BUF_NRD=1"
+        run_point "tile_buffer_d${N}_p${N}" "SYNTH_TOP=tile_buffer BUF_DIM=${N} BUF_NRD=${N}"
+    done
+}
+
 phase3() {
     echo "### PHASE 3: stream_pipeline sweep ###"
     for N in "${SWEEP_N[@]}"; do
@@ -136,11 +149,13 @@ case "$mode" in
     all)
         phase1
         phase2
+        phase2b
         phase3
         ;;
-    phase1) phase1 ;;
-    phase2) phase2 ;;
-    phase3) phase3 ;;
+    phase1)  phase1  ;;
+    phase2)  phase2  ;;
+    phase2b) phase2b ;;
+    phase3)  phase3  ;;
     point)
         # ./run_sweep.sh point <SYNTH_TOP> [<ARRAY_N> | <BUF_NRD-as-num for tile_buffer>]
         if [ $# -lt 2 ]; then
@@ -161,7 +176,7 @@ case "$mode" in
         esac
         ;;
     *)
-        echo "Usage: $0 [all|phase1|phase2|phase3|point <top> [<n>]]" >&2
+        echo "Usage: $0 [all|phase1|phase2|phase2b|phase3|point <top> [<n>]]" >&2
         exit 2
         ;;
 esac

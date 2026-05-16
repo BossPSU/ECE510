@@ -34,9 +34,13 @@ _TAG_PATTERNS = [
     # stream_pipeline_8x8 -> top="stream_pipeline", N=8
     (re.compile(r"^(stream_pipeline)_(\d+)x\2$"),
      lambda m: (m.group(1), int(m.group(2)), 1)),
-    # tile_buffer_p64 -> top="tile_buffer", N=1, NRD=64
+    # tile_buffer_d32_p1 -> top="tile_buffer", N=32 (TILE_DIM), NRD=1
+    # Must be matched before the legacy p<NRD> form below.
+    (re.compile(r"^(tile_buffer)_d(\d+)_p(\d+)$"),
+     lambda m: (m.group(1), int(m.group(2)), int(m.group(3)))),
+    # tile_buffer_p64 -> top="tile_buffer", N=64 (legacy TILE_DIM=64 default), NRD=64
     (re.compile(r"^(tile_buffer)_p(\d+)$"),
-     lambda m: (m.group(1), 1, int(m.group(2)))),
+     lambda m: (m.group(1), 64, int(m.group(2)))),
     # everything else: top is the whole tag, N=1, NRD=1
     (re.compile(r"^(.+)$"),
      lambda m: (m.group(1), 1, 1)),
