@@ -1,25 +1,21 @@
-# CF07 — M3 Plan (Option A, project core)
+# CF07 — M3 Plan
 
-**Change for M3: pipeline `mac_pe` between the 8×8 multiply and the
-Q8.8→Q16.16 align/accumulate.**
+`mac_pe` is the leaf. `systolic_array_64x64` adds **4,096 MACs/cycle**
+per array (output-stationary dataflow, no intermediate SRAM).
+`stream_pipeline` fuses matmul with activation so intermediates never
+materialize; `tile_buffer` keeps tiles register-resident for
+high-bandwidth scattered reads; `softmax_unit` and
+`fused_postproc_unit` pipeline the attention/FFN nonlinearities.
+Sixteen lanes in `compute_core` run **65,536 MACs/cycle** in parallel.
 
-Grounded in the synthesis numbers:
+**Tool limits.** OpenLane on Sky130 chokes past ~50 K cells —
+multi-million-cell designs take days or OOM the WSL VM. Genus on
+phobos handles leaves cleanly but the flat top-level netlist OOMs the
+64 GB box; only leaf-block synthesis fits.
 
-- OpenLane (Sky130A, typical corner) reports **WNS = +1.475 ns at 10 ns
-  (f_max ≈ 117 MHz)**; the slow corner needs **~14.5 ns**.
-  Cadence Genus on SAED32 (separate M3 sweep, 1 GHz target) reports
-  WNS = **−560 ps**, i.e. **f_max ≈ 641 MHz on SAED32**.
-- Both tools agree on the path shape: `a_in[*]` → quantize/saturate →
-  8×8 multiply → align shift → accumulator flop, all combinational. The
-  multiplier + adder accounts for **113 of 702 cells** (XOR/XNOR pairs).
-- Splitting that path at the Q8.8 boundary cuts combinational depth
-  roughly in half. Cost: 1 cycle of added MAC latency (acceptable in a
-  systolic feed) and ~16 extra DFFs (≈400 µm² on Sky130,
-  ≈3 % of current cell area).
-
-For M3 I will:
-1. Add `pipeline_q88_reg` between `product_q88` and `product_q` in
-   `mac_pe.sv`.
-2. Re-run the Genus sweep at the same N axis to confirm the WNS gap
-   closes at 1 ns.
-3. Update `timing_analysis.md` with the new per-N WNS curve.
+**M3 proof point.** Synthesize `systolic_array_64x64` at **N=4 (16 PEs,
+~25 K cells extrapolated from `mac_pe`'s 1,482)** in OpenLane —
+within tool limits, directly comparable to phobos's `sys_4x4` Genus
+point. Combine with the Genus sweep N ∈ {1…32} and an
+`area(N) = a + b·N² + c·N` fit to extrapolate full-chip area without
+synthesizing the chip.
