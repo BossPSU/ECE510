@@ -38,6 +38,14 @@ transcript
 # plus error.txt already capture what matters.
 logs_sweep/
 **/logs_sweep/
+# Genus session bookkeeping (timestamps, tool-state markers)
+.rs_*.tstamp
+**/.rs_*.tstamp
+# Cadence formal-verification intermediates -- auto-generated per
+# elaborate (~1.6 M lines across all blocks). Not needed for sweep
+# deliverable; regenerated on every run.
+fv/
+**/fv/
 
 # ---- Python ----
 __pycache__/
