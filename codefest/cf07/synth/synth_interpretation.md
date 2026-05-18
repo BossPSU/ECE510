@@ -42,11 +42,13 @@ through clock-gating idle PEs and per-tile DVFS.
 
 ## (d) Violations and handling
 Typical corner is clean (0 setup, 0 hold, 0 lint). The
-**slow-corner −4.499 ns setup gap** is the only real issue. Two
-handling paths: (1) pipeline `mac_pe` between multiply and align,
-halving combinational depth at a cost of 1 MAC-latency cycle — cheap
-in a systolic feed where pipeline fill amortizes over thousands of
-steps; (2) derate to ~70 MHz at slow PVT. The array's parallelism
-(1,024 MACs/cycle at N=32) keeps useful throughput high either way.
-The 6 max-fanout violations are on `en`/`clear_acc` control nets
-fanning to 88 flops; one buffer insertion clears them.
+**slow-corner −4.499 ns setup gap is substantial — the path is
+45 % over the 10 ns budget at SS PVT.** Two handling paths:
+(1) pipeline `mac_pe` between multiply and align, halving
+combinational depth at a cost of 1 MAC-latency cycle — cheap in a
+systolic feed where pipeline fill amortizes over thousands of steps;
+(2) derate to ~69 MHz at slow PVT (a **31 % throughput tax** vs the
+typical-corner 117 MHz f_max — not free). Pipelining is the right
+fix; the derate is a fallback. The 6 max-fanout violations are on
+`en`/`clear_acc` control nets fanning to 88 flops; one buffer
+insertion clears them.
