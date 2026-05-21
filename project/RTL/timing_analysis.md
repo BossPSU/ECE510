@@ -4,6 +4,17 @@ Companion to [`Claude_sweep.md`](Claude_sweep.md). This document fills in the
 timing portion of the sweep: per-N WNS, derived f_max, critical-path location,
 and the extrapolation to the full 64×64 systolic array.
 
+> **⚠️ Update (Phase 2+3 data, 2026-05-18):** the Phase-1-only f_max
+> projection of **583–588 MHz** below is **superseded** by the integrated
+> chip-level result. With `softmax_unit` measured in Phase 2c and
+> `stream_pipeline` (the chip's main fused pipeline) measured in Phase 3,
+> the chip f_max is bottlenecked at **~52 MHz** by the combinational
+> Q16.16 divider inside `softmax_unit`. See
+> [`chip_area_rollup.md` §6](chip_area_rollup.md) for the full new story.
+> This document remains accurate for `systolic_array_64x64` *in isolation*,
+> which is what the slide and Phase-1 narrative are about — but the
+> chip-scale claim has changed.
+
 ## Source data
 
 Single sweep session, captured in [`../error.txt`](../error.txt) (the
@@ -157,17 +168,24 @@ RTL change, not a synthesis-side fix.
 
 ## What to do next
 
-1. **Re-run Phase 2 to completion** — fusion blocks at default size, ~30
-   min total, none expected to push the system over 64 GB.
-2. **Run Phase 3** — `stream_pipeline` at N ∈ {2, 4, 8, 16, 32} to get
-   the glue-and-buffer timing. Critical path may shift to the
-   64-read-port `tile_buffer` or the post-systolic mux.
+1. **Re-run Phase 2 to completion** — ✅ done (2026-05-18).
+2. **Run Phase 3** — ⚠️ partial (2/6 points: N=1, N=2 only). The
+   `stream_pipeline_2x2` measurement confirms the chip f_max is
+   bottlenecked by `softmax_unit`, not by the systolic array — see
+   [`chip_area_rollup.md`](chip_area_rollup.md).
 3. After Phase 2/3 are done, regenerate `sweep_results.csv` with
    [`collect_sweep_csv.py`](collect_sweep_csv.py) and re-fit with
-   [`analyze_sweep.py`](analyze_sweep.py). The script already pulls
-   `WNS_ps` from `qor.rpt` / `timing.rpt`; the area-vs-N fit it produces
-   plus the timing table above is the M3 timing-and-area deliverable.
+   [`analyze_sweep.py`](analyze_sweep.py). ✅ done. Results in
+   [`sweep_results.csv`](sweep_results.csv),
+   [`sweep_metrics.txt`](sweep_metrics.txt),
+   [`sweep_figure.pdf`](sweep_figure.pdf).
 4. If 583–588 MHz is below the system target, the **single
    actionable RTL change** is to add a pipeline stage inside
    `mac_pe.sv` between the Q4.4 multiply and the Q16.16 accumulate.
    That doubles MAC latency by one cycle but removes the dominant path.
+   ⚠️ **However** — the new Phase 2+3 data shows the chip-level f_max is
+   actually limited by softmax_unit's combinational divider (52 MHz at
+   1 ns target), not the MAC. The mac_pe pipeline is still needed for
+   PVT robustness, but the bigger M4 RTL target is to replace softmax's
+   Padé + divider with a LUT-based exp + reciprocal. See
+   [`chip_area_rollup.md` §6.1](chip_area_rollup.md) for the analysis.

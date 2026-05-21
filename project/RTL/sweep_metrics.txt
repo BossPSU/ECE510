@@ -1,0 +1,60 @@
+# M3 sweep analysis -- input: sweep_results.csv
+
+## systolic_array_64x64 (n_points = 6)
+  N= 1  PEs=   1  area=      1834.7 um^2  per_PE= 1834.67
+  N= 2  PEs=   4  area=      6903.3 um^2  per_PE= 1725.83
+  N= 4  PEs=  16  area=     27024.1 um^2  per_PE= 1689.01
+  N= 8  PEs=  64  area=    102849.0 um^2  per_PE= 1607.02
+  N=16  PEs= 256  area=    402506.7 um^2  per_PE= 1572.29
+  N=32  PEs=1024  area=   1611448.6 um^2  per_PE= 1573.68
+
+  Fit: area(N) = 1006.74 + 1572.4542*N^2 + 2.00*N
+       R^2   = 1.0000
+       Residual sigma = 1162.4 um^2  (~95% band: +/-2324.8 um^2)
+  Predict N= 8:       101659.8 um^2  (0.102 mm^2)  +/- 2324.8
+  Predict N=16:       403587.0 um^2  (0.404 mm^2)  +/- 2324.8
+  Predict N=32:      1611263.8 um^2  (1.611 mm^2)  +/- 2324.8
+  Predict N=64:      6441907.1 um^2  (6.442 mm^2)  +/- 2324.8
+
+## stream_pipeline (n_points = 2)
+  N= 1  PEs=   1  area=    154454.0 um^2
+  N= 2  PEs=   4  area=    290152.1 um^2
+
+## Fusion / control blocks (Phase 2)
+  accel_controller              :       6233.4 um^2  cells=2321
+  adder_tree              :      73012.5 um^2  cells=21255
+  adder_tree              :      17617.8 um^2  cells=5094
+  adder_tree              :       1468.7 um^2  cells=370
+  adder_tree              :      36103.4 um^2  cells=10473
+  adder_tree              :       3778.9 um^2  cells=1046
+  adder_tree              :       8406.8 um^2  cells=2394
+  causal_mask_unit              :       4496.3 um^2  cells=2213
+  divider_or_reciprocal_unit              :      41120.8 um^2  cells=17333
+  fused_postproc_unit              :     155773.2 um^2  cells=57367
+  gelu_grad_unit              :      86806.9 um^2  cells=32774
+  gelu_unit              :      68449.9 um^2  cells=26246
+  perf_counter_block              :       2239.3 um^2  cells=648
+  softmax_unit              :    3818674.7 um^2  cells=1519545
+  softmax_unit              :       1467.2 um^2  cells=561
+  softmax_unit              :     974130.9 um^2  cells=387449
+  softmax_unit              :     141652.2 um^2  cells=56378
+  softmax_unit              :    1914792.8 um^2  cells=760884
+  softmax_unit              :     259719.9 um^2  cells=101915
+  softmax_unit              :     496777.1 um^2  cells=198940
+  tile_buffer (NRD=1)      :     119899.8 um^2  cells=24457
+  tile_buffer (NRD=16)     :     407421.3 um^2  cells=90425
+  tile_buffer (NRD=1)      :        308.5 um^2  cells=38
+  tile_buffer (NRD=1)      :       1783.6 um^2  cells=243
+  tile_buffer (NRD=2)      :       1978.0 um^2  cells=278
+  tile_buffer (NRD=1)      :     564941.8 um^2  cells=134602
+  tile_buffer (NRD=32)     :    2476526.5 um^2  cells=845767
+  tile_buffer (NRD=1)      :       8193.6 um^2  cells=1899
+  tile_buffer (NRD=4)      :      12162.8 um^2  cells=3828
+  tile_buffer (NRD=1)      :      31505.7 um^2  cells=6802
+  tile_buffer (NRD=8)      :      57033.0 um^2  cells=16695
+  tile_buffer (NRD=1)      :    2171528.6 um^2  cells=566290
+
+## Stream_pipeline glue overhead
+   glue(N) = stream(N) - systolic(N) - fused_postproc
+   N= 1: glue =      -3153.9 um^2
+   N= 2: glue =     127475.6 um^2

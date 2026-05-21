@@ -125,10 +125,21 @@ def parse_area(rpt: Path, top: str) -> dict[str, str]:
 
 
 # ---------------------------------------------------------------------------
-# qor.rpt has a one-line WNS summary per clock group. Fall back to timing.rpt
-# scanning for a "Slack" line if qor isn't there.
+# qor.rpt -- Genus prints a "Cost Group" table with one row per clock domain:
+#
+#   Cost    Critical               Violating
+#  Group   Path Slack     TNS        Paths
+# -------------------------------------------
+# clk          -668.9   -730897.5       1423
+#
+# We extract the slack column of the clk row (already in ps).
+# Fall back to timing.rpt scanning for a "Slack" line if qor isn't there.
 # ---------------------------------------------------------------------------
-_QOR_WNS_RX = re.compile(r"WNS\s*\(?ps\)?[^\-\d]*(-?\d+\.?\d*)", re.IGNORECASE)
+_QOR_CLK_ROW_RX = re.compile(
+    r"^\s*clk\s+(-?\d+\.?\d*)\s+(-?\d+\.?\d*)\s+\d+\s*$",
+    re.MULTILINE,
+)
+_QOR_CLK_NOPATHS_RX = re.compile(r"^\s*clk\s+No paths\s+", re.MULTILINE)
 _TIMING_SLACK_RX = re.compile(r"^\s*Slack\s*:?\s*(-?\d+\.?\d*)", re.MULTILINE)
 
 
@@ -137,9 +148,11 @@ def parse_wns_ps(qor: Path, timing: Path) -> str:
         if not f.exists():
             continue
         txt = f.read_text(errors="ignore")
-        m = _QOR_WNS_RX.search(txt)
+        m = _QOR_CLK_ROW_RX.search(txt)
         if m:
             return m.group(1)
+        if _QOR_CLK_NOPATHS_RX.search(txt):
+            return "0.0"
         m = _TIMING_SLACK_RX.search(txt)
         if m:
             # Slack reported in ns by default -> convert to ps for the CSV
@@ -151,15 +164,19 @@ def parse_wns_ps(qor: Path, timing: Path) -> str:
 
 
 # ---------------------------------------------------------------------------
-# power.rpt -- Genus prints "Leakage Power", "Internal Power", "Switching
-# Power", "Total Power" with a unit suffix (nW / uW / mW / W). Normalize to
-# Watts.
+# power.rpt -- Genus prints a table with a "Subtotal" row containing all
+# four power values in Watts (the "Power Unit: W" line at top sets unit):
+#
+#   Category         Leakage     Internal    Switching        Total    Row%
+#   Subtotal     2.71706e-03  2.66715e-02  3.96298e-03  3.33516e-02 100.00%
+#
+# We grab the Subtotal row directly. If "Power Unit: <X>" specifies a
+# different unit (mW/uW/nW), we apply the scale.
 # ---------------------------------------------------------------------------
 _UNIT_SCALE = {"W": 1.0, "mW": 1e-3, "uW": 1e-6, "nW": 1e-9, "pW": 1e-12}
-_POWER_RX = re.compile(
-    r"(Leakage|Internal|Switching|Total)\s+Power\s*[:=]?\s*"
-    r"(-?\d+\.?\d*(?:[eE][-+]?\d+)?)\s*(p?W|nW|uW|mW|W)",
-    re.IGNORECASE,
+_POWER_UNIT_RX = re.compile(r"Power Unit:\s*(\S+)", re.IGNORECASE)
+_POWER_SUBTOTAL_RX = re.compile(
+    r"Subtotal\s+([\d.eE+-]+)\s+([\d.eE+-]+)\s+([\d.eE+-]+)\s+([\d.eE+-]+)",
 )
 
 
@@ -169,16 +186,19 @@ def parse_power(rpt: Path) -> dict[str, str]:
     if not rpt.exists():
         return out
     txt = rpt.read_text(errors="ignore")
-    for m in _POWER_RX.finditer(txt):
-        kind = m.group(1).lower()
-        val = float(m.group(2))
-        unit = m.group(3)
-        # Canonicalize 'uW'/'UW' -> 'uW', 'mw' -> 'mW'
-        norm = {"W": "W", "mW": "mW", "uW": "uW", "nW": "nW",
-                "pW": "pW", "mw": "mW", "uw": "uW", "nw": "nW",
-                "UW": "uW", "MW": "mW", "NW": "nW"}.get(unit, unit)
-        watts = val * _UNIT_SCALE.get(norm, 1.0)
-        out[f"{kind}_W"] = f"{watts:.6e}"
+    unit_match = _POWER_UNIT_RX.search(txt)
+    scale = _UNIT_SCALE.get(unit_match.group(1), 1.0) if unit_match else 1.0
+    m = _POWER_SUBTOTAL_RX.search(txt)
+    if not m:
+        return out
+    try:
+        leak, intern, switch, total = (float(m.group(i)) * scale for i in (1, 2, 3, 4))
+    except ValueError:
+        return out
+    out["leakage_W"] = f"{leak:.6e}"
+    out["internal_W"] = f"{intern:.6e}"
+    out["switching_W"] = f"{switch:.6e}"
+    out["total_W"] = f"{total:.6e}"
     return out
 
 
