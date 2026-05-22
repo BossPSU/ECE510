@@ -1,0 +1,76 @@
+
+43. Printing statistics.
+
+=== divider_or_reciprocal_unit ===
+
+   Number of wires:              16310
+   Number of wire bits:          16497
+   Number of public wires:          11
+   Number of public wire bits:     198
+   Number of ports:                  8
+   Number of port bits:            101
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              16397
+     sky130_fd_sc_hd__a2111oi_0      1
+     sky130_fd_sc_hd__a211o_2        5
+     sky130_fd_sc_hd__a211oi_1      57
+     sky130_fd_sc_hd__a21boi_0     111
+     sky130_fd_sc_hd__a21o_2        28
+     sky130_fd_sc_hd__a21oi_1     1268
+     sky130_fd_sc_hd__a221oi_1       1
+     sky130_fd_sc_hd__a22o_2         6
+     sky130_fd_sc_hd__a22oi_1      111
+     sky130_fd_sc_hd__a2bb2oi_1     13
+     sky130_fd_sc_hd__a311o_2        4
+     sky130_fd_sc_hd__a311oi_1      54
+     sky130_fd_sc_hd__a31o_2        10
+     sky130_fd_sc_hd__a31oi_1      262
+     sky130_fd_sc_hd__a32oi_1       19
+     sky130_fd_sc_hd__a41o_2         2
+     sky130_fd_sc_hd__a41oi_1       37
+     sky130_fd_sc_hd__and2_2        75
+     sky130_fd_sc_hd__and2b_2        1
+     sky130_fd_sc_hd__and3_2        81
+     sky130_fd_sc_hd__clkinv_1    1809
+     sky130_fd_sc_hd__dfrtp_1       97
+     sky130_fd_sc_hd__dfstp_2        1
+     sky130_fd_sc_hd__lpflow_inputiso0p_1      6
+     sky130_fd_sc_hd__maj3_1         1
+     sky130_fd_sc_hd__mux2_2         6
+     sky130_fd_sc_hd__nand2_1     3982
+     sky130_fd_sc_hd__nand3_1     2962
+     sky130_fd_sc_hd__nand3b_1      78
+     sky130_fd_sc_hd__nand4_1      939
+     sky130_fd_sc_hd__nor2_1      1205
+     sky130_fd_sc_hd__nor3_1       188
+     sky130_fd_sc_hd__nor3b_1       14
+     sky130_fd_sc_hd__nor4_1        52
+     sky130_fd_sc_hd__o2111a_1      39
+     sky130_fd_sc_hd__o2111ai_1     29
+     sky130_fd_sc_hd__o211a_1       92
+     sky130_fd_sc_hd__o211ai_1     676
+     sky130_fd_sc_hd__o21a_1        91
+     sky130_fd_sc_hd__o21ai_0     1155
+     sky130_fd_sc_hd__o21ba_2        2
+     sky130_fd_sc_hd__o21bai_1     175
+     sky130_fd_sc_hd__o221ai_1      17
+     sky130_fd_sc_hd__o22a_2         4
+     sky130_fd_sc_hd__o22ai_1      214
+     sky130_fd_sc_hd__o2bb2ai_1    165
+     sky130_fd_sc_hd__o311a_2        1
+     sky130_fd_sc_hd__o311ai_0       2
+     sky130_fd_sc_hd__o31a_2         2
+     sky130_fd_sc_hd__o31ai_1       12
+     sky130_fd_sc_hd__o41ai_1        1
+     sky130_fd_sc_hd__or2_2         39
+     sky130_fd_sc_hd__or2b_2         1
+     sky130_fd_sc_hd__or3_2          1
+     sky130_fd_sc_hd__or4_2          1
+     sky130_fd_sc_hd__xnor2_1       57
+     sky130_fd_sc_hd__xor2_1       135
+
+   Chip area for module '\divider_or_reciprocal_unit': 83914.230400
+     of which used for sequential elements: 2453.603200 (2.92%)
+

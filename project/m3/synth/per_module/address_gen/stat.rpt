@@ -1,0 +1,53 @@
+
+43. Printing statistics.
+
+=== address_gen ===
+
+   Number of wires:               1390
+   Number of wire bits:           1463
+   Number of public wires:          14
+   Number of public wire bits:      87
+   Number of ports:                 12
+   Number of port bits:             71
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               1410
+     sky130_fd_sc_hd__a21boi_0      25
+     sky130_fd_sc_hd__a21o_2         6
+     sky130_fd_sc_hd__a21oi_1       63
+     sky130_fd_sc_hd__a22o_2         2
+     sky130_fd_sc_hd__a22oi_1        1
+     sky130_fd_sc_hd__a2bb2oi_1      1
+     sky130_fd_sc_hd__a31oi_1        8
+     sky130_fd_sc_hd__and2_2         5
+     sky130_fd_sc_hd__and3_2         1
+     sky130_fd_sc_hd__clkinv_1     152
+     sky130_fd_sc_hd__dfrtp_1       18
+     sky130_fd_sc_hd__lpflow_inputiso0p_1      1
+     sky130_fd_sc_hd__nand2_1      333
+     sky130_fd_sc_hd__nand3_1      483
+     sky130_fd_sc_hd__nand3b_1      14
+     sky130_fd_sc_hd__nand4_1       78
+     sky130_fd_sc_hd__nor2_1        68
+     sky130_fd_sc_hd__nor3_1         6
+     sky130_fd_sc_hd__nor3b_1        2
+     sky130_fd_sc_hd__nor4_1         1
+     sky130_fd_sc_hd__o2111ai_1      2
+     sky130_fd_sc_hd__o211ai_1       5
+     sky130_fd_sc_hd__o21a_1         6
+     sky130_fd_sc_hd__o21ai_0       52
+     sky130_fd_sc_hd__o21bai_1       2
+     sky130_fd_sc_hd__o22ai_1       14
+     sky130_fd_sc_hd__o2bb2ai_1      4
+     sky130_fd_sc_hd__o32ai_1        4
+     sky130_fd_sc_hd__or2_2          6
+     sky130_fd_sc_hd__or3_2          2
+     sky130_fd_sc_hd__xnor2_1       13
+     sky130_fd_sc_hd__xnor3_4        5
+     sky130_fd_sc_hd__xor2_1        25
+     sky130_fd_sc_hd__xor3_4         2
+
+   Chip area for module '\address_gen': 7387.084800
+     of which used for sequential elements: 450.432000 (6.10%)
+

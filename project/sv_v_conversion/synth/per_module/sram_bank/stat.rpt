@@ -1,0 +1,31 @@
+
+45. Printing statistics.
+
+=== sram_bank ===
+
+   Number of wires:                179
+   Number of wire bits:            313
+   Number of public wires:           7
+   Number of public wire bits:      74
+   Number of ports:                  7
+   Number of port bits:             74
+   Number of memories:               1
+   Number of memory bits:         2048
+   Number of processes:              0
+   Number of cells:                211
+     $memrd                          1
+     $memwr_v2                       1
+     sky130_fd_sc_hd__and2b_2        1
+     sky130_fd_sc_hd__clkinv_1      72
+     sky130_fd_sc_hd__dfxtp_1       33
+     sky130_fd_sc_hd__nand2_1        1
+     sky130_fd_sc_hd__nand3_1       32
+     sky130_fd_sc_hd__nor2_1        38
+     sky130_fd_sc_hd__o21ai_0       32
+
+   Area for cell type $memrd is unknown!
+   Area for cell type $memwr_v2 is unknown!
+
+   Chip area for module '\sram_bank': 1406.348800
+     of which used for sequential elements: 660.633600 (46.98%)
+

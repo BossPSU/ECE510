@@ -1,0 +1,35 @@
+	Command being timed: "/nix/store/9r0bh7sp051dpm8km8bqlb028anpd3v3-yosys/bin/yosys -p read_verilog v_hand/*.v
+chparam -set ROWS 4 systolic_array_64x64; chparam -set COLS 4 systolic_array_64x64;
+hierarchy -check -top systolic_array_64x64
+proc
+flatten
+opt -fast
+techmap
+opt -fast
+dfflibmap -liberty /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+abc -liberty /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib -script "+strash; scorr; ifraig; retime,{D}; strash; dch,-f; map,-M,1,{D}"
+opt_clean -purge
+tee -o per_module/systolic_array_64x64/stat.rpt stat -liberty /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+write_verilog -noattr per_module/systolic_array_64x64/systolic_array_64x64.synth.v"
+	User time (seconds): 51.21
+	System time (seconds): 1.99
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:53.46
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1944564
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 4
+	Minor (reclaiming a frame) page faults: 618560
+	Voluntary context switches: 1429
+	Involuntary context switches: 97
+	Swaps: 0
+	File system inputs: 256
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

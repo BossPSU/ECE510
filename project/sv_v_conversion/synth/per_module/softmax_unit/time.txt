@@ -1,0 +1,35 @@
+	Command being timed: "/nix/store/9r0bh7sp051dpm8km8bqlb028anpd3v3-yosys/bin/yosys -p read_verilog v_hand/*.v
+chparam -set VEC_LEN 4 softmax_unit;
+hierarchy -check -top softmax_unit
+proc
+flatten
+opt -fast
+techmap
+opt -fast
+dfflibmap -liberty /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+abc -liberty /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib -script "+strash; scorr; ifraig; retime,{D}; strash; dch,-f; map,-M,1,{D}"
+opt_clean -purge
+tee -o per_module/softmax_unit/stat.rpt stat -liberty /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+write_verilog -noattr per_module/softmax_unit/softmax_unit.synth.v"
+	User time (seconds): 3746.86
+	System time (seconds): 1063.24
+	Percent of CPU this job got: 14%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 9:13:04
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 4034028
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1234
+	Minor (reclaiming a frame) page faults: 19088150
+	Voluntary context switches: 7351855
+	Involuntary context switches: 28042
+	Swaps: 0
+	File system inputs: 96605632
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

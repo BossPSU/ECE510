@@ -1,0 +1,29 @@
+module,cells,area_um2,scope
+accel_controller,3345,18680.416000,leaf
+adder_tree,1656,12076.582400,NUM_INPUTS=4
+address_gen,1410,7387.084800,leaf
+causal_mask_unit,234,1262.460800,VEC_LEN=4
+chiplet_interface,0,,leaf
+divider_or_reciprocal_unit,16397,83914.230400,leaf
+dma_engine,213,1963.132800,leaf
+double_buffer_ctrl,6,48.796800,leaf
+exp_lut,34,640.614400,default 256x32 ROM
+fused_postproc_unit,141379,731987.033601,instantiates gelu+gelu_grad
+gelu_grad_unit,76134,394208.076800,leaf (single instance)
+gelu_lut,34,640.614400,default 256x32 ROM
+gelu_unit,56324,291065.404800,leaf (single instance)
+mac_pe,1478,8958.592000,leaf
+mode_decoder,6,27.526400,leaf
+perf_counter_block,664,5735.500800,leaf
+pipeline_stage,134,1289.987200,DATA_WIDTH=32
+scratchpad_ctrl,686,4239.065600,NUM_BANKS=2, BANK_DEPTH=64
+skid_buffer,331,2977.856000,DATA_WIDTH=32
+softmax_unit,215434,1134454.281602,VEC_LEN=4
+sram_bank,211,1406.348800,DEPTH=64
+stream_mux,174,873.337600,NUM_INPUTS=4
+systolic_array_64x64,20391,116748.220800,ROWS=COLS=4 (16 PEs)
+tile_buffer,5613,43694.406400,TILE_DIM=4, NUM_RD_PORTS=4
+tile_dispatcher,1686,10752.812800,N_LANES=1, TILE_DIM=4
+tile_loader,1335,7263.216000,leaf
+tile_scheduler,243,1787.964800,TILE_DIM=64 (cmd-level only)
+tile_writer,1546,8503.155200,leaf

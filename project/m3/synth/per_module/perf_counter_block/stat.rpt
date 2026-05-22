@@ -1,0 +1,42 @@
+
+43. Printing statistics.
+
+=== perf_counter_block ===
+
+   Number of wires:                515
+   Number of wire bits:            670
+   Number of public wires:          10
+   Number of public wire bits:     134
+   Number of ports:                 10
+   Number of port bits:            134
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                664
+     sky130_fd_sc_hd__a211oi_1       2
+     sky130_fd_sc_hd__a21oi_1       71
+     sky130_fd_sc_hd__a221oi_1       2
+     sky130_fd_sc_hd__a31oi_1        5
+     sky130_fd_sc_hd__a41oi_1        2
+     sky130_fd_sc_hd__and2_2         2
+     sky130_fd_sc_hd__and3_2         5
+     sky130_fd_sc_hd__clkinv_1      83
+     sky130_fd_sc_hd__dfrtp_1      128
+     sky130_fd_sc_hd__nand2_1       47
+     sky130_fd_sc_hd__nand3_1       25
+     sky130_fd_sc_hd__nand4_1       40
+     sky130_fd_sc_hd__nor2_1       114
+     sky130_fd_sc_hd__nor3_1        42
+     sky130_fd_sc_hd__nor3b_1        7
+     sky130_fd_sc_hd__nor4_1        10
+     sky130_fd_sc_hd__nor4b_1        1
+     sky130_fd_sc_hd__o211a_1        2
+     sky130_fd_sc_hd__o21a_1         1
+     sky130_fd_sc_hd__o21ai_0       71
+     sky130_fd_sc_hd__o31a_2         1
+     sky130_fd_sc_hd__o31ai_1        1
+     sky130_fd_sc_hd__o41ai_1        2
+
+   Chip area for module '\perf_counter_block': 5735.500800
+     of which used for sequential elements: 3203.072000 (55.85%)
+

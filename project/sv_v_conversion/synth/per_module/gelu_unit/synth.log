@@ -1,0 +1,1803 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2024  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.46 (git sha1 e97731b9dda91fa5fa53ed87df7c34163ba59a41, clang++ 17.0.6 -fPIC -O3)
+
+-- Running command `read_verilog v_hand/*.v
+
+hierarchy -check -top gelu_unit
+proc
+flatten
+opt -fast
+techmap
+opt -fast
+dfflibmap -liberty /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+abc -liberty /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib -script "+strash; scorr; ifraig; retime,{D}; strash; dch,-f; map,-M,1,{D}"
+opt_clean -purge
+tee -o per_module/gelu_unit/stat.rpt stat -liberty /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+write_verilog -noattr per_module/gelu_unit/gelu_unit.synth.v' --
+
+1. Executing Verilog-2005 frontend: v_hand/accel_controller.v
+Parsing Verilog input from `v_hand/accel_controller.v' to AST representation.
+Generating RTLIL representation for module `\accel_controller'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: v_hand/accel_engine.v
+Parsing Verilog input from `v_hand/accel_engine.v' to AST representation.
+Generating RTLIL representation for module `\accel_engine'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: v_hand/accel_top.v
+Parsing Verilog input from `v_hand/accel_top.v' to AST representation.
+Generating RTLIL representation for module `\accel_top'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: v_hand/adder_tree.v
+Parsing Verilog input from `v_hand/adder_tree.v' to AST representation.
+Generating RTLIL representation for module `\adder_tree'.
+Warning: Replacing memory \stage with list of registers. See v_hand/adder_tree.v:63
+Warning: Replacing memory \valid_pipe with list of registers. See v_hand/adder_tree.v:61
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: v_hand/address_gen.v
+Parsing Verilog input from `v_hand/address_gen.v' to AST representation.
+Generating RTLIL representation for module `\address_gen'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: v_hand/causal_mask_unit.v
+Parsing Verilog input from `v_hand/causal_mask_unit.v' to AST representation.
+Generating RTLIL representation for module `\causal_mask_unit'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: v_hand/chiplet_interface.v
+Parsing Verilog input from `v_hand/chiplet_interface.v' to AST representation.
+Generating RTLIL representation for module `\chiplet_interface'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: v_hand/compute_core.v
+Parsing Verilog input from `v_hand/compute_core.v' to AST representation.
+Generating RTLIL representation for module `\compute_core'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: v_hand/divider_or_reciprocal_unit.v
+Parsing Verilog input from `v_hand/divider_or_reciprocal_unit.v' to AST representation.
+Generating RTLIL representation for module `\divider_or_reciprocal_unit'.
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: v_hand/dma_engine.v
+Parsing Verilog input from `v_hand/dma_engine.v' to AST representation.
+Generating RTLIL representation for module `\dma_engine'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: v_hand/double_buffer_ctrl.v
+Parsing Verilog input from `v_hand/double_buffer_ctrl.v' to AST representation.
+Generating RTLIL representation for module `\double_buffer_ctrl'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: v_hand/exp_lut.v
+Parsing Verilog input from `v_hand/exp_lut.v' to AST representation.
+Generating RTLIL representation for module `\exp_lut'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: v_hand/fused_postproc_unit.v
+Parsing Verilog input from `v_hand/fused_postproc_unit.v' to AST representation.
+Generating RTLIL representation for module `\fused_postproc_unit'.
+Warning: Replacing memory \data_delay with list of registers. See v_hand/fused_postproc_unit.v:97
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: v_hand/gelu_grad_unit.v
+Parsing Verilog input from `v_hand/gelu_grad_unit.v' to AST representation.
+Generating RTLIL representation for module `\gelu_grad_unit'.
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: v_hand/gelu_lut.v
+Parsing Verilog input from `v_hand/gelu_lut.v' to AST representation.
+Generating RTLIL representation for module `\gelu_lut'.
+Successfully finished Verilog frontend.
+
+16. Executing Verilog-2005 frontend: v_hand/gelu_unit.v
+Parsing Verilog input from `v_hand/gelu_unit.v' to AST representation.
+Generating RTLIL representation for module `\gelu_unit'.
+Successfully finished Verilog frontend.
+
+17. Executing Verilog-2005 frontend: v_hand/mac_pe.v
+Parsing Verilog input from `v_hand/mac_pe.v' to AST representation.
+Generating RTLIL representation for module `\mac_pe'.
+Successfully finished Verilog frontend.
+
+18. Executing Verilog-2005 frontend: v_hand/mode_decoder.v
+Parsing Verilog input from `v_hand/mode_decoder.v' to AST representation.
+Generating RTLIL representation for module `\mode_decoder'.
+Successfully finished Verilog frontend.
+
+19. Executing Verilog-2005 frontend: v_hand/perf_counter_block.v
+Parsing Verilog input from `v_hand/perf_counter_block.v' to AST representation.
+Generating RTLIL representation for module `\perf_counter_block'.
+Successfully finished Verilog frontend.
+
+20. Executing Verilog-2005 frontend: v_hand/pipeline_stage.v
+Parsing Verilog input from `v_hand/pipeline_stage.v' to AST representation.
+Generating RTLIL representation for module `\pipeline_stage'.
+Successfully finished Verilog frontend.
+
+21. Executing Verilog-2005 frontend: v_hand/scratchpad_ctrl.v
+Parsing Verilog input from `v_hand/scratchpad_ctrl.v' to AST representation.
+Generating RTLIL representation for module `\scratchpad_ctrl'.
+Successfully finished Verilog frontend.
+
+22. Executing Verilog-2005 frontend: v_hand/skid_buffer.v
+Parsing Verilog input from `v_hand/skid_buffer.v' to AST representation.
+Generating RTLIL representation for module `\skid_buffer'.
+Successfully finished Verilog frontend.
+
+23. Executing Verilog-2005 frontend: v_hand/softmax_unit.v
+Parsing Verilog input from `v_hand/softmax_unit.v' to AST representation.
+Generating RTLIL representation for module `\softmax_unit'.
+Warning: Replacing memory \s3_exp with list of registers. See v_hand/softmax_unit.v:194
+Warning: Replacing memory \s2_exp with list of registers. See v_hand/softmax_unit.v:171
+Warning: Replacing memory \s1_scores with list of registers. See v_hand/softmax_unit.v:146
+Successfully finished Verilog frontend.
+
+24. Executing Verilog-2005 frontend: v_hand/sram_bank.v
+Parsing Verilog input from `v_hand/sram_bank.v' to AST representation.
+Generating RTLIL representation for module `\sram_bank'.
+Successfully finished Verilog frontend.
+
+25. Executing Verilog-2005 frontend: v_hand/stream_mux.v
+Parsing Verilog input from `v_hand/stream_mux.v' to AST representation.
+Generating RTLIL representation for module `\stream_mux'.
+Successfully finished Verilog frontend.
+
+26. Executing Verilog-2005 frontend: v_hand/stream_pipeline.v
+Parsing Verilog input from `v_hand/stream_pipeline.v' to AST representation.
+Generating RTLIL representation for module `\stream_pipeline'.
+Warning: Replacing memory \sm_row_buf with list of registers. See v_hand/stream_pipeline.v:302
+Successfully finished Verilog frontend.
+
+27. Executing Verilog-2005 frontend: v_hand/systolic_array_64x64.v
+Parsing Verilog input from `v_hand/systolic_array_64x64.v' to AST representation.
+Generating RTLIL representation for module `\systolic_array_64x64'.
+Successfully finished Verilog frontend.
+
+28. Executing Verilog-2005 frontend: v_hand/tile_buffer.v
+Parsing Verilog input from `v_hand/tile_buffer.v' to AST representation.
+Generating RTLIL representation for module `\tile_buffer'.
+Warning: Replacing memory \mem with list of registers. See v_hand/tile_buffer.v:70
+Successfully finished Verilog frontend.
+
+29. Executing Verilog-2005 frontend: v_hand/tile_dispatcher.v
+Parsing Verilog input from `v_hand/tile_dispatcher.v' to AST representation.
+Generating RTLIL representation for module `\tile_dispatcher'.
+Successfully finished Verilog frontend.
+
+30. Executing Verilog-2005 frontend: v_hand/tile_loader.v
+Parsing Verilog input from `v_hand/tile_loader.v' to AST representation.
+Generating RTLIL representation for module `\tile_loader'.
+Successfully finished Verilog frontend.
+
+31. Executing Verilog-2005 frontend: v_hand/tile_scheduler.v
+Parsing Verilog input from `v_hand/tile_scheduler.v' to AST representation.
+Generating RTLIL representation for module `\tile_scheduler'.
+Successfully finished Verilog frontend.
+
+32. Executing Verilog-2005 frontend: v_hand/tile_writer.v
+Parsing Verilog input from `v_hand/tile_writer.v' to AST representation.
+Generating RTLIL representation for module `\tile_writer'.
+Successfully finished Verilog frontend.
+
+33. Executing Verilog-2005 frontend: v_hand/top_small.v
+Parsing Verilog input from `v_hand/top_small.v' to AST representation.
+Generating RTLIL representation for module `\top_small'.
+Successfully finished Verilog frontend.
+
+34. Executing HIERARCHY pass (managing design hierarchy).
+
+34.1. Analyzing design hierarchy..
+Top module:  \gelu_unit
+
+34.2. Analyzing design hierarchy..
+Top module:  \gelu_unit
+Removing unused module `\top_small'.
+Removing unused module `\tile_writer'.
+Removing unused module `\tile_scheduler'.
+Removing unused module `\tile_loader'.
+Removing unused module `\tile_dispatcher'.
+Removing unused module `\tile_buffer'.
+Removing unused module `\systolic_array_64x64'.
+Removing unused module `\stream_pipeline'.
+Removing unused module `\stream_mux'.
+Removing unused module `\sram_bank'.
+Removing unused module `\softmax_unit'.
+Removing unused module `\skid_buffer'.
+Removing unused module `\scratchpad_ctrl'.
+Removing unused module `\pipeline_stage'.
+Removing unused module `\perf_counter_block'.
+Removing unused module `\mode_decoder'.
+Removing unused module `\mac_pe'.
+Removing unused module `\gelu_lut'.
+Removing unused module `\gelu_grad_unit'.
+Removing unused module `\fused_postproc_unit'.
+Removing unused module `\exp_lut'.
+Removing unused module `\double_buffer_ctrl'.
+Removing unused module `\dma_engine'.
+Removing unused module `\divider_or_reciprocal_unit'.
+Removing unused module `\compute_core'.
+Removing unused module `\chiplet_interface'.
+Removing unused module `\causal_mask_unit'.
+Removing unused module `\address_gen'.
+Removing unused module `\adder_tree'.
+Removing unused module `\accel_top'.
+Removing unused module `\accel_engine'.
+Removing unused module `\accel_controller'.
+Removed 32 unused modules.
+
+35. Executing PROC pass (convert processes to netlists).
+
+35.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+35.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 3 switch rules as full_case in process $proc$v_hand/gelu_unit.v:220$873 in module gelu_unit.
+Marked 6 switch rules as full_case in process $proc$v_hand/gelu_unit.v:200$836 in module gelu_unit.
+Marked 3 switch rules as full_case in process $proc$v_hand/gelu_unit.v:177$802 in module gelu_unit.
+Marked 5 switch rules as full_case in process $proc$v_hand/gelu_unit.v:142$781 in module gelu_unit.
+Marked 3 switch rules as full_case in process $proc$v_hand/gelu_unit.v:122$752 in module gelu_unit.
+Marked 3 switch rules as full_case in process $proc$v_hand/gelu_unit.v:101$699 in module gelu_unit.
+Marked 2 switch rules as full_case in process $proc$v_hand/gelu_unit.v:89$696 in module gelu_unit.
+Removed a total of 0 dead cases.
+
+35.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 42 assignments to connections.
+
+35.4. Executing PROC_INIT pass (extract init attributes).
+
+35.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\gelu_unit.$proc$v_hand/gelu_unit.v:220$873'.
+Found async reset \rst_n in `\gelu_unit.$proc$v_hand/gelu_unit.v:200$836'.
+Found async reset \rst_n in `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+Found async reset \rst_n in `\gelu_unit.$proc$v_hand/gelu_unit.v:142$781'.
+Found async reset \rst_n in `\gelu_unit.$proc$v_hand/gelu_unit.v:122$752'.
+Found async reset \rst_n in `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+
+35.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~19 debug messages>
+
+35.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\gelu_unit.$proc$v_hand/gelu_unit.v:220$873'.
+     1/23: $3\q_mul$func$v_hand/gelu_unit.v:227$695.$result[31:0]$900
+     2/23: $3\q_mul$func$v_hand/gelu_unit.v:227$695.product[63:0]$902
+     3/23: $3\q_mul$func$v_hand/gelu_unit.v:227$695.b[31:0]$901
+     4/23: $3\q_mul$func$v_hand/gelu_unit.v:227$694.$result[31:0]$896
+     5/23: $3\q_mul$func$v_hand/gelu_unit.v:227$694.product[63:0]$899
+     6/23: $3\q_mul$func$v_hand/gelu_unit.v:227$694.b[31:0]$898
+     7/23: $3\q_mul$func$v_hand/gelu_unit.v:227$694.a[31:0]$897
+     8/23: $2\q_mul$func$v_hand/gelu_unit.v:227$695.product[63:0]$895
+     9/23: $2\q_mul$func$v_hand/gelu_unit.v:227$695.b[31:0]$894
+    10/23: $2\q_mul$func$v_hand/gelu_unit.v:227$695.$result[31:0]$893
+    11/23: $2\q_mul$func$v_hand/gelu_unit.v:227$694.product[63:0]$892
+    12/23: $2\q_mul$func$v_hand/gelu_unit.v:227$694.b[31:0]$891
+    13/23: $2\q_mul$func$v_hand/gelu_unit.v:227$694.a[31:0]$890
+    14/23: $2\q_mul$func$v_hand/gelu_unit.v:227$694.$result[31:0]$889
+    15/23: $1\q_mul$func$v_hand/gelu_unit.v:227$695.product[63:0]$888
+    16/23: $1\q_mul$func$v_hand/gelu_unit.v:227$695.b[31:0]$887
+    17/23: $1\q_mul$func$v_hand/gelu_unit.v:227$695.$result[31:0]$886
+    18/23: $1\q_mul$func$v_hand/gelu_unit.v:227$694.product[63:0]$885
+    19/23: $1\q_mul$func$v_hand/gelu_unit.v:227$694.b[31:0]$884
+    20/23: $1\q_mul$func$v_hand/gelu_unit.v:227$694.a[31:0]$883
+    21/23: $1\q_mul$func$v_hand/gelu_unit.v:227$694.$result[31:0]$882
+    22/23: $0\y_out[31:0]
+    23/23: $0\out_valid[0:0]
+Creating decoders for process `\gelu_unit.$proc$v_hand/gelu_unit.v:200$836'.
+     1/31: $6\q_div$func$v_hand/gelu_unit.v:214$693.$result[31:0]$869
+     2/31: $6\q_div$func$v_hand/gelu_unit.v:214$693.result[63:0]$871
+     3/31: $6\q_div$func$v_hand/gelu_unit.v:214$693.num_ext[63:0]$870
+     4/31: $5\q_div$func$v_hand/gelu_unit.v:214$693.result[63:0]$867
+     5/31: $5\q_div$func$v_hand/gelu_unit.v:214$693.num_ext[63:0]$866
+     6/31: $5\q_div$func$v_hand/gelu_unit.v:214$693.den[31:0]$865
+     7/31: $5\q_div$func$v_hand/gelu_unit.v:214$693.num[31:0]$864
+     8/31: $5\q_div$func$v_hand/gelu_unit.v:214$693.$result[31:0]$863
+     9/31: $4\q_div$func$v_hand/gelu_unit.v:214$693.result[63:0]$862
+    10/31: $4\q_div$func$v_hand/gelu_unit.v:214$693.num_ext[63:0]$861
+    11/31: $4\q_div$func$v_hand/gelu_unit.v:214$693.den[31:0]$860
+    12/31: $4\q_div$func$v_hand/gelu_unit.v:214$693.num[31:0]$859
+    13/31: $4\q_div$func$v_hand/gelu_unit.v:214$693.$result[31:0]$858
+    14/31: $3\q_div$func$v_hand/gelu_unit.v:214$693.result[63:0]$857
+    15/31: $3\q_div$func$v_hand/gelu_unit.v:214$693.num_ext[63:0]$856
+    16/31: $3\q_div$func$v_hand/gelu_unit.v:214$693.den[31:0]$855
+    17/31: $3\q_div$func$v_hand/gelu_unit.v:214$693.num[31:0]$854
+    18/31: $3\q_div$func$v_hand/gelu_unit.v:214$693.$result[31:0]$853
+    19/31: $2\q_div$func$v_hand/gelu_unit.v:214$693.result[63:0]$852
+    20/31: $2\q_div$func$v_hand/gelu_unit.v:214$693.num_ext[63:0]$851
+    21/31: $2\q_div$func$v_hand/gelu_unit.v:214$693.den[31:0]$850
+    22/31: $2\q_div$func$v_hand/gelu_unit.v:214$693.num[31:0]$849
+    23/31: $2\q_div$func$v_hand/gelu_unit.v:214$693.$result[31:0]$848
+    24/31: $1\q_div$func$v_hand/gelu_unit.v:214$693.result[63:0]$847
+    25/31: $1\q_div$func$v_hand/gelu_unit.v:214$693.num_ext[63:0]$846
+    26/31: $1\q_div$func$v_hand/gelu_unit.v:214$693.den[31:0]$845
+    27/31: $1\q_div$func$v_hand/gelu_unit.v:214$693.num[31:0]$844
+    28/31: $1\q_div$func$v_hand/gelu_unit.v:214$693.$result[31:0]$843
+    29/31: $0\s5_valid[0:0]
+    30/31: $0\s5_tanh[31:0]
+    31/31: $0\s5_x[31:0]
+Creating decoders for process `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+     1/27: $3\q_mul$func$v_hand/gelu_unit.v:190$692.$result[31:0]$829
+     2/27: $3\q_mul$func$v_hand/gelu_unit.v:190$692.product[63:0]$831
+     3/27: $3\q_mul$func$v_hand/gelu_unit.v:190$692.b[31:0]$830
+     4/27: $3\q_mul$func$v_hand/gelu_unit.v:189$691.$result[31:0]$825
+     5/27: $3\q_mul$func$v_hand/gelu_unit.v:189$691.product[63:0]$828
+     6/27: $3\q_mul$func$v_hand/gelu_unit.v:189$691.b[31:0]$827
+     7/27: $3\q_mul$func$v_hand/gelu_unit.v:189$691.a[31:0]$826
+     8/27: $2\q_mul$func$v_hand/gelu_unit.v:190$692.product[63:0]$824
+     9/27: $2\q_mul$func$v_hand/gelu_unit.v:190$692.b[31:0]$823
+    10/27: $2\q_mul$func$v_hand/gelu_unit.v:190$692.$result[31:0]$822
+    11/27: $2\q_mul$func$v_hand/gelu_unit.v:189$691.product[63:0]$821
+    12/27: $2\q_mul$func$v_hand/gelu_unit.v:189$691.b[31:0]$820
+    13/27: $2\q_mul$func$v_hand/gelu_unit.v:189$691.a[31:0]$819
+    14/27: $2\q_mul$func$v_hand/gelu_unit.v:189$691.$result[31:0]$818
+    15/27: $1\q_mul$func$v_hand/gelu_unit.v:190$692.product[63:0]$817
+    16/27: $1\q_mul$func$v_hand/gelu_unit.v:190$692.b[31:0]$816
+    17/27: $1\q_mul$func$v_hand/gelu_unit.v:190$692.$result[31:0]$815
+    18/27: $1\q_mul$func$v_hand/gelu_unit.v:189$691.product[63:0]$814
+    19/27: $1\q_mul$func$v_hand/gelu_unit.v:189$691.b[31:0]$813
+    20/27: $1\q_mul$func$v_hand/gelu_unit.v:189$691.a[31:0]$812
+    21/27: $1\q_mul$func$v_hand/gelu_unit.v:189$691.$result[31:0]$811
+    22/27: $0\s4_sat_neg[0:0]
+    23/27: $0\s4_sat_pos[0:0]
+    24/27: $0\s4_valid[0:0]
+    25/27: $0\s4_den[31:0]
+    26/27: $0\s4_num[31:0]
+    27/27: $0\s4_x[31:0]
+Creating decoders for process `\gelu_unit.$proc$v_hand/gelu_unit.v:142$781'.
+     1/18: $3\q_mul$func$v_hand/gelu_unit.v:167$690.$result[31:0]$795
+     2/18: $3\q_mul$func$v_hand/gelu_unit.v:167$690.product[63:0]$798
+     3/18: $3\q_mul$func$v_hand/gelu_unit.v:167$690.b[31:0]$797
+     4/18: $3\q_mul$func$v_hand/gelu_unit.v:167$690.a[31:0]$796
+     5/18: $2\q_mul$func$v_hand/gelu_unit.v:167$690.product[63:0]$794
+     6/18: $2\q_mul$func$v_hand/gelu_unit.v:167$690.b[31:0]$793
+     7/18: $2\q_mul$func$v_hand/gelu_unit.v:167$690.a[31:0]$792
+     8/18: $2\q_mul$func$v_hand/gelu_unit.v:167$690.$result[31:0]$791
+     9/18: $1\q_mul$func$v_hand/gelu_unit.v:167$690.product[63:0]$790
+    10/18: $1\q_mul$func$v_hand/gelu_unit.v:167$690.b[31:0]$789
+    11/18: $1\q_mul$func$v_hand/gelu_unit.v:167$690.a[31:0]$788
+    12/18: $1\q_mul$func$v_hand/gelu_unit.v:167$690.$result[31:0]$787
+    13/18: $0\s3_saturate_neg[0:0]
+    14/18: $0\s3_saturate_pos[0:0]
+    15/18: $0\s3_valid[0:0]
+    16/18: $0\s3_z2[31:0]
+    17/18: $0\s3_z[31:0]
+    18/18: $0\s3_x[31:0]
+Creating decoders for process `\gelu_unit.$proc$v_hand/gelu_unit.v:122$752'.
+     1/21: $3\q_mul$func$v_hand/gelu_unit.v:131$689.$result[31:0]$775
+     2/21: $3\q_mul$func$v_hand/gelu_unit.v:131$689.product[63:0]$777
+     3/21: $3\q_mul$func$v_hand/gelu_unit.v:131$689.b[31:0]$776
+     4/21: $3\q_mul$func$v_hand/gelu_unit.v:132$688.$result[31:0]$772
+     5/21: $3\q_mul$func$v_hand/gelu_unit.v:132$688.product[63:0]$774
+     6/21: $3\q_mul$func$v_hand/gelu_unit.v:132$688.b[31:0]$773
+     7/21: $2\q_mul$func$v_hand/gelu_unit.v:131$689.product[63:0]$771
+     8/21: $2\q_mul$func$v_hand/gelu_unit.v:131$689.b[31:0]$770
+     9/21: $2\q_mul$func$v_hand/gelu_unit.v:131$689.$result[31:0]$769
+    10/21: $2\q_mul$func$v_hand/gelu_unit.v:132$688.product[63:0]$768
+    11/21: $2\q_mul$func$v_hand/gelu_unit.v:132$688.b[31:0]$767
+    12/21: $2\q_mul$func$v_hand/gelu_unit.v:132$688.$result[31:0]$766
+    13/21: $1\q_mul$func$v_hand/gelu_unit.v:131$689.product[63:0]$765
+    14/21: $1\q_mul$func$v_hand/gelu_unit.v:131$689.b[31:0]$764
+    15/21: $1\q_mul$func$v_hand/gelu_unit.v:131$689.$result[31:0]$763
+    16/21: $1\q_mul$func$v_hand/gelu_unit.v:132$688.product[63:0]$762
+    17/21: $1\q_mul$func$v_hand/gelu_unit.v:132$688.b[31:0]$761
+    18/21: $1\q_mul$func$v_hand/gelu_unit.v:132$688.$result[31:0]$760
+    19/21: $0\s2_valid[0:0]
+    20/21: $0\s2_z[31:0]
+    21/21: $0\s2_x[31:0]
+Creating decoders for process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+     1/41: $3\q_mul$func$v_hand/gelu_unit.v:114$687.$result[31:0]$745
+     2/41: $3\q_mul$func$v_hand/gelu_unit.v:114$687.product[63:0]$748
+     3/41: $3\q_mul$func$v_hand/gelu_unit.v:114$687.b[31:0]$747
+     4/41: $3\q_mul$func$v_hand/gelu_unit.v:114$687.a[31:0]$746
+     5/41: $3\q_mul$func$v_hand/gelu_unit.v:114$686.$result[31:0]$741
+     6/41: $3\q_mul$func$v_hand/gelu_unit.v:114$686.product[63:0]$744
+     7/41: $3\q_mul$func$v_hand/gelu_unit.v:114$686.b[31:0]$743
+     8/41: $3\q_mul$func$v_hand/gelu_unit.v:114$686.a[31:0]$742
+     9/41: $3\q_mul$func$v_hand/gelu_unit.v:113$685.$result[31:0]$737
+    10/41: $3\q_mul$func$v_hand/gelu_unit.v:113$685.product[63:0]$740
+    11/41: $3\q_mul$func$v_hand/gelu_unit.v:113$685.b[31:0]$739
+    12/41: $3\q_mul$func$v_hand/gelu_unit.v:113$685.a[31:0]$738
+    13/41: $2\q_mul$func$v_hand/gelu_unit.v:114$687.product[63:0]$736
+    14/41: $2\q_mul$func$v_hand/gelu_unit.v:114$687.b[31:0]$735
+    15/41: $2\q_mul$func$v_hand/gelu_unit.v:114$687.a[31:0]$734
+    16/41: $2\q_mul$func$v_hand/gelu_unit.v:114$687.$result[31:0]$733
+    17/41: $2\q_mul$func$v_hand/gelu_unit.v:114$686.product[63:0]$732
+    18/41: $2\q_mul$func$v_hand/gelu_unit.v:114$686.b[31:0]$731
+    19/41: $2\q_mul$func$v_hand/gelu_unit.v:114$686.a[31:0]$730
+    20/41: $2\q_mul$func$v_hand/gelu_unit.v:114$686.$result[31:0]$729
+    21/41: $2\q_mul$func$v_hand/gelu_unit.v:113$685.product[63:0]$728
+    22/41: $2\q_mul$func$v_hand/gelu_unit.v:113$685.b[31:0]$727
+    23/41: $2\q_mul$func$v_hand/gelu_unit.v:113$685.a[31:0]$726
+    24/41: $2\q_mul$func$v_hand/gelu_unit.v:113$685.$result[31:0]$725
+    25/41: $1\q_mul$func$v_hand/gelu_unit.v:114$687.product[63:0]$724
+    26/41: $1\q_mul$func$v_hand/gelu_unit.v:114$687.b[31:0]$723
+    27/41: $1\q_mul$func$v_hand/gelu_unit.v:114$687.a[31:0]$722
+    28/41: $1\q_mul$func$v_hand/gelu_unit.v:114$687.$result[31:0]$721
+    29/41: $1\q_mul$func$v_hand/gelu_unit.v:114$686.product[63:0]$720
+    30/41: $1\q_mul$func$v_hand/gelu_unit.v:114$686.b[31:0]$719
+    31/41: $1\q_mul$func$v_hand/gelu_unit.v:114$686.a[31:0]$718
+    32/41: $1\q_mul$func$v_hand/gelu_unit.v:114$686.$result[31:0]$717
+    33/41: $1\q_mul$func$v_hand/gelu_unit.v:113$685.product[63:0]$716
+    34/41: $1\q_mul$func$v_hand/gelu_unit.v:113$685.b[31:0]$715
+    35/41: $1\q_mul$func$v_hand/gelu_unit.v:113$685.a[31:0]$714
+    36/41: $1\q_mul$func$v_hand/gelu_unit.v:113$685.$result[31:0]$713
+    37/41: $0\s1_valid[0:0]
+    38/41: $0\s1_x3[31:0]
+    39/41: $0\s1_x2[31:0]
+    40/41: $0\s1_xp[31:0]
+    41/41: $0\s1_x[31:0]
+Creating decoders for process `\gelu_unit.$proc$v_hand/gelu_unit.v:89$696'.
+     1/2: $2\x_for_poly[31:0]
+     2/2: $1\x_for_poly[31:0]
+
+35.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\gelu_unit.\x_for_poly' from process `\gelu_unit.$proc$v_hand/gelu_unit.v:89$696'.
+
+35.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\gelu_unit.\out_valid' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:220$873'.
+  created $adff cell `$procdff$22394' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\y_out' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:220$873'.
+  created $adff cell `$procdff$22399' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:227$694.$result' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:220$873'.
+  created $adff cell `$procdff$22404' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:227$694.a' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:220$873'.
+  created $adff cell `$procdff$22409' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:227$694.b' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:220$873'.
+  created $adff cell `$procdff$22414' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:227$694.product' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:220$873'.
+  created $adff cell `$procdff$22419' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:227$695.$result' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:220$873'.
+  created $adff cell `$procdff$22424' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:227$695.b' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:220$873'.
+  created $adff cell `$procdff$22429' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:227$695.product' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:220$873'.
+  created $adff cell `$procdff$22434' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s5_x' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:200$836'.
+  created $adff cell `$procdff$22439' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s5_tanh' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:200$836'.
+  created $adff cell `$procdff$22444' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s5_valid' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:200$836'.
+  created $adff cell `$procdff$22449' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_div$func$v_hand/gelu_unit.v:214$693.$result' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:200$836'.
+  created $adff cell `$procdff$22454' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_div$func$v_hand/gelu_unit.v:214$693.num' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:200$836'.
+  created $adff cell `$procdff$22459' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_div$func$v_hand/gelu_unit.v:214$693.den' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:200$836'.
+  created $adff cell `$procdff$22464' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_div$func$v_hand/gelu_unit.v:214$693.num_ext' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:200$836'.
+  created $adff cell `$procdff$22469' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_div$func$v_hand/gelu_unit.v:214$693.result' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:200$836'.
+  created $adff cell `$procdff$22474' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s4_x' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+  created $adff cell `$procdff$22479' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s4_num' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+  created $adff cell `$procdff$22484' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s4_den' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+  created $adff cell `$procdff$22489' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s4_valid' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+  created $adff cell `$procdff$22494' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s4_sat_pos' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+  created $adff cell `$procdff$22499' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s4_sat_neg' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+  created $adff cell `$procdff$22504' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:189$691.$result' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+  created $adff cell `$procdff$22509' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:189$691.a' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+  created $adff cell `$procdff$22514' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:189$691.b' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+  created $adff cell `$procdff$22519' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:189$691.product' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+  created $adff cell `$procdff$22524' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:190$692.$result' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+  created $adff cell `$procdff$22529' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:190$692.b' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+  created $adff cell `$procdff$22534' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:190$692.product' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+  created $adff cell `$procdff$22539' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s3_x' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:142$781'.
+  created $adff cell `$procdff$22544' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s3_z' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:142$781'.
+  created $adff cell `$procdff$22549' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s3_z2' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:142$781'.
+  created $adff cell `$procdff$22554' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s3_valid' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:142$781'.
+  created $adff cell `$procdff$22559' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s3_saturate_pos' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:142$781'.
+  created $adff cell `$procdff$22564' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s3_saturate_neg' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:142$781'.
+  created $adff cell `$procdff$22569' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:167$690.$result' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:142$781'.
+  created $adff cell `$procdff$22574' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:167$690.a' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:142$781'.
+  created $adff cell `$procdff$22579' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:167$690.b' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:142$781'.
+  created $adff cell `$procdff$22584' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:167$690.product' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:142$781'.
+  created $adff cell `$procdff$22589' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s2_x' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:122$752'.
+  created $adff cell `$procdff$22594' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s2_z' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:122$752'.
+  created $adff cell `$procdff$22599' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s2_valid' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:122$752'.
+  created $adff cell `$procdff$22604' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:132$688.$result' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:122$752'.
+  created $adff cell `$procdff$22609' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:132$688.b' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:122$752'.
+  created $adff cell `$procdff$22614' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:132$688.product' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:122$752'.
+  created $adff cell `$procdff$22619' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:131$689.$result' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:122$752'.
+  created $adff cell `$procdff$22624' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:131$689.b' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:122$752'.
+  created $adff cell `$procdff$22629' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:131$689.product' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:122$752'.
+  created $adff cell `$procdff$22634' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s1_x' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22639' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s1_xp' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22644' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s1_x2' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22649' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s1_x3' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22654' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\s1_valid' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22659' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:113$685.$result' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22664' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:113$685.a' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22669' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:113$685.b' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22674' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:113$685.product' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22679' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:114$686.$result' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22684' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:114$686.a' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22689' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:114$686.b' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22694' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:114$686.product' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22699' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:114$687.$result' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22704' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:114$687.a' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22709' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:114$687.b' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22714' with positive edge clock and positive level reset.
+Creating register for signal `\gelu_unit.\q_mul$func$v_hand/gelu_unit.v:114$687.product' using process `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+  created $adff cell `$procdff$22719' with positive edge clock and positive level reset.
+
+35.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+35.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `\gelu_unit.$proc$v_hand/gelu_unit.v:220$873'.
+Removing empty process `gelu_unit.$proc$v_hand/gelu_unit.v:220$873'.
+Found and cleaned up 5 empty switches in `\gelu_unit.$proc$v_hand/gelu_unit.v:200$836'.
+Removing empty process `gelu_unit.$proc$v_hand/gelu_unit.v:200$836'.
+Found and cleaned up 2 empty switches in `\gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+Removing empty process `gelu_unit.$proc$v_hand/gelu_unit.v:177$802'.
+Found and cleaned up 4 empty switches in `\gelu_unit.$proc$v_hand/gelu_unit.v:142$781'.
+Removing empty process `gelu_unit.$proc$v_hand/gelu_unit.v:142$781'.
+Found and cleaned up 2 empty switches in `\gelu_unit.$proc$v_hand/gelu_unit.v:122$752'.
+Removing empty process `gelu_unit.$proc$v_hand/gelu_unit.v:122$752'.
+Found and cleaned up 2 empty switches in `\gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+Removing empty process `gelu_unit.$proc$v_hand/gelu_unit.v:101$699'.
+Found and cleaned up 2 empty switches in `\gelu_unit.$proc$v_hand/gelu_unit.v:89$696'.
+Removing empty process `gelu_unit.$proc$v_hand/gelu_unit.v:89$696'.
+Cleaned up 19 empty switches.
+
+35.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gelu_unit.
+<suppressed ~133 debug messages>
+
+36. Executing FLATTEN pass (flatten design).
+
+37. Executing OPT pass (performing simple optimizations).
+
+37.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gelu_unit.
+<suppressed ~5 debug messages>
+
+37.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gelu_unit'.
+<suppressed ~411 debug messages>
+Removed a total of 137 cells.
+
+37.3. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$22564 ($adff) from module gelu_unit (D = $procmux$22144_Y, Q = \s3_saturate_pos).
+Adding EN signal on $procdff$22499 ($adff) from module gelu_unit (D = \s3_saturate_pos, Q = \s4_sat_pos).
+Adding EN signal on $procdff$22549 ($adff) from module gelu_unit (D = $procmux$22165_Y, Q = \s3_z).
+Adding EN signal on $procdff$22504 ($adff) from module gelu_unit (D = \s3_saturate_neg, Q = \s4_sat_neg).
+Adding EN signal on $procdff$22569 ($adff) from module gelu_unit (D = $procmux$22133_Y, Q = \s3_saturate_neg).
+Adding EN signal on $procdff$22649 ($adff) from module gelu_unit (D = $mul$v_hand/gelu_unit.v:64$749_Y [47:16], Q = \s1_x2).
+Adding EN signal on $procdff$22399 ($adff) from module gelu_unit (D = $mul$v_hand/gelu_unit.v:64$905_Y [47:16], Q = \y_out).
+Adding EN signal on $procdff$22554 ($adff) from module gelu_unit (D = $mul$v_hand/gelu_unit.v:64$801_Y [47:16], Q = \s3_z2).
+Adding EN signal on $procdff$22444 ($adff) from module gelu_unit (D = $procmux$21983_Y, Q = \s5_tanh).
+Adding EN signal on $procdff$22599 ($adff) from module gelu_unit (D = $mul$v_hand/gelu_unit.v:64$780_Y [47:16], Q = \s2_z).
+Adding EN signal on $procdff$22594 ($adff) from module gelu_unit (D = \s1_x, Q = \s2_x).
+Adding EN signal on $procdff$22604 ($adff) from module gelu_unit (D = \s1_valid, Q = \s2_valid).
+Adding EN signal on $procdff$22544 ($adff) from module gelu_unit (D = \s2_x, Q = \s3_x).
+Adding EN signal on $procdff$22449 ($adff) from module gelu_unit (D = \s4_valid, Q = \s5_valid).
+Adding EN signal on $procdff$22489 ($adff) from module gelu_unit (D = $add$v_hand/gelu_unit.v:190$835_Y, Q = \s4_den).
+Adding EN signal on $procdff$22659 ($adff) from module gelu_unit (D = \in_valid, Q = \s1_valid).
+Adding EN signal on $procdff$22654 ($adff) from module gelu_unit (D = $mul$v_hand/gelu_unit.v:64$751_Y [47:16], Q = \s1_x3).
+Adding EN signal on $procdff$22639 ($adff) from module gelu_unit (D = \x_in, Q = \s1_x).
+Adding EN signal on $procdff$22644 ($adff) from module gelu_unit (D = \x_for_poly, Q = \s1_xp).
+Adding EN signal on $procdff$22479 ($adff) from module gelu_unit (D = \s3_x, Q = \s4_x).
+Adding EN signal on $procdff$22494 ($adff) from module gelu_unit (D = \s3_valid, Q = \s4_valid).
+Adding EN signal on $procdff$22559 ($adff) from module gelu_unit (D = \s2_valid, Q = \s3_valid).
+Adding EN signal on $procdff$22439 ($adff) from module gelu_unit (D = \s4_x, Q = \s5_x).
+Adding EN signal on $procdff$22394 ($adff) from module gelu_unit (D = \s5_valid, Q = \out_valid).
+Adding EN signal on $procdff$22484 ($adff) from module gelu_unit (D = $mul$v_hand/gelu_unit.v:64$833_Y [47:16], Q = \s4_num).
+Setting constant 1-bit at position 0 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 1 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 2 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 3 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 4 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 5 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 6 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 7 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 8 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 9 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 10 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 11 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 12 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 13 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 14 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 15 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 16 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 17 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 18 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 19 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 20 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 21 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 22 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 23 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 24 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 25 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 26 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 27 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 28 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 29 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 30 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 31 on $procdff$22584 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 0 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 1 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 2 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 3 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 4 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 5 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 6 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 7 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 8 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 9 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 10 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 11 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 12 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 13 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 14 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 15 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 16 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 17 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 18 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 19 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 20 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 21 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 22 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 23 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 24 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 25 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 26 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 27 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 28 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 29 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 30 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 31 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 32 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 33 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 34 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 35 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 36 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 37 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 38 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 39 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 40 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 41 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 42 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 43 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 44 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 45 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 46 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 47 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 48 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 49 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 50 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 51 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 52 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 53 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 54 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 55 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 56 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 57 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 58 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 59 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 60 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 61 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 62 on $procdff$22679 ($adff) from module gelu_unit.
+Setting constant 1-bit at position 63 on $procdff$22679 ($adff) from module gelu_unit.
+
+37.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gelu_unit..
+Removed 189 unused cells and 798 unused wires.
+<suppressed ~191 debug messages>
+
+37.5. Rerunning OPT passes. (Removed registers in this run.)
+
+37.6. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gelu_unit.
+
+37.7. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gelu_unit'.
+<suppressed ~36 debug messages>
+Removed a total of 12 cells.
+
+37.8. Executing OPT_DFF pass (perform DFF optimizations).
+
+37.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gelu_unit..
+Removed 0 unused cells and 12 unused wires.
+<suppressed ~1 debug messages>
+
+37.10. Finished fast OPT passes.
+
+38. Executing TECHMAP pass (map to technology primitives).
+
+38.1. Executing Verilog-2005 frontend: /nix/store/9r0bh7sp051dpm8km8bqlb028anpd3v3-yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/nix/store/9r0bh7sp051dpm8km8bqlb028anpd3v3-yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `\$__div_mod_u'.
+Generating RTLIL representation for module `\$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `\$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Successfully finished Verilog frontend.
+
+38.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $reduce_and.
+Using extmapper simplemap for cells of type $adffe.
+Running "alumacc" on wrapper $extern:wrap:$gt:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$gt:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$gt:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$lt:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$lt:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$lt:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=64:B_SIGNED=1:B_WIDTH=64:Y_WIDTH=64:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=64:B_SIGNED=1:B_WIDTH=64:Y_WIDTH=64:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=64:B_SIGNED=1:B_WIDTH=64:Y_WIDTH=64:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=63:B_SIGNED=1:B_WIDTH=64:Y_WIDTH=63:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=63:B_SIGNED=1:B_WIDTH=64:Y_WIDTH=63:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=63:B_SIGNED=1:B_WIDTH=64:Y_WIDTH=63:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=61:B_SIGNED=1:B_WIDTH=64:Y_WIDTH=61:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=61:B_SIGNED=1:B_WIDTH=64:Y_WIDTH=61:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=61:B_SIGNED=1:B_WIDTH=64:Y_WIDTH=61:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=0:A_WIDTH=32:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=0:A_WIDTH=32:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=0:A_WIDTH=32:B_SIGNED=0:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=48:B_SIGNED=1:B_WIDTH=64:Y_WIDTH=48:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=48:B_SIGNED=1:B_WIDTH=64:Y_WIDTH=48:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=48:B_SIGNED=1:B_WIDTH=64:Y_WIDTH=48:394426c56d1a028ba8fdd5469b163e04011def47.
+Using extmapper simplemap for cells of type $logic_not.
+Using template $paramod$c902248951c526246774c2c266eae0951dd5fd6e\_90_div for cells of type $div.
+Using extmapper maccmap for cells of type $macc.
+  add { \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x [31] \s5_x } * { $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y [31] $add$v_hand/gelu_unit.v:227$903_Y } (64x64 bits, signed)
+Using template $paramod$fbc7873bff55778c0b3173955b7e4bce1d9d6834\_90_alu for cells of type $alu.
+Using template $paramod$c902248951c526246774c2c266eae0951dd5fd6e\$__div_mod_trunc for cells of type $__div_mod_trunc.
+Using extmapper simplemap for cells of type $xor.
+  add { $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47] $mul$v_hand/gelu_unit.v:64$749_Y [47:16] } * { \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly } (64x64 bits, signed)
+  add { $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y [31] $add$v_hand/gelu_unit.v:132$779_Y } * 61'0000000000000000000000000000000000000000000000001100110000111 (64x61 bits, signed)
+Using template $paramod$2653f68ddb8eab7b1907b4a20767b72a824a7a36\_90_alu for cells of type $alu.
+  add { \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 [31] \s3_z2 } * 48'000000000000000000000000000000000000000000001001 (64x48 bits, signed)
+  add { \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 [31] \s1_x3 } * 63'000000000000000000000000000000000000000000000000000010110111001 (64x63 bits, signed)
+  add { \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z [31] \s3_z } * { $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y [31] $add$v_hand/gelu_unit.v:189$832_Y } (64x64 bits, signed)
+  add { \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly } * { \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly [31] \x_for_poly } (64x64 bits, signed)
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $or.
+  add { \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z } * { \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z [31] \s2_z } (64x64 bits, signed)
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000001000000 for cells of type $fa.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $pos.
+Using extmapper simplemap for cells of type $logic_and.
+Running "alumacc" on wrapper $extern:wrap:$neg:Y_WIDTH=64:A_WIDTH=64:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$neg:Y_WIDTH=64:A_WIDTH=64:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$neg:Y_WIDTH=64:A_WIDTH=64:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $paramod\$__div_mod_u\WIDTH=32'00000000000000000000000001000000 for cells of type $__div_mod_u.
+Using extmapper simplemap for cells of type $ne.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000100000 for cells of type $lcu.
+Using template $paramod$039520c137afc9cd69dd56c3fb11a4e1fbe5f664\_90_alu for cells of type $alu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000111101 for cells of type $fa.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000110000 for cells of type $fa.
+Using template $paramod$88aad6f8473fb7e4e5fbfb8335ddebad03429eaa\_90_alu for cells of type $alu.
+Using template $paramod$5513f5036d93e612e8575b2353d458dc35ea17fc\_90_alu for cells of type $alu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000111111 for cells of type $fa.
+Using template $paramod$d2455104d750d99d2c2ad573b55e75e857f021ee\_90_alu for cells of type $alu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001000000 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000110000 for cells of type $lcu.
+Using template $paramod$38ea46ffd892378bfaf8febe0c8ac03b94ee7ee9\_90_alu for cells of type $alu.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=127:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=127:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=127:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=127:B_WIDTH=127:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=127:B_WIDTH=127:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=127:B_WIDTH=127:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=126:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=126:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=126:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=126:B_WIDTH=126:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=126:B_WIDTH=126:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=126:B_WIDTH=126:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=125:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=125:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=125:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=125:B_WIDTH=125:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=125:B_WIDTH=125:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=125:B_WIDTH=125:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=124:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=124:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=124:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=124:B_WIDTH=124:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=124:B_WIDTH=124:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=124:B_WIDTH=124:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=123:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=123:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=123:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=123:B_WIDTH=123:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=123:B_WIDTH=123:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=123:B_WIDTH=123:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=122:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=122:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=122:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=122:B_WIDTH=122:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=122:B_WIDTH=122:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=122:B_WIDTH=122:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=121:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=121:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=121:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=121:B_WIDTH=121:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=121:B_WIDTH=121:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=121:B_WIDTH=121:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=120:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=120:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=120:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=120:B_WIDTH=120:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=120:B_WIDTH=120:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=120:B_WIDTH=120:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=119:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=119:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=119:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=119:B_WIDTH=119:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=119:B_WIDTH=119:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=119:B_WIDTH=119:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=118:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=118:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=118:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=118:B_WIDTH=118:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=118:B_WIDTH=118:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=118:B_WIDTH=118:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=117:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=117:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=117:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=117:B_WIDTH=117:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=117:B_WIDTH=117:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=117:B_WIDTH=117:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=116:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=116:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=116:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=116:B_WIDTH=116:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=116:B_WIDTH=116:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=116:B_WIDTH=116:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=115:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=115:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=115:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=115:B_WIDTH=115:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=115:B_WIDTH=115:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=115:B_WIDTH=115:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=114:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=114:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=114:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=114:B_WIDTH=114:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=114:B_WIDTH=114:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=114:B_WIDTH=114:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=113:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=113:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=113:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=113:B_WIDTH=113:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=113:B_WIDTH=113:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=113:B_WIDTH=113:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=112:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=112:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=112:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=112:B_WIDTH=112:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=112:B_WIDTH=112:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=112:B_WIDTH=112:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=111:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=111:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=111:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=111:B_WIDTH=111:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=111:B_WIDTH=111:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=111:B_WIDTH=111:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=110:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=110:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=110:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=110:B_WIDTH=110:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=110:B_WIDTH=110:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=110:B_WIDTH=110:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=109:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=109:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=109:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=109:B_WIDTH=109:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=109:B_WIDTH=109:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=109:B_WIDTH=109:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=108:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=108:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=108:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=108:B_WIDTH=108:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=108:B_WIDTH=108:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=108:B_WIDTH=108:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=107:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=107:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=107:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=107:B_WIDTH=107:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=107:B_WIDTH=107:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=107:B_WIDTH=107:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=106:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=106:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=106:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=106:B_WIDTH=106:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=106:B_WIDTH=106:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=106:B_WIDTH=106:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=105:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=105:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=105:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=105:B_WIDTH=105:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=105:B_WIDTH=105:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=105:B_WIDTH=105:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=104:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=104:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=104:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=104:B_WIDTH=104:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=104:B_WIDTH=104:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=104:B_WIDTH=104:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=103:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=103:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=103:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=103:B_WIDTH=103:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=103:B_WIDTH=103:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=103:B_WIDTH=103:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=102:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=102:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=102:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=102:B_WIDTH=102:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=102:B_WIDTH=102:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=102:B_WIDTH=102:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=101:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=101:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=101:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=101:B_WIDTH=101:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=101:B_WIDTH=101:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=101:B_WIDTH=101:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=100:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=100:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=100:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=100:B_WIDTH=100:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=100:B_WIDTH=100:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=100:B_WIDTH=100:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=99:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=99:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=99:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=99:B_WIDTH=99:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=99:B_WIDTH=99:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=99:B_WIDTH=99:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=98:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=98:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=98:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=98:B_WIDTH=98:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=98:B_WIDTH=98:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=98:B_WIDTH=98:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=97:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=97:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=97:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=97:B_WIDTH=97:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=97:B_WIDTH=97:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=97:B_WIDTH=97:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=96:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=96:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=96:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=96:B_WIDTH=96:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=96:B_WIDTH=96:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=96:B_WIDTH=96:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=95:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=95:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=95:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=95:B_WIDTH=95:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=95:B_WIDTH=95:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=95:B_WIDTH=95:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=94:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=94:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=94:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=94:B_WIDTH=94:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=94:B_WIDTH=94:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=94:B_WIDTH=94:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=93:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=93:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=93:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=93:B_WIDTH=93:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=93:B_WIDTH=93:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=93:B_WIDTH=93:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=92:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=92:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=92:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=92:B_WIDTH=92:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=92:B_WIDTH=92:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=92:B_WIDTH=92:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=91:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=91:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=91:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=91:B_WIDTH=91:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=91:B_WIDTH=91:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=91:B_WIDTH=91:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=90:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=90:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=90:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=90:B_WIDTH=90:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=90:B_WIDTH=90:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=90:B_WIDTH=90:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=89:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=89:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=89:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=89:B_WIDTH=89:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=89:B_WIDTH=89:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=89:B_WIDTH=89:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=88:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=88:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=88:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=88:B_WIDTH=88:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=88:B_WIDTH=88:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=88:B_WIDTH=88:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=87:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=87:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=87:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=87:B_WIDTH=87:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=87:B_WIDTH=87:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=87:B_WIDTH=87:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=86:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=86:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=86:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=86:B_WIDTH=86:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=86:B_WIDTH=86:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=86:B_WIDTH=86:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=85:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=85:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=85:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=85:B_WIDTH=85:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=85:B_WIDTH=85:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=85:B_WIDTH=85:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=84:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=84:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=84:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=84:B_WIDTH=84:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=84:B_WIDTH=84:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=84:B_WIDTH=84:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=83:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=83:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=83:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=83:B_WIDTH=83:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=83:B_WIDTH=83:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=83:B_WIDTH=83:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=82:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=82:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=82:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=82:B_WIDTH=82:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=82:B_WIDTH=82:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=82:B_WIDTH=82:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=81:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=81:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=81:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=81:B_WIDTH=81:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=81:B_WIDTH=81:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=81:B_WIDTH=81:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=80:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=80:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=80:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=80:B_WIDTH=80:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=80:B_WIDTH=80:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=80:B_WIDTH=80:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=79:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=79:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=79:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=79:B_WIDTH=79:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=79:B_WIDTH=79:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=79:B_WIDTH=79:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=78:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=78:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=78:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=78:B_WIDTH=78:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=78:B_WIDTH=78:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=78:B_WIDTH=78:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=77:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=77:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=77:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=77:B_WIDTH=77:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=77:B_WIDTH=77:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=77:B_WIDTH=77:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=76:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=76:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=76:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=76:B_WIDTH=76:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=76:B_WIDTH=76:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=76:B_WIDTH=76:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=75:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=75:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=75:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=75:B_WIDTH=75:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=75:B_WIDTH=75:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=75:B_WIDTH=75:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=74:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=74:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=74:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=74:B_WIDTH=74:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=74:B_WIDTH=74:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=74:B_WIDTH=74:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=73:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=73:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=73:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=73:B_WIDTH=73:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=73:B_WIDTH=73:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=73:B_WIDTH=73:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=72:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=72:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=72:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=72:B_WIDTH=72:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=72:B_WIDTH=72:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=72:B_WIDTH=72:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=71:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=71:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=71:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=71:B_WIDTH=71:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=71:B_WIDTH=71:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=71:B_WIDTH=71:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=70:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=70:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=70:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=70:B_WIDTH=70:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=70:B_WIDTH=70:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=70:B_WIDTH=70:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=69:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=69:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=69:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=69:B_WIDTH=69:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=69:B_WIDTH=69:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=69:B_WIDTH=69:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=68:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=68:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=68:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=68:B_WIDTH=68:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=68:B_WIDTH=68:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=68:B_WIDTH=68:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=67:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=67:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=67:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=67:B_WIDTH=67:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=67:B_WIDTH=67:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=67:B_WIDTH=67:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=66:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=66:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=66:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=66:B_WIDTH=66:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=66:B_WIDTH=66:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=66:B_WIDTH=66:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=65:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=65:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=65:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=65:B_WIDTH=65:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=65:B_WIDTH=65:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=65:B_WIDTH=65:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=64:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=64:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$ge:Y_WIDTH=1:B_WIDTH=64:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$sub:Y_WIDTH=64:B_WIDTH=64:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$sub:Y_WIDTH=64:B_WIDTH=64:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$sub:Y_WIDTH=64:B_WIDTH=64:A_WIDTH=64:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000111111 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000111101 for cells of type $lcu.
+Using template $paramod$08cc15c16d4079c52dc06bea79ec714c0c81b053\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $reduce_or.
+Using template $paramod$418b871fe632c967d6a5d1ab6ea3a148dcaf55cb\_90_alu for cells of type $alu.
+Using template $paramod$2635ff9eb43f974c04ae64032d960c1c4cfcd658\_90_alu for cells of type $alu.
+Using template $paramod$e8be2adf314cd0dec261c3eb5cb2f28a64c6280f\_90_alu for cells of type $alu.
+Using template $paramod$a8e3dae252c25470c3a975b82c519ee95b273206\_90_alu for cells of type $alu.
+Using template $paramod$6f702fd4fd68bf0006dc1b0b5a1b8578555618b5\_90_alu for cells of type $alu.
+Using template $paramod$1b68ad131a7aa075f0c29d5de75b4b5053550e24\_90_alu for cells of type $alu.
+Using template $paramod$f7f02b1e3a76ad6575c5862da7e48179ed32a378\_90_alu for cells of type $alu.
+Using template $paramod$e58242c01953e519035ba3abed3440e30285f9f3\_90_alu for cells of type $alu.
+Using template $paramod$1d752fed28e8dceebe22539292a31b8bb1059f95\_90_alu for cells of type $alu.
+Using template $paramod$16df1880e54ed0b9da561b25bd7846d51e39dc08\_90_alu for cells of type $alu.
+Using template $paramod$8883523d85f986b987e27c1594505c82d77a4eb0\_90_alu for cells of type $alu.
+Using template $paramod$d960b7b40210b533e60ac4e65fc1fb749f552c90\_90_alu for cells of type $alu.
+Using template $paramod$e3e31db9fb756872c68211b2a3a2f0368397e710\_90_alu for cells of type $alu.
+Using template $paramod$7328a7e498b26e954392b4b0bade8b5b0c6f8cb2\_90_alu for cells of type $alu.
+Using template $paramod$e343947ae2b5e9c0581d3856f1c2dcb26875bbba\_90_alu for cells of type $alu.
+Using template $paramod$a92669e50b53481856def96f05cf74aa94a72dd0\_90_alu for cells of type $alu.
+Using template $paramod$e690d853d65f4dd9cd01ec28f6d0cc607eba734d\_90_alu for cells of type $alu.
+Using template $paramod$9ff0978fe1a3cdb45bbc37974845f200b32a21ef\_90_alu for cells of type $alu.
+Using template $paramod$b13b855d8a0a68b7644eb5faf05224673439c194\_90_alu for cells of type $alu.
+Using template $paramod$ccb19575981258c0ff75db71fb59246c19039ab5\_90_alu for cells of type $alu.
+Using template $paramod$5caf26cb142f12001c86a610754584ab299d9070\_90_alu for cells of type $alu.
+Using template $paramod$e551800f92754d0875841ab5e3ea0685ccbc1811\_90_alu for cells of type $alu.
+Using template $paramod$638fcbd1c34bc4fe71e9aee7e262f7ae53ce4f47\_90_alu for cells of type $alu.
+Using template $paramod$52a2a6cbdc3e823cb3e79323f5854f4cb3af4a72\_90_alu for cells of type $alu.
+Using template $paramod$8a6d5f62888b02b7bec84c0cf4291b3243291eb6\_90_alu for cells of type $alu.
+Using template $paramod$10a38c05efbf413f6c8f2fd4f5048c33d46c4268\_90_alu for cells of type $alu.
+Using template $paramod$f1a002b56bbc1e6f56dd6bc934cc5cc60cfdc0b4\_90_alu for cells of type $alu.
+Using template $paramod$b6e11bcaac8d46131c6c85e8bb91a703f58377ef\_90_alu for cells of type $alu.
+Using template $paramod$549afeeb953f82392daa21f38e3f0ab48cdb1609\_90_alu for cells of type $alu.
+Using template $paramod$b9d0081565d3a452ae9e921a267d00bf52bd5ecc\_90_alu for cells of type $alu.
+Using template $paramod$e0ab18d2d5948959fb19583c85a5288c467d134c\_90_alu for cells of type $alu.
+Using template $paramod$0b854ffe2f712e3003932ea40de5087f7ec6873c\_90_alu for cells of type $alu.
+Using template $paramod$d465982d24d42f85f8f22587845494855a52c7fa\_90_alu for cells of type $alu.
+Using template $paramod$763b1fe3a14cfd7857c7b0e41ac7b5656d1282e2\_90_alu for cells of type $alu.
+Using template $paramod$4d469aa90f25de9e9cfcd3c3a985500366c81562\_90_alu for cells of type $alu.
+Using template $paramod$8627dfb1e560ab6dde6628653c1d3bab7cd9e53d\_90_alu for cells of type $alu.
+Using template $paramod$a98f4581d210a6c681e7fc03a68243d9fcdef2f2\_90_alu for cells of type $alu.
+Using template $paramod$61f5e6b4d29c23fd386beac7cea0c6d527a88f0b\_90_alu for cells of type $alu.
+Using template $paramod$8635bacc22564f9cac75dc76d8d3938873b6ca7b\_90_alu for cells of type $alu.
+Using template $paramod$1f4d3bd9c2f89dad8534592359efff3c022ce1a9\_90_alu for cells of type $alu.
+Using template $paramod$22029ffdfc8ba83f4e51fcd4517a247fc405923c\_90_alu for cells of type $alu.
+Using template $paramod$8270e43f7697cdbaa0f82016277dbec2c601fa8b\_90_alu for cells of type $alu.
+Using template $paramod$369a53a0660d5700f89d254a5477986517bbcc36\_90_alu for cells of type $alu.
+Using template $paramod$358ca4a120d58910b8d72886aeb500ac753f528a\_90_alu for cells of type $alu.
+Using template $paramod$451d76431158edebc79f68c8380e4d029352d4c8\_90_alu for cells of type $alu.
+Using template $paramod$ae6e22d95f5a7d91bd164fc449ff2f3e2ae88c22\_90_alu for cells of type $alu.
+Using template $paramod$b0810b978920b50007706c1ec02aaef44c8abb99\_90_alu for cells of type $alu.
+Using template $paramod$deef177569da965fc86c44ef51477ffacc480c0b\_90_alu for cells of type $alu.
+Using template $paramod$de5baf74eb1ad4127dbbd88344b0d0c67c80101f\_90_alu for cells of type $alu.
+Using template $paramod$188281d2f3c37a1d2a77d23a85b0a2fe4265c96d\_90_alu for cells of type $alu.
+Using template $paramod$d5a79a6a3f45138860dc21a546285f61eb4f897f\_90_alu for cells of type $alu.
+Using template $paramod$968e588c9180238dbeead15129116beb9e016a4f\_90_alu for cells of type $alu.
+Using template $paramod$788a62176a4dbae10e20d17d1c50a9b7d0cfaf40\_90_alu for cells of type $alu.
+Using template $paramod$9212a4a9d2a4c984771cdf5beeab3abcc31ffb36\_90_alu for cells of type $alu.
+Using template $paramod$f4e07a831c71bf03289707653be34a7f09620799\_90_alu for cells of type $alu.
+Using template $paramod$b71aabf337202ffa5f2545aec7635a78f1fbdc68\_90_alu for cells of type $alu.
+Using template $paramod$615bfe15c115338eda9544f64bdb7cba9b6774f0\_90_alu for cells of type $alu.
+Using template $paramod$dbc0432367de50356f2ef0c0787f1424fd7f12f0\_90_alu for cells of type $alu.
+Using template $paramod$6b6617cd20c5a3c8431b08ff5e9b00435dc218c6\_90_alu for cells of type $alu.
+Using template $paramod$9c156d8ec8a3851201ec73d1b17e5780bf930ea5\_90_alu for cells of type $alu.
+Using template $paramod$c5c2451dc1f17990fadcfd7ea986ede2d5da4273\_90_alu for cells of type $alu.
+Using template $paramod$2686df4b354495a38c0be3630857de04e3828670\_90_alu for cells of type $alu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001111111 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001111110 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001111101 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001111100 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001111011 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001111010 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001111001 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001111000 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001110111 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001110110 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001110101 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001110100 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001110011 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001110010 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001110001 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001110000 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001101111 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001101110 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001101101 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001101100 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001101011 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001101010 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001101001 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001101000 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001100111 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001100110 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001100101 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001100100 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001100011 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001100010 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001100001 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001100000 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001011111 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001011110 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001011101 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001011100 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001011011 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001011010 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001011001 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001011000 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001010111 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001010110 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001010101 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001010100 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001010011 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001010010 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001010001 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001010000 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001001111 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001001110 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001001101 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001001100 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001001011 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001001010 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001001001 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001001000 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001000111 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001000110 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001000101 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001000100 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001000011 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001000010 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000001000001 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~84271 debug messages>
+
+39. Executing OPT pass (performing simple optimizations).
+
+39.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gelu_unit.
+<suppressed ~175823 debug messages>
+
+39.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gelu_unit'.
+<suppressed ~189237 debug messages>
+Removed a total of 63079 cells.
+
+39.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+39.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gelu_unit..
+Removed 21804 unused cells and 51920 unused wires.
+<suppressed ~21805 debug messages>
+
+39.5. Finished fast OPT passes.
+
+40. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+  cell sky130_fd_sc_hd__dfxtp_1 (noninv, pins=3, area=20.02) is a direct match for cell type $_DFF_P_.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+  cell sky130_fd_sc_hd__dfrtn_1 (noninv, pins=4, area=25.02) is a direct match for cell type $_DFF_NN0_.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+  cell sky130_fd_sc_hd__dfrtp_1 (noninv, pins=4, area=25.02) is a direct match for cell type $_DFF_PN0_.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+  cell sky130_fd_sc_hd__dfstp_2 (noninv, pins=4, area=26.28) is a direct match for cell type $_DFF_PN1_.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+  cell sky130_fd_sc_hd__dfbbn_1 (noninv, pins=6, area=32.53) is a direct match for cell type $_DFFSR_NNN_.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+  cell sky130_fd_sc_hd__dfbbp_1 (noninv, pins=6, area=32.53) is a direct match for cell type $_DFFSR_PNN_.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+  final dff cell mappings:
+    unmapped dff cell: $_DFF_N_
+    \sky130_fd_sc_hd__dfxtp_1 _DFF_P_ (.CLK( C), .D( D), .Q( Q));
+    \sky130_fd_sc_hd__dfrtn_1 _DFF_NN0_ (.CLK_N( C), .D( D), .Q( Q), .RESET_B( R));
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    \sky130_fd_sc_hd__dfrtp_1 _DFF_PN0_ (.CLK( C), .D( D), .Q( Q), .RESET_B( R));
+    \sky130_fd_sc_hd__dfstp_2 _DFF_PN1_ (.CLK( C), .D( D), .Q( Q), .SET_B( R));
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    \sky130_fd_sc_hd__dfbbn_1 _DFFSR_NNN_ (.CLK_N( C), .D( D), .Q( Q), .Q_N(~Q), .RESET_B( R), .SET_B( S));
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \sky130_fd_sc_hd__dfbbp_1 _DFFSR_PNN_ (.CLK( C), .D( D), .Q( Q), .Q_N(~Q), .RESET_B( R), .SET_B( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+40.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+Mapping DFF cells in module `\gelu_unit':
+  mapped 456 $_DFF_PN0_ cells to \sky130_fd_sc_hd__dfrtp_1 cells.
+  mapped 1 $_DFF_PN1_ cells to \sky130_fd_sc_hd__dfstp_2 cells.
+
+41. Executing ABC pass (technology mapping using ABC).
+
+41.1. Extracting gate netlist of module `\gelu_unit' to `<abc-temp-dir>/input.blif'..
+Replacing 160 occurrences of constant undef bits with constant zero bits
+Extracted 63313 gates and 63807 wires to a netlist network with 491 inputs and 457 outputs.
+
+41.1.1. Executing ABC.
+Running ABC command: "/nix/store/6l3aj1gi4lja8z5s4lan2k2cfz9mqkrz-yosys-abc/bin/abc" -s -f <abc-temp-dir>/abc.script 2>&1
+ABC: ABC command line: "source <abc-temp-dir>/abc.script".
+ABC: 
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_lib -w /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.07 sec
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__decap_12" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__decap_3" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__decap_4" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__decap_6" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__decap_8" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfbbn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfbbn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfbbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrtn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrtp_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfsbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfsbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfstp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfstp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfstp_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfxbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfxbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfxtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfxtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfxtp_4".
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__diode_2" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__dlclkp_1" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__dlclkp_2" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__dlclkp_4" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrbn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrbn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtn_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtp_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxbn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxbn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxtn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxtn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxtn_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxtp_1".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__ebufn_1".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__ebufn_2".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__ebufn_4".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__ebufn_8".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__edfxbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__edfxtp_1".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvn_0".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvn_1".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvn_2".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvn_4".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvn_8".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvp_1".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvp_2".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvp_4".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvp_8".
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_bleeder_1" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_decapkapwr_12" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_decapkapwr_3" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_decapkapwr_4" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_decapkapwr_6" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_decapkapwr_8" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__lpflow_inputisolatch_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfbbn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfbbn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfbbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrtn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrtp_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfsbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfsbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfstp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfstp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfstp_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfxbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfxbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfxtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfxtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfxtp_4".
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__sdlclkp_1" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__sdlclkp_2" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__sdlclkp_4" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sedfxbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sedfxbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sedfxtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sedfxtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sedfxtp_4".
+ABC: Library "sky130_fd_sc_hd__tt_025C_1v80" from "/home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib" has 334 cells (94 skipped: 63 seq; 13 tri-state; 18 no func; 0 dont_use).  Time =     0.11 sec
+ABC: Memory =   19.85 MB. Time =     0.11 sec
+ABC: Warning: Detected 9 multi-output gates (for example, "sky130_fd_sc_hd__fa_1").
+ABC: + strash 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + ifraig 
+ABC: + retime 
+ABC: + strash 
+ABC: + dch -f 
+ABC: + map -M 1 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+
+41.1.2. Re-integrating ABC results.
+ABC RESULTS:   sky130_fd_sc_hd__mux2i_1 cells:        3
+ABC RESULTS:   sky130_fd_sc_hd__and3b_2 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__o311a_2 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__or3b_2 cells:        2
+ABC RESULTS:   sky130_fd_sc_hd__xnor3_4 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__a21bo_2 cells:        3
+ABC RESULTS:   sky130_fd_sc_hd__a311o_2 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__or4_2 cells:        2
+ABC RESULTS:   sky130_fd_sc_hd__o311ai_0 cells:        6
+ABC RESULTS:   sky130_fd_sc_hd__a41o_2 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__or2b_2 cells:        6
+ABC RESULTS:   sky130_fd_sc_hd__a2111o_1 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__a32oi_1 cells:       28
+ABC RESULTS:   sky130_fd_sc_hd__a31o_2 cells:       16
+ABC RESULTS:   sky130_fd_sc_hd__o2111a_1 cells:       34
+ABC RESULTS:   sky130_fd_sc_hd__nor3b_1 cells:       12
+ABC RESULTS:   sky130_fd_sc_hd__o221ai_1 cells:       24
+ABC RESULTS:   sky130_fd_sc_hd__a2bb2oi_1 cells:       18
+ABC RESULTS:   sky130_fd_sc_hd__o32ai_1 cells:        3
+ABC RESULTS:   sky130_fd_sc_hd__a41oi_1 cells:       31
+ABC RESULTS:   sky130_fd_sc_hd__o41ai_1 cells:        6
+ABC RESULTS:   sky130_fd_sc_hd__o31a_2 cells:        3
+ABC RESULTS:   sky130_fd_sc_hd__a311oi_1 cells:       51
+ABC RESULTS:   sky130_fd_sc_hd__a32o_1 cells:        3
+ABC RESULTS:   sky130_fd_sc_hd__a2111oi_0 cells:        4
+ABC RESULTS:   sky130_fd_sc_hd__o2111ai_1 cells:       50
+ABC RESULTS:   sky130_fd_sc_hd__a221oi_1 cells:        8
+ABC RESULTS:   sky130_fd_sc_hd__a21boi_0 cells:      179
+ABC RESULTS:   sky130_fd_sc_hd__nand3b_1 cells:      115
+ABC RESULTS:   sky130_fd_sc_hd__o22a_2 cells:        6
+ABC RESULTS:   sky130_fd_sc_hd__o211ai_1 cells:      579
+ABC RESULTS:   sky130_fd_sc_hd__a21o_2 cells:      158
+ABC RESULTS:   sky130_fd_sc_hd__a211o_2 cells:       13
+ABC RESULTS:   sky130_fd_sc_hd__or3_2 cells:      103
+ABC RESULTS:   sky130_fd_sc_hd__a211oi_1 cells:       96
+ABC RESULTS:   sky130_fd_sc_hd__o211a_1 cells:       82
+ABC RESULTS:   sky130_fd_sc_hd__a31oi_1 cells:      400
+ABC RESULTS:   sky130_fd_sc_hd__a22o_2 cells:      148
+ABC RESULTS:   sky130_fd_sc_hd__o21bai_1 cells:      208
+ABC RESULTS:   sky130_fd_sc_hd__nor4_1 cells:      190
+ABC RESULTS:   sky130_fd_sc_hd__and3_2 cells:      181
+ABC RESULTS:   sky130_fd_sc_hd__nor3_1 cells:      596
+ABC RESULTS:   sky130_fd_sc_hd__o31ai_1 cells:       57
+ABC RESULTS:   sky130_fd_sc_hd__o21a_1 cells:      421
+ABC RESULTS:   sky130_fd_sc_hd__o2bb2ai_1 cells:      267
+ABC RESULTS:   sky130_fd_sc_hd__o22ai_1 cells:      773
+ABC RESULTS:   sky130_fd_sc_hd__nand4_1 cells:     1222
+ABC RESULTS:   sky130_fd_sc_hd__a22oi_1 cells:      163
+ABC RESULTS:   sky130_fd_sc_hd__clkinv_1 cells:     6967
+ABC RESULTS:   sky130_fd_sc_hd__and2_2 cells:      468
+ABC RESULTS:   sky130_fd_sc_hd__lpflow_inputiso0p_1 cells:      552
+ABC RESULTS:   sky130_fd_sc_hd__or2_2 cells:      835
+ABC RESULTS:   sky130_fd_sc_hd__nand3_1 cells:     5017
+ABC RESULTS:   sky130_fd_sc_hd__maj3_1 cells:      932
+ABC RESULTS:   sky130_fd_sc_hd__nor2_1 cells:     9917
+ABC RESULTS:   sky130_fd_sc_hd__xnor2_1 cells:     1160
+ABC RESULTS:   sky130_fd_sc_hd__xor2_1 cells:     3702
+ABC RESULTS:   sky130_fd_sc_hd__a21oi_1 cells:     2903
+ABC RESULTS:   sky130_fd_sc_hd__nand2_1 cells:    14393
+ABC RESULTS:   sky130_fd_sc_hd__o21ai_0 cells:     2745
+ABC RESULTS:        internal signals:    62859
+ABC RESULTS:           input signals:      491
+ABC RESULTS:          output signals:      457
+Removing temp directory.
+
+42. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gelu_unit..
+Removed 0 unused cells and 13729 unused wires.
+<suppressed ~32 debug messages>
+
+43. Printing statistics.
+
+=== gelu_unit ===
+
+   Number of wires:              55896
+   Number of wire bits:          56361
+   Number of public wires:          29
+   Number of public wire bits:     494
+   Number of ports:                  7
+   Number of port bits:             69
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              56324
+     sky130_fd_sc_hd__a2111o_1       1
+     sky130_fd_sc_hd__a2111oi_0      4
+     sky130_fd_sc_hd__a211o_2       13
+     sky130_fd_sc_hd__a211oi_1      96
+     sky130_fd_sc_hd__a21bo_2        3
+     sky130_fd_sc_hd__a21boi_0     179
+     sky130_fd_sc_hd__a21o_2       158
+     sky130_fd_sc_hd__a21oi_1     2903
+     sky130_fd_sc_hd__a221oi_1       8
+     sky130_fd_sc_hd__a22o_2       148
+     sky130_fd_sc_hd__a22oi_1      163
+     sky130_fd_sc_hd__a2bb2oi_1     18
+     sky130_fd_sc_hd__a311o_2        1
+     sky130_fd_sc_hd__a311oi_1      51
+     sky130_fd_sc_hd__a31o_2        16
+     sky130_fd_sc_hd__a31oi_1      400
+     sky130_fd_sc_hd__a32o_1         3
+     sky130_fd_sc_hd__a32oi_1       28
+     sky130_fd_sc_hd__a41o_2         1
+     sky130_fd_sc_hd__a41oi_1       31
+     sky130_fd_sc_hd__and2_2       468
+     sky130_fd_sc_hd__and3_2       181
+     sky130_fd_sc_hd__and3b_2        1
+     sky130_fd_sc_hd__clkinv_1    6967
+     sky130_fd_sc_hd__dfrtp_1      456
+     sky130_fd_sc_hd__dfstp_2        1
+     sky130_fd_sc_hd__lpflow_inputiso0p_1    552
+     sky130_fd_sc_hd__maj3_1       932
+     sky130_fd_sc_hd__mux2i_1        3
+     sky130_fd_sc_hd__nand2_1    14393
+     sky130_fd_sc_hd__nand3_1     5017
+     sky130_fd_sc_hd__nand3b_1     115
+     sky130_fd_sc_hd__nand4_1     1222
+     sky130_fd_sc_hd__nor2_1      9917
+     sky130_fd_sc_hd__nor3_1       596
+     sky130_fd_sc_hd__nor3b_1       12
+     sky130_fd_sc_hd__nor4_1       190
+     sky130_fd_sc_hd__o2111a_1      34
+     sky130_fd_sc_hd__o2111ai_1     50
+     sky130_fd_sc_hd__o211a_1       82
+     sky130_fd_sc_hd__o211ai_1     579
+     sky130_fd_sc_hd__o21a_1       421
+     sky130_fd_sc_hd__o21ai_0     2745
+     sky130_fd_sc_hd__o21bai_1     208
+     sky130_fd_sc_hd__o221ai_1      24
+     sky130_fd_sc_hd__o22a_2         6
+     sky130_fd_sc_hd__o22ai_1      773
+     sky130_fd_sc_hd__o2bb2ai_1    267
+     sky130_fd_sc_hd__o311a_2        1
+     sky130_fd_sc_hd__o311ai_0       6
+     sky130_fd_sc_hd__o31a_2         3
+     sky130_fd_sc_hd__o31ai_1       57
+     sky130_fd_sc_hd__o32ai_1        3
+     sky130_fd_sc_hd__o41ai_1        6
+     sky130_fd_sc_hd__or2_2        835
+     sky130_fd_sc_hd__or2b_2         6
+     sky130_fd_sc_hd__or3_2        103
+     sky130_fd_sc_hd__or3b_2         2
+     sky130_fd_sc_hd__or4_2          2
+     sky130_fd_sc_hd__xnor2_1     1160
+     sky130_fd_sc_hd__xnor3_4        1
+     sky130_fd_sc_hd__xor2_1      3702
+
+   Chip area for module '\gelu_unit': 291065.404800
+     of which used for sequential elements: 11437.219200 (3.93%)
+
+44. Executing Verilog backend.
+
+44.1. Executing BMUXMAP pass.
+
+44.2. Executing DEMUXMAP pass.
+Dumping module `\gelu_unit'.
+
+Warnings: 34 unique messages, 242 total
+End of script. Logfile hash: e59c8494f7, CPU: user 72.82s system 2.24s, MEM: 1898.64 MB peak
+Yosys 0.46 (git sha1 e97731b9dda91fa5fa53ed87df7c34163ba59a41, clang++ 17.0.6 -fPIC -O3)
+Time spent: 36% 1x abc (41 sec), 35% 35x read_verilog (41 sec), ...

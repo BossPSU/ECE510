@@ -1,0 +1,43 @@
+
+43. Printing statistics.
+
+=== tile_scheduler ===
+
+   Number of wires:                228
+   Number of wire bits:            279
+   Number of public wires:          14
+   Number of public wire bits:      57
+   Number of ports:                 13
+   Number of port bits:             55
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                243
+     sky130_fd_sc_hd__a21o_2         1
+     sky130_fd_sc_hd__a21oi_1        6
+     sky130_fd_sc_hd__a22oi_1        2
+     sky130_fd_sc_hd__a2bb2oi_1      2
+     sky130_fd_sc_hd__a31oi_1        2
+     sky130_fd_sc_hd__a41oi_1        6
+     sky130_fd_sc_hd__clkinv_1      37
+     sky130_fd_sc_hd__dfrtp_1       29
+     sky130_fd_sc_hd__nand2_1       50
+     sky130_fd_sc_hd__nand3_1       15
+     sky130_fd_sc_hd__nand3b_1       2
+     sky130_fd_sc_hd__nand4_1       12
+     sky130_fd_sc_hd__nor2_1        38
+     sky130_fd_sc_hd__nor3_1         2
+     sky130_fd_sc_hd__nor4_1         5
+     sky130_fd_sc_hd__o21a_1         1
+     sky130_fd_sc_hd__o21ai_0        9
+     sky130_fd_sc_hd__o21bai_1       1
+     sky130_fd_sc_hd__o221a_2        1
+     sky130_fd_sc_hd__o22ai_1        2
+     sky130_fd_sc_hd__o2bb2ai_1      9
+     sky130_fd_sc_hd__o31ai_1        7
+     sky130_fd_sc_hd__xnor2_1        1
+     sky130_fd_sc_hd__xor2_1         3
+
+   Chip area for module '\tile_scheduler': 1787.964800
+     of which used for sequential elements: 725.696000 (40.59%)
+

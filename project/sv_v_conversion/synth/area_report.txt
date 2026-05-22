@@ -1,0 +1,352 @@
+128. Printing statistics.
+
+=== mac_pe ===
+
+   Number of wires:                615
+   Number of wire bits:            770
+   Number of public wires:           9
+   Number of public wire bits:     164
+   Number of ports:                  9
+   Number of port bits:            164
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                702
+     sky130_fd_sc_hd__a2111o_2       1
+     sky130_fd_sc_hd__a211oi_2       1
+     sky130_fd_sc_hd__a21bo_2        5
+     sky130_fd_sc_hd__a21boi_2       3
+     sky130_fd_sc_hd__a21o_2        14
+     sky130_fd_sc_hd__a21oi_2       23
+     sky130_fd_sc_hd__a22o_2        16
+     sky130_fd_sc_hd__a22oi_2        6
+     sky130_fd_sc_hd__a2bb2o_2       6
+     sky130_fd_sc_hd__a31o_2        16
+     sky130_fd_sc_hd__a31oi_2        1
+     sky130_fd_sc_hd__a32o_2        13
+     sky130_fd_sc_hd__and2_2        16
+     sky130_fd_sc_hd__and2b_2       10
+     sky130_fd_sc_hd__and3_2         7
+     sky130_fd_sc_hd__and4_2        16
+     sky130_fd_sc_hd__and4b_2        5
+     sky130_fd_sc_hd__and4bb_2       1
+     sky130_fd_sc_hd__conb_1         8
+     sky130_fd_sc_hd__dfrtp_2       88
+     sky130_fd_sc_hd__inv_2         14
+     sky130_fd_sc_hd__mux2_1        65
+     sky130_fd_sc_hd__nand2_2       57
+     sky130_fd_sc_hd__nand2b_2       7
+     sky130_fd_sc_hd__nand3_2        8
+     sky130_fd_sc_hd__nand4_2        4
+     sky130_fd_sc_hd__nor2_2        68
+     sky130_fd_sc_hd__nor3_2         6
+     sky130_fd_sc_hd__nor4_2         2
+     sky130_fd_sc_hd__o2111ai_2      1
+     sky130_fd_sc_hd__o211ai_2       1
+     sky130_fd_sc_hd__o21a_2         9
+     sky130_fd_sc_hd__o21ai_2       15
+     sky130_fd_sc_hd__o21ba_2        6
+     sky130_fd_sc_hd__o221a_2        1
+     sky130_fd_sc_hd__o2bb2a_2       5
+     sky130_fd_sc_hd__o31a_2         5
+     sky130_fd_sc_hd__o32a_2         1
+     sky130_fd_sc_hd__o41a_2         2
+     sky130_fd_sc_hd__or2_2         36
+     sky130_fd_sc_hd__or3_2          1
+     sky130_fd_sc_hd__or3b_2         1
+     sky130_fd_sc_hd__or4_2         18
+     sky130_fd_sc_hd__xnor2_2       68
+     sky130_fd_sc_hd__xor2_2        45
+
+   Chip area for module '\mac_pe': 8398.054400
+     of which used for sequential elements: 2312.217600 (27.53%)
+
+
+============================================================================
+Post-PnR area / cell-count metrics (final design)
+============================================================================
+Metric,Value
+design__lint_error__count,0
+design__lint_timing_construct__count,0
+design__lint_warning__count,0
+design__inferred_latch__count,0
+design__instance__count,1482
+design__instance__area,10327.4
+design__instance_unmapped__count,0
+synthesis__check_error__count,0
+design__max_slew_violation__count__corner:nom_tt_025C_1v80,0
+design__max_fanout_violation__count__corner:nom_tt_025C_1v80,6
+design__max_cap_violation__count__corner:nom_tt_025C_1v80,0
+power__internal__total,0.0014823265373706818
+power__switching__total,0.001239266712218523
+power__leakage__total,1.2989005426788935E-8
+power__total,0.0027216062881052494
+clock__skew__worst_hold__corner:nom_tt_025C_1v80,-0.25930516801061015
+clock__skew__worst_setup__corner:nom_tt_025C_1v80,0.25666156038075766
+timing__hold__ws__corner:nom_tt_025C_1v80,0.3349574601382738
+timing__setup__ws__corner:nom_tt_025C_1v80,1.4753008121614721
+timing__hold__tns__corner:nom_tt_025C_1v80,0.0
+timing__setup__tns__corner:nom_tt_025C_1v80,0.0
+timing__hold__wns__corner:nom_tt_025C_1v80,0
+timing__setup__wns__corner:nom_tt_025C_1v80,0.0
+timing__hold_vio__count__corner:nom_tt_025C_1v80,0
+timing__hold_r2r__ws__corner:nom_tt_025C_1v80,0.334957
+timing__hold_r2r_vio__count__corner:nom_tt_025C_1v80,0
+timing__setup_vio__count__corner:nom_tt_025C_1v80,0
+timing__setup_r2r__ws__corner:nom_tt_025C_1v80,Infinity
+timing__setup_r2r_vio__count__corner:nom_tt_025C_1v80,0
+design__max_slew_violation__count__corner:nom_ss_100C_1v60,0
+design__max_fanout_violation__count__corner:nom_ss_100C_1v60,6
+design__max_cap_violation__count__corner:nom_ss_100C_1v60,0
+clock__skew__worst_hold__corner:nom_ss_100C_1v60,-0.26355338102333475
+clock__skew__worst_setup__corner:nom_ss_100C_1v60,0.2603482780828979
+timing__hold__ws__corner:nom_ss_100C_1v60,0.9107951317607171
+timing__setup__ws__corner:nom_ss_100C_1v60,-4.499255317885171
+timing__hold__tns__corner:nom_ss_100C_1v60,0.0
+timing__setup__tns__corner:nom_ss_100C_1v60,-42.74921515556612
+timing__hold__wns__corner:nom_ss_100C_1v60,0
+timing__setup__wns__corner:nom_ss_100C_1v60,-4.499255317885171
+timing__hold_vio__count__corner:nom_ss_100C_1v60,0
+timing__hold_r2r__ws__corner:nom_ss_100C_1v60,0.910795
+timing__hold_r2r_vio__count__corner:nom_ss_100C_1v60,0
+timing__setup_vio__count__corner:nom_ss_100C_1v60,16
+timing__setup_r2r__ws__corner:nom_ss_100C_1v60,6.926852
+timing__setup_r2r_vio__count__corner:nom_ss_100C_1v60,0
+design__max_slew_violation__count__corner:nom_ff_n40C_1v95,0
+design__max_fanout_violation__count__corner:nom_ff_n40C_1v95,6
+design__max_cap_violation__count__corner:nom_ff_n40C_1v95,0
+clock__skew__worst_hold__corner:nom_ff_n40C_1v95,-0.256959849560335
+clock__skew__worst_setup__corner:nom_ff_n40C_1v95,0.2545573268670982
+timing__hold__ws__corner:nom_ff_n40C_1v95,0.11629758596429367
+timing__setup__ws__corner:nom_ff_n40C_1v95,3.7968891327925585
+timing__hold__tns__corner:nom_ff_n40C_1v95,0.0
+timing__setup__tns__corner:nom_ff_n40C_1v95,0.0
+timing__hold__wns__corner:nom_ff_n40C_1v95,0
+timing__setup__wns__corner:nom_ff_n40C_1v95,0.0
+timing__hold_vio__count__corner:nom_ff_n40C_1v95,0
+timing__hold_r2r__ws__corner:nom_ff_n40C_1v95,0.116298
+timing__hold_r2r_vio__count__corner:nom_ff_n40C_1v95,0
+timing__setup_vio__count__corner:nom_ff_n40C_1v95,0
+timing__setup_r2r__ws__corner:nom_ff_n40C_1v95,Infinity
+timing__setup_r2r_vio__count__corner:nom_ff_n40C_1v95,0
+design__max_slew_violation__count,0
+design__max_fanout_violation__count,6
+design__max_cap_violation__count,0
+clock__skew__worst_hold,-0.2562944928828596
+clock__skew__worst_setup,0.25442532134573687
+timing__hold__ws,0.11296125465863473
+timing__setup__ws,-4.589688758958251
+timing__hold__tns,0.0
+timing__setup__tns,-43.98915489709953
+timing__hold__wns,0
+timing__setup__wns,-4.589688758958251
+timing__hold_vio__count,0
+timing__hold_r2r__ws,0.112961
+timing__hold_r2r_vio__count,0
+timing__setup_vio__count,48
+timing__setup_r2r__ws,6.921237
+timing__setup_r2r_vio__count,0
+design__die__bbox,0.0 0.0 200.0 200.0
+design__core__bbox,5.52 10.88 194.12 187.68
+design__io,166
+design__die__area,40000
+design__core__area,33344.5
+design__instance__count__stdcell,1482
+design__instance__area__stdcell,10327.4
+design__instance__count__macros,0
+design__instance__area__macros,0
+design__instance__utilization,0.309719
+design__instance__utilization__stdcell,0.309719
+design__instance__count__class:inverter,14
+design__instance__count__class:sequential_cell,88
+design__instance__count__class:multi_input_combinational_cell,600
+flow__warnings__count,1
+flow__errors__count,0
+design__instance__count__class:fill_cell,2556
+design__instance__count__class:tap_cell,469
+design__power_grid_violation__count__net:VGND,0
+design__power_grid_violation__count__net:VPWR,0
+design__power_grid_violation__count,0
+floorplan__design__io,164
+design__io__hpwl,14508530
+timing__drv__floating__nets,0
+timing__drv__floating__pins,0
+design__instance__displacement__total,844.477
+design__instance__displacement__mean,0.523
+design__instance__displacement__max,15.06
+route__wirelength__estimated,23822.7
+design__violations,0
+design__instance__count__class:timing_repair_buffer,295
+design__instance__count__class:clock_buffer,9
+design__instance__count__class:clock_inverter,7
+design__instance__count__setup_buffer,19
+design__instance__count__hold_buffer,70
+antenna__violating__nets,3
+antenna__violating__pins,3
+route__antenna_violation__count,3
+route__net,1074
+route__net__special,2
+route__drc_errors__iter:1,246
+route__wirelength__iter:1,25190
+route__drc_errors__iter:2,62
+route__wirelength__iter:2,25057
+route__drc_errors__iter:3,61
+route__wirelength__iter:3,25089
+route__drc_errors__iter:4,0
+route__wirelength__iter:4,25057
+route__drc_errors,0
+route__wirelength,25057
+route__vias,6278
+route__vias__singlecut,6278
+route__vias__multicut,0
+design__disconnected_pin__count,0
+design__critical_disconnected_pin__count,0
+route__wirelength__max,488.68
+timing__unannotated_net__count__corner:nom_tt_025C_1v80,15
+timing__unannotated_net_filtered__count__corner:nom_tt_025C_1v80,0
+timing__unannotated_net__count__corner:nom_ss_100C_1v60,15
+timing__unannotated_net_filtered__count__corner:nom_ss_100C_1v60,0
+timing__unannotated_net__count__corner:nom_ff_n40C_1v95,15
+timing__unannotated_net_filtered__count__corner:nom_ff_n40C_1v95,0
+design__max_slew_violation__count__corner:min_tt_025C_1v80,0
+design__max_fanout_violation__count__corner:min_tt_025C_1v80,6
+design__max_cap_violation__count__corner:min_tt_025C_1v80,0
+clock__skew__worst_hold__corner:min_tt_025C_1v80,-0.25845223914781945
+clock__skew__worst_setup__corner:min_tt_025C_1v80,0.2564571128049908
+timing__hold__ws__corner:min_tt_025C_1v80,0.32947223659652686
+timing__setup__ws__corner:min_tt_025C_1v80,1.5149464334028815
+timing__hold__tns__corner:min_tt_025C_1v80,0.0
+timing__setup__tns__corner:min_tt_025C_1v80,0.0
+timing__hold__wns__corner:min_tt_025C_1v80,0
+timing__setup__wns__corner:min_tt_025C_1v80,0.0
+timing__hold_vio__count__corner:min_tt_025C_1v80,0
+timing__hold_r2r__ws__corner:min_tt_025C_1v80,0.329472
+timing__hold_r2r_vio__count__corner:min_tt_025C_1v80,0
+timing__setup_vio__count__corner:min_tt_025C_1v80,0
+timing__setup_r2r__ws__corner:min_tt_025C_1v80,Infinity
+timing__setup_r2r_vio__count__corner:min_tt_025C_1v80,0
+timing__unannotated_net__count__corner:min_tt_025C_1v80,15
+timing__unannotated_net_filtered__count__corner:min_tt_025C_1v80,0
+design__max_slew_violation__count__corner:min_ss_100C_1v60,0
+design__max_fanout_violation__count__corner:min_ss_100C_1v60,6
+design__max_cap_violation__count__corner:min_ss_100C_1v60,0
+clock__skew__worst_hold__corner:min_ss_100C_1v60,-0.2623623337288318
+clock__skew__worst_setup__corner:min_ss_100C_1v60,0.2600607303113876
+timing__hold__ws__corner:min_ss_100C_1v60,0.9017835622372726
+timing__setup__ws__corner:min_ss_100C_1v60,-4.4170952590255865
+timing__hold__tns__corner:min_ss_100C_1v60,0.0
+timing__setup__tns__corner:min_ss_100C_1v60,-41.79626718583658
+timing__hold__wns__corner:min_ss_100C_1v60,0
+timing__setup__wns__corner:min_ss_100C_1v60,-4.4170952590255865
+timing__hold_vio__count__corner:min_ss_100C_1v60,0
+timing__hold_r2r__ws__corner:min_ss_100C_1v60,0.901784
+timing__hold_r2r_vio__count__corner:min_ss_100C_1v60,0
+timing__setup_vio__count__corner:min_ss_100C_1v60,16
+timing__setup_r2r__ws__corner:min_ss_100C_1v60,6.933299
+timing__setup_r2r_vio__count__corner:min_ss_100C_1v60,0
+timing__unannotated_net__count__corner:min_ss_100C_1v60,15
+timing__unannotated_net_filtered__count__corner:min_ss_100C_1v60,0
+design__max_slew_violation__count__corner:min_ff_n40C_1v95,0
+design__max_fanout_violation__count__corner:min_ff_n40C_1v95,6
+design__max_cap_violation__count__corner:min_ff_n40C_1v95,0
+clock__skew__worst_hold__corner:min_ff_n40C_1v95,-0.2562944928828596
+clock__skew__worst_setup__corner:min_ff_n40C_1v95,0.25442532134573687
+timing__hold__ws__corner:min_ff_n40C_1v95,0.11296125465863473
+timing__setup__ws__corner:min_ff_n40C_1v95,3.8178417063950736
+timing__hold__tns__corner:min_ff_n40C_1v95,0.0
+timing__setup__tns__corner:min_ff_n40C_1v95,0.0
+timing__hold__wns__corner:min_ff_n40C_1v95,0
+timing__setup__wns__corner:min_ff_n40C_1v95,0.0
+timing__hold_vio__count__corner:min_ff_n40C_1v95,0
+timing__hold_r2r__ws__corner:min_ff_n40C_1v95,0.112961
+timing__hold_r2r_vio__count__corner:min_ff_n40C_1v95,0
+timing__setup_vio__count__corner:min_ff_n40C_1v95,0
+timing__setup_r2r__ws__corner:min_ff_n40C_1v95,Infinity
+timing__setup_r2r_vio__count__corner:min_ff_n40C_1v95,0
+timing__unannotated_net__count__corner:min_ff_n40C_1v95,15
+timing__unannotated_net_filtered__count__corner:min_ff_n40C_1v95,0
+design__max_slew_violation__count__corner:max_tt_025C_1v80,0
+design__max_fanout_violation__count__corner:max_tt_025C_1v80,6
+design__max_cap_violation__count__corner:max_tt_025C_1v80,0
+clock__skew__worst_hold__corner:max_tt_025C_1v80,-0.26140143567384266
+clock__skew__worst_setup__corner:max_tt_025C_1v80,0.2582218678636944
+timing__hold__ws__corner:max_tt_025C_1v80,0.34102105438105673
+timing__setup__ws__corner:max_tt_025C_1v80,1.4363719509250323
+timing__hold__tns__corner:max_tt_025C_1v80,0.0
+timing__setup__tns__corner:max_tt_025C_1v80,0.0
+timing__hold__wns__corner:max_tt_025C_1v80,0
+timing__setup__wns__corner:max_tt_025C_1v80,0.0
+timing__hold_vio__count__corner:max_tt_025C_1v80,0
+timing__hold_r2r__ws__corner:max_tt_025C_1v80,0.341021
+timing__hold_r2r_vio__count__corner:max_tt_025C_1v80,0
+timing__setup_vio__count__corner:max_tt_025C_1v80,0
+timing__setup_r2r__ws__corner:max_tt_025C_1v80,Infinity
+timing__setup_r2r_vio__count__corner:max_tt_025C_1v80,0
+timing__unannotated_net__count__corner:max_tt_025C_1v80,15
+timing__unannotated_net_filtered__count__corner:max_tt_025C_1v80,0
+design__max_slew_violation__count__corner:max_ss_100C_1v60,0
+design__max_fanout_violation__count__corner:max_ss_100C_1v60,6
+design__max_cap_violation__count__corner:max_ss_100C_1v60,0
+clock__skew__worst_hold__corner:max_ss_100C_1v60,-0.2663147278082787
+clock__skew__worst_setup__corner:max_ss_100C_1v60,0.26254629768921506
+timing__hold__ws__corner:max_ss_100C_1v60,0.9215315438240013
+timing__setup__ws__corner:max_ss_100C_1v60,-4.589688758958251
+timing__hold__tns__corner:max_ss_100C_1v60,0.0
+timing__setup__tns__corner:max_ss_100C_1v60,-43.98915489709953
+timing__hold__wns__corner:max_ss_100C_1v60,0
+timing__setup__wns__corner:max_ss_100C_1v60,-4.589688758958251
+timing__hold_vio__count__corner:max_ss_100C_1v60,0
+timing__hold_r2r__ws__corner:max_ss_100C_1v60,0.921532
+timing__hold_r2r_vio__count__corner:max_ss_100C_1v60,0
+timing__setup_vio__count__corner:max_ss_100C_1v60,16
+timing__setup_r2r__ws__corner:max_ss_100C_1v60,6.921237
+timing__setup_r2r_vio__count__corner:max_ss_100C_1v60,0
+timing__unannotated_net__count__corner:max_ss_100C_1v60,15
+timing__unannotated_net_filtered__count__corner:max_ss_100C_1v60,0
+design__max_slew_violation__count__corner:max_ff_n40C_1v95,0
+design__max_fanout_violation__count__corner:max_ff_n40C_1v95,6
+design__max_cap_violation__count__corner:max_ff_n40C_1v95,0
+clock__skew__worst_hold__corner:max_ff_n40C_1v95,-0.25869818131030525
+clock__skew__worst_setup__corner:max_ff_n40C_1v95,0.255766859375484
+timing__hold__ws__corner:max_ff_n40C_1v95,0.11935008874567998
+timing__setup__ws__corner:max_ff_n40C_1v95,3.7684159082085342
+timing__hold__tns__corner:max_ff_n40C_1v95,0.0
+timing__setup__tns__corner:max_ff_n40C_1v95,0.0
+timing__hold__wns__corner:max_ff_n40C_1v95,0
+timing__setup__wns__corner:max_ff_n40C_1v95,0.0
+timing__hold_vio__count__corner:max_ff_n40C_1v95,0
+timing__hold_r2r__ws__corner:max_ff_n40C_1v95,0.119350
+timing__hold_r2r_vio__count__corner:max_ff_n40C_1v95,0
+timing__setup_vio__count__corner:max_ff_n40C_1v95,0
+timing__setup_r2r__ws__corner:max_ff_n40C_1v95,Infinity
+timing__setup_r2r_vio__count__corner:max_ff_n40C_1v95,0
+timing__unannotated_net__count__corner:max_ff_n40C_1v95,15
+timing__unannotated_net_filtered__count__corner:max_ff_n40C_1v95,0
+timing__unannotated_net__count,15
+timing__unannotated_net_filtered__count,0
+design_powergrid__voltage__worst__net:VPWR__corner:nom_tt_025C_1v80,1.79948
+design_powergrid__drop__average__net:VPWR__corner:nom_tt_025C_1v80,1.79988
+design_powergrid__drop__worst__net:VPWR__corner:nom_tt_025C_1v80,0.000516636
+design_powergrid__voltage__worst__net:VGND__corner:nom_tt_025C_1v80,0.000584971
+design_powergrid__drop__average__net:VGND__corner:nom_tt_025C_1v80,0.000128824
+design_powergrid__drop__worst__net:VGND__corner:nom_tt_025C_1v80,0.000584971
+design_powergrid__voltage__worst,0.000584971
+design_powergrid__voltage__worst__net:VPWR,1.79948
+design_powergrid__drop__worst,0.000584971
+design_powergrid__drop__worst__net:VPWR,0.000516636
+design_powergrid__voltage__worst__net:VGND,0.000584971
+design_powergrid__drop__worst__net:VGND,0.000584971
+ir__voltage__worst,1.8000000000000000444089209850062616169452667236328125
+ir__drop__avg,0.00012400000000000000540019418071580048490432091057300567626953125
+ir__drop__worst,0.000516999999999999989945542733238426080788485705852508544921875
+design__xor_difference__count,0
+magic__drc_error__count,0
+klayout__drc_error__count,0
+magic__illegal_overlap__count,0
+design__lvs_device_difference__count,0
+design__lvs_net_difference__count,0
+design__lvs_property_fail__count,0
+design__lvs_error__count,0
+design__lvs_unmatched_device__count,0
+design__lvs_unmatched_net__count,0
+design__lvs_unmatched_pin__count,0

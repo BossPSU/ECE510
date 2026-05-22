@@ -1,0 +1,54 @@
+
+43. Printing statistics.
+
+=== tile_writer ===
+
+   Number of wires:               1497
+   Number of wire bits:           1632
+   Number of public wires:          18
+   Number of public wire bits:     153
+   Number of ports:                 15
+   Number of port bits:            136
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               1546
+     sky130_fd_sc_hd__a211oi_1       1
+     sky130_fd_sc_hd__a21boi_0      18
+     sky130_fd_sc_hd__a21o_2         9
+     sky130_fd_sc_hd__a21oi_1       88
+     sky130_fd_sc_hd__a22o_2         1
+     sky130_fd_sc_hd__a22oi_1        6
+     sky130_fd_sc_hd__a31oi_1        5
+     sky130_fd_sc_hd__and2_2         8
+     sky130_fd_sc_hd__and3_2         1
+     sky130_fd_sc_hd__clkinv_1     144
+     sky130_fd_sc_hd__dfrtp_1       51
+     sky130_fd_sc_hd__lpflow_inputiso0p_1      5
+     sky130_fd_sc_hd__nand2_1      464
+     sky130_fd_sc_hd__nand3_1      424
+     sky130_fd_sc_hd__nand3b_1      19
+     sky130_fd_sc_hd__nand4_1       72
+     sky130_fd_sc_hd__nor2_1        80
+     sky130_fd_sc_hd__nor3_1         5
+     sky130_fd_sc_hd__nor3b_1        3
+     sky130_fd_sc_hd__nor4_1         1
+     sky130_fd_sc_hd__o2111a_1       2
+     sky130_fd_sc_hd__o2111ai_1      2
+     sky130_fd_sc_hd__o211ai_1       9
+     sky130_fd_sc_hd__o21a_1         3
+     sky130_fd_sc_hd__o21ai_0       55
+     sky130_fd_sc_hd__o21bai_1       2
+     sky130_fd_sc_hd__o22ai_1       11
+     sky130_fd_sc_hd__o2bb2ai_1      2
+     sky130_fd_sc_hd__o32ai_1       10
+     sky130_fd_sc_hd__or2_2          7
+     sky130_fd_sc_hd__or3_2          2
+     sky130_fd_sc_hd__xnor2_1        8
+     sky130_fd_sc_hd__xnor3_4        2
+     sky130_fd_sc_hd__xor2_1        25
+     sky130_fd_sc_hd__xor3_4         1
+
+   Chip area for module '\tile_writer': 8503.155200
+     of which used for sequential elements: 1276.224000 (15.01%)
+

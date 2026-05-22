@@ -1,0 +1,73 @@
+{
+  "DESIGN_NAME": "top_small",
+  "VERILOG_FILES": [
+    "dir::accel_pkg.sv",
+
+    "dir::../../m2/rtl/stream_if.sv",
+    "dir::../../m2/rtl/sram_if.sv",
+    "dir::../../m2/rtl/cmd_if.sv",
+    "dir::../../m2/rtl/tile_if.sv",
+    "dir::../../m2/rtl/ctrl_if.sv",
+    "dir::../../m2/rtl/status_if.sv",
+
+    "dir::../../m2/rtl/mac_pe.sv",
+    "dir::../../m2/rtl/systolic_array_64x64.sv",
+    "dir::../../m2/rtl/gelu_lut.sv",
+    "dir::../../m2/rtl/exp_lut.sv",
+    "dir::../../m2/rtl/adder_tree.sv",
+    "dir::../../m2/rtl/gelu_unit.sv",
+    "dir::../../m2/rtl/gelu_grad_unit.sv",
+    "dir::../../m2/rtl/softmax_unit.sv",
+    "dir::../../m2/rtl/causal_mask_unit.sv",
+    "dir::../../m2/rtl/divider_or_reciprocal_unit.sv",
+    "dir::../../m2/rtl/fused_postproc_unit.sv",
+
+    "dir::../../m2/rtl/pipeline_stage.sv",
+    "dir::../../m2/rtl/skid_buffer.sv",
+    "dir::../../m2/rtl/stream_mux.sv",
+
+    "dir::../../m2/rtl/tile_loader.sv",
+    "dir::../../m2/rtl/tile_writer.sv",
+
+    "dir::../../m2/rtl/sram_bank.sv",
+    "dir::../../m2/rtl/scratchpad_ctrl.sv",
+    "dir::../../m2/rtl/address_gen.sv",
+    "dir::../../m2/rtl/dma_engine.sv",
+    "dir::../../m2/rtl/double_buffer_ctrl.sv",
+    "dir::../../m2/rtl/tile_buffer.sv",
+
+    "dir::../../m2/rtl/stream_pipeline.sv",
+
+    "dir::../../m2/rtl/mode_decoder.sv",
+    "dir::../../m2/rtl/tile_scheduler.sv",
+    "dir::../../m2/rtl/tile_dispatcher.sv",
+    "dir::../../m2/rtl/accel_controller.sv",
+    "dir::../../m2/rtl/perf_counter_block.sv",
+    "dir::../../m2/rtl/csr_block.sv",
+
+    "dir::accel_engine.sv",
+    "dir::accel_top.sv",
+
+    "dir::../../m2/rtl/compute_core.sv",
+    "dir::../../m2/rtl/interface.sv",
+
+    "dir::top_small.sv"
+  ],
+
+  "USE_SYNLIG": true,
+  "SYNLIG_DEFER": true,
+  "CLOCK_PORT": "clk",
+  "CLOCK_NET": "clk",
+  "CLOCK_PERIOD": 10.0,
+
+  "DESIGN_IS_CORE": false,
+  "PDK": "sky130A",
+  "STD_CELL_LIBRARY": "sky130_fd_sc_hd",
+
+  "FP_SIZING": "relative",
+  "FP_CORE_UTIL": 30,
+  "PL_TARGET_DENSITY": 0.45,
+
+  "RUN_HEURISTIC_DIODE_INSERTION": false,
+  "GRT_REPAIR_ANTENNAS": false
+}

@@ -1,0 +1,23 @@
+
+43. Printing statistics.
+
+=== double_buffer_ctrl ===
+
+   Number of wires:                 10
+   Number of wire bits:             40
+   Number of public wires:           6
+   Number of public wire bits:      36
+   Number of ports:                  6
+   Number of port bits:             36
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  6
+     sky130_fd_sc_hd__clkinv_1       2
+     sky130_fd_sc_hd__dfrtp_1        1
+     sky130_fd_sc_hd__nand2_1        2
+     sky130_fd_sc_hd__or2b_2         1
+
+   Chip area for module '\double_buffer_ctrl': 48.796800
+     of which used for sequential elements: 25.024000 (51.28%)
+

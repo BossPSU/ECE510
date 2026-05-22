@@ -1,0 +1,27 @@
+
+44. Printing statistics.
+
+=== causal_mask_unit ===
+
+   Number of wires:                111
+   Number of wire bits:            372
+   Number of public wires:           5
+   Number of public wire bits:     266
+   Number of ports:                  5
+   Number of port bits:            266
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                234
+     sky130_fd_sc_hd__a31oi_1       30
+     sky130_fd_sc_hd__a41oi_1       60
+     sky130_fd_sc_hd__buf_1         32
+     sky130_fd_sc_hd__clkinv_1      97
+     sky130_fd_sc_hd__nand2_1        7
+     sky130_fd_sc_hd__nand4_1        3
+     sky130_fd_sc_hd__nor2_1         4
+     sky130_fd_sc_hd__nor3_1         1
+
+   Chip area for module '\causal_mask_unit': 1262.460800
+     of which used for sequential elements: 0.000000 (0.00%)
+

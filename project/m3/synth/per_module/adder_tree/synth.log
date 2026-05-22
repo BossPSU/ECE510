@@ -1,0 +1,1236 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2024  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.46 (git sha1 e97731b9dda91fa5fa53ed87df7c34163ba59a41, clang++ 17.0.6 -fPIC -O3)
+
+-- Running command `read_verilog v_hand/*.v
+chparam -set NUM_INPUTS 4 adder_tree;
+hierarchy -check -top adder_tree
+proc
+flatten
+opt -fast
+techmap
+opt -fast
+dfflibmap -liberty /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+abc -liberty /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib -script "+strash; scorr; ifraig; retime,{D}; strash; dch,-f; map,-M,1,{D}"
+opt_clean -purge
+tee -o per_module/adder_tree/stat.rpt stat -liberty /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+write_verilog -noattr per_module/adder_tree/adder_tree.synth.v' --
+
+1. Executing Verilog-2005 frontend: v_hand/accel_controller.v
+Parsing Verilog input from `v_hand/accel_controller.v' to AST representation.
+Generating RTLIL representation for module `\accel_controller'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: v_hand/accel_engine.v
+Parsing Verilog input from `v_hand/accel_engine.v' to AST representation.
+Generating RTLIL representation for module `\accel_engine'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: v_hand/accel_top.v
+Parsing Verilog input from `v_hand/accel_top.v' to AST representation.
+Generating RTLIL representation for module `\accel_top'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: v_hand/adder_tree.v
+Parsing Verilog input from `v_hand/adder_tree.v' to AST representation.
+Generating RTLIL representation for module `\adder_tree'.
+Warning: Replacing memory \stage with list of registers. See v_hand/adder_tree.v:63
+Warning: Replacing memory \valid_pipe with list of registers. See v_hand/adder_tree.v:61
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: v_hand/address_gen.v
+Parsing Verilog input from `v_hand/address_gen.v' to AST representation.
+Generating RTLIL representation for module `\address_gen'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: v_hand/causal_mask_unit.v
+Parsing Verilog input from `v_hand/causal_mask_unit.v' to AST representation.
+Generating RTLIL representation for module `\causal_mask_unit'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: v_hand/chiplet_interface.v
+Parsing Verilog input from `v_hand/chiplet_interface.v' to AST representation.
+Generating RTLIL representation for module `\chiplet_interface'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: v_hand/compute_core.v
+Parsing Verilog input from `v_hand/compute_core.v' to AST representation.
+Generating RTLIL representation for module `\compute_core'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: v_hand/divider_or_reciprocal_unit.v
+Parsing Verilog input from `v_hand/divider_or_reciprocal_unit.v' to AST representation.
+Generating RTLIL representation for module `\divider_or_reciprocal_unit'.
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: v_hand/dma_engine.v
+Parsing Verilog input from `v_hand/dma_engine.v' to AST representation.
+Generating RTLIL representation for module `\dma_engine'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: v_hand/double_buffer_ctrl.v
+Parsing Verilog input from `v_hand/double_buffer_ctrl.v' to AST representation.
+Generating RTLIL representation for module `\double_buffer_ctrl'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: v_hand/exp_lut.v
+Parsing Verilog input from `v_hand/exp_lut.v' to AST representation.
+Generating RTLIL representation for module `\exp_lut'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: v_hand/fused_postproc_unit.v
+Parsing Verilog input from `v_hand/fused_postproc_unit.v' to AST representation.
+Generating RTLIL representation for module `\fused_postproc_unit'.
+Warning: Replacing memory \data_delay with list of registers. See v_hand/fused_postproc_unit.v:97
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: v_hand/gelu_grad_unit.v
+Parsing Verilog input from `v_hand/gelu_grad_unit.v' to AST representation.
+Generating RTLIL representation for module `\gelu_grad_unit'.
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: v_hand/gelu_lut.v
+Parsing Verilog input from `v_hand/gelu_lut.v' to AST representation.
+Generating RTLIL representation for module `\gelu_lut'.
+Successfully finished Verilog frontend.
+
+16. Executing Verilog-2005 frontend: v_hand/gelu_unit.v
+Parsing Verilog input from `v_hand/gelu_unit.v' to AST representation.
+Generating RTLIL representation for module `\gelu_unit'.
+Successfully finished Verilog frontend.
+
+17. Executing Verilog-2005 frontend: v_hand/mac_pe.v
+Parsing Verilog input from `v_hand/mac_pe.v' to AST representation.
+Generating RTLIL representation for module `\mac_pe'.
+Successfully finished Verilog frontend.
+
+18. Executing Verilog-2005 frontend: v_hand/mode_decoder.v
+Parsing Verilog input from `v_hand/mode_decoder.v' to AST representation.
+Generating RTLIL representation for module `\mode_decoder'.
+Successfully finished Verilog frontend.
+
+19. Executing Verilog-2005 frontend: v_hand/perf_counter_block.v
+Parsing Verilog input from `v_hand/perf_counter_block.v' to AST representation.
+Generating RTLIL representation for module `\perf_counter_block'.
+Successfully finished Verilog frontend.
+
+20. Executing Verilog-2005 frontend: v_hand/pipeline_stage.v
+Parsing Verilog input from `v_hand/pipeline_stage.v' to AST representation.
+Generating RTLIL representation for module `\pipeline_stage'.
+Successfully finished Verilog frontend.
+
+21. Executing Verilog-2005 frontend: v_hand/scratchpad_ctrl.v
+Parsing Verilog input from `v_hand/scratchpad_ctrl.v' to AST representation.
+Generating RTLIL representation for module `\scratchpad_ctrl'.
+Successfully finished Verilog frontend.
+
+22. Executing Verilog-2005 frontend: v_hand/skid_buffer.v
+Parsing Verilog input from `v_hand/skid_buffer.v' to AST representation.
+Generating RTLIL representation for module `\skid_buffer'.
+Successfully finished Verilog frontend.
+
+23. Executing Verilog-2005 frontend: v_hand/softmax_unit.v
+Parsing Verilog input from `v_hand/softmax_unit.v' to AST representation.
+Generating RTLIL representation for module `\softmax_unit'.
+Warning: Replacing memory \s3_exp with list of registers. See v_hand/softmax_unit.v:194
+Warning: Replacing memory \s2_exp with list of registers. See v_hand/softmax_unit.v:171
+Warning: Replacing memory \s1_scores with list of registers. See v_hand/softmax_unit.v:146
+Successfully finished Verilog frontend.
+
+24. Executing Verilog-2005 frontend: v_hand/sram_bank.v
+Parsing Verilog input from `v_hand/sram_bank.v' to AST representation.
+Generating RTLIL representation for module `\sram_bank'.
+Successfully finished Verilog frontend.
+
+25. Executing Verilog-2005 frontend: v_hand/stream_mux.v
+Parsing Verilog input from `v_hand/stream_mux.v' to AST representation.
+Generating RTLIL representation for module `\stream_mux'.
+Successfully finished Verilog frontend.
+
+26. Executing Verilog-2005 frontend: v_hand/stream_pipeline.v
+Parsing Verilog input from `v_hand/stream_pipeline.v' to AST representation.
+Generating RTLIL representation for module `\stream_pipeline'.
+Warning: Replacing memory \sm_row_buf with list of registers. See v_hand/stream_pipeline.v:302
+Successfully finished Verilog frontend.
+
+27. Executing Verilog-2005 frontend: v_hand/systolic_array_64x64.v
+Parsing Verilog input from `v_hand/systolic_array_64x64.v' to AST representation.
+Generating RTLIL representation for module `\systolic_array_64x64'.
+Successfully finished Verilog frontend.
+
+28. Executing Verilog-2005 frontend: v_hand/tile_buffer.v
+Parsing Verilog input from `v_hand/tile_buffer.v' to AST representation.
+Generating RTLIL representation for module `\tile_buffer'.
+Warning: Replacing memory \mem with list of registers. See v_hand/tile_buffer.v:70
+Successfully finished Verilog frontend.
+
+29. Executing Verilog-2005 frontend: v_hand/tile_dispatcher.v
+Parsing Verilog input from `v_hand/tile_dispatcher.v' to AST representation.
+Generating RTLIL representation for module `\tile_dispatcher'.
+Successfully finished Verilog frontend.
+
+30. Executing Verilog-2005 frontend: v_hand/tile_loader.v
+Parsing Verilog input from `v_hand/tile_loader.v' to AST representation.
+Generating RTLIL representation for module `\tile_loader'.
+Successfully finished Verilog frontend.
+
+31. Executing Verilog-2005 frontend: v_hand/tile_scheduler.v
+Parsing Verilog input from `v_hand/tile_scheduler.v' to AST representation.
+Generating RTLIL representation for module `\tile_scheduler'.
+Successfully finished Verilog frontend.
+
+32. Executing Verilog-2005 frontend: v_hand/tile_writer.v
+Parsing Verilog input from `v_hand/tile_writer.v' to AST representation.
+Generating RTLIL representation for module `\tile_writer'.
+Successfully finished Verilog frontend.
+
+33. Executing Verilog-2005 frontend: v_hand/top_small.v
+Parsing Verilog input from `v_hand/top_small.v' to AST representation.
+Generating RTLIL representation for module `\top_small'.
+Successfully finished Verilog frontend.
+Parameter \NUM_INPUTS = 4
+
+34. Executing AST frontend in derive mode using pre-parsed AST for module `\adder_tree'.
+Parameter \NUM_INPUTS = 4
+Generating RTLIL representation for module `$paramod\adder_tree\NUM_INPUTS=32'00000000000000000000000000000100'.
+Warning: Replacing memory \stage with list of registers. See v_hand/adder_tree.v:63
+Warning: Replacing memory \valid_pipe with list of registers. See v_hand/adder_tree.v:61
+
+35. Executing HIERARCHY pass (managing design hierarchy).
+
+35.1. Analyzing design hierarchy..
+Top module:  \adder_tree
+
+35.2. Analyzing design hierarchy..
+Top module:  \adder_tree
+Removing unused module `\top_small'.
+Removing unused module `\tile_writer'.
+Removing unused module `\tile_scheduler'.
+Removing unused module `\tile_loader'.
+Removing unused module `\tile_dispatcher'.
+Removing unused module `\tile_buffer'.
+Removing unused module `\systolic_array_64x64'.
+Removing unused module `\stream_pipeline'.
+Removing unused module `\stream_mux'.
+Removing unused module `\sram_bank'.
+Removing unused module `\softmax_unit'.
+Removing unused module `\skid_buffer'.
+Removing unused module `\scratchpad_ctrl'.
+Removing unused module `\pipeline_stage'.
+Removing unused module `\perf_counter_block'.
+Removing unused module `\mode_decoder'.
+Removing unused module `\mac_pe'.
+Removing unused module `\gelu_unit'.
+Removing unused module `\gelu_lut'.
+Removing unused module `\gelu_grad_unit'.
+Removing unused module `\fused_postproc_unit'.
+Removing unused module `\exp_lut'.
+Removing unused module `\double_buffer_ctrl'.
+Removing unused module `\dma_engine'.
+Removing unused module `\divider_or_reciprocal_unit'.
+Removing unused module `\compute_core'.
+Removing unused module `\chiplet_interface'.
+Removing unused module `\causal_mask_unit'.
+Removing unused module `\address_gen'.
+Removing unused module `\accel_top'.
+Removing unused module `\accel_engine'.
+Removing unused module `\accel_controller'.
+Removed 32 unused modules.
+
+36. Executing PROC pass (convert processes to netlists).
+
+36.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\adder_tree.$proc$v_hand/adder_tree.v:78$21710'.
+Found and cleaned up 1 empty switch in `\adder_tree.$proc$v_hand/adder_tree.v:78$21714'.
+Cleaned up 2 empty switches.
+
+36.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$v_hand/adder_tree.v:59$21708 in module adder_tree.
+Marked 2 switch rules as full_case in process $proc$v_hand/adder_tree.v:78$21710 in module adder_tree.
+Marked 2 switch rules as full_case in process $proc$v_hand/adder_tree.v:78$21714 in module adder_tree.
+Removed a total of 0 dead cases.
+
+36.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 4 assignments to connections.
+
+36.4. Executing PROC_INIT pass (extract init attributes).
+
+36.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\adder_tree.$proc$v_hand/adder_tree.v:59$21708'.
+Found async reset \rst_n in `\adder_tree.$proc$v_hand/adder_tree.v:78$21710'.
+Found async reset \rst_n in `\adder_tree.$proc$v_hand/adder_tree.v:78$21714'.
+
+36.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~3 debug messages>
+
+36.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\adder_tree.$proc$v_hand/adder_tree.v:59$21708'.
+     1/8: $2\load_i[31:0]
+     2/8: $1\load_i[31:0]
+     3/8: $1\init_i[31:0]
+     4/8: $0\stage[3][31:0]
+     5/8: $0\stage[2][31:0]
+     6/8: $0\stage[1][31:0]
+     7/8: $0\stage[0][31:0]
+     8/8: $0\valid_pipe[0][0:0]
+Creating decoders for process `\adder_tree.$proc$v_hand/adder_tree.v:78$21710'.
+     1/7: $2\red_i[31:0]
+     2/7: $1\red_i[31:0]
+     3/7: $0\stage[7][31:0]
+     4/7: $0\stage[6][31:0]
+     5/7: $0\stage[5][31:0]
+     6/7: $0\stage[4][31:0]
+     7/7: $0\valid_pipe[1][0:0]
+Creating decoders for process `\adder_tree.$proc$v_hand/adder_tree.v:78$21714'.
+     1/7: $5\red_i[31:0]
+     2/7: $4\red_i[31:0]
+     3/7: $0\stage[11][31:0]
+     4/7: $0\stage[10][31:0]
+     5/7: $0\stage[9][31:0]
+     6/7: $0\stage[8][31:0]
+     7/7: $0\valid_pipe[2][0:0]
+
+36.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+36.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\adder_tree.\init_i' using process `\adder_tree.$proc$v_hand/adder_tree.v:59$21708'.
+  created $adff cell `$procdff$21760' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\load_i' using process `\adder_tree.$proc$v_hand/adder_tree.v:59$21708'.
+  created $dff cell `$procdff$21767' with positive edge clock.
+Creating register for signal `\adder_tree.\valid_pipe[0]' using process `\adder_tree.$proc$v_hand/adder_tree.v:59$21708'.
+  created $adff cell `$procdff$21772' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\stage[0]' using process `\adder_tree.$proc$v_hand/adder_tree.v:59$21708'.
+  created $adff cell `$procdff$21777' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\stage[1]' using process `\adder_tree.$proc$v_hand/adder_tree.v:59$21708'.
+  created $adff cell `$procdff$21782' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\stage[2]' using process `\adder_tree.$proc$v_hand/adder_tree.v:59$21708'.
+  created $adff cell `$procdff$21787' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\stage[3]' using process `\adder_tree.$proc$v_hand/adder_tree.v:59$21708'.
+  created $adff cell `$procdff$21792' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\red_i' using process `\adder_tree.$proc$v_hand/adder_tree.v:78$21710'.
+  created $adff cell `$procdff$21797' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\valid_pipe[1]' using process `\adder_tree.$proc$v_hand/adder_tree.v:78$21710'.
+  created $adff cell `$procdff$21802' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\stage[4]' using process `\adder_tree.$proc$v_hand/adder_tree.v:78$21710'.
+  created $adff cell `$procdff$21807' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\stage[5]' using process `\adder_tree.$proc$v_hand/adder_tree.v:78$21710'.
+  created $adff cell `$procdff$21812' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\stage[6]' using process `\adder_tree.$proc$v_hand/adder_tree.v:78$21710'.
+  created $adff cell `$procdff$21817' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\stage[7]' using process `\adder_tree.$proc$v_hand/adder_tree.v:78$21710'.
+  created $adff cell `$procdff$21822' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\red_i' using process `\adder_tree.$proc$v_hand/adder_tree.v:78$21714'.
+  created $adff cell `$procdff$21827' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\valid_pipe[2]' using process `\adder_tree.$proc$v_hand/adder_tree.v:78$21714'.
+  created $adff cell `$procdff$21832' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\stage[8]' using process `\adder_tree.$proc$v_hand/adder_tree.v:78$21714'.
+  created $adff cell `$procdff$21837' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\stage[9]' using process `\adder_tree.$proc$v_hand/adder_tree.v:78$21714'.
+  created $adff cell `$procdff$21842' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\stage[10]' using process `\adder_tree.$proc$v_hand/adder_tree.v:78$21714'.
+  created $adff cell `$procdff$21847' with positive edge clock and positive level reset.
+Creating register for signal `\adder_tree.\stage[11]' using process `\adder_tree.$proc$v_hand/adder_tree.v:78$21714'.
+  created $adff cell `$procdff$21852' with positive edge clock and positive level reset.
+
+36.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+36.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\adder_tree.$proc$v_hand/adder_tree.v:59$21708'.
+Removing empty process `adder_tree.$proc$v_hand/adder_tree.v:59$21708'.
+Found and cleaned up 1 empty switch in `\adder_tree.$proc$v_hand/adder_tree.v:78$21710'.
+Removing empty process `adder_tree.$proc$v_hand/adder_tree.v:78$21710'.
+Found and cleaned up 1 empty switch in `\adder_tree.$proc$v_hand/adder_tree.v:78$21714'.
+Removing empty process `adder_tree.$proc$v_hand/adder_tree.v:78$21714'.
+Cleaned up 3 empty switches.
+
+36.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module adder_tree.
+<suppressed ~38 debug messages>
+
+37. Executing FLATTEN pass (flatten design).
+
+38. Executing OPT pass (performing simple optimizations).
+
+38.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module adder_tree.
+
+38.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\adder_tree'.
+<suppressed ~60 debug messages>
+Removed a total of 20 cells.
+
+38.3. Executing OPT_DFF pass (perform DFF optimizations).
+Handling D = Q on $procdff$21847 ($adff) from module adder_tree (removing D path).
+Adding EN signal on $procdff$21807 ($adff) from module adder_tree (D = $add$v_hand/adder_tree.v:90$21712_Y, Q = \stage[4]).
+Adding EN signal on $procdff$21792 ($adff) from module adder_tree (D = \in_data [127:96], Q = \stage[3]).
+Handling D = Q on $procdff$21817 ($adff) from module adder_tree (removing D path).
+Handling D = Q on $procdff$21760 ($adff) from module adder_tree (removing D path).
+Adding EN signal on $procdff$21827 ($adff) from module adder_tree (D = 1, Q = \red_i).
+Handling D = Q on $procdff$21852 ($adff) from module adder_tree (removing D path).
+Adding EN signal on $procdff$21767 ($dff) from module adder_tree (D = 4, Q = \load_i).
+Adding EN signal on $procdff$21797 ($adff) from module adder_tree (D = 2, Q = \red_i).
+Adding EN signal on $procdff$21832 ($adff) from module adder_tree (D = \valid_pipe[1], Q = \valid_pipe[2]).
+Adding EN signal on $procdff$21772 ($adff) from module adder_tree (D = \in_valid, Q = \valid_pipe[0]).
+Adding EN signal on $procdff$21812 ($adff) from module adder_tree (D = $add$v_hand/adder_tree.v:90$21713_Y, Q = \stage[5]).
+Handling D = Q on $procdff$21842 ($adff) from module adder_tree (removing D path).
+Adding EN signal on $procdff$21777 ($adff) from module adder_tree (D = \in_data [31:0], Q = \stage[0]).
+Adding EN signal on $procdff$21802 ($adff) from module adder_tree (D = \valid_pipe[0], Q = \valid_pipe[1]).
+Handling D = Q on $procdff$21822 ($adff) from module adder_tree (removing D path).
+Adding EN signal on $procdff$21782 ($adff) from module adder_tree (D = \in_data [63:32], Q = \stage[1]).
+Adding EN signal on $procdff$21837 ($adff) from module adder_tree (D = $add$v_hand/adder_tree.v:90$21716_Y, Q = \stage[8]).
+Adding EN signal on $procdff$21787 ($adff) from module adder_tree (D = \in_data [95:64], Q = \stage[2]).
+Setting constant 0-bit at position 0 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 1 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 2 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 3 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 4 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 5 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 6 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 7 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 8 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 9 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 10 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 11 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 12 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 13 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 14 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 15 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 16 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 17 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 18 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 19 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 20 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 21 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 22 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 23 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 24 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 25 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 26 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 27 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 28 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 29 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 30 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 31 on $procdff$21822 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 0 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 1 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 2 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 3 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 4 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 5 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 6 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 7 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 8 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 9 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 10 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 11 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 12 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 13 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 14 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 15 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 16 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 17 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 18 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 19 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 20 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 21 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 22 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 23 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 24 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 25 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 26 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 27 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 28 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 29 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 30 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 31 on $procdff$21852 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 0 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 1 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 2 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 3 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 4 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 5 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 6 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 7 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 8 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 9 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 10 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 11 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 12 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 13 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 14 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 15 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 16 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 17 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 18 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 19 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 20 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 21 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 22 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 23 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 24 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 25 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 26 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 27 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 28 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 29 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 30 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 31 on $procdff$21842 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 0 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 3 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 4 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 5 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 6 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 7 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 8 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 9 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 10 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 11 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 12 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 13 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 14 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 15 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 16 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 17 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 18 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 19 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 20 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 21 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 22 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 23 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 24 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 25 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 26 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 27 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 28 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 29 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 30 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 31 on $auto$ff.cc:266:slice$21859 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 0 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 1 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 1-bit at position 2 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 3 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 4 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 5 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 6 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 7 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 8 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 9 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 10 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 11 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 12 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 13 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 14 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 15 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 16 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 17 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 18 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 19 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 20 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 21 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 22 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 23 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 24 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 25 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 26 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 27 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 28 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 29 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 30 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 31 on $auto$ff.cc:266:slice$21856 ($dffe) from module adder_tree.
+Setting constant 0-bit at position 0 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 1 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 1-bit at position 2 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 3 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 4 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 5 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 6 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 7 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 8 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 9 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 10 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 11 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 12 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 13 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 14 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 15 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 16 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 17 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 18 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 19 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 20 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 21 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 22 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 23 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 24 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 25 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 26 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 27 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 28 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 29 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 30 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 31 on $procdff$21760 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 1 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 3 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 4 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 5 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 6 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 7 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 8 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 9 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 10 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 11 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 12 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 13 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 14 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 15 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 16 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 17 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 18 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 19 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 20 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 21 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 22 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 23 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 24 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 25 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 26 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 27 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 28 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 29 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 30 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 31 on $auto$ff.cc:266:slice$21855 ($adffe) from module adder_tree.
+Setting constant 0-bit at position 0 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 1 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 2 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 3 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 4 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 5 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 6 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 7 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 8 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 9 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 10 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 11 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 12 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 13 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 14 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 15 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 16 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 17 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 18 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 19 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 20 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 21 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 22 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 23 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 24 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 25 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 26 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 27 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 28 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 29 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 30 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 31 on $procdff$21817 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 0 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 1 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 2 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 3 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 4 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 5 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 6 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 7 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 8 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 9 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 10 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 11 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 12 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 13 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 14 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 15 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 16 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 17 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 18 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 19 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 20 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 21 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 22 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 23 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 24 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 25 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 26 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 27 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 28 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 29 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 30 on $procdff$21847 ($dlatch) from module adder_tree.
+Setting constant 0-bit at position 31 on $procdff$21847 ($dlatch) from module adder_tree.
+
+38.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \adder_tree..
+Removed 19 unused cells and 95 unused wires.
+<suppressed ~20 debug messages>
+
+38.5. Rerunning OPT passes. (Removed registers in this run.)
+
+38.6. Executing OPT_EXPR pass (perform const folding).
+Optimizing module adder_tree.
+
+38.7. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\adder_tree'.
+Removed a total of 0 cells.
+
+38.8. Executing OPT_DFF pass (perform DFF optimizations).
+
+38.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \adder_tree..
+
+38.10. Finished fast OPT passes.
+
+39. Executing TECHMAP pass (map to technology primitives).
+
+39.1. Executing Verilog-2005 frontend: /nix/store/9r0bh7sp051dpm8km8bqlb028anpd3v3-yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/nix/store/9r0bh7sp051dpm8km8bqlb028anpd3v3-yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `\$__div_mod_u'.
+Generating RTLIL representation for module `\$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `\$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Successfully finished Verilog frontend.
+
+39.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $adffe.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $paramod$2653f68ddb8eab7b1907b4a20767b72a824a7a36\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000100000 for cells of type $lcu.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $xor.
+Using extmapper simplemap for cells of type $or.
+No more expansions possible.
+<suppressed ~710 debug messages>
+
+40. Executing OPT pass (performing simple optimizations).
+
+40.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module adder_tree.
+<suppressed ~108 debug messages>
+
+40.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\adder_tree'.
+Removed a total of 0 cells.
+
+40.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+40.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \adder_tree..
+Removed 141 unused cells and 123 unused wires.
+<suppressed ~142 debug messages>
+
+40.5. Finished fast OPT passes.
+
+41. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+  cell sky130_fd_sc_hd__dfxtp_1 (noninv, pins=3, area=20.02) is a direct match for cell type $_DFF_P_.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+  cell sky130_fd_sc_hd__dfrtn_1 (noninv, pins=4, area=25.02) is a direct match for cell type $_DFF_NN0_.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+  cell sky130_fd_sc_hd__dfrtp_1 (noninv, pins=4, area=25.02) is a direct match for cell type $_DFF_PN0_.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+  cell sky130_fd_sc_hd__dfstp_2 (noninv, pins=4, area=26.28) is a direct match for cell type $_DFF_PN1_.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+  cell sky130_fd_sc_hd__dfbbn_1 (noninv, pins=6, area=32.53) is a direct match for cell type $_DFFSR_NNN_.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+  cell sky130_fd_sc_hd__dfbbp_1 (noninv, pins=6, area=32.53) is a direct match for cell type $_DFFSR_PNN_.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+  final dff cell mappings:
+    unmapped dff cell: $_DFF_N_
+    \sky130_fd_sc_hd__dfxtp_1 _DFF_P_ (.CLK( C), .D( D), .Q( Q));
+    \sky130_fd_sc_hd__dfrtn_1 _DFF_NN0_ (.CLK_N( C), .D( D), .Q( Q), .RESET_B( R));
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    \sky130_fd_sc_hd__dfrtp_1 _DFF_PN0_ (.CLK( C), .D( D), .Q( Q), .RESET_B( R));
+    \sky130_fd_sc_hd__dfstp_2 _DFF_PN1_ (.CLK( C), .D( D), .Q( Q), .SET_B( R));
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    \sky130_fd_sc_hd__dfbbn_1 _DFFSR_NNN_ (.CLK_N( C), .D( D), .Q( Q), .Q_N(~Q), .RESET_B( R), .SET_B( S));
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \sky130_fd_sc_hd__dfbbp_1 _DFFSR_PNN_ (.CLK( C), .D( D), .Q( Q), .Q_N(~Q), .RESET_B( R), .SET_B( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+41.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+Mapping DFF cells in module `\adder_tree':
+  mapped 227 $_DFF_PN0_ cells to \sky130_fd_sc_hd__dfrtp_1 cells.
+
+42. Executing ABC pass (technology mapping using ABC).
+
+42.1. Extracting gate netlist of module `\adder_tree' to `<abc-temp-dir>/input.blif'..
+Extracted 887 gates and 1244 wires to a netlist network with 357 inputs and 227 outputs.
+
+42.1.1. Executing ABC.
+Running ABC command: "/nix/store/6l3aj1gi4lja8z5s4lan2k2cfz9mqkrz-yosys-abc/bin/abc" -s -f <abc-temp-dir>/abc.script 2>&1
+ABC: ABC command line: "source <abc-temp-dir>/abc.script".
+ABC: 
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_lib -w /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.07 sec
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__decap_12" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__decap_3" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__decap_4" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__decap_6" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__decap_8" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfbbn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfbbn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfbbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrtn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrtp_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfsbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfsbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfstp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfstp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfstp_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfxbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfxbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfxtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfxtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfxtp_4".
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__diode_2" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__dlclkp_1" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__dlclkp_2" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__dlclkp_4" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrbn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrbn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtn_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtp_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxbn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxbn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxtn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxtn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxtn_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxtp_1".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__ebufn_1".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__ebufn_2".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__ebufn_4".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__ebufn_8".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__edfxbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__edfxtp_1".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvn_0".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvn_1".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvn_2".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvn_4".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvn_8".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvp_1".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvp_2".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvp_4".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvp_8".
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_bleeder_1" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_decapkapwr_12" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_decapkapwr_3" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_decapkapwr_4" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_decapkapwr_6" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_decapkapwr_8" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__lpflow_inputisolatch_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfbbn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfbbn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfbbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrtn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrtp_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfsbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfsbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfstp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfstp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfstp_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfxbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfxbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfxtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfxtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfxtp_4".
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__sdlclkp_1" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__sdlclkp_2" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__sdlclkp_4" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sedfxbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sedfxbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sedfxtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sedfxtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sedfxtp_4".
+ABC: Library "sky130_fd_sc_hd__tt_025C_1v80" from "/home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib" has 334 cells (94 skipped: 63 seq; 13 tri-state; 18 no func; 0 dont_use).  Time =     0.12 sec
+ABC: Memory =   19.85 MB. Time =     0.12 sec
+ABC: Warning: Detected 9 multi-output gates (for example, "sky130_fd_sc_hd__fa_1").
+ABC: + strash 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + ifraig 
+ABC: + retime 
+ABC: + strash 
+ABC: + dch -f 
+ABC: + map -M 1 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+
+42.1.2. Re-integrating ABC results.
+ABC RESULTS:   sky130_fd_sc_hd__o221a_2 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__a31o_2 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__and2_2 cells:        5
+ABC RESULTS:   sky130_fd_sc_hd__o211ai_1 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__o221ai_1 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__xnor2_1 cells:        8
+ABC RESULTS:   sky130_fd_sc_hd__o21a_1 cells:        5
+ABC RESULTS:   sky130_fd_sc_hd__a21boi_0 cells:        4
+ABC RESULTS:   sky130_fd_sc_hd__or2_2 cells:        2
+ABC RESULTS:   sky130_fd_sc_hd__or2b_2 cells:       12
+ABC RESULTS:   sky130_fd_sc_hd__nand4_1 cells:        9
+ABC RESULTS:   sky130_fd_sc_hd__o31ai_1 cells:       12
+ABC RESULTS:   sky130_fd_sc_hd__xor2_1 cells:       27
+ABC RESULTS:   sky130_fd_sc_hd__nand3_1 cells:       30
+ABC RESULTS:   sky130_fd_sc_hd__nor3_1 cells:       12
+ABC RESULTS:   sky130_fd_sc_hd__clkinv_1 cells:      219
+ABC RESULTS:   sky130_fd_sc_hd__o21ai_0 cells:      205
+ABC RESULTS:   sky130_fd_sc_hd__a22oi_1 cells:       19
+ABC RESULTS:   sky130_fd_sc_hd__a21oi_1 cells:       53
+ABC RESULTS:   sky130_fd_sc_hd__o21bai_1 cells:       17
+ABC RESULTS:   sky130_fd_sc_hd__nor4_1 cells:        3
+ABC RESULTS:   sky130_fd_sc_hd__o22ai_1 cells:       22
+ABC RESULTS:   sky130_fd_sc_hd__nand2_1 cells:      511
+ABC RESULTS:   sky130_fd_sc_hd__o2bb2ai_1 cells:        3
+ABC RESULTS:   sky130_fd_sc_hd__nor2_1 cells:      225
+ABC RESULTS:   sky130_fd_sc_hd__a31oi_1 cells:       19
+ABC RESULTS:   sky130_fd_sc_hd__a2bb2oi_1 cells:        3
+ABC RESULTS:        internal signals:      660
+ABC RESULTS:           input signals:      357
+ABC RESULTS:          output signals:      227
+Removing temp directory.
+
+43. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \adder_tree..
+Removed 0 unused cells and 894 unused wires.
+<suppressed ~11 debug messages>
+
+44. Printing statistics.
+
+=== adder_tree ===
+
+   Number of wires:               1444
+   Number of wire bits:           1788
+   Number of public wires:          15
+   Number of public wire bits:     359
+   Number of ports:                  7
+   Number of port bits:            165
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               1656
+     sky130_fd_sc_hd__a21boi_0       4
+     sky130_fd_sc_hd__a21oi_1       53
+     sky130_fd_sc_hd__a22oi_1       19
+     sky130_fd_sc_hd__a2bb2oi_1      3
+     sky130_fd_sc_hd__a31o_2         1
+     sky130_fd_sc_hd__a31oi_1       19
+     sky130_fd_sc_hd__and2_2         5
+     sky130_fd_sc_hd__clkinv_1     219
+     sky130_fd_sc_hd__dfrtp_1      227
+     sky130_fd_sc_hd__nand2_1      511
+     sky130_fd_sc_hd__nand3_1       30
+     sky130_fd_sc_hd__nand4_1        9
+     sky130_fd_sc_hd__nor2_1       225
+     sky130_fd_sc_hd__nor3_1        12
+     sky130_fd_sc_hd__nor4_1         3
+     sky130_fd_sc_hd__o211ai_1       1
+     sky130_fd_sc_hd__o21a_1         5
+     sky130_fd_sc_hd__o21ai_0      205
+     sky130_fd_sc_hd__o21bai_1      17
+     sky130_fd_sc_hd__o221a_2        1
+     sky130_fd_sc_hd__o221ai_1       1
+     sky130_fd_sc_hd__o22ai_1       22
+     sky130_fd_sc_hd__o2bb2ai_1      3
+     sky130_fd_sc_hd__o31ai_1       12
+     sky130_fd_sc_hd__or2_2          2
+     sky130_fd_sc_hd__or2b_2        12
+     sky130_fd_sc_hd__xnor2_1        8
+     sky130_fd_sc_hd__xor2_1        27
+
+   Chip area for module '\adder_tree': 12076.582400
+     of which used for sequential elements: 5680.448000 (47.04%)
+
+45. Executing Verilog backend.
+
+45.1. Executing BMUXMAP pass.
+
+45.2. Executing DEMUXMAP pass.
+Dumping module `\adder_tree'.
+
+Warnings: 34 unique messages, 244 total
+End of script. Logfile hash: 0487cf4529, CPU: user 42.16s system 2.41s, MEM: 1899.04 MB peak
+Yosys 0.46 (git sha1 e97731b9dda91fa5fa53ed87df7c34163ba59a41, clang++ 17.0.6 -fPIC -O3)
+Time spent: 96% 35x read_verilog (43 sec), 2% 1x hierarchy (0 sec), ...

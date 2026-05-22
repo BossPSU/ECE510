@@ -1,0 +1,1270 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2024  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.46 (git sha1 e97731b9dda91fa5fa53ed87df7c34163ba59a41, clang++ 17.0.6 -fPIC -O3)
+
+-- Running command `read_verilog v_hand/*.v
+chparam -set ROWS 4 systolic_array_64x64; chparam -set COLS 4 systolic_array_64x64;
+hierarchy -check -top systolic_array_64x64
+proc
+flatten
+opt -fast
+techmap
+opt -fast
+dfflibmap -liberty /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+abc -liberty /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib -script "+strash; scorr; ifraig; retime,{D}; strash; dch,-f; map,-M,1,{D}"
+opt_clean -purge
+tee -o per_module/systolic_array_64x64/stat.rpt stat -liberty /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+write_verilog -noattr per_module/systolic_array_64x64/systolic_array_64x64.synth.v' --
+
+1. Executing Verilog-2005 frontend: v_hand/accel_controller.v
+Parsing Verilog input from `v_hand/accel_controller.v' to AST representation.
+Generating RTLIL representation for module `\accel_controller'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: v_hand/accel_engine.v
+Parsing Verilog input from `v_hand/accel_engine.v' to AST representation.
+Generating RTLIL representation for module `\accel_engine'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: v_hand/accel_top.v
+Parsing Verilog input from `v_hand/accel_top.v' to AST representation.
+Generating RTLIL representation for module `\accel_top'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: v_hand/adder_tree.v
+Parsing Verilog input from `v_hand/adder_tree.v' to AST representation.
+Generating RTLIL representation for module `\adder_tree'.
+Warning: Replacing memory \stage with list of registers. See v_hand/adder_tree.v:63
+Warning: Replacing memory \valid_pipe with list of registers. See v_hand/adder_tree.v:61
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: v_hand/address_gen.v
+Parsing Verilog input from `v_hand/address_gen.v' to AST representation.
+Generating RTLIL representation for module `\address_gen'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: v_hand/causal_mask_unit.v
+Parsing Verilog input from `v_hand/causal_mask_unit.v' to AST representation.
+Generating RTLIL representation for module `\causal_mask_unit'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: v_hand/chiplet_interface.v
+Parsing Verilog input from `v_hand/chiplet_interface.v' to AST representation.
+Generating RTLIL representation for module `\chiplet_interface'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: v_hand/compute_core.v
+Parsing Verilog input from `v_hand/compute_core.v' to AST representation.
+Generating RTLIL representation for module `\compute_core'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: v_hand/divider_or_reciprocal_unit.v
+Parsing Verilog input from `v_hand/divider_or_reciprocal_unit.v' to AST representation.
+Generating RTLIL representation for module `\divider_or_reciprocal_unit'.
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: v_hand/dma_engine.v
+Parsing Verilog input from `v_hand/dma_engine.v' to AST representation.
+Generating RTLIL representation for module `\dma_engine'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: v_hand/double_buffer_ctrl.v
+Parsing Verilog input from `v_hand/double_buffer_ctrl.v' to AST representation.
+Generating RTLIL representation for module `\double_buffer_ctrl'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: v_hand/exp_lut.v
+Parsing Verilog input from `v_hand/exp_lut.v' to AST representation.
+Generating RTLIL representation for module `\exp_lut'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: v_hand/fused_postproc_unit.v
+Parsing Verilog input from `v_hand/fused_postproc_unit.v' to AST representation.
+Generating RTLIL representation for module `\fused_postproc_unit'.
+Warning: Replacing memory \data_delay with list of registers. See v_hand/fused_postproc_unit.v:97
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: v_hand/gelu_grad_unit.v
+Parsing Verilog input from `v_hand/gelu_grad_unit.v' to AST representation.
+Generating RTLIL representation for module `\gelu_grad_unit'.
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: v_hand/gelu_lut.v
+Parsing Verilog input from `v_hand/gelu_lut.v' to AST representation.
+Generating RTLIL representation for module `\gelu_lut'.
+Successfully finished Verilog frontend.
+
+16. Executing Verilog-2005 frontend: v_hand/gelu_unit.v
+Parsing Verilog input from `v_hand/gelu_unit.v' to AST representation.
+Generating RTLIL representation for module `\gelu_unit'.
+Successfully finished Verilog frontend.
+
+17. Executing Verilog-2005 frontend: v_hand/mac_pe.v
+Parsing Verilog input from `v_hand/mac_pe.v' to AST representation.
+Generating RTLIL representation for module `\mac_pe'.
+Successfully finished Verilog frontend.
+
+18. Executing Verilog-2005 frontend: v_hand/mode_decoder.v
+Parsing Verilog input from `v_hand/mode_decoder.v' to AST representation.
+Generating RTLIL representation for module `\mode_decoder'.
+Successfully finished Verilog frontend.
+
+19. Executing Verilog-2005 frontend: v_hand/perf_counter_block.v
+Parsing Verilog input from `v_hand/perf_counter_block.v' to AST representation.
+Generating RTLIL representation for module `\perf_counter_block'.
+Successfully finished Verilog frontend.
+
+20. Executing Verilog-2005 frontend: v_hand/pipeline_stage.v
+Parsing Verilog input from `v_hand/pipeline_stage.v' to AST representation.
+Generating RTLIL representation for module `\pipeline_stage'.
+Successfully finished Verilog frontend.
+
+21. Executing Verilog-2005 frontend: v_hand/scratchpad_ctrl.v
+Parsing Verilog input from `v_hand/scratchpad_ctrl.v' to AST representation.
+Generating RTLIL representation for module `\scratchpad_ctrl'.
+Successfully finished Verilog frontend.
+
+22. Executing Verilog-2005 frontend: v_hand/skid_buffer.v
+Parsing Verilog input from `v_hand/skid_buffer.v' to AST representation.
+Generating RTLIL representation for module `\skid_buffer'.
+Successfully finished Verilog frontend.
+
+23. Executing Verilog-2005 frontend: v_hand/softmax_unit.v
+Parsing Verilog input from `v_hand/softmax_unit.v' to AST representation.
+Generating RTLIL representation for module `\softmax_unit'.
+Warning: Replacing memory \s3_exp with list of registers. See v_hand/softmax_unit.v:194
+Warning: Replacing memory \s2_exp with list of registers. See v_hand/softmax_unit.v:171
+Warning: Replacing memory \s1_scores with list of registers. See v_hand/softmax_unit.v:146
+Successfully finished Verilog frontend.
+
+24. Executing Verilog-2005 frontend: v_hand/sram_bank.v
+Parsing Verilog input from `v_hand/sram_bank.v' to AST representation.
+Generating RTLIL representation for module `\sram_bank'.
+Successfully finished Verilog frontend.
+
+25. Executing Verilog-2005 frontend: v_hand/stream_mux.v
+Parsing Verilog input from `v_hand/stream_mux.v' to AST representation.
+Generating RTLIL representation for module `\stream_mux'.
+Successfully finished Verilog frontend.
+
+26. Executing Verilog-2005 frontend: v_hand/stream_pipeline.v
+Parsing Verilog input from `v_hand/stream_pipeline.v' to AST representation.
+Generating RTLIL representation for module `\stream_pipeline'.
+Warning: Replacing memory \sm_row_buf with list of registers. See v_hand/stream_pipeline.v:302
+Successfully finished Verilog frontend.
+
+27. Executing Verilog-2005 frontend: v_hand/systolic_array_64x64.v
+Parsing Verilog input from `v_hand/systolic_array_64x64.v' to AST representation.
+Generating RTLIL representation for module `\systolic_array_64x64'.
+Successfully finished Verilog frontend.
+
+28. Executing Verilog-2005 frontend: v_hand/tile_buffer.v
+Parsing Verilog input from `v_hand/tile_buffer.v' to AST representation.
+Generating RTLIL representation for module `\tile_buffer'.
+Warning: Replacing memory \mem with list of registers. See v_hand/tile_buffer.v:70
+Successfully finished Verilog frontend.
+
+29. Executing Verilog-2005 frontend: v_hand/tile_dispatcher.v
+Parsing Verilog input from `v_hand/tile_dispatcher.v' to AST representation.
+Generating RTLIL representation for module `\tile_dispatcher'.
+Successfully finished Verilog frontend.
+
+30. Executing Verilog-2005 frontend: v_hand/tile_loader.v
+Parsing Verilog input from `v_hand/tile_loader.v' to AST representation.
+Generating RTLIL representation for module `\tile_loader'.
+Successfully finished Verilog frontend.
+
+31. Executing Verilog-2005 frontend: v_hand/tile_scheduler.v
+Parsing Verilog input from `v_hand/tile_scheduler.v' to AST representation.
+Generating RTLIL representation for module `\tile_scheduler'.
+Successfully finished Verilog frontend.
+
+32. Executing Verilog-2005 frontend: v_hand/tile_writer.v
+Parsing Verilog input from `v_hand/tile_writer.v' to AST representation.
+Generating RTLIL representation for module `\tile_writer'.
+Successfully finished Verilog frontend.
+
+33. Executing Verilog-2005 frontend: v_hand/top_small.v
+Parsing Verilog input from `v_hand/top_small.v' to AST representation.
+Generating RTLIL representation for module `\top_small'.
+Successfully finished Verilog frontend.
+Parameter \ROWS = 4
+
+34. Executing AST frontend in derive mode using pre-parsed AST for module `\systolic_array_64x64'.
+Parameter \ROWS = 4
+Generating RTLIL representation for module `$paramod\systolic_array_64x64\ROWS=32'00000000000000000000000000000100'.
+Parameter \COLS = 4
+
+35. Executing AST frontend in derive mode using pre-parsed AST for module `\systolic_array_64x64'.
+Parameter \COLS = 4
+Generating RTLIL representation for module `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100'.
+
+36. Executing HIERARCHY pass (managing design hierarchy).
+
+36.1. Analyzing design hierarchy..
+Top module:  \systolic_array_64x64
+Used module:     \mac_pe
+Parameter \DATA_WIDTH = 32
+
+36.2. Executing AST frontend in derive mode using pre-parsed AST for module `\mac_pe'.
+Parameter \DATA_WIDTH = 32
+Generating RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Reprocessing module systolic_array_64x64 because instantiated module $paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000 has become available.
+Generating RTLIL representation for module `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100'.
+
+36.3. Analyzing design hierarchy..
+Top module:  $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100
+Used module:     \mac_pe
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+Parameter \DATA_WIDTH = 32
+Found cached RTLIL representation for module `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000'.
+
+36.4. Analyzing design hierarchy..
+Top module:  $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100
+Used module:     $paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000
+
+36.5. Analyzing design hierarchy..
+Top module:  $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100
+Used module:     $paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000
+Removing unused module `\top_small'.
+Removing unused module `\tile_writer'.
+Removing unused module `\tile_scheduler'.
+Removing unused module `\tile_loader'.
+Removing unused module `\tile_dispatcher'.
+Removing unused module `\tile_buffer'.
+Removing unused module `\stream_pipeline'.
+Removing unused module `\stream_mux'.
+Removing unused module `\sram_bank'.
+Removing unused module `\softmax_unit'.
+Removing unused module `\skid_buffer'.
+Removing unused module `\scratchpad_ctrl'.
+Removing unused module `\pipeline_stage'.
+Removing unused module `\perf_counter_block'.
+Removing unused module `\mode_decoder'.
+Removing unused module `\mac_pe'.
+Removing unused module `\gelu_unit'.
+Removing unused module `\gelu_lut'.
+Removing unused module `\gelu_grad_unit'.
+Removing unused module `\fused_postproc_unit'.
+Removing unused module `\exp_lut'.
+Removing unused module `\double_buffer_ctrl'.
+Removing unused module `\dma_engine'.
+Removing unused module `\divider_or_reciprocal_unit'.
+Removing unused module `\compute_core'.
+Removing unused module `\chiplet_interface'.
+Removing unused module `\causal_mask_unit'.
+Removing unused module `\address_gen'.
+Removing unused module `\adder_tree'.
+Removing unused module `\accel_top'.
+Removing unused module `\accel_engine'.
+Removing unused module `\accel_controller'.
+Removed 32 unused modules.
+
+37. Executing PROC pass (convert processes to netlists).
+
+37.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+37.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$v_hand/mac_pe.v:92$21720 in module $paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000.
+Removed a total of 0 dead cases.
+
+37.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 40 assignments to connections.
+
+37.4. Executing PROC_INIT pass (extract init attributes).
+
+37.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000.$proc$v_hand/mac_pe.v:92$21720'.
+
+37.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~2 debug messages>
+
+37.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+Creating decoders for process `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000.$proc$v_hand/mac_pe.v:92$21720'.
+     1/3: $0\acc_r[31:0]
+     2/3: $0\b_out[31:0]
+     3/3: $0\a_out[31:0]
+
+37.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[0]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[1]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[2]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[3]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[4]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[5]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[6]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[7]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[8]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[9]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[10]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[11]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[12]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[13]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[14]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[15]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[16]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[17]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[18]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\a_wire[19]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[0]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[1]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[2]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[3]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[4]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[5]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[6]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[7]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[8]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[9]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[10]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[11]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[12]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[13]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[14]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[15]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[16]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[17]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[18]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+No latch inferred for signal `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.\b_wire[19]' from process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+
+37.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000.\a_out' using process `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000.$proc$v_hand/mac_pe.v:92$21720'.
+  created $adff cell `$procdff$21801' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000.\b_out' using process `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000.$proc$v_hand/mac_pe.v:92$21720'.
+  created $adff cell `$procdff$21806' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000.\acc_r' using process `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000.$proc$v_hand/mac_pe.v:92$21720'.
+  created $adff cell `$procdff$21811' with positive edge clock and positive level reset.
+
+37.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+37.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.$proc$v_hand/systolic_array_64x64.v:0$21787'.
+Found and cleaned up 2 empty switches in `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000.$proc$v_hand/mac_pe.v:92$21720'.
+Removing empty process `$paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000.$proc$v_hand/mac_pe.v:92$21720'.
+Cleaned up 2 empty switches.
+
+37.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.
+Optimizing module $paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000.
+<suppressed ~8 debug messages>
+
+38. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\mac_pe\DATA_WIDTH=s32'00000000000000000000000000100000.
+<suppressed ~16 debug messages>
+
+39. Executing OPT pass (performing simple optimizations).
+
+39.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.
+
+39.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100'.
+<suppressed ~186 debug messages>
+Removed a total of 62 cells.
+
+39.3. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $flatten\gen_row[0].gen_col[0].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[0].gen_col[0].u_pe.b_in, Q = \gen_row[0].gen_col[0].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[0].gen_col[1].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[0].gen_col[1].u_pe.b_in, Q = \gen_row[0].gen_col[1].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[0].gen_col[2].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[0].gen_col[2].u_pe.b_in, Q = \gen_row[0].gen_col[2].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[0].gen_col[3].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[0].gen_col[3].u_pe.b_in, Q = \gen_row[0].gen_col[3].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[1].gen_col[0].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[1].gen_col[0].u_pe.b_in, Q = \gen_row[1].gen_col[0].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[1].gen_col[1].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[1].gen_col[1].u_pe.b_in, Q = \gen_row[1].gen_col[1].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[1].gen_col[2].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[1].gen_col[2].u_pe.b_in, Q = \gen_row[1].gen_col[2].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[1].gen_col[3].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[1].gen_col[3].u_pe.b_in, Q = \gen_row[1].gen_col[3].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[2].gen_col[0].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[2].gen_col[0].u_pe.b_in, Q = \gen_row[2].gen_col[0].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[2].gen_col[1].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[2].gen_col[1].u_pe.b_in, Q = \gen_row[2].gen_col[1].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[2].gen_col[2].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[2].gen_col[2].u_pe.b_in, Q = \gen_row[2].gen_col[2].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[2].gen_col[3].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[2].gen_col[3].u_pe.b_in, Q = \gen_row[2].gen_col[3].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[3].gen_col[0].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[3].gen_col[0].u_pe.b_in, Q = \gen_row[3].gen_col[0].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[3].gen_col[1].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[3].gen_col[1].u_pe.b_in, Q = \gen_row[3].gen_col[1].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[3].gen_col[2].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[3].gen_col[2].u_pe.b_in, Q = \gen_row[3].gen_col[2].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[3].gen_col[3].u_pe.$procdff$21806 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[3].gen_col[3].u_pe.b_in, Q = \gen_row[3].gen_col[3].u_pe.b_out).
+Adding EN signal on $flatten\gen_row[3].gen_col[1].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[3].gen_col[1].u_pe.a_in, Q = \gen_row[3].gen_col[1].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[0].gen_col[0].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[0].gen_col[0].u_pe.a_in, Q = \gen_row[0].gen_col[0].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[0].gen_col[0].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[0].u_pe.$procmux$21789_Y, Q = \gen_row[0].gen_col[0].u_pe.acc_r).
+Adding EN signal on $flatten\gen_row[0].gen_col[1].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[0].gen_col[1].u_pe.a_in, Q = \gen_row[0].gen_col[1].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[0].gen_col[1].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[1].u_pe.$procmux$21789_Y, Q = \gen_row[0].gen_col[1].u_pe.acc_r).
+Adding EN signal on $flatten\gen_row[0].gen_col[2].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[0].gen_col[2].u_pe.a_in, Q = \gen_row[0].gen_col[2].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[0].gen_col[2].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[2].u_pe.$procmux$21789_Y, Q = \gen_row[0].gen_col[2].u_pe.acc_r).
+Adding EN signal on $flatten\gen_row[0].gen_col[3].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[0].gen_col[3].u_pe.a_in, Q = \gen_row[0].gen_col[3].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[0].gen_col[3].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[3].u_pe.$procmux$21789_Y, Q = \gen_row[0].gen_col[3].u_pe.acc_r).
+Adding EN signal on $flatten\gen_row[1].gen_col[0].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[1].gen_col[0].u_pe.a_in, Q = \gen_row[1].gen_col[0].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[3].gen_col[1].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[1].u_pe.$procmux$21789_Y, Q = \gen_row[3].gen_col[1].u_pe.acc_r).
+Adding EN signal on $flatten\gen_row[1].gen_col[0].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[0].u_pe.$procmux$21789_Y, Q = \gen_row[1].gen_col[0].u_pe.acc_r).
+Adding EN signal on $flatten\gen_row[1].gen_col[1].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[1].gen_col[1].u_pe.a_in, Q = \gen_row[1].gen_col[1].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[3].gen_col[2].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[3].gen_col[2].u_pe.a_in, Q = \gen_row[3].gen_col[2].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[1].gen_col[1].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[1].u_pe.$procmux$21789_Y, Q = \gen_row[1].gen_col[1].u_pe.acc_r).
+Adding EN signal on $flatten\gen_row[1].gen_col[2].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[1].gen_col[2].u_pe.a_in, Q = \gen_row[1].gen_col[2].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[1].gen_col[2].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[2].u_pe.$procmux$21789_Y, Q = \gen_row[1].gen_col[2].u_pe.acc_r).
+Adding EN signal on $flatten\gen_row[1].gen_col[3].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[1].gen_col[3].u_pe.a_in, Q = \gen_row[1].gen_col[3].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[1].gen_col[3].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[3].u_pe.$procmux$21789_Y, Q = \gen_row[1].gen_col[3].u_pe.acc_r).
+Adding EN signal on $flatten\gen_row[2].gen_col[0].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[2].gen_col[0].u_pe.a_in, Q = \gen_row[2].gen_col[0].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[2].gen_col[0].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[0].u_pe.$procmux$21789_Y, Q = \gen_row[2].gen_col[0].u_pe.acc_r).
+Adding EN signal on $flatten\gen_row[2].gen_col[1].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[2].gen_col[1].u_pe.a_in, Q = \gen_row[2].gen_col[1].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[3].gen_col[2].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[2].u_pe.$procmux$21789_Y, Q = \gen_row[3].gen_col[2].u_pe.acc_r).
+Adding EN signal on $flatten\gen_row[2].gen_col[1].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[1].u_pe.$procmux$21789_Y, Q = \gen_row[2].gen_col[1].u_pe.acc_r).
+Adding EN signal on $flatten\gen_row[2].gen_col[2].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[2].gen_col[2].u_pe.a_in, Q = \gen_row[2].gen_col[2].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[3].gen_col[3].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[3].u_pe.$procmux$21789_Y, Q = \gen_row[3].gen_col[3].u_pe.acc_r).
+Adding EN signal on $flatten\gen_row[3].gen_col[3].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[3].gen_col[3].u_pe.a_in, Q = \gen_row[3].gen_col[3].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[2].gen_col[2].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[2].u_pe.$procmux$21789_Y, Q = \gen_row[2].gen_col[2].u_pe.acc_r).
+Adding EN signal on $flatten\gen_row[2].gen_col[3].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[2].gen_col[3].u_pe.a_in, Q = \gen_row[2].gen_col[3].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[2].gen_col[3].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[3].u_pe.$procmux$21789_Y, Q = \gen_row[2].gen_col[3].u_pe.acc_r).
+Adding EN signal on $flatten\gen_row[3].gen_col[0].u_pe.$procdff$21801 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = \gen_row[3].gen_col[0].u_pe.a_in, Q = \gen_row[3].gen_col[0].u_pe.a_out).
+Adding EN signal on $flatten\gen_row[3].gen_col[0].u_pe.$procdff$21811 ($adff) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[0].u_pe.$procmux$21789_Y, Q = \gen_row[3].gen_col[0].u_pe.acc_r).
+
+39.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100..
+Removed 58 unused cells and 462 unused wires.
+<suppressed ~65 debug messages>
+
+39.5. Rerunning OPT passes. (Removed registers in this run.)
+
+39.6. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.
+
+39.7. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100'.
+Removed a total of 0 cells.
+
+39.8. Executing OPT_DFF pass (perform DFF optimizations).
+
+39.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100..
+Removed 0 unused cells and 10 unused wires.
+<suppressed ~10 debug messages>
+
+39.10. Finished fast OPT passes.
+
+40. Executing TECHMAP pass (map to technology primitives).
+
+40.1. Executing Verilog-2005 frontend: /nix/store/9r0bh7sp051dpm8km8bqlb028anpd3v3-yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/nix/store/9r0bh7sp051dpm8km8bqlb028anpd3v3-yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `\$__div_mod_u'.
+Generating RTLIL representation for module `\$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `\$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Successfully finished Verilog frontend.
+
+40.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $adffe.
+Running "alumacc" on wrapper $extern:wrap:$gt:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$gt:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$gt:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$lt:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$lt:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$lt:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=8:B_SIGNED=1:B_WIDTH=8:Y_WIDTH=16:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=8:B_SIGNED=1:B_WIDTH=8:Y_WIDTH=16:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$mul:A_SIGNED=1:A_WIDTH=8:B_SIGNED=1:B_WIDTH=8:Y_WIDTH=16:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$add:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:A_SIGNED=1:A_WIDTH=32:B_SIGNED=1:B_WIDTH=32:Y_WIDTH=32:394426c56d1a028ba8fdd5469b163e04011def47.
+Using extmapper simplemap for cells of type $or.
+Using extmapper simplemap for cells of type $reduce_and.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod$2653f68ddb8eab7b1907b4a20767b72a824a7a36\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $not.
+Using extmapper maccmap for cells of type $macc.
+  add \gen_row[0].gen_col[1].u_pe.a_q44 * \gen_row[0].gen_col[1].u_pe.b_q44 (8x8 bits, signed)
+  add \gen_row[1].gen_col[1].u_pe.a_q44 * \gen_row[1].gen_col[1].u_pe.b_q44 (8x8 bits, signed)
+  add \gen_row[0].gen_col[2].u_pe.a_q44 * \gen_row[0].gen_col[2].u_pe.b_q44 (8x8 bits, signed)
+  add \gen_row[1].gen_col[0].u_pe.a_q44 * \gen_row[1].gen_col[0].u_pe.b_q44 (8x8 bits, signed)
+  add \gen_row[1].gen_col[3].u_pe.a_q44 * \gen_row[1].gen_col[3].u_pe.b_q44 (8x8 bits, signed)
+  add \gen_row[0].gen_col[3].u_pe.a_q44 * \gen_row[0].gen_col[3].u_pe.b_q44 (8x8 bits, signed)
+  add \gen_row[3].gen_col[3].u_pe.a_q44 * \gen_row[3].gen_col[3].u_pe.b_q44 (8x8 bits, signed)
+  add \gen_row[1].gen_col[2].u_pe.a_q44 * \gen_row[1].gen_col[2].u_pe.b_q44 (8x8 bits, signed)
+  add \gen_row[3].gen_col[2].u_pe.a_q44 * \gen_row[3].gen_col[2].u_pe.b_q44 (8x8 bits, signed)
+  add \gen_row[3].gen_col[1].u_pe.a_q44 * \gen_row[3].gen_col[1].u_pe.b_q44 (8x8 bits, signed)
+  add \gen_row[3].gen_col[0].u_pe.a_q44 * \gen_row[3].gen_col[0].u_pe.b_q44 (8x8 bits, signed)
+  add \gen_row[2].gen_col[0].u_pe.a_q44 * \gen_row[2].gen_col[0].u_pe.b_q44 (8x8 bits, signed)
+  add \gen_row[2].gen_col[1].u_pe.a_q44 * \gen_row[2].gen_col[1].u_pe.b_q44 (8x8 bits, signed)
+  add \gen_row[2].gen_col[2].u_pe.a_q44 * \gen_row[2].gen_col[2].u_pe.b_q44 (8x8 bits, signed)
+  add \gen_row[2].gen_col[3].u_pe.a_q44 * \gen_row[2].gen_col[3].u_pe.b_q44 (8x8 bits, signed)
+  add \gen_row[0].gen_col[0].u_pe.a_q44 * \gen_row[0].gen_col[0].u_pe.b_q44 (8x8 bits, signed)
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000100000 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000010000 for cells of type $fa.
+Using template $paramod$6df0329addda9228fcc2546de2aaf14ad26c98e1\_90_alu for cells of type $alu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000010000 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~14973 debug messages>
+
+41. Executing OPT pass (performing simple optimizations).
+
+41.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.
+<suppressed ~17432 debug messages>
+
+41.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100'.
+<suppressed ~12564 debug messages>
+Removed a total of 4188 cells.
+
+41.3. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $auto$ff.cc:266:slice$22139 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[0].u_pe.$procmux$21789_Y [0], Q = \gen_row[0].gen_col[0].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$22140 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[0].u_pe.$procmux$21789_Y [1], Q = \gen_row[0].gen_col[0].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$22141 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[0].u_pe.$procmux$21789_Y [2], Q = \gen_row[0].gen_col[0].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$22142 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[0].u_pe.$procmux$21789_Y [3], Q = \gen_row[0].gen_col[0].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$22143 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[0].u_pe.$procmux$21789_Y [4], Q = \gen_row[0].gen_col[0].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$22144 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[0].u_pe.$procmux$21789_Y [5], Q = \gen_row[0].gen_col[0].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$22145 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[0].u_pe.$procmux$21789_Y [6], Q = \gen_row[0].gen_col[0].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$22146 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[0].u_pe.$procmux$21789_Y [7], Q = \gen_row[0].gen_col[0].u_pe.acc_r [7]).
+Adding EN signal on $auto$ff.cc:266:slice$22203 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[1].u_pe.$procmux$21789_Y [0], Q = \gen_row[0].gen_col[1].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$22204 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[1].u_pe.$procmux$21789_Y [1], Q = \gen_row[0].gen_col[1].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$22205 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[1].u_pe.$procmux$21789_Y [2], Q = \gen_row[0].gen_col[1].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$22206 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[1].u_pe.$procmux$21789_Y [3], Q = \gen_row[0].gen_col[1].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$22207 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[1].u_pe.$procmux$21789_Y [4], Q = \gen_row[0].gen_col[1].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$22208 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[1].u_pe.$procmux$21789_Y [5], Q = \gen_row[0].gen_col[1].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$22209 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[1].u_pe.$procmux$21789_Y [6], Q = \gen_row[0].gen_col[1].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$22210 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[1].u_pe.$procmux$21789_Y [7], Q = \gen_row[0].gen_col[1].u_pe.acc_r [7]).
+Adding EN signal on $auto$ff.cc:266:slice$22315 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[2].u_pe.$procmux$21789_Y [0], Q = \gen_row[0].gen_col[2].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$22316 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[2].u_pe.$procmux$21789_Y [1], Q = \gen_row[0].gen_col[2].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$22317 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[2].u_pe.$procmux$21789_Y [2], Q = \gen_row[0].gen_col[2].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$22318 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[2].u_pe.$procmux$21789_Y [3], Q = \gen_row[0].gen_col[2].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$22319 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[2].u_pe.$procmux$21789_Y [4], Q = \gen_row[0].gen_col[2].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$22320 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[2].u_pe.$procmux$21789_Y [5], Q = \gen_row[0].gen_col[2].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$22321 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[2].u_pe.$procmux$21789_Y [6], Q = \gen_row[0].gen_col[2].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$22322 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[2].u_pe.$procmux$21789_Y [7], Q = \gen_row[0].gen_col[2].u_pe.acc_r [7]).
+Adding EN signal on $auto$ff.cc:266:slice$22755 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[1].u_pe.$procmux$21789_Y [0], Q = \gen_row[3].gen_col[1].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$22756 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[1].u_pe.$procmux$21789_Y [1], Q = \gen_row[3].gen_col[1].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$22757 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[1].u_pe.$procmux$21789_Y [2], Q = \gen_row[3].gen_col[1].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$22758 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[1].u_pe.$procmux$21789_Y [3], Q = \gen_row[3].gen_col[1].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$22759 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[1].u_pe.$procmux$21789_Y [4], Q = \gen_row[3].gen_col[1].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$22760 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[1].u_pe.$procmux$21789_Y [5], Q = \gen_row[3].gen_col[1].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$22761 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[1].u_pe.$procmux$21789_Y [6], Q = \gen_row[3].gen_col[1].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$22762 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[1].u_pe.$procmux$21789_Y [7], Q = \gen_row[3].gen_col[1].u_pe.acc_r [7]).
+Adding EN signal on $auto$ff.cc:266:slice$22819 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[3].u_pe.$procmux$21789_Y [0], Q = \gen_row[1].gen_col[3].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$22820 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[3].u_pe.$procmux$21789_Y [1], Q = \gen_row[1].gen_col[3].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$22821 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[3].u_pe.$procmux$21789_Y [2], Q = \gen_row[1].gen_col[3].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$22822 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[3].u_pe.$procmux$21789_Y [3], Q = \gen_row[1].gen_col[3].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$22823 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[3].u_pe.$procmux$21789_Y [4], Q = \gen_row[1].gen_col[3].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$22824 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[3].u_pe.$procmux$21789_Y [5], Q = \gen_row[1].gen_col[3].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$22825 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[3].u_pe.$procmux$21789_Y [6], Q = \gen_row[1].gen_col[3].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$22826 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[3].u_pe.$procmux$21789_Y [7], Q = \gen_row[1].gen_col[3].u_pe.acc_r [7]).
+Adding EN signal on $auto$ff.cc:266:slice$22979 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[3].u_pe.$procmux$21789_Y [0], Q = \gen_row[0].gen_col[3].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$22980 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[3].u_pe.$procmux$21789_Y [1], Q = \gen_row[0].gen_col[3].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$22981 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[3].u_pe.$procmux$21789_Y [2], Q = \gen_row[0].gen_col[3].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$22982 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[3].u_pe.$procmux$21789_Y [3], Q = \gen_row[0].gen_col[3].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$22983 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[3].u_pe.$procmux$21789_Y [4], Q = \gen_row[0].gen_col[3].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$22984 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[3].u_pe.$procmux$21789_Y [5], Q = \gen_row[0].gen_col[3].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$22985 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[3].u_pe.$procmux$21789_Y [6], Q = \gen_row[0].gen_col[3].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$22986 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[0].gen_col[3].u_pe.$procmux$21789_Y [7], Q = \gen_row[0].gen_col[3].u_pe.acc_r [7]).
+Adding EN signal on $auto$ff.cc:266:slice$23107 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[2].u_pe.$procmux$21789_Y [0], Q = \gen_row[1].gen_col[2].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$23108 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[2].u_pe.$procmux$21789_Y [1], Q = \gen_row[1].gen_col[2].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$23109 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[2].u_pe.$procmux$21789_Y [2], Q = \gen_row[1].gen_col[2].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$23110 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[2].u_pe.$procmux$21789_Y [3], Q = \gen_row[1].gen_col[2].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$23111 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[2].u_pe.$procmux$21789_Y [4], Q = \gen_row[1].gen_col[2].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$23112 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[2].u_pe.$procmux$21789_Y [5], Q = \gen_row[1].gen_col[2].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$23113 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[2].u_pe.$procmux$21789_Y [6], Q = \gen_row[1].gen_col[2].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$23114 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[2].u_pe.$procmux$21789_Y [7], Q = \gen_row[1].gen_col[2].u_pe.acc_r [7]).
+Adding EN signal on $auto$ff.cc:266:slice$23323 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[2].u_pe.$procmux$21789_Y [0], Q = \gen_row[2].gen_col[2].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$23324 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[2].u_pe.$procmux$21789_Y [1], Q = \gen_row[2].gen_col[2].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$23325 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[2].u_pe.$procmux$21789_Y [2], Q = \gen_row[2].gen_col[2].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$23326 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[2].u_pe.$procmux$21789_Y [3], Q = \gen_row[2].gen_col[2].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$23327 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[2].u_pe.$procmux$21789_Y [4], Q = \gen_row[2].gen_col[2].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$23328 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[2].u_pe.$procmux$21789_Y [5], Q = \gen_row[2].gen_col[2].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$23329 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[2].u_pe.$procmux$21789_Y [6], Q = \gen_row[2].gen_col[2].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$23330 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[2].u_pe.$procmux$21789_Y [7], Q = \gen_row[2].gen_col[2].u_pe.acc_r [7]).
+Adding EN signal on $auto$ff.cc:266:slice$23355 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[1].u_pe.$procmux$21789_Y [0], Q = \gen_row[2].gen_col[1].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$23356 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[1].u_pe.$procmux$21789_Y [1], Q = \gen_row[2].gen_col[1].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$23357 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[1].u_pe.$procmux$21789_Y [2], Q = \gen_row[2].gen_col[1].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$23358 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[1].u_pe.$procmux$21789_Y [3], Q = \gen_row[2].gen_col[1].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$23359 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[1].u_pe.$procmux$21789_Y [4], Q = \gen_row[2].gen_col[1].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$23360 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[1].u_pe.$procmux$21789_Y [5], Q = \gen_row[2].gen_col[1].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$23361 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[1].u_pe.$procmux$21789_Y [6], Q = \gen_row[2].gen_col[1].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$23362 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[1].u_pe.$procmux$21789_Y [7], Q = \gen_row[2].gen_col[1].u_pe.acc_r [7]).
+Adding EN signal on $auto$ff.cc:266:slice$23451 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[1].u_pe.$procmux$21789_Y [0], Q = \gen_row[1].gen_col[1].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$23452 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[1].u_pe.$procmux$21789_Y [1], Q = \gen_row[1].gen_col[1].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$23453 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[1].u_pe.$procmux$21789_Y [2], Q = \gen_row[1].gen_col[1].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$23454 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[1].u_pe.$procmux$21789_Y [3], Q = \gen_row[1].gen_col[1].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$23455 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[1].u_pe.$procmux$21789_Y [4], Q = \gen_row[1].gen_col[1].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$23456 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[1].u_pe.$procmux$21789_Y [5], Q = \gen_row[1].gen_col[1].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$23457 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[1].u_pe.$procmux$21789_Y [6], Q = \gen_row[1].gen_col[1].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$23458 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[1].u_pe.$procmux$21789_Y [7], Q = \gen_row[1].gen_col[1].u_pe.acc_r [7]).
+Adding EN signal on $auto$ff.cc:266:slice$23483 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[0].u_pe.$procmux$21789_Y [0], Q = \gen_row[1].gen_col[0].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$23484 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[0].u_pe.$procmux$21789_Y [1], Q = \gen_row[1].gen_col[0].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$23485 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[0].u_pe.$procmux$21789_Y [2], Q = \gen_row[1].gen_col[0].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$23486 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[0].u_pe.$procmux$21789_Y [3], Q = \gen_row[1].gen_col[0].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$23487 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[0].u_pe.$procmux$21789_Y [4], Q = \gen_row[1].gen_col[0].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$23488 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[0].u_pe.$procmux$21789_Y [5], Q = \gen_row[1].gen_col[0].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$23489 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[0].u_pe.$procmux$21789_Y [6], Q = \gen_row[1].gen_col[0].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$23490 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[1].gen_col[0].u_pe.$procmux$21789_Y [7], Q = \gen_row[1].gen_col[0].u_pe.acc_r [7]).
+Adding EN signal on $auto$ff.cc:266:slice$23675 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[0].u_pe.$procmux$21789_Y [0], Q = \gen_row[3].gen_col[0].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$23676 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[0].u_pe.$procmux$21789_Y [1], Q = \gen_row[3].gen_col[0].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$23677 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[0].u_pe.$procmux$21789_Y [2], Q = \gen_row[3].gen_col[0].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$23678 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[0].u_pe.$procmux$21789_Y [3], Q = \gen_row[3].gen_col[0].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$23679 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[0].u_pe.$procmux$21789_Y [4], Q = \gen_row[3].gen_col[0].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$23680 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[0].u_pe.$procmux$21789_Y [5], Q = \gen_row[3].gen_col[0].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$23681 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[0].u_pe.$procmux$21789_Y [6], Q = \gen_row[3].gen_col[0].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$23682 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[0].u_pe.$procmux$21789_Y [7], Q = \gen_row[3].gen_col[0].u_pe.acc_r [7]).
+Adding EN signal on $auto$ff.cc:266:slice$23803 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[3].u_pe.$procmux$21789_Y [0], Q = \gen_row[2].gen_col[3].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$23804 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[3].u_pe.$procmux$21789_Y [1], Q = \gen_row[2].gen_col[3].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$23805 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[3].u_pe.$procmux$21789_Y [2], Q = \gen_row[2].gen_col[3].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$23806 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[3].u_pe.$procmux$21789_Y [3], Q = \gen_row[2].gen_col[3].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$23807 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[3].u_pe.$procmux$21789_Y [4], Q = \gen_row[2].gen_col[3].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$23808 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[3].u_pe.$procmux$21789_Y [5], Q = \gen_row[2].gen_col[3].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$23809 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[3].u_pe.$procmux$21789_Y [6], Q = \gen_row[2].gen_col[3].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$23810 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[3].u_pe.$procmux$21789_Y [7], Q = \gen_row[2].gen_col[3].u_pe.acc_r [7]).
+Adding EN signal on $auto$ff.cc:266:slice$23931 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[3].u_pe.$procmux$21789_Y [0], Q = \gen_row[3].gen_col[3].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$23932 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[3].u_pe.$procmux$21789_Y [1], Q = \gen_row[3].gen_col[3].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$23933 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[3].u_pe.$procmux$21789_Y [2], Q = \gen_row[3].gen_col[3].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$23934 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[3].u_pe.$procmux$21789_Y [3], Q = \gen_row[3].gen_col[3].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$23935 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[3].u_pe.$procmux$21789_Y [4], Q = \gen_row[3].gen_col[3].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$23936 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[3].u_pe.$procmux$21789_Y [5], Q = \gen_row[3].gen_col[3].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$23937 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[3].u_pe.$procmux$21789_Y [6], Q = \gen_row[3].gen_col[3].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$23938 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[3].u_pe.$procmux$21789_Y [7], Q = \gen_row[3].gen_col[3].u_pe.acc_r [7]).
+Adding EN signal on $auto$ff.cc:266:slice$24091 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[2].u_pe.$procmux$21789_Y [0], Q = \gen_row[3].gen_col[2].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$24092 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[2].u_pe.$procmux$21789_Y [1], Q = \gen_row[3].gen_col[2].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$24093 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[2].u_pe.$procmux$21789_Y [2], Q = \gen_row[3].gen_col[2].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$24094 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[2].u_pe.$procmux$21789_Y [3], Q = \gen_row[3].gen_col[2].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$24095 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[2].u_pe.$procmux$21789_Y [4], Q = \gen_row[3].gen_col[2].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$24096 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[2].u_pe.$procmux$21789_Y [5], Q = \gen_row[3].gen_col[2].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$24097 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[2].u_pe.$procmux$21789_Y [6], Q = \gen_row[3].gen_col[2].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$24098 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[3].gen_col[2].u_pe.$procmux$21789_Y [7], Q = \gen_row[3].gen_col[2].u_pe.acc_r [7]).
+Adding EN signal on $auto$ff.cc:266:slice$24251 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[0].u_pe.$procmux$21789_Y [0], Q = \gen_row[2].gen_col[0].u_pe.acc_r [0]).
+Adding EN signal on $auto$ff.cc:266:slice$24252 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[0].u_pe.$procmux$21789_Y [1], Q = \gen_row[2].gen_col[0].u_pe.acc_r [1]).
+Adding EN signal on $auto$ff.cc:266:slice$24253 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[0].u_pe.$procmux$21789_Y [2], Q = \gen_row[2].gen_col[0].u_pe.acc_r [2]).
+Adding EN signal on $auto$ff.cc:266:slice$24254 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[0].u_pe.$procmux$21789_Y [3], Q = \gen_row[2].gen_col[0].u_pe.acc_r [3]).
+Adding EN signal on $auto$ff.cc:266:slice$24255 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[0].u_pe.$procmux$21789_Y [4], Q = \gen_row[2].gen_col[0].u_pe.acc_r [4]).
+Adding EN signal on $auto$ff.cc:266:slice$24256 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[0].u_pe.$procmux$21789_Y [5], Q = \gen_row[2].gen_col[0].u_pe.acc_r [5]).
+Adding EN signal on $auto$ff.cc:266:slice$24257 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[0].u_pe.$procmux$21789_Y [6], Q = \gen_row[2].gen_col[0].u_pe.acc_r [6]).
+Adding EN signal on $auto$ff.cc:266:slice$24258 ($_DFFE_PN0P_) from module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 (D = $flatten\gen_row[2].gen_col[0].u_pe.$procmux$21789_Y [7], Q = \gen_row[2].gen_col[0].u_pe.acc_r [7]).
+
+41.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100..
+Removed 5144 unused cells and 11611 unused wires.
+<suppressed ~5145 debug messages>
+
+41.5. Rerunning OPT passes. (Removed registers in this run.)
+
+41.6. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100.
+<suppressed ~224 debug messages>
+
+41.7. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100'.
+<suppressed ~1143 debug messages>
+Removed a total of 381 cells.
+
+41.8. Executing OPT_DFF pass (perform DFF optimizations).
+
+41.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100..
+Removed 0 unused cells and 351 unused wires.
+<suppressed ~1 debug messages>
+
+41.10. Finished fast OPT passes.
+
+42. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+  cell sky130_fd_sc_hd__dfxtp_1 (noninv, pins=3, area=20.02) is a direct match for cell type $_DFF_P_.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+  cell sky130_fd_sc_hd__dfrtn_1 (noninv, pins=4, area=25.02) is a direct match for cell type $_DFF_NN0_.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+  cell sky130_fd_sc_hd__dfrtp_1 (noninv, pins=4, area=25.02) is a direct match for cell type $_DFF_PN0_.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+  cell sky130_fd_sc_hd__dfstp_2 (noninv, pins=4, area=26.28) is a direct match for cell type $_DFF_PN1_.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+  cell sky130_fd_sc_hd__dfbbn_1 (noninv, pins=6, area=32.53) is a direct match for cell type $_DFFSR_NNN_.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbn_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtn_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+  cell sky130_fd_sc_hd__dfbbp_1 (noninv, pins=6, area=32.53) is a direct match for cell type $_DFFSR_PNN_.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE|IQ&!DE' in pin attribute of cell 'sky130_fd_sc_hd__edfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfbbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfrtp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfsbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfstp_4' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sdfxtp_4' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxbp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_1' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_2' - skipping.
+Warning: Found unsupported expression 'D&DE&!SCE|IQ&!DE&!SCE|SCD&SCE' in pin attribute of cell 'sky130_fd_sc_hd__sedfxtp_4' - skipping.
+  final dff cell mappings:
+    unmapped dff cell: $_DFF_N_
+    \sky130_fd_sc_hd__dfxtp_1 _DFF_P_ (.CLK( C), .D( D), .Q( Q));
+    \sky130_fd_sc_hd__dfrtn_1 _DFF_NN0_ (.CLK_N( C), .D( D), .Q( Q), .RESET_B( R));
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    \sky130_fd_sc_hd__dfrtp_1 _DFF_PN0_ (.CLK( C), .D( D), .Q( Q), .RESET_B( R));
+    \sky130_fd_sc_hd__dfstp_2 _DFF_PN1_ (.CLK( C), .D( D), .Q( Q), .SET_B( R));
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    \sky130_fd_sc_hd__dfbbn_1 _DFFSR_NNN_ (.CLK_N( C), .D( D), .Q( Q), .Q_N(~Q), .RESET_B( R), .SET_B( S));
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \sky130_fd_sc_hd__dfbbp_1 _DFFSR_PNN_ (.CLK( C), .D( D), .Q( Q), .Q_N(~Q), .RESET_B( R), .SET_B( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+42.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+Mapping DFF cells in module `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100':
+  mapped 865 $_DFF_PN0_ cells to \sky130_fd_sc_hd__dfrtp_1 cells.
+
+43. Executing ABC pass (technology mapping using ABC).
+
+43.1. Extracting gate netlist of module `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100' to `<abc-temp-dir>/input.blif'..
+Replacing 1 occurrences of constant undef bits with constant zero bits
+Extracted 15543 gates and 16573 wires to a netlist network with 1027 inputs and 865 outputs.
+
+43.1.1. Executing ABC.
+Running ABC command: "/nix/store/6l3aj1gi4lja8z5s4lan2k2cfz9mqkrz-yosys-abc/bin/abc" -s -f <abc-temp-dir>/abc.script 2>&1
+ABC: ABC command line: "source <abc-temp-dir>/abc.script".
+ABC: 
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_lib -w /home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.07 sec
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__decap_12" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__decap_3" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__decap_4" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__decap_6" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__decap_8" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfbbn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfbbn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfbbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrtn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfrtp_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfsbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfsbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfstp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfstp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfstp_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfxbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfxbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfxtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfxtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dfxtp_4".
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__diode_2" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__dlclkp_1" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__dlclkp_2" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__dlclkp_4" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrbn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrbn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtn_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlrtp_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxbn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxbn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxtn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxtn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxtn_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__dlxtp_1".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__ebufn_1".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__ebufn_2".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__ebufn_4".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__ebufn_8".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__edfxbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__edfxtp_1".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvn_0".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvn_1".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvn_2".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvn_4".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvn_8".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvp_1".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvp_2".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvp_4".
+ABC: Scl_LibertyReadGenlib() skipped three-state cell "sky130_fd_sc_hd__einvp_8".
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_bleeder_1" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_decapkapwr_12" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_decapkapwr_3" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_decapkapwr_4" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_decapkapwr_6" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__lpflow_decapkapwr_8" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__lpflow_inputisolatch_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfbbn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfbbn_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfbbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrtn_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfrtp_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfsbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfsbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfstp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfstp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfstp_4".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfxbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfxbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfxtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfxtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sdfxtp_4".
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__sdlclkp_1" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__sdlclkp_2" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped cell "sky130_fd_sc_hd__sdlclkp_4" without logic function.
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sedfxbp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sedfxbp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sedfxtp_1".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sedfxtp_2".
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "sky130_fd_sc_hd__sedfxtp_4".
+ABC: Library "sky130_fd_sc_hd__tt_025C_1v80" from "/home/david/.volare/volare/sky130/versions/0fe599b2afb6708d281543108caf8310912f54af/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib" has 334 cells (94 skipped: 63 seq; 13 tri-state; 18 no func; 0 dont_use).  Time =     0.12 sec
+ABC: Memory =   19.85 MB. Time =     0.12 sec
+ABC: Warning: Detected 9 multi-output gates (for example, "sky130_fd_sc_hd__fa_1").
+ABC: + strash 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + ifraig 
+ABC: + retime 
+ABC: + strash 
+ABC: + dch -f 
+ABC: + map -M 1 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+
+43.1.2. Re-integrating ABC results.
+ABC RESULTS:   sky130_fd_sc_hd__or2b_2 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__o22a_2 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__xor3_4 cells:        5
+ABC RESULTS:   sky130_fd_sc_hd__o31a_2 cells:        2
+ABC RESULTS:   sky130_fd_sc_hd__a32oi_1 cells:        2
+ABC RESULTS:   sky130_fd_sc_hd__a311oi_1 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__a32o_1 cells:        6
+ABC RESULTS:   sky130_fd_sc_hd__or3_2 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__a2111o_1 cells:        2
+ABC RESULTS:   sky130_fd_sc_hd__o221ai_1 cells:        3
+ABC RESULTS:   sky130_fd_sc_hd__a211o_2 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__a31o_2 cells:        7
+ABC RESULTS:   sky130_fd_sc_hd__o211a_1 cells:       13
+ABC RESULTS:   sky130_fd_sc_hd__a211oi_1 cells:       11
+ABC RESULTS:   sky130_fd_sc_hd__nor3b_1 cells:       18
+ABC RESULTS:   sky130_fd_sc_hd__maj3_1 cells:       31
+ABC RESULTS:   sky130_fd_sc_hd__o2111a_1 cells:       16
+ABC RESULTS:   sky130_fd_sc_hd__a22o_2 cells:        8
+ABC RESULTS:   sky130_fd_sc_hd__o41ai_1 cells:        5
+ABC RESULTS:   sky130_fd_sc_hd__nor4_1 cells:      101
+ABC RESULTS:   sky130_fd_sc_hd__o31ai_1 cells:       44
+ABC RESULTS:   sky130_fd_sc_hd__lpflow_inputiso0p_1 cells:       13
+ABC RESULTS:   sky130_fd_sc_hd__a2bb2oi_1 cells:       13
+ABC RESULTS:   sky130_fd_sc_hd__o2111ai_1 cells:        2
+ABC RESULTS:   sky130_fd_sc_hd__o32ai_1 cells:       23
+ABC RESULTS:   sky130_fd_sc_hd__o21a_1 cells:       61
+ABC RESULTS:   sky130_fd_sc_hd__a21bo_2 cells:        1
+ABC RESULTS:   sky130_fd_sc_hd__and3_2 cells:       52
+ABC RESULTS:   sky130_fd_sc_hd__a22oi_1 cells:      128
+ABC RESULTS:   sky130_fd_sc_hd__xnor3_4 cells:       36
+ABC RESULTS:   sky130_fd_sc_hd__xnor2_1 cells:       73
+ABC RESULTS:   sky130_fd_sc_hd__a21boi_0 cells:      310
+ABC RESULTS:   sky130_fd_sc_hd__a31oi_1 cells:      139
+ABC RESULTS:   sky130_fd_sc_hd__a21o_2 cells:       83
+ABC RESULTS:   sky130_fd_sc_hd__or2_2 cells:       52
+ABC RESULTS:   sky130_fd_sc_hd__nand3b_1 cells:      129
+ABC RESULTS:   sky130_fd_sc_hd__and2_2 cells:      106
+ABC RESULTS:   sky130_fd_sc_hd__o211ai_1 cells:       75
+ABC RESULTS:   sky130_fd_sc_hd__nand4_1 cells:      949
+ABC RESULTS:   sky130_fd_sc_hd__a41oi_1 cells:       23
+ABC RESULTS:   sky130_fd_sc_hd__xor2_1 cells:      194
+ABC RESULTS:   sky130_fd_sc_hd__nor3_1 cells:      143
+ABC RESULTS:   sky130_fd_sc_hd__o21bai_1 cells:       87
+ABC RESULTS:   sky130_fd_sc_hd__o2bb2ai_1 cells:      240
+ABC RESULTS:   sky130_fd_sc_hd__o21ai_0 cells:     1015
+ABC RESULTS:   sky130_fd_sc_hd__a21oi_1 cells:     1257
+ABC RESULTS:   sky130_fd_sc_hd__o22ai_1 cells:      310
+ABC RESULTS:   sky130_fd_sc_hd__nand3_1 cells:     4963
+ABC RESULTS:   sky130_fd_sc_hd__nand2_1 cells:     5785
+ABC RESULTS:   sky130_fd_sc_hd__clkinv_1 cells:     1731
+ABC RESULTS:   sky130_fd_sc_hd__nor2_1 cells:     1254
+ABC RESULTS:        internal signals:    14681
+ABC RESULTS:           input signals:     1027
+ABC RESULTS:          output signals:      865
+Removing temp directory.
+
+44. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100..
+Removed 16 unused cells and 6778 unused wires.
+<suppressed ~289 debug messages>
+
+45. Printing statistics.
+
+=== $paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100 ===
+
+   Number of wires:              19557
+   Number of wire bits:          21066
+   Number of public wires:          31
+   Number of public wire bits:    1540
+   Number of ports:                  7
+   Number of port bits:            772
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              20391
+     sky130_fd_sc_hd__a2111o_1       2
+     sky130_fd_sc_hd__a211o_2        1
+     sky130_fd_sc_hd__a211oi_1      11
+     sky130_fd_sc_hd__a21bo_2        1
+     sky130_fd_sc_hd__a21boi_0     310
+     sky130_fd_sc_hd__a21o_2        83
+     sky130_fd_sc_hd__a21oi_1     1257
+     sky130_fd_sc_hd__a22o_2         8
+     sky130_fd_sc_hd__a22oi_1      128
+     sky130_fd_sc_hd__a2bb2oi_1     13
+     sky130_fd_sc_hd__a311oi_1       1
+     sky130_fd_sc_hd__a31o_2         7
+     sky130_fd_sc_hd__a31oi_1      139
+     sky130_fd_sc_hd__a32o_1         6
+     sky130_fd_sc_hd__a32oi_1        2
+     sky130_fd_sc_hd__a41oi_1       23
+     sky130_fd_sc_hd__and2_2       106
+     sky130_fd_sc_hd__and3_2        52
+     sky130_fd_sc_hd__clkinv_1    1731
+     sky130_fd_sc_hd__dfrtp_1      865
+     sky130_fd_sc_hd__lpflow_inputiso0p_1     13
+     sky130_fd_sc_hd__maj3_1        31
+     sky130_fd_sc_hd__nand2_1     5785
+     sky130_fd_sc_hd__nand3_1     4963
+     sky130_fd_sc_hd__nand3b_1     129
+     sky130_fd_sc_hd__nand4_1      949
+     sky130_fd_sc_hd__nor2_1      1254
+     sky130_fd_sc_hd__nor3_1       143
+     sky130_fd_sc_hd__nor3b_1       18
+     sky130_fd_sc_hd__nor4_1       101
+     sky130_fd_sc_hd__o2111a_1      16
+     sky130_fd_sc_hd__o2111ai_1      2
+     sky130_fd_sc_hd__o211a_1       13
+     sky130_fd_sc_hd__o211ai_1      75
+     sky130_fd_sc_hd__o21a_1        61
+     sky130_fd_sc_hd__o21ai_0     1015
+     sky130_fd_sc_hd__o21bai_1      87
+     sky130_fd_sc_hd__o221ai_1       3
+     sky130_fd_sc_hd__o22a_2         1
+     sky130_fd_sc_hd__o22ai_1      310
+     sky130_fd_sc_hd__o2bb2ai_1    240
+     sky130_fd_sc_hd__o31a_2         2
+     sky130_fd_sc_hd__o31ai_1       44
+     sky130_fd_sc_hd__o32ai_1       23
+     sky130_fd_sc_hd__o41ai_1        5
+     sky130_fd_sc_hd__or2_2         52
+     sky130_fd_sc_hd__or2b_2         1
+     sky130_fd_sc_hd__or3_2          1
+     sky130_fd_sc_hd__xnor2_1       73
+     sky130_fd_sc_hd__xnor3_4       36
+     sky130_fd_sc_hd__xor2_1       194
+     sky130_fd_sc_hd__xor3_4         5
+
+   Chip area for module '$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100': 116748.220800
+     of which used for sequential elements: 21645.760000 (18.54%)
+
+46. Executing Verilog backend.
+
+46.1. Executing BMUXMAP pass.
+
+46.2. Executing DEMUXMAP pass.
+Dumping module `$paramod\systolic_array_64x64\COLS=32'00000000000000000000000000000100'.
+
+Warnings: 34 unique messages, 242 total
+End of script. Logfile hash: 5a1aa75373, CPU: user 43.43s system 1.61s, MEM: 1898.99 MB peak
+Yosys 0.46 (git sha1 e97731b9dda91fa5fa53ed87df7c34163ba59a41, clang++ 17.0.6 -fPIC -O3)
+Time spent: 76% 35x read_verilog (40 sec), 15% 1x abc (8 sec), ...

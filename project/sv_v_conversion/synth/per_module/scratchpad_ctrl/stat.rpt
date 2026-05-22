@@ -1,0 +1,42 @@
+
+45. Printing statistics.
+
+=== scratchpad_ctrl ===
+
+   Number of wires:                621
+   Number of wire bits:            865
+   Number of public wires:          19
+   Number of public wire bits:     263
+   Number of ports:                 16
+   Number of port bits:            185
+   Number of memories:               2
+   Number of memory bits:         4096
+   Number of processes:              0
+   Number of cells:                686
+     $memrd                          2
+     $memwr_v2                       2
+     sky130_fd_sc_hd__a21o_2         1
+     sky130_fd_sc_hd__a21oi_1       71
+     sky130_fd_sc_hd__a2bb2oi_1      1
+     sky130_fd_sc_hd__a311oi_1       4
+     sky130_fd_sc_hd__a31oi_1        8
+     sky130_fd_sc_hd__and2b_2        1
+     sky130_fd_sc_hd__clkinv_1      48
+     sky130_fd_sc_hd__dfxtp_1       66
+     sky130_fd_sc_hd__nand2_1      155
+     sky130_fd_sc_hd__nand3_1       72
+     sky130_fd_sc_hd__nand3b_1       1
+     sky130_fd_sc_hd__nand4_1       33
+     sky130_fd_sc_hd__nor2_1        44
+     sky130_fd_sc_hd__nor3b_1        1
+     sky130_fd_sc_hd__nor4_1        32
+     sky130_fd_sc_hd__o211ai_1       7
+     sky130_fd_sc_hd__o21ai_0      136
+     sky130_fd_sc_hd__o2bb2ai_1      1
+
+   Area for cell type $memrd is unknown!
+   Area for cell type $memwr_v2 is unknown!
+
+   Chip area for module '\scratchpad_ctrl': 4239.065600
+     of which used for sequential elements: 1321.267200 (31.17%)
+

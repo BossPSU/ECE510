@@ -22,8 +22,12 @@ transcript
 
 # ---- OpenLane ----
 # Per-flow run outputs (DEF/LEF/GDS intermediates, ~100s of MB per run).
-# We keep only the curated reports copied into codefest/cf07/synth/.
+# We keep only the curated reports copied into codefest/cf07/synth/ and
+# project/m3/synth/.
 **/codefest/**/runs/
+**/synth/runs/
+# OpenLane SystemVerilog-frontend transient parse cache
+**/slpp_all/
 
 # ---- Cadence Genus ----
 # Per-run PBS scratch dir (host- and PID-specific, contains lib_script etc.)
