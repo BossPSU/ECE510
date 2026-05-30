@@ -2,12 +2,18 @@
 
 ## Summary
 
-Five OpenLane / yosys synthesis attempts were made for M3, in
-escalating order. The first two failed on yosys-internal asserts;
-the third succeeded at the leaf; the fourth failed on host memory;
-the fifth succeeded as a per-module sweep covering 28 modules. The
-M3 OpenLane evidence is the union of attempts 3 + 5, plus the
-documented failure of attempts 1, 2, and 4.
+Eight OpenLane / yosys synthesis attempts were made for M3 (plus its
+M4 / M5 follow-ons), in escalating order. The first two failed on
+yosys-internal asserts; the third succeeded at the leaf; the fourth
+failed on host memory; the fifth succeeded as a per-module sweep
+covering 28 modules; the sixth and seventh added M4 LUT swaps that
+unblocked the flat-top synth and produced a clean Sky130 GDS at the
+cost of severe setup violations; the eighth added M5 pipelining to
+the divider and MAC PE, closing 97 % of the TT setup gap and
+producing a second clean Sky130 GDS that closes setup outright at FF.
+The M3 OpenLane evidence is the union of attempts 3, 5, 6, 7, and 8b,
+plus the documented failures of attempts 1, 2, 4, and the BLKANDNBLK
+Verilator hit in attempt 8a.
 
 1. **Integrated `top_small` through the synlig SV frontend** --
    yosys 0.46 + synlig assertion failure on `accel_engine` AST→RTLIL
@@ -39,8 +45,26 @@ documented failure of attempts 1, 2, and 4.
    reports under [`synth/per_module/`](synth/per_module/). Per-block
    cell counts + areas; sister sweep to the SAED32 Genus sweep on
    phobos. Chip-scale rollup in [`chip_scale_rollup.md`](chip_scale_rollup.md).
+6. **M4 LUT swap unblocks flat top_small Yosys.Synthesis** -- replacing
+   the Padé softmax / gelu / gelu_grad chains with LUT+linterp
+   drop-ins drops yosys peak RSS from ~5.7 GiB (OOM in Attempt 4) to
+   ~1 GiB. The flat Yosys.Synthesis completes in under 4 min wall-clock
+   ([`synth/top_small_M4_LUT_synth/`](synth/top_small_M4_LUT_synth/)).
+7. **Attempt 6 extended through full OpenLane Classic flow with GDS
+   streamout** -- after four structural fixes to clear yosys
+   unmapped-cells, all 74 / 78 steps ran end-to-end on Sky130A. Clean
+   DRC + LVS + antenna. But setup timing did **not** close at the
+   10 ns target (TT WNS = -55.7 ns; chip f_max ≈ 15 MHz, divider-
+   limited). Snapshot: [`synth/top_small_M4_LUT_full/`](synth/top_small_M4_LUT_full/).
+8. **M5 pipelining (divider + mac_pe) closes 97 % of the TT setup gap
+   and produces a second clean Sky130 GDS** -- the 64-bit combinational
+   divider was replaced by a 48-cycle iterative shift-subtract
+   (`divider_or_reciprocal_seq`), and `mac_pe_piped` adds one mid-MAC
+   pipeline register. Full flow completes; FF closes outright; TT
+   1.6 ns over budget; SS rated f_max **45 MHz** (vs did-not-close
+   Attempt 7). Snapshot: [`synth/top_small_M5_attempt8/`](synth/top_small_M5_attempt8/).
 
-All five attempts are real, all are documented. The M3 spec's
+All eight attempts are real, all are documented. The M3 spec's
 "documented scope adjustment with the synthesis attempt that
 justifies it" branch is met three different ways: the passing leaf
 flow (attempt 3), the passing per-module sweep on the hand-flattened
@@ -530,6 +554,143 @@ Snapshot of artifacts (GDS, DEF, post-PnR netlist, STA summary, power)
 at [`synth/top_small_M4_LUT_full/`](synth/top_small_M4_LUT_full/)
 with full per-corner reports in [`synth/runs/M4_LUT_full_v5_*/`](synth/runs/)
 (gitignored).
+
+## Attempt 8 -- M5 pipelining, second clean Sky130 GDS, FF closes setup
+
+Attempt 7's headline failure was setup timing: 0 DRC/LVS violations and
+a clean GDS, but the chip closed at only ≈ 15 MHz at TT instead of the
+~600 MHz the LUT-only swap was supposed to enable. The bottleneck was
+the 64-bit combinational divider inside `divider_or_reciprocal_unit`
+(~500 gate levels, ~65 ns) which the M4 LUT swap had moved from
+per-lane to a shared instance but had not pipelined. The cf07 mac_pe
+leaf measurement also showed ~14.5 ns at SS, suggesting one more
+pipeline stage in the MAC PE would help cover the SS corner.
+
+M5 addresses both. Two new modules + one parameter thread per caller:
+
+- **`divider_or_reciprocal_seq.v`** -- drop-in port-compatible
+  replacement that runs a 48-cycle MSB-first iterative shift-subtract
+  divider. Per-cycle work is one 32-bit compare-and-subtract + 1-bit
+  shift = ~5 gate levels. Bit-exact match to the legacy divider for
+  inputs whose Q16.16 quotient fits in signed 32 bits (the softmax
+  1/sum use case).
+- **`mac_pe_piped.v`** -- mid-MAC pipeline register between the Q4.4
+  × Q4.4 multiplier output (Q8.8 product) and the Q16.16 alignment +
+  32-bit accumulator add. `clear_acc` delayed by 1 cycle. West/north
+  forwarding (`a_out`, `b_out`) remain 1-cycle so systolic feed timing
+  is unchanged.
+- **`USE_PIPELINED_DIVIDER`** and **`USE_PIPED_MAC`** parameters
+  thread through [`softmax_unit_lut.v`](synth/v_hand/softmax_unit_lut.v)
+  and [`systolic_array_64x64.v`](synth/v_hand/systolic_array_64x64.v)
+  to select between legacy and M5 implementations. Both default to 1
+  in the SV sources and are hard-on in the v_hand variants for this
+  OpenLane run. [`stream_pipeline.v`](synth/v_hand/stream_pipeline.v)'s
+  `DRAIN_CYCLES` was bumped from 4 → 5 to absorb the extra MAC stage.
+
+Full RTL + plan: [`../RTL/Planned_M5_Update.md`](../RTL/Planned_M5_Update.md).
+
+### Attempt 8a -- BLKANDNBLK Verilator failure (one-line fix)
+
+The first launch ([`synth/openlane_M5_attempt8.log`](synth/openlane_M5_attempt8.log))
+failed at Verilator lint inside `divider_or_reciprocal_seq.v`:
+the combinational scratchpad temps `R_shifted`, `q_bit_next`,
+`Q_low_next` were declared as `reg` with both `<=` initial assignment
+in the reset branch and `=` blocking writes in the BUSY branch.
+Verilator flagged the mixed assignment pattern as BLKANDNBLK.
+
+Fix: removed the reset-branch `<=` initialization for those three regs.
+They are pure combinational scratchpads only read inside the S_BUSY
+branch after being written, so no reset value is needed. Comment in
+the source explains why the reset writes were intentionally omitted.
+
+### Attempt 8b -- 74 / 74 steps, second clean Sky130 GDS
+
+After the BLKANDNBLK fix, the relaunch
+([`synth/openlane_M5_attempt8b.log`](synth/openlane_M5_attempt8b.log))
+rolled through every step:
+
+| Step group | Result |
+|---|---|
+| Verilator lint (1-4) | 0 errors, 3 expected warnings |
+| Yosys.Synthesis (5-9) | 38,521 cells, 454,587 µm² = 0.45 mm², 0 unmapped, 0 latches, peak ~1.1 GiB |
+| Floorplan + PDN (10-22) | clean |
+| Placement (23-33) | timing-driven, clean |
+| CTS (34-37) | balanced |
+| Routing (38-44) | 0 final DRC violations |
+| Antenna repair (39-45) | clean |
+| Detailed routing DRC (46) | clear |
+| Wirelength + connectivity (47-50) | clean |
+| RCX + post-PnR STA (53-54) | done; see timing table below |
+| IR drop (55) | 1.02 % VPWR, 0.86 % VGND (well under 5 % budget) |
+| GDS streamout: Magic (56) + KLayout (57) | clean |
+| LEF writeback (58) | clean |
+| Antenna design properties (59) | clean |
+| **XOR (60-61) -- KLayout vs Magic GDS** | **clear, no diff** |
+| Magic DRC (62) + KLayout DRC (63) | **0 violations** |
+| Setup / hold / max-slew / max-cap checkers (70-73) | viol detail per corner below |
+| Manufacturability report (74) | done |
+
+Wall-clock: ~2 h 45 min on the same WSL2 host as Attempt 7.
+
+### Timing -- M5 closes 97 % of the TT setup gap
+
+Post-PnR STA at 9 corners ([`synth/top_small_M5_attempt8/sta_summary.rpt`](synth/top_small_M5_attempt8/sta_summary.rpt)):
+
+| Corner | A7 setup WNS | **A8b setup WNS** | A7 hold WNS | **A8b hold WNS** |
+|---|---:|---:|---:|---:|
+| nom_tt_025C_1v80 (sign-off) | -55.69 ns ✗ | **-1.63 ns ✗** (97 % closer) | +0.31 ✓ | +0.31 ✓ |
+| nom_ss_100C_1v60 (worst)    | -115.04 ns ✗ | **-12.15 ns ✗** (89 % closer) | -0.49 ✗ | -0.51 ✗ |
+| nom_ff_n40C_1v95 (fast)     | -31.50 ns ✗ | **+2.55 ns ✓** | +0.11 ✓ | +0.10 ✓ |
+
+Chip f_max post-M5:
+
+| Corner | Critical path at 10 ns target | f_max |
+|---|---:|---:|
+| nom_tt | 11.63 ns | **~86 MHz** (vs 15 MHz Attempt 7) |
+| nom_ss | 22.15 ns | **~45 MHz** (vs did-not-close Attempt 7) |
+| nom_ff | 7.45 ns  | **>100 MHz** ✓ |
+
+The rated worst-case f_max is **45 MHz** at SS (sign-off convention).
+FF closes outright. TT is 1.6 ns short of meeting the 10 ns target and
+would close cleanly at ≈ 12 ns (~83 MHz). SS hold has 48 violators
+(small count, ECO-fixable without RTL change).
+
+### What's still on the critical path
+
+The remaining gap is the `mac_pe_piped` stage-2 path: Q16.16 alignment
+shift + 32-bit accumulator add, currently one cycle. Splitting that
+into two (align in cycle K, add in cycle K+1) is the M5 follow-on
+that projects to clear TT outright and reduce SS to a few-ns gap that
+ECO + cell upsizing can close.
+
+### Why this matters for the M3 deliverable
+
+Attempt 7 already satisfied the spec letter: real OpenLane flow, real
+GDS, DRC + LVS clean. Attempt 8b strengthens the deliverable along
+two specific axes:
+
+- **Two independent clean Sky130 GDS streamouts** (M4-only and M5),
+  each from a different RTL configuration, both with 0 DRC violations
+  and identical Magic vs KLayout layouts (XOR clean step 61). The
+  flow is reproducible across RTL changes, not a one-off.
+- **Setup-closure improvement from 5.5× over budget to 16 %** at TT
+  via the M5 pipeline pair, and **first corner ever to close setup**
+  (FF), establishes that the architecture is timing-realistic and the
+  M3 critical-path identification was correct. The M5 plan in
+  [`../RTL/Planned_M5_Update.md`](../RTL/Planned_M5_Update.md) was
+  validated by post-PnR measurement, not just synth WNS projection.
+
+### Power -- 0.366 W at TT 100 MHz
+
+From [`synth/top_small_M5_attempt8/power_nom_tt.rpt`](synth/top_small_M5_attempt8/power_nom_tt.rpt):
+combinational 84.2 %, sequential 9.8 %, clock 6.0 %, leakage
+negligible. Switching power (52.8 %) > internal (47.2 %) -- consistent
+with an arithmetic-dominated datapath. Scaling to the 45 MHz SS f_max
+gives ≈ 165 mW chip total.
+
+Cell count fell 7.6 % vs Attempt 7 (41,689 → 38,521) because the
+sequential divider removed more combinational area (the ~500 gate level
+Brent-Kung chain) than it added in state regs.
 
 ## Chip-scale evidence (Genus per-block sweep on phobos)
 
