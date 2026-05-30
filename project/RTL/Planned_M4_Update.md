@@ -1,5 +1,48 @@
 # Planned M4 Update — softmax_unit LUT replacement
 
+## Implementation status (M4 Options C + B+linterp)
+
+### Option C -- softmax_unit_lut
+
+| Phase | Status | Artifact |
+|---|---|---|
+| 1. RTL ([`softmax_unit_lut.sv`](softmax_unit_lut.sv)) | **done** | drop-in port-compatible with `softmax_unit` |
+| 2. Unit TB ([`tb_softmax_unit_lut.sv`](tb_softmax_unit_lut.sv)) | **done (sim pending)** | wired into [`run.do`](run.do) |
+| 3. `stream_pipeline.sv` integration | **gated, default off** | `USE_LUT_SOFTMAX` parameter |
+| 4. Genus sweep wiring | **done (sweep pending)** | [`run_sweep.sh`](run_sweep.sh) `phase2d` |
+| 5. m3 hand-flatten | **done (sim pending)** | [`../m3/synth/v_hand/softmax_unit_lut.v`](../m3/synth/v_hand/softmax_unit_lut.v) + per-module sweep |
+
+### Option B + linear interp -- gelu_unit_lut / gelu_grad_unit_lut
+
+| Phase | Status | Artifact |
+|---|---|---|
+| 1. RTL ([`gelu_unit_lut.sv`](gelu_unit_lut.sv), [`gelu_grad_unit_lut.sv`](gelu_grad_unit_lut.sv)) | **done** | drop-in port-compatible; 3-stage pipeline (vs 6 for Padé) |
+| 2. ROM modules ([`gelu_direct_lut.sv`](gelu_direct_lut.sv), [`gelu_grad_direct_lut.sv`](gelu_grad_direct_lut.sv)) | **done** | dual-read 256x32 Q16.16; contents in `gelu_lut_direct.mem` / `gelu_grad_lut_direct.mem` from [`gen_lut_mem.py`](gen_lut_mem.py) |
+| 3. Unit TBs ([`tb_gelu_unit_lut.sv`](tb_gelu_unit_lut.sv), [`tb_gelu_grad_unit_lut.sv`](tb_gelu_grad_unit_lut.sv)) | **done (sim pending)** | true-erf golden, tolerance 1e-3 |
+| 4. `fused_postproc_unit.sv` integration | **gated, default off** | `USE_LUT_GELU` parameter |
+| 5. Genus sweep wiring | **done (sweep pending)** | [`run_sweep.sh`](run_sweep.sh) `phase2e` |
+| 6. m3 hand-flatten | **done (sim pending)** | [`../m3/synth/v_hand/gelu_unit_lut.v`](../m3/synth/v_hand/gelu_unit_lut.v), [`../m3/synth/v_hand/gelu_grad_unit_lut.v`](../m3/synth/v_hand/gelu_grad_unit_lut.v) + ROM modules + .mem |
+
+**Reproduce on phobos:**
+```
+cd project/RTL
+vsim -do run.do                      # softmax_lut + gelu_lut + gelu_grad_lut PASS/FAIL
+./run_sweep.sh phase2d               # softmax_unit_lut sweep (7 points)
+./run_sweep.sh phase2e               # gelu_unit_lut + gelu_grad_unit_lut (2 points)
+./collect_sweep_csv.sh               # re-emits sweep_results.csv with new rows
+
+# m3 Sky130A per-module sweep, on WSL2 with yosys
+cd ../m3/synth
+bash synth_per_module_scoped.sh      # populates per_module/{softmax,gelu*}_lut/
+```
+
+After phobos numbers land, the integrated chip is switched by setting
+`USE_LUT_SOFTMAX=1` and `USE_LUT_GELU=1` at the `stream_pipeline` /
+`fused_postproc_unit` instantiations. Re-run sweep `phase3`
+(`stream_pipeline`) to capture the post-swap chip f_max.
+
+
+
 ## Problem: softmax_unit Padé + combinational divider — timing and area issues
 
 The current `softmax_unit.sv` implements per-lane exp as a Padé[2,2]

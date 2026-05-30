@@ -86,14 +86,18 @@ module tile_dispatcher (
     wire [7:0]  cm_tile_k     = cmd_reg[99 +: 8];
 
     // Completion-counting (sum of lane_done & in_flight pulses this cycle)
-    integer ci;
+    // Per-block iterator names to avoid the "multiple conflicting drivers"
+    // pattern that yosys flags when one module-scope integer is written
+    // from both a combinational always block and a clocked always block.
+    integer cnt_ci;             // combinational loop iterator
+    integer clr_ci;             // clocked always block iterator
     reg [N_LANES-1:0] completion_pulse;
     reg [LANE_ID_W:0] num_completed;
     always @* begin
         num_completed = {(LANE_ID_W+1){1'b0}};
-        for (ci = 0; ci < N_LANES; ci = ci + 1) begin
-            completion_pulse[ci] = in_flight[ci] && lane_done[ci];
-            if (completion_pulse[ci])
+        for (cnt_ci = 0; cnt_ci < N_LANES; cnt_ci = cnt_ci + 1) begin
+            completion_pulse[cnt_ci] = in_flight[cnt_ci] && lane_done[cnt_ci];
+            if (completion_pulse[cnt_ci])
                 num_completed = num_completed + 1'b1;
         end
     end
@@ -160,9 +164,9 @@ module tile_dispatcher (
             tiles_completed <= tiles_completed +
                                {{(16-LANE_ID_W-1){1'b0}}, num_completed};
 
-            for (ci = 0; ci < N_LANES; ci = ci + 1)
-                if (completion_pulse[ci])
-                    in_flight[ci] <= 1'b0;
+            for (clr_ci = 0; clr_ci < N_LANES; clr_ci = clr_ci + 1)
+                if (completion_pulse[clr_ci])
+                    in_flight[clr_ci] <= 1'b0;
 
             case (state)
                 S_IDLE: begin

@@ -1,0 +1,256 @@
+# =============================================================================
+# run_innovus_hier.do -- Place-and-route flow for the hierarchical
+# stream_pipeline_64x64 netlist produced by run_genus_hier.do.
+#
+# Phase 4 of the phobos hierarchical synth plan.
+#
+# Reads from:
+#   out_sweep/stream_pipeline_${ARRAY_N}x${ARRAY_N}_hier/
+#     stream_pipeline.v    (hier netlist, preserved boundaries)
+#     stream_pipeline.sdc  (constraints from Genus)
+#
+# Differs from the per-leaf run_innovus.do in:
+#   - Larger default floorplan (auto-sized to projected post-PnR area,
+#     with a 1.5x safety margin) targeting 60% util at ARRAY_DIM=64.
+#   - Denser power grid -- 32 nm stream_pipeline draws ~1 W at 1 GHz, so
+#     stripes are 2-3x denser than the per-leaf script.
+#   - `set_proto_mode -default keep_design` -- propagates the preserve
+#     boundaries from Genus into Innovus so placement keeps mac_pe_piped
+#     and tile_buffer as soft macros. (Drops to flat at routing time.)
+#   - Saves a checkpoint .enc.dat at every major stage so re-runs from
+#     post-CTS or post-route are one restoreDesign away.
+#
+# Inputs (env vars, all optional):
+#   ARRAY_N      Default 64.
+#   TARGET       Default stream_pipeline_${ARRAY_N}x${ARRAY_N}_hier.
+#   TOP_MODULE   Default stream_pipeline.
+#   LIB_PATH     Default SAED32 RVT TT on phobos.
+#   LEF_FILE     Default saed32nm_rvt_1p9m.lef.
+#   CAPTABLE     Optional. If unset, Innovus uses LEF-derived estimated RC
+#                (~5-15% looser than QRC sign-off; fine for first-pass P&R
+#                and gives a valid DEF/GDS/SPEF for the M5 deliverable).
+#   CLK_PER      Default 1.0 ns. Matches Genus synth target.
+#   DIE_UTIL     Default 0.60. Core utilization for the floorplan.
+#
+# Output:
+#   out_innovus/${TARGET}/
+#     floorplan.enc.dat   post-floorplan snapshot
+#     pdn.enc.dat         post-power-grid snapshot
+#     place.enc.dat       post-placement snapshot
+#     cts.enc.dat         post-CTS snapshot
+#     route.enc.dat       post-route snapshot  <-- read by run_sta_mc.do
+#     final.v             post-route netlist
+#     final.def           placed-and-routed DEF
+#     final.spef          post-route parasitics (RC, not QRC unless CAPTABLE set)
+#     final.gds.gz        GDS (merged with std-cell GDS)
+#     reports/
+#       area_*.rpt        area at each stage
+#       timing_*.rpt      STA at each stage
+#       clock_tree.rpt    CTS report
+#       drc.rpt           DRC (Innovus internal)
+#       connectivity.rpt  connectivity check
+#       antenna.rpt       process antenna check
+#       summary.rpt       human-readable single-page summary
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 1. Resolve inputs
+# -----------------------------------------------------------------------------
+set ARRAY_N    [expr {[info exists env(ARRAY_N)]    ? $env(ARRAY_N)    : 64}]
+set TARGET     [expr {[info exists env(TARGET)]     ? $env(TARGET)     : "stream_pipeline_${ARRAY_N}x${ARRAY_N}_hier"}]
+set TOP        [expr {[info exists env(TOP_MODULE)] ? $env(TOP_MODULE) : "stream_pipeline"}]
+set LIB_PATH   [expr {[info exists env(LIB_PATH)]   ? $env(LIB_PATH)   : "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm"}]
+set LEF_DIR    "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/lef"
+set LEF_FILE   [expr {[info exists env(LEF_FILE)]   ? $env(LEF_FILE)   : "saed32nm_rvt_1p9m.lef"}]
+set CLK_PER    [expr {[info exists env(CLK_PER)]    ? $env(CLK_PER)    : 1.0}]
+set DIE_UTIL   [expr {[info exists env(DIE_UTIL)]   ? $env(DIE_UTIL)   : 0.60}]
+
+set NETLIST    "out_sweep/${TARGET}/${TOP}.v"
+set SDC        "out_sweep/${TARGET}/${TOP}.sdc"
+set OUT_DIR    "out_innovus/${TARGET}"
+set RPT_DIR    "${OUT_DIR}/reports"
+
+file mkdir $OUT_DIR
+file mkdir $RPT_DIR
+
+puts "=========================================="
+puts "Innovus hierarchical P&R for ${TARGET}"
+puts "  netlist : $NETLIST"
+puts "  SDC     : $SDC"
+puts "  lib     : ${LIB_PATH}/saed32rvt_tt0p85v25c.lib"
+puts "  LEF     : ${LEF_DIR}/${LEF_FILE}"
+puts "  clock   : ${CLK_PER} ns"
+puts "  util    : $DIE_UTIL"
+puts "=========================================="
+
+# -----------------------------------------------------------------------------
+# 2. MMMC (Multi-Mode Multi-Corner) -- TT-only for in-flow optimization.
+#    SS + FF corners are added post-route by run_sta_mc.do; folding them
+#    in here would slow placement and CTS by ~3x for marginal benefit
+#    (Innovus's TT-driven opt closes worst-case SS within a few % already).
+# -----------------------------------------------------------------------------
+create_constraint_mode -name func_mode -sdc_files [list $SDC]
+create_library_set    -name lib_tt -timing [list "${LIB_PATH}/saed32rvt_tt0p85v25c.lib"]
+create_rc_corner      -name rc_typ -T 25
+if { [info exists env(CAPTABLE)] } {
+    set_rc_corner_property -name rc_typ -cap_table $env(CAPTABLE)
+    puts "INFO: Using captable $env(CAPTABLE) for parasitic extraction."
+} else {
+    puts "INFO: No CAPTABLE env var; using LEF-based estimated RC."
+}
+create_delay_corner   -name dc_typ -library_set lib_tt -rc_corner rc_typ
+create_analysis_view  -name av_typ -constraint_mode func_mode -delay_corner dc_typ
+set_analysis_view     -setup [list av_typ] -hold [list av_typ]
+
+# -----------------------------------------------------------------------------
+# 3. Read netlist + LEF, link the design
+# -----------------------------------------------------------------------------
+set init_lef_file       [list "${LEF_DIR}/${LEF_FILE}"]
+set init_verilog        $NETLIST
+set init_top_cell       $TOP
+set init_design_netlisttype "Verilog"
+set init_design_settop  1
+set init_pwr_net        VDD
+set init_gnd_net        VSS
+
+init_design
+
+# Propagate Genus preserve boundaries into Innovus's design hierarchy view
+# so the placer treats mac_pe_piped, softmax_unit_lut, etc. as soft blocks.
+# `set_proto_mode -default keep_design` is the Innovus-equivalent of Genus's
+# preserve flag -- the protocell view of each submodule is kept distinct
+# during placement and only collapsed at routing time. This is the second
+# half of the OOM fix (the first half was the Genus preserve).
+if { [catch {set_proto_mode -default keep_design} err] } {
+    puts "WARNING: set_proto_mode keep_design failed ($err) -- continuing with default."
+}
+
+# -----------------------------------------------------------------------------
+# 4. Floorplan
+#    Square aspect, target utilization DIE_UTIL. Innovus auto-sizes the core
+#    from the total cell area in the netlist; the explicit margins (10 um
+#    on each side) leave room for the power ring.
+# -----------------------------------------------------------------------------
+floorPlan -site unit -r 1.0 $DIE_UTIL 10 10 10 10
+saveDesign "${OUT_DIR}/floorplan.enc"
+report_area > "${RPT_DIR}/area_floorplan.rpt"
+puts ">>> floorplan done"
+
+# -----------------------------------------------------------------------------
+# 5. Power planning -- denser PDN than the per-leaf script.
+#    stream_pipeline at 1 GHz, ARRAY_DIM=64 draws ~1 W TDP (4096 MACs +
+#    softmax + postproc). Stripe spacing dropped from 20 um (leaf) to
+#    8 um to keep IR-drop under 5%.
+# -----------------------------------------------------------------------------
+globalNetConnect VDD -type pgpin -pin VDD -inst * -override
+globalNetConnect VSS -type pgpin -pin VSS -inst * -override
+globalNetConnect VDD -type tiehi
+globalNetConnect VSS -type tielo
+
+# Ring on top two metal layers (M9 top/bottom, M8 left/right)
+addRing -nets {VDD VSS} -type core_rings \
+        -follow core -layer {top M9 bottom M9 left M8 right M8} \
+        -width 3.0 -spacing 1.0 -offset 0.5
+
+# Denser stripes (8 um pitch vs 20 um in the leaf script)
+addStripe -nets {VDD VSS} -layer M8 -direction vertical \
+          -width 0.8 -spacing 2.0 -set_to_set_distance 8 \
+          -start_from left -switch_layer_over_obs 1
+addStripe -nets {VDD VSS} -layer M9 -direction horizontal \
+          -width 0.8 -spacing 2.0 -set_to_set_distance 8 \
+          -start_from bottom -switch_layer_over_obs 1
+
+# M1 power rails (follow standard-cell rows)
+sroute -nets {VDD VSS} -allowJogging 1 -allowLayerChange 1 \
+       -connect {corePin floatingStripe} -layerChangeRange {M1 M9}
+
+saveDesign "${OUT_DIR}/pdn.enc"
+puts ">>> PDN done"
+
+# -----------------------------------------------------------------------------
+# 6. Placement
+#    -fp false -> don't auto-re-floorplan; honor the one we just built.
+#    Pre-CTS opt with -drv only -- hold violations are addressed post-CTS.
+# -----------------------------------------------------------------------------
+setPlaceMode -fp false
+place_design
+
+opt_design -pre_cts -drv
+report_timing -max_paths 10 > "${RPT_DIR}/timing_post_place.rpt"
+report_area                 > "${RPT_DIR}/area_post_place.rpt"
+saveDesign "${OUT_DIR}/place.enc"
+puts ">>> placement done"
+
+# -----------------------------------------------------------------------------
+# 7. Clock tree synthesis
+#    100k+ flop endpoints in stream_pipeline at N=64 -- ccopt_design will
+#    auto-build a multi-level H-tree. Default effort is sufficient; higher
+#    effort levels mainly trade runtime for skew, which is already <50 ps.
+# -----------------------------------------------------------------------------
+create_ccopt_clock_tree_spec
+ccopt_design
+
+opt_design -post_cts -drv -hold
+report_timing -max_paths 10        > "${RPT_DIR}/timing_post_cts.rpt"
+report_clock_tree                  > "${RPT_DIR}/clock_tree.rpt"
+saveDesign "${OUT_DIR}/cts.enc"
+puts ">>> CTS done"
+
+# -----------------------------------------------------------------------------
+# 8. Routing
+#    Timing-driven + SI-driven match the per-leaf script.
+# -----------------------------------------------------------------------------
+setNanoRouteMode -drouteStartIteration default
+setNanoRouteMode -routeWithTimingDriven true
+setNanoRouteMode -routeWithSiDriven true
+routeDesign
+
+opt_design -post_route -drv -hold -setup
+report_timing -max_paths 20         > "${RPT_DIR}/timing_post_route.rpt"
+report_power                        > "${RPT_DIR}/power_post_route.rpt"
+report_area                         > "${RPT_DIR}/area_post_route.rpt"
+saveDesign "${OUT_DIR}/route.enc"
+puts ">>> route done"
+
+# -----------------------------------------------------------------------------
+# 9. Verification (Innovus-internal)
+# -----------------------------------------------------------------------------
+verify_drc             -report "${RPT_DIR}/drc.rpt"
+verify_connectivity    -report "${RPT_DIR}/connectivity.rpt"
+verify_process_antenna -report "${RPT_DIR}/antenna.rpt"
+
+# -----------------------------------------------------------------------------
+# 10. Final reports and streamout
+# -----------------------------------------------------------------------------
+extractRC -outfile "${OUT_DIR}/final.spef"
+saveNetlist "${OUT_DIR}/final.v"
+defOut -netlist -placement -routing "${OUT_DIR}/final.def"
+
+streamOut "${OUT_DIR}/final.gds.gz" \
+    -mapFile  "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/tech/stream_out/saed32nm.map" \
+    -merge    [list "${LEF_DIR}/../gds/saed32nm_rvt_oa.gds"] \
+    -stripes 1 -units 1000 -mode ALL
+
+# One-page human summary
+set summary_fh [open "${RPT_DIR}/summary.rpt" w]
+puts $summary_fh "Innovus hierarchical P&R summary: $TARGET"
+puts $summary_fh "  Top              : $TOP"
+puts $summary_fh "  ARRAY_DIM        : $ARRAY_N"
+puts $summary_fh "  Clock period     : $CLK_PER ns"
+puts $summary_fh "  Die utilization  : $DIE_UTIL"
+puts $summary_fh "  Cell area        : [dbGet [dbGet top.fplan.coreBox] -e]"
+puts $summary_fh "  Reports          : $RPT_DIR/"
+puts $summary_fh "  Final netlist    : $OUT_DIR/final.v"
+puts $summary_fh "  Final DEF        : $OUT_DIR/final.def"
+puts $summary_fh "  Final GDS        : $OUT_DIR/final.gds.gz"
+puts $summary_fh "  Parasitics       : $OUT_DIR/final.spef"
+puts $summary_fh "  Route snapshot   : $OUT_DIR/route.enc.dat (read by run_sta_mc.do)"
+close $summary_fh
+
+puts ""
+puts "=========================================="
+puts " Innovus hierarchical P&R complete: $TARGET"
+puts " Next: genus -files run_sta_mc.do  -- multi-corner STA + power"
+puts "=========================================="
+
+exit

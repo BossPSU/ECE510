@@ -199,3 +199,62 @@ This is the same methodology pattern that the original Phase-1 timing
 analysis ([`../RTL/timing_analysis.md`](../RTL/timing_analysis.md))
 used to project the systolic array to 64×64 -- per-block measurements
 plus a fitted curve.
+
+## 5. M4 LUT-based activation updates
+
+### 5.1 softmax_unit_lut (M4 Option C)
+
+A hand-flattened drop-in replacement for `softmax_unit` is now
+committed at [`synth/v_hand/softmax_unit_lut.v`](synth/v_hand/softmax_unit_lut.v).
+It is wired into [`synth/synth_per_module_scoped.sh`](synth/synth_per_module_scoped.sh)
+(VEC_LEN=4, N_LUT_BANKS=4) and into the SAED32 Genus sweep on phobos
+via `./run_sweep.sh phase2d`.
+
+### 5.2 gelu_unit_lut / gelu_grad_unit_lut (M4 Option B + linear interp)
+
+After the softmax swap lands, the remaining ~500-gate-level
+combinational dividers in the design sit inside `gelu_unit` and
+`gelu_grad_unit` -- each computing tanh via Padé[3,2]. These were
+the next chip f_max bottleneck (the integrated `top_small.v` synth
+projection in [`synthesis_notes.md`](synthesis_notes.md) showed
+gelu's divider keeping WNS at -5 to -15 ns even after the softmax
+fix).
+
+Drop-in replacements are committed:
+
+- [`synth/v_hand/gelu_unit_lut.v`](synth/v_hand/gelu_unit_lut.v) -- 256-entry direct GELU LUT + linear interp
+- [`synth/v_hand/gelu_grad_unit_lut.v`](synth/v_hand/gelu_grad_unit_lut.v) -- same shape for GELU'
+- [`synth/v_hand/gelu_direct_lut.v`](synth/v_hand/gelu_direct_lut.v), [`synth/v_hand/gelu_grad_direct_lut.v`](synth/v_hand/gelu_grad_direct_lut.v) -- the dual-read ROMs
+- [`synth/v_hand/gelu_lut_direct.mem`](synth/v_hand/gelu_lut_direct.mem) / [`synth/v_hand/gelu_grad_lut_direct.mem`](synth/v_hand/gelu_grad_lut_direct.mem) -- 256-entry Q16.16 ROM contents
+
+Architecture: clamp x to [-4, +4 - 1 LSB], compute 8-bit address +
+11-bit fractional position, read LUT[addr] and LUT[addr+1] in one
+ROM cycle, linearly interpolate. 3-stage pipeline replaces the 6-stage
+Padé chain. Saturation tails are handled explicitly (`GELU(x>4) = x`
+forwarding for the GELU module; `GELU'(x>4) = 1, GELU'(x<-4) = 0`
+for the gradient module).
+
+Worst-case interpolation error: ~5e-5 (about 3 Q16.16 LSB),
+vs ~1e-3 for the current Padé[3,2] chain. **~20× more accurate AND
+smaller** -- precision is a free win on top of area.
+
+### Projected chip-scale impact (all M4 LUT swaps combined)
+
+| Block (VEC_LEN=4 scope) | Sky130A baseline | Sky130A LUT | SAED32 baseline | SAED32 LUT |
+|---|---:|---:|---:|---:|
+| `softmax_unit*`              | 215,434 cells / 1,134,454 µm² | ~40-60 K cells / ~200-300 K µm² (proj.) | 1,134,454 (v4) / 3,818,675 (v64) | ~0.6-0.9 M µm² (v64 proj.) |
+| `gelu_unit*`                 | 56,324 cells / 291,065 µm² | ~30-35 K cells / ~160 K µm² (proj.) | 68,450 µm² (leaf) | ~35 K µm² (proj.) |
+| `gelu_grad_unit*`            | 76,134 cells / 394,208 µm² | ~45-50 K cells / ~230 K µm² (proj.) | 86,807 µm² (leaf) | ~50 K µm² (proj.) |
+| **Per-lane subtotal change** | 2,220,024 µm² baseline | ~1,150,000 µm² (proj.) | -- | -- |
+| **Chip f_max (SAED32)**      | 52 MHz | **600+ MHz** (proj.) | -- | -- |
+
+At 16 lanes the projected combined chip area win is **~50 mm² from
+softmax + ~7 mm² from gelu/gelu_grad = ~57 mm²** out of the 460-500 mm²
+SAED32 baseline -- about **12 % of the whole chip**.
+
+The numbers above are projections from the
+[Planned_M4_Update.md](../RTL/Planned_M4_Update.md) analysis combined
+with the per-block Sky130A measurements in this document; this
+section will be updated with measurements once the LUT sweeps
+(`phase2d` softmax, `phase2e` gelu) complete on phobos and the
+local per-module synth re-run completes.

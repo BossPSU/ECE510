@@ -12,10 +12,13 @@ methodology (per-block synthesis + sum), different PDK.
 
 | Module | Cells | Cell area (µm²) | Scope |
 |---|---:|---:|---|
-| `softmax_unit` | 215434 | 1134454.281602 | VEC_LEN=4 |
-| `fused_postproc_unit` | 141379 | 731987.033601 | instantiates gelu+gelu_grad |
-| `gelu_grad_unit` | 76134 | 394208.076800 | leaf (single instance) |
-| `gelu_unit` | 56324 | 291065.404800 | leaf (single instance) |
+| `softmax_unit` | 215434 | 1134454.281602 | VEC_LEN=4 (Padé+combdiv baseline) |
+| `softmax_unit_lut` | _pending_ | _pending_ | VEC_LEN=4, N_LUT_BANKS=4 (M4 Option C; re-run `synth_per_module_scoped.sh` to fill) |
+| `fused_postproc_unit` | 141379 | 731987.033601 | instantiates gelu+gelu_grad (Padé baseline) |
+| `gelu_grad_unit` | 76134 | 394208.076800 | leaf (single instance, Padé[3,2] tanh + combdiv) |
+| `gelu_grad_unit_lut` | _pending_ | _pending_ | leaf (M4: 256-entry direct GELU' LUT + linear interp; re-run synth to fill) |
+| `gelu_unit` | 56324 | 291065.404800 | leaf (single instance, Padé[3,2] tanh + combdiv) |
+| `gelu_unit_lut` | _pending_ | _pending_ | leaf (M4: 256-entry direct GELU LUT + linear interp; re-run synth to fill) |
 | `systolic_array_64x64` | 20391 | 116748.220800 | ROWS=COLS=4 (16 PEs) |
 | `divider_or_reciprocal_unit` | 16397 | 83914.230400 | leaf |
 | `tile_buffer` | 5613 | 43694.406400 | TILE_DIM=4, NUM_RD_PORTS=4 |
@@ -52,6 +55,29 @@ methodology (per-block synthesis + sum), different PDK.
   Genus SAED32 sweep where `softmax_unit` was identified as the chip
   WNS bottleneck. Cross-PDK ratio Sky130:SAED32 ≈ 4.4x for this block,
   in line with the typical cell-area ratio between the two PDKs.
+* **`softmax_unit_lut` is the M4 Option C replacement.** Drop-in
+  port-compatible: it swaps the per-lane Padé[2,2] exp + 64-bit
+  combinational divider for a bank of 4 time-multiplexed `exp_lut`
+  ROMs plus the existing sequential `divider_or_reciprocal_unit` for
+  1/sum. Projected area at VEC_LEN=64 (from the SAED32 ratio): ~0.6-0.9
+  M µm² SAED32 → ~2.6-3.9 M µm² Sky130A, vs. the Padé baseline's
+  3.82 M / ~16 M µm² respectively. RTL: [`../v_hand/softmax_unit_lut.v`](../v_hand/softmax_unit_lut.v).
+  Run `./synth_per_module_scoped.sh` to populate the row.
+* **`gelu_unit_lut` / `gelu_grad_unit_lut` are the M4 fused-activation
+  replacement** (the "Option B + linear interpolation" path agreed
+  after softmax). Drop-in port-compatible. Each replaces the entire
+  Padé[3,2] tanh chain (10 / 15 mults + 1 combinational divider,
+  ~500 gate levels of critical path) with a 256-entry direct
+  GELU(x) / GELU'(x) ROM plus adjacent-entry linear interpolation
+  (one q_mul, ~10 gate levels). 3-stage pipeline vs 6 for the Padé
+  version. Projected area: ~30-35 K cells each (~40 % of the Padé
+  56 K / 76 K baseline). Worst-case interpolation error ~5e-5 (about
+  3 Q16.16 LSB) vs ~1e-3 for the Padé chain -- this is ~20× more
+  accurate AND smaller. RTL: [`../v_hand/gelu_unit_lut.v`](../v_hand/gelu_unit_lut.v),
+  [`../v_hand/gelu_grad_unit_lut.v`](../v_hand/gelu_grad_unit_lut.v).
+  ROMs: [`../v_hand/gelu_direct_lut.v`](../v_hand/gelu_direct_lut.v),
+  [`../v_hand/gelu_grad_direct_lut.v`](../v_hand/gelu_grad_direct_lut.v)
+  with contents in `gelu_lut_direct.mem` / `gelu_grad_lut_direct.mem`.
 * **`chiplet_interface` synthesizes to 0 cells**: the UCIe protocol
   adapter is pure combinational pass-through (only `assign`
   statements). yosys's optimization passes recognize this as wires

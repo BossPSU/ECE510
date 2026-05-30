@@ -19,6 +19,7 @@ mkdir -p per_module
 declare -A SCOPE
 SCOPE[systolic_array_64x64]="chparam -set ROWS 4 systolic_array_64x64; chparam -set COLS 4 systolic_array_64x64;"
 SCOPE[softmax_unit]="chparam -set VEC_LEN 4 softmax_unit;"
+SCOPE[softmax_unit_lut]="chparam -set VEC_LEN 4 softmax_unit_lut; chparam -set N_LUT_BANKS 4 softmax_unit_lut;"
 SCOPE[adder_tree]="chparam -set NUM_INPUTS 4 adder_tree;"
 SCOPE[causal_mask_unit]="chparam -set VEC_LEN 4 causal_mask_unit;"
 SCOPE[tile_buffer]="chparam -set TILE_DIM 4 tile_buffer; chparam -set NUM_RD_PORTS 4 tile_buffer;"
@@ -32,6 +33,7 @@ SCOPE[compute_core]="chparam -set N_LANES 1 compute_core; chparam -set TILE_DIM 
 
 TOPS=(
     mac_pe
+    mac_pe_piped
     adder_tree
     sram_bank
     exp_lut
@@ -40,12 +42,16 @@ TOPS=(
     skid_buffer
     causal_mask_unit
     divider_or_reciprocal_unit
+    divider_or_reciprocal_seq
     perf_counter_block
     address_gen
     systolic_array_64x64
     gelu_unit
+    gelu_unit_lut
     gelu_grad_unit
+    gelu_grad_unit_lut
     softmax_unit
+    softmax_unit_lut
     fused_postproc_unit
     scratchpad_ctrl
     tile_buffer

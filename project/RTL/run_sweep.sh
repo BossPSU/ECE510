@@ -17,6 +17,8 @@
 #   ./run_sweep.sh phase2         # fusion blocks only
 #   ./run_sweep.sh phase2b        # tile_buffer TILE_DIM sweep only
 #   ./run_sweep.sh phase2c        # softmax_unit + adder_tree size sweep
+#   ./run_sweep.sh phase2d        # softmax_unit_lut size sweep (M4 Option C)
+#   ./run_sweep.sh phase2e        # gelu_unit_lut + gelu_grad_unit_lut (M4 Option B+linterp)
 #   ./run_sweep.sh phase3         # stream_pipeline only
 #   ./run_sweep.sh point systolic_array_64x64 8     # one specific point
 #
@@ -151,6 +153,39 @@ phase2c() {
     done
 }
 
+phase2d() {
+    echo "### PHASE 2d: softmax_unit_lut (M4 Option C) size sweep ###"
+    # softmax_unit_lut at VEC_LEN N. Each row's exp lookups are time-
+    # multiplexed over min(N,8) LUT banks. Expected area at N=64 is
+    # ~0.6-0.9 M um^2 (vs the Padé 3.82 M um^2) and WNS comfortably met.
+    for N in 1 2 4 8 16 32 64; do
+        run_point "softmax_unit_lut_v${N}" "SYNTH_TOP=softmax_unit_lut SOFTMAX_VEC=${N}"
+    done
+}
+
+phase2e() {
+    echo "### PHASE 2e: gelu_unit_lut / gelu_grad_unit_lut (M4 Option B+linterp) ###"
+    # Direct GELU/GELU' LUT with linear interpolation. Single-instance
+    # leaf tops (no size parameter). Expected area: ~30-35 K cells each
+    # (~40% of the Pade baseline) with WNS comfortably met -- chip f_max
+    # bottleneck shifts away from the fused activation path entirely.
+    run_point "gelu_unit_lut"      "SYNTH_TOP=gelu_unit_lut ARRAY_N=1"
+    run_point "gelu_grad_unit_lut" "SYNTH_TOP=gelu_grad_unit_lut ARRAY_N=1"
+}
+
+phase2f() {
+    echo "### PHASE 2f: M5 pipelined dividers + piped mac_pe ###"
+    # divider_or_reciprocal_seq -- replaces the 64-bit combinational
+    # divide with an N_ITER-cycle iterative shift-subtract. Expected
+    # cells: ~3K (vs the 16K combinational baseline). Critical path
+    # collapses from ~65 ns to ~0.5 ns. Single-instance leaf top.
+    run_point "divider_or_reciprocal_seq" "SYNTH_TOP=divider_or_reciprocal_seq ARRAY_N=1"
+    # mac_pe_piped -- mid-MAC pipeline register insertion. +1 cycle
+    # latency, no throughput change. Expected: ~1500 cells (vs 1478
+    # for legacy mac_pe), SS-corner WNS comfortably met.
+    run_point "mac_pe_piped" "SYNTH_TOP=mac_pe_piped ARRAY_N=1"
+}
+
 phase3() {
     echo "### PHASE 3: stream_pipeline sweep ###"
     for N in "${SWEEP_N[@]}"; do
@@ -168,12 +203,18 @@ case "$mode" in
         phase2
         phase2b
         phase2c
+        phase2d
+        phase2e
+        phase2f
         phase3
         ;;
     phase1)  phase1  ;;
     phase2)  phase2  ;;
     phase2b) phase2b ;;
     phase2c) phase2c ;;
+    phase2d) phase2d ;;
+    phase2e) phase2e ;;
+    phase2f) phase2f ;;
     phase3)  phase3  ;;
     point)
         # ./run_sweep.sh point <SYNTH_TOP> [<ARRAY_N> | <BUF_NRD-as-num for tile_buffer>]
@@ -195,7 +236,7 @@ case "$mode" in
         esac
         ;;
     *)
-        echo "Usage: $0 [all|phase1|phase2|phase2b|phase2c|phase3|point <top> [<n>]]" >&2
+        echo "Usage: $0 [all|phase1|phase2|phase2b|phase2c|phase2d|phase2e|phase3|point <top> [<n>]]" >&2
         exit 2
         ;;
 esac

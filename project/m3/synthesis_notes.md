@@ -301,6 +301,14 @@ killed Attempts 1 and 2 never fires here. The constraint is host
 memory available to the synthesis pass. A 16-32 GB host (or moving
 the synth off-laptop) should let the flat run complete.
 
+**Update -- resolved by Attempt 6.** See Section "Attempt 6" below:
+after applying the M4 LUT swaps to the hand-flattened RTL chain
+(replacing the Padé+combinational-divider blocks in `softmax_unit`,
+`gelu_unit`, `gelu_grad_unit` with LUT+linear-interp drop-ins), the
+flat top_small synthesis fits in **1 GiB peak RSS** instead of 5.7 GiB,
+and completes Yosys.Synthesis cleanly in under 4 minutes on the same
+WSL2 host.
+
 ## Attempt 5 -- per-module Sky130A sweep (the working integrated artifact)
 
 With the flat run blocked by host memory, the practical path is the
@@ -371,6 +379,158 @@ their area by summing the per-module measurements with the appropriate
 instance multipliers, which is the same methodology Genus uses for
 its SAED32 chip rollup (`accel_top` doesn't fit flat in Genus either).
 
+## Attempt 6 -- M4 LUT swap unblocks the flat OpenLane synth
+
+The Attempt 4 OOM is a memory-pressure problem, not a yosys correctness
+problem -- the dividers and adders dominating yosys's Brent-Kung
+lowering peak live inside three specific blocks: `softmax_unit`,
+`gelu_unit`, `gelu_grad_unit`. The M4 update detailed in
+[`../RTL/Planned_M4_Update.md`](../RTL/Planned_M4_Update.md) replaces
+those blocks with LUT-based drop-ins:
+
+- `softmax_unit` -> `softmax_unit_lut` (M4 Option C: time-multiplexed
+  exp LUT + sequential 1/sum divider)
+- `gelu_unit` -> `gelu_unit_lut` (256-entry direct GELU LUT + linear
+  interpolation)
+- `gelu_grad_unit` -> `gelu_grad_unit_lut` (same shape for GELU')
+
+For the integrated flat synth, the LUT modules were wired into the
+hand-flattened instantiation chain ([`synth/v_hand/stream_pipeline.v`](synth/v_hand/stream_pipeline.v)
+now instantiates `softmax_unit_lut`, [`synth/v_hand/fused_postproc_unit.v`](synth/v_hand/fused_postproc_unit.v)
+now instantiates the `_lut` gelu variants), and the new modules added
+to [`synth/config_top_small_v_hand.json`](synth/config_top_small_v_hand.json)'s
+`VERILOG_FILES` list.
+
+### Result -- 41,537 cells, 0.47 mm² Sky130A, 1 GiB peak
+
+OpenLane v2.3.10, `--to Yosys.Synthesis`, scope `N_LANES=1, TILE_DIM=2`,
+same WSL2 host as Attempt 4 (4.5 GiB cap, 4 vCPUs).
+
+| Metric | Attempt 4 (Padé) | **Attempt 6 (M4 LUT)** | Delta |
+|---|---:|---:|---:|
+| Yosys.Synthesis outcome | OOM kill at ~5.7 GiB | **completed cleanly** | unblocked |
+| Yosys peak RSS | ~5.7 GiB | **~1 GiB** | **-82 %** |
+| Wall-clock to fail / finish | indeterminate (OOM) | **3 min 45 s** | n/a |
+| Cells (post-techmap, Sky130) | not reached | **41,537** | -- |
+| Chip area | not reached | **472,628 µm² = 0.47 mm²** | -- |
+| Sequential element area | not reached | 139,013 µm² (29.41 %) | -- |
+| OpenLane errors | n/a | 0 | -- |
+| OpenLane warnings | n/a | 3 (Verilator lint, expected) | -- |
+
+Snapshot of the key artifacts (yosys-synthesis.log, stat.rpt, runtime.txt,
+gate-level netlist top_small.nl.v, flow.log) is committed at
+[`synth/top_small_M4_LUT_synth/`](synth/top_small_M4_LUT_synth/) with a
+companion [README](synth/top_small_M4_LUT_synth/README.md). The full
+OpenLane intermediate dir lands in `synth/runs/M4_LUT_v4_*/` and is
+.gitignored.
+
+### What was previously expected vs what happened
+
+The pre-run estimate in [`chip_scale_rollup.md`](chip_scale_rollup.md)
+Section 5 projected ~3.4-4.2 GiB yosys peak after the M4 swap (right
+at the WSL2 wall, "coin flip"). The actual peak landed at 1 GiB --
+**a much larger drop than projected**. The likely reason: removing
+the dividers also collapsed the multiplier chains feeding them
+(softmax's per-lane Padé numerator/denominator setup, gelu's tanh-
+argument setup), so the cumulative arithmetic deck that yosys's
+share + opt + memory passes had to keep alive shrank further than
+just "subtract the divider sizes".
+
+### What's still pending
+
+This run stops at `Yosys.Synthesis` (step 6 of 78). The rest of the
+OpenLane Classic flow -- floorplan, placement, CTS, routing, DRC,
+LVS, GDS streamout -- was deliberately not invoked (`--to
+Yosys.Synthesis`). The next run with no `--to` flag would target
+full GDS streamout. Expected:
+
+- **OpenROAD floorplan, placement, routing:** fits comfortably given
+  the 41 K cells and the cf07 mac_pe leaf precedent (1.5 K cells in
+  200x200 um, 26 % util). At 25 % util and 41 K cells, the die is
+  ~2 mm² area.
+- **Timing closure:** projected WNS MET at 10 ns target (100 MHz).
+  The LUT-swapped chain has ~10 gate levels of combinational depth
+  in its critical path (the LUT mux tree + linear-interp multiply),
+  vs the Padé chain's ~500 gate levels (the 64-bit divider). This is
+  the f_max recovery [`Planned_M4_Update.md`](../RTL/Planned_M4_Update.md)
+  predicted.
+
+The remaining OpenLane steps are CPU- and disk-bound, not memory-bound.
+A full GDS run from these inputs is expected to complete in 4-12 hours
+wall-clock on the same WSL2 host.
+
+## Attempt 7 -- full OpenLane Classic flow, GDS streamed out
+
+After Attempt 6 proved Yosys.Synthesis fits in 1 GiB peak RSS, the
+natural next step was to run the rest of the 78-step Classic flow
+(floorplan → placement → CTS → routing → DRC → LVS → GDS). The first
+attempt got past Yosys.Synthesis but failed at the very next step
+(Checker.YosysUnmappedCells). It took **four structural fixes**
+across `softmax_unit_lut.v` and `tile_dispatcher.v` before yosys
+emitted a netlist that mapped cleanly to Sky130 standard cells:
+
+| # | What broke | Fix | Where |
+|---|---|---|---|
+| 1 | 8 `$_ALDFFE_PNP_` cells (async-load DFFs not in Sky130 library) inferred from the stage-2 FSM | Split the single deeply-nested FSM always block into 5 narrow `always` blocks, one per register | [`synth/v_hand/softmax_unit_lut.v`](synth/v_hand/softmax_unit_lut.v) stage 2 |
+| 2 | Same 8 ALDFFE cells re-appeared because `lane_idx`, `b`, `i` were module-scope `integer` written in BOTH a `always @*` and an `always_ff`, which yosys flagged as multi-driver and inferred async-load | Split iterator names per always block: `aw_b/aw_lane_idx` for the combinational, `cap_b/cap_lane_idx` for the clocked, `s1_i/s3_i/s4_i/s5_i/s2h_i/s2c_i` for the per-stage init loops | [`synth/v_hand/softmax_unit_lut.v`](synth/v_hand/softmax_unit_lut.v) module-scope decls |
+| 3 | 2 inferred latches on the 32-bit `aw_diff` reg (written only inside the `if` branch of `lut_addr` generation, holds otherwise → latch) | Compute the difference inline inside `q_to_lut_addr(...)`, drop the intermediate | [`synth/v_hand/softmax_unit_lut.v`](synth/v_hand/softmax_unit_lut.v) `always @*` |
+| 4 | 2 "multiple conflicting drivers" warnings on `tile_dispatcher`'s `\ci` integer (also multi-block iterator pattern, pre-existing in the hand-flatten) | Split `ci` into `cnt_ci` (combinational) and `clr_ci` (clocked) | [`synth/v_hand/tile_dispatcher.v`](synth/v_hand/tile_dispatcher.v) |
+
+All four fixes also went into the SV sources in [`../RTL/`](../RTL/)
+to keep the two flows in sync.
+
+### What completed -- full GDS, DRC/LVS clean
+
+On the fifth try (v5 run) the flow rolled through **74 of 78 steps**
+in ~3 hours wall-clock on the same WSL2 host. Steps 75-78 (save final
+views) were skipped because OpenLane returns a "deferred error" if
+post-PnR STA finds setup violations. But every prior step succeeded:
+
+- Verilator lint: 0 errors, 3 warnings (expected `/* lint_off */`)
+- Yosys.Synthesis: 41,689 cells, 474,500 µm² total area, 0 unmapped cells, 0 latches
+- Floorplan + PDN: clean
+- Placement (global + detailed, timing-driven): clean
+- CTS: 865 clock buffers, max depth 6, fanout balanced
+- Global + detailed routing: 0 final violations after iterating from 22,072 down
+- Antenna repair: clean
+- Signoff DRC (Magic + KLayout): **0 violations**
+- LVS (netgen): **clean**
+
+The clean Sky130 GDS was streamed out by both Magic and KLayout
+backends ([`synth/top_small_M4_LUT_full/top_small.klayout.gds`](synth/top_small_M4_LUT_full/top_small.klayout.gds),
+63 MB). Companion DEF and post-PnR netlist also committed.
+
+### What didn't close -- setup timing at 10 ns target
+
+Post-PnR STA at the 9 corners ([`synth/top_small_M4_LUT_full/sta_summary.rpt`](synth/top_small_M4_LUT_full/sta_summary.rpt)):
+
+| Corner | Hold WNS (ns) | Setup WNS (ns) |
+|---|---:|---:|
+| nom_tt_025C_1v80 (sign-off) | +0.31 ✓ | **−55.7** ✗ |
+| nom_ss_100C_1v60 (worst-case) | −0.49 ✗ | **−115.0** ✗ |
+| nom_ff_n40C_1v95 (fast-case) | +0.11 ✓ | **−31.5** ✗ |
+
+Critical path at TT corner is ~65.7 ns, so the chip's actual f_max at
+the 10 ns target is **≈ 15.2 MHz** -- well short of the ~600 MHz the
+LUT-only swap was supposed to recover. **The bottleneck is now the
+combinational divider inside `divider_or_reciprocal_unit`** (the
+sequential reciprocal used by `softmax_unit_lut` stage 4). The unit
+has registered I/O but its core `q_full = num_ext / den_r` is a
+single-cycle 64-bit Brent-Kung divide -- ~500 gate levels, same depth
+the per-lane Padé softmax used to have. The M4 LUT swap moved this
+divider from "per lane" to "one shared instance" (huge area win) but
+didn't pipeline its internal combinational core.
+
+**Next step (M5 work):** pipeline `divider_or_reciprocal_unit` --
+split the 64-bit `/` across multiple cycles (e.g., 4-cycle radix-4 SRT
+or N-cycle non-restoring shift-subtract). Trade latency for clock
+period; chip f_max should recover to the originally-projected ~600 MHz.
+
+Snapshot of artifacts (GDS, DEF, post-PnR netlist, STA summary, power)
+at [`synth/top_small_M4_LUT_full/`](synth/top_small_M4_LUT_full/)
+with full per-corner reports in [`synth/runs/M4_LUT_full_v5_*/`](synth/runs/)
+(gitignored).
+
 ## Chip-scale evidence (Genus per-block sweep on phobos)
 
 Because Attempt 1 did not produce an integrated-build artifact, the
@@ -438,6 +598,56 @@ Two known bottlenecks are deferred to M4, both already characterized:
   replace the per-lane Pade+combinational divider with the existing
   `exp_lut` ROM + a sequential `divider_or_reciprocal_unit`. Plan in
   [`project/RTL/Planned_M4_Update.md`](../RTL/Planned_M4_Update.md).
+  **M4 Option C is now implemented in-tree** as a drop-in
+  port-compatible module:
+  - SystemVerilog source: [`project/RTL/softmax_unit_lut.sv`](../RTL/softmax_unit_lut.sv)
+  - Hand-flattened Verilog 2005 (for this M3 Sky130 flow):
+    [`synth/v_hand/softmax_unit_lut.v`](synth/v_hand/softmax_unit_lut.v)
+  - Wired into [`synth/synth_per_module_scoped.sh`](synth/synth_per_module_scoped.sh)
+    at VEC_LEN=4, N_LUT_BANKS=4, and into the SAED32 Genus driver at
+    `./run_sweep.sh phase2d` (VEC_LEN ∈ {1,2,4,8,16,32,64}).
+  - Gated swap inside [`stream_pipeline.sv`](../RTL/stream_pipeline.sv)
+    via a new `USE_LUT_SOFTMAX` parameter (default 0, keeps M3 results
+    bit-identical; flip to 1 after the M4 sweep validates).
+  - Unit TB: [`tb_softmax_unit_lut.sv`](../RTL/tb_softmax_unit_lut.sv);
+    wired into [`run.do`](../RTL/run.do) between `tb_softmax_unit`
+    and `tb_systolic_array`.
+
+  Sweep results will populate [`chip_scale_rollup.md`](chip_scale_rollup.md)
+  Section 5 once `synth_per_module_scoped.sh` and `run_sweep.sh phase2d`
+  finish on phobos.
+
+- **`gelu_unit` / `gelu_grad_unit` Padé[3,2] tanh dividers** -- once
+  the softmax LUT swap above is in place, these were the next
+  ~500-gate-level combinational dividers in the design (the analysis
+  in [`chip_scale_rollup.md`](chip_scale_rollup.md) §5.2 shows them
+  keeping WNS at -5 to -15 ns on `top_small.v` even after the softmax
+  fix). The fix is the same pattern as Option C but applied to GELU:
+  - SystemVerilog sources: [`project/RTL/gelu_unit_lut.sv`](../RTL/gelu_unit_lut.sv),
+    [`project/RTL/gelu_grad_unit_lut.sv`](../RTL/gelu_grad_unit_lut.sv)
+  - Dual-read ROMs: [`project/RTL/gelu_direct_lut.sv`](../RTL/gelu_direct_lut.sv),
+    [`project/RTL/gelu_grad_direct_lut.sv`](../RTL/gelu_grad_direct_lut.sv)
+  - ROM contents: `gelu_lut_direct.mem`, `gelu_grad_lut_direct.mem`
+    (256-entry × Q16.16, half-open grid, generated by
+    [`gen_lut_mem.py`](../RTL/gen_lut_mem.py))
+  - Hand-flattened Verilog 2005 for this M3 Sky130 flow:
+    [`synth/v_hand/gelu_unit_lut.v`](synth/v_hand/gelu_unit_lut.v),
+    [`synth/v_hand/gelu_grad_unit_lut.v`](synth/v_hand/gelu_grad_unit_lut.v),
+    plus the two ROM modules and .mem files
+  - Architecture: 256-entry direct GELU(x) / GELU'(x) ROM with
+    adjacent-entry linear interpolation. 3-stage pipeline replaces the
+    6-stage Padé chain. Saturation tails (`GELU(x>4) = x`,
+    `GELU'(x>4) = 1`, `GELU'(x<-4) = 0`) handled explicitly so the
+    upstream value is exact past the LUT range.
+  - Numerical fidelity: worst-case error ~5e-5 (about 3 Q16.16 LSB)
+    vs ~1e-3 for the Padé[3,2] baseline -- **~20× more accurate**.
+  - Wired into [`synth/synth_per_module_scoped.sh`](synth/synth_per_module_scoped.sh)
+    (no scope-down -- single-instance leaves), into the SAED32 Genus
+    driver at `./run_sweep.sh phase2e`, and into [`fused_postproc_unit.sv`](../RTL/fused_postproc_unit.sv)
+    via the new `USE_LUT_GELU` parameter (default 0).
+  - Unit TBs: [`tb_gelu_unit_lut.sv`](../RTL/tb_gelu_unit_lut.sv),
+    [`tb_gelu_grad_unit_lut.sv`](../RTL/tb_gelu_grad_unit_lut.sv)
+    (true-erf golden, tolerance 1e-3). Wired into [`run.do`](../RTL/run.do).
 
 A third M4 item, surfaced by Attempts 1 and 2: **upgrade the yosys
 inside OpenLane** if a future milestone requires the integrated build

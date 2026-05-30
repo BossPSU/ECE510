@@ -24,8 +24,15 @@
 module stream_pipeline
   import accel_pkg::*;
 #(
-  parameter int DATA_WIDTH = 32,
-  parameter int ARRAY_DIM  = ARRAY_ROWS  // square array
+  parameter int DATA_WIDTH      = 32,
+  parameter int ARRAY_DIM       = ARRAY_ROWS,  // square array
+  // 0 = current Padé+comb-divide softmax (default; unchanged behavior)
+  // 1 = LUT+seq-divide softmax (softmax_unit_lut, M4 Option C)
+  parameter int USE_LUT_SOFTMAX = 0,
+  // M5: when systolic_array_64x64 is built with USE_PIPED_MAC=1 the MAC
+  // has +1 cycle of latency, so the array needs one extra cycle to
+  // drain its last accumulator. Caller threads this parameter down.
+  parameter int USE_PIPED_MAC   = 1
 )(
   input  logic                            clk,
   input  logic                            rst_n,
@@ -72,9 +79,14 @@ module stream_pipeline
   logic        running;
   assign running_o = running;
 
-  localparam int DRAIN_CYCLES   = 4;
+  localparam int DRAIN_CYCLES   = USE_PIPED_MAC ? 5 : 4;
   localparam int FUSED_DEPTH    = 7;
-  localparam int SOFTMAX_LAT    = 4;  // softmax_unit pipeline depth
+  // Padé softmax_unit: in_valid -> out_valid = 4 cycles.
+  // LUT softmax_unit_lut: latency = 7 + N_PHASES, where
+  //   N_PHASES = ceil(ARRAY_DIM / N_LUT_BANKS), N_LUT_BANKS = min(ARRAY_DIM, 8).
+  localparam int LUT_N_BANKS    = (ARRAY_DIM < 8) ? ARRAY_DIM : 8;
+  localparam int LUT_N_PHASES   = (ARRAY_DIM + LUT_N_BANKS - 1) / LUT_N_BANKS;
+  localparam int SOFTMAX_LAT    = USE_LUT_SOFTMAX ? (7 + LUT_N_PHASES) : 4;
 
   logic        softmax_mode;
   assign softmax_mode = (op_sel == FUSED_SOFTMAX);
@@ -168,9 +180,10 @@ module stream_pipeline
   logic signed [31:0] c_out_array [ARRAY_DIM][ARRAY_DIM];
 
   systolic_array_64x64 #(
-    .ROWS       (ARRAY_DIM),
-    .COLS       (ARRAY_DIM),
-    .DATA_WIDTH (32)
+    .ROWS          (ARRAY_DIM),
+    .COLS          (ARRAY_DIM),
+    .DATA_WIDTH    (32),
+    .USE_PIPED_MAC (USE_PIPED_MAC)
   ) u_array (
     .clk       (clk),
     .rst_n     (rst_n),
@@ -283,20 +296,39 @@ module stream_pipeline
     end
   endgenerate
 
-  softmax_unit #(
-    .DATA_WIDTH (32),
-    .VEC_LEN    (ARRAY_DIM)
-  ) u_softmax (
-    .clk       (clk),
-    .rst_n     (rst_n),
-    .en        (1'b1),
-    .start     (1'b0),  // unused inside softmax_unit
-    .vec_len   (tile_n),
-    .scores_in (sm_scores_in),
-    .in_valid  (sm_in_valid),
-    .probs_out (sm_probs_out),
-    .out_valid (sm_out_valid)
-  );
+  generate
+    if (USE_LUT_SOFTMAX) begin : g_softmax_lut
+      softmax_unit_lut #(
+        .DATA_WIDTH (32),
+        .VEC_LEN    (ARRAY_DIM)
+      ) u_softmax (
+        .clk       (clk),
+        .rst_n     (rst_n),
+        .en        (1'b1),
+        .start     (1'b0),
+        .vec_len   (tile_n),
+        .scores_in (sm_scores_in),
+        .in_valid  (sm_in_valid),
+        .probs_out (sm_probs_out),
+        .out_valid (sm_out_valid)
+      );
+    end else begin : g_softmax_pade
+      softmax_unit #(
+        .DATA_WIDTH (32),
+        .VEC_LEN    (ARRAY_DIM)
+      ) u_softmax (
+        .clk       (clk),
+        .rst_n     (rst_n),
+        .en        (1'b1),
+        .start     (1'b0),
+        .vec_len   (tile_n),
+        .scores_in (sm_scores_in),
+        .in_valid  (sm_in_valid),
+        .probs_out (sm_probs_out),
+        .out_valid (sm_out_valid)
+      );
+    end
+  endgenerate
 
   // Capture softmax output rows
   logic       sm_capture_active;

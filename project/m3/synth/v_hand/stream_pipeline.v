@@ -48,9 +48,19 @@ module stream_pipeline (
     parameter ARRAY_DIM  = 64;
 
     localparam [2:0] FUSED_SOFTMAX = 3'd3;
-    localparam DRAIN_CYCLES = 4;
+    // M5 Item B: mac_pe_piped adds +1 cycle of MAC latency, so the
+    // systolic array needs one more cycle to drain its last accumulator.
+    // 5 instead of the legacy 4 -- back to 4 if mac_pe (not _piped) is
+    // restored in v_hand/systolic_array_64x64.v.
+    localparam DRAIN_CYCLES = 5;
     localparam FUSED_DEPTH  = 7;
-    localparam SOFTMAX_LAT  = 4;
+    // M4: softmax_unit_lut latency = 7 + N_PHASES, where
+    // N_PHASES = ceil(ARRAY_DIM / min(ARRAY_DIM, 8)). At default
+    // top_small scope ARRAY_DIM=2 -> N_PHASES=1 -> SOFTMAX_LAT=8.
+    // At ARRAY_DIM=64 -> N_PHASES=8 -> SOFTMAX_LAT=15.
+    localparam LUT_N_BANKS  = (ARRAY_DIM < 8) ? ARRAY_DIM : 8;
+    localparam LUT_N_PHASES = (ARRAY_DIM + LUT_N_BANKS - 1) / LUT_N_BANKS;
+    localparam SOFTMAX_LAT  = 7 + LUT_N_PHASES;
 
     input  wire                                  clk;
     input  wire                                  rst_n;
@@ -271,7 +281,10 @@ module stream_pipeline (
         end
     endgenerate
 
-    softmax_unit #(
+    // M4 Option C: LUT exp + sequential 1/sum (drop-in port-compatible).
+    // N_LUT_BANKS defaults to min(VEC_LEN, 8) per the module; no override
+    // needed at this instance.
+    softmax_unit_lut #(
         .DATA_WIDTH (DATA_WIDTH),
         .VEC_LEN    (ARRAY_DIM)
     ) u_softmax (

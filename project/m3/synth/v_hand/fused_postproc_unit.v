@@ -61,7 +61,12 @@ module fused_postproc_unit (
     wire               gelu_valid;
     wire               gelu_grad_valid;
 
-    gelu_unit #(
+    // M4 Option B+linterp: 256-entry direct GELU / GELU' LUT with
+    // linear interpolation. Drop-in port-compatible with the Pade
+    // versions. 3-stage pipeline vs 6 for the Pade chain -- gelu output
+    // arrives 3 cycles earlier, which the downstream data_delay tap
+    // handles benignly (just earlier-than-expected gelu_valid).
+    gelu_unit_lut #(
         .DATA_WIDTH (DATA_WIDTH)
     ) u_gelu (
         .clk       (clk),
@@ -73,7 +78,7 @@ module fused_postproc_unit (
         .out_valid (gelu_valid)
     );
 
-    gelu_grad_unit #(
+    gelu_grad_unit_lut #(
         .DATA_WIDTH (DATA_WIDTH)
     ) u_gelu_grad (
         .clk       (clk),

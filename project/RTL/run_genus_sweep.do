@@ -8,7 +8,8 @@
 #   * any leaf fusion block (gelu_unit, softmax_unit, ...) with default params
 #   * tile_buffer at NUM_RD_PORTS in {1, 64} (TILE_DIM=64 default)
 #   * tile_buffer at TILE_DIM in {1, 2, 4, 8, 16, 32} (BUF_DIM sweep)
-#   * softmax_unit at VEC_LEN in {1, 2, 4, 8, 16, 32} (SOFTMAX_VEC sweep)
+#   * softmax_unit at VEC_LEN in {1, 2, 4, 8, 16, 32, 64} (SOFTMAX_VEC sweep)
+#   * softmax_unit_lut at VEC_LEN in {1, 2, 4, 8, 16, 32, 64} (SOFTMAX_VEC sweep)
 #   * adder_tree  at NUM_INPUTS in {2, 4, 8, 16, 32} (ADDER_N sweep)
 #
 # Inputs (env vars):
@@ -99,7 +100,7 @@ if { $TOP eq "systolic_array_64x64" || $TOP eq "stream_pipeline" } {
     } else {
         set tag "${TOP}_p${NRD}"
     }
-} elseif { $TOP eq "softmax_unit" } {
+} elseif { $TOP eq "softmax_unit" || $TOP eq "softmax_unit_lut" } {
     if { $SMV_explicit } {
         set tag "${TOP}_v${SMV}"
     } else {
@@ -160,15 +161,22 @@ read_hdl -sv status_if.sv
 
 # Datapath leaves
 read_hdl -sv mac_pe.sv
+read_hdl -sv mac_pe_piped.sv
 read_hdl -sv systolic_array_64x64.sv
 read_hdl -sv gelu_lut.sv
 read_hdl -sv exp_lut.sv
+read_hdl -sv gelu_direct_lut.sv
+read_hdl -sv gelu_grad_direct_lut.sv
 read_hdl -sv adder_tree.sv
 read_hdl -sv gelu_unit.sv
+read_hdl -sv gelu_unit_lut.sv
 read_hdl -sv gelu_grad_unit.sv
+read_hdl -sv gelu_grad_unit_lut.sv
 read_hdl -sv softmax_unit.sv
+read_hdl -sv softmax_unit_lut.sv
 read_hdl -sv causal_mask_unit.sv
 read_hdl -sv divider_or_reciprocal_unit.sv
+read_hdl -sv divider_or_reciprocal_seq.sv
 read_hdl -sv fused_postproc_unit.sv
 
 # Pipeline / flow control
@@ -195,6 +203,7 @@ puts ">>> Elaborating $TOP (tag=$tag)..."
 #   stream_pipeline     : parameter order = (DATA_WIDTH, ARRAY_DIM)
 #   tile_buffer         : parameter order = (DATA_WIDTH, TILE_DIM, NUM_RD_PORTS)
 #   softmax_unit        : parameter order = (DATA_WIDTH, VEC_LEN)
+#   softmax_unit_lut    : parameter order = (DATA_WIDTH, VEC_LEN, N_LUT_BANKS)
 #   adder_tree          : parameter order = (DATA_WIDTH, NUM_INPUTS)
 if { $TOP eq "systolic_array_64x64" } {
     elaborate $TOP -parameters [list $N $N 32]
@@ -204,6 +213,11 @@ if { $TOP eq "systolic_array_64x64" } {
     elaborate $TOP -parameters [list 32 $DIM $NRD]
 } elseif { $TOP eq "softmax_unit" } {
     elaborate $TOP -parameters [list 32 $SMV]
+} elseif { $TOP eq "softmax_unit_lut" } {
+    # softmax_unit_lut parameter order: (DATA_WIDTH, VEC_LEN, N_LUT_BANKS).
+    # N_LUT_BANKS default = min(VEC_LEN, 8); replicate that here.
+    set NBANKS [expr {$SMV < 8 ? $SMV : 8}]
+    elaborate $TOP -parameters [list 32 $SMV $NBANKS]
 } elseif { $TOP eq "adder_tree" } {
     elaborate $TOP -parameters [list 32 $ADN]
 } else {

@@ -3,7 +3,10 @@
 module fused_postproc_unit
   import accel_pkg::*;
 #(
-  parameter int DATA_WIDTH = 32
+  parameter int DATA_WIDTH   = 32,
+  // 0 = original Pade-chain gelu_unit / gelu_grad_unit (default; unchanged)
+  // 1 = LUT+linear-interp gelu_unit_lut / gelu_grad_unit_lut (M4 update)
+  parameter int USE_LUT_GELU = 0
 )(
   input  logic                            clk,
   input  logic                            rst_n,
@@ -24,27 +27,55 @@ module fused_postproc_unit
   logic signed [31:0] gelu_out, gelu_grad_out;
   logic               gelu_valid, gelu_grad_valid;
 
-  // GELU forward
-  gelu_unit #(.DATA_WIDTH(DATA_WIDTH)) u_gelu (
-    .clk       (clk),
-    .rst_n     (rst_n),
-    .en        (en),
-    .x_in      (data_in),
-    .in_valid  (in_valid && (op_sel == FUSED_GELU)),
-    .y_out     (gelu_out),
-    .out_valid (gelu_valid)
-  );
+  // GELU forward + gradient. USE_LUT_GELU picks between the original
+  // Pade-chain modules and the M4 LUT+interp drop-ins. SOFTMAX_LAT-style
+  // pipeline-depth handling isn't needed here because both variants
+  // converge to the same downstream out_valid; the data_delay tap below
+  // assumes 6-stage gelu_grad latency (the new LUT version is only 3
+  // stages so output arrives earlier, which is benign for the MUX).
+  generate
+    if (USE_LUT_GELU) begin : g_gelu_lut
+      gelu_unit_lut #(.DATA_WIDTH(DATA_WIDTH)) u_gelu (
+        .clk       (clk),
+        .rst_n     (rst_n),
+        .en        (en),
+        .x_in      (data_in),
+        .in_valid  (in_valid && (op_sel == FUSED_GELU)),
+        .y_out     (gelu_out),
+        .out_valid (gelu_valid)
+      );
 
-  // GELU gradient
-  gelu_grad_unit #(.DATA_WIDTH(DATA_WIDTH)) u_gelu_grad (
-    .clk       (clk),
-    .rst_n     (rst_n),
-    .en        (en),
-    .x_in      (aux_in),
-    .in_valid  (in_valid && (op_sel == FUSED_GELU_GRAD)),
-    .grad_out  (gelu_grad_out),
-    .out_valid (gelu_grad_valid)
-  );
+      gelu_grad_unit_lut #(.DATA_WIDTH(DATA_WIDTH)) u_gelu_grad (
+        .clk       (clk),
+        .rst_n     (rst_n),
+        .en        (en),
+        .x_in      (aux_in),
+        .in_valid  (in_valid && (op_sel == FUSED_GELU_GRAD)),
+        .grad_out  (gelu_grad_out),
+        .out_valid (gelu_grad_valid)
+      );
+    end else begin : g_gelu_pade
+      gelu_unit #(.DATA_WIDTH(DATA_WIDTH)) u_gelu (
+        .clk       (clk),
+        .rst_n     (rst_n),
+        .en        (en),
+        .x_in      (data_in),
+        .in_valid  (in_valid && (op_sel == FUSED_GELU)),
+        .y_out     (gelu_out),
+        .out_valid (gelu_valid)
+      );
+
+      gelu_grad_unit #(.DATA_WIDTH(DATA_WIDTH)) u_gelu_grad (
+        .clk       (clk),
+        .rst_n     (rst_n),
+        .en        (en),
+        .x_in      (aux_in),
+        .in_valid  (in_valid && (op_sel == FUSED_GELU_GRAD)),
+        .grad_out  (gelu_grad_out),
+        .out_valid (gelu_grad_valid)
+      );
+    end
+  endgenerate
 
   // 6-stage delay for data_in to align with gelu_grad pipeline
   localparam int GRAD_DELAY = 6;

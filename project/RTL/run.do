@@ -34,15 +34,22 @@ vlog -sv status_if.sv
 
 # Datapath building blocks
 vlog -sv mac_pe.sv
+vlog -sv mac_pe_piped.sv
 vlog -sv systolic_array_64x64.sv
 vlog -sv gelu_lut.sv
 vlog -sv exp_lut.sv
+vlog -sv gelu_direct_lut.sv
+vlog -sv gelu_grad_direct_lut.sv
 vlog -sv adder_tree.sv
 vlog -sv gelu_unit.sv
+vlog -sv gelu_unit_lut.sv
 vlog -sv gelu_grad_unit.sv
+vlog -sv gelu_grad_unit_lut.sv
 vlog -sv softmax_unit.sv
+vlog -sv softmax_unit_lut.sv
 vlog -sv causal_mask_unit.sv
 vlog -sv divider_or_reciprocal_unit.sv
+vlog -sv divider_or_reciprocal_seq.sv
 vlog -sv fused_postproc_unit.sv
 
 # Pipeline / flow control
@@ -85,8 +92,13 @@ echo ""
 echo ">>> Compiling testbenches..."
 
 vlog -sv tb_mac_pe.sv
+vlog -sv tb_mac_pe_piped.sv
+vlog -sv tb_divider_or_reciprocal_seq.sv
 vlog -sv tb_gelu_unit.sv
+vlog -sv tb_gelu_unit_lut.sv
+vlog -sv tb_gelu_grad_unit_lut.sv
 vlog -sv tb_softmax_unit.sv
+vlog -sv tb_softmax_unit_lut.sv
 vlog -sv tb_causal_mask.sv
 vlog -sv tb_systolic_array.sv
 vlog -sv tb_fused_postproc.sv
@@ -129,9 +141,14 @@ echo " Running TB Suite"
 echo "=============================================="
 
 run_tb tb_mac_pe
+run_tb tb_mac_pe_piped
+run_tb tb_divider_or_reciprocal_seq
 run_tb tb_causal_mask
 run_tb tb_gelu_unit
+run_tb tb_gelu_unit_lut
+run_tb tb_gelu_grad_unit_lut
 run_tb tb_softmax_unit
+run_tb tb_softmax_unit_lut
 run_tb tb_systolic_array
 run_tb tb_fused_postproc
 run_tb tb_accel_top

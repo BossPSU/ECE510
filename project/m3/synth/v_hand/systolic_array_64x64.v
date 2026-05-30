@@ -69,7 +69,11 @@ module systolic_array_64x64 (
             for (c = 0; c < COLS; c = c + 1) begin : gen_col
                 wire signed [DATA_WIDTH-1:0] pe_acc;
 
-                mac_pe #(
+                // M5 Item B: mid-MAC pipelined PE (+1 cycle latency,
+                // ~half the leaf critical path). Port-compatible drop-in
+                // for mac_pe. stream_pipeline.v's DRAIN_CYCLES bumped to
+                // 5 to match the deeper systolic dataflow.
+                mac_pe_piped #(
                     .DATA_WIDTH (DATA_WIDTH)
                 ) u_pe (
                     .clk       (clk),

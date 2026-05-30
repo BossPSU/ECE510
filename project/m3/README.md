@@ -41,8 +41,10 @@ Q16.16) transformer accelerator chiplet. Three things live here:
 | [`synth/area_report.txt`](synth/area_report.txt) | leaf yosys stats + post-PnR area metrics |
 | [`synth/power_report.txt`](synth/power_report.txt) | leaf power breakdown at `nom_tt_025C_1v80` |
 | [`synth/critical_path.md`](synth/critical_path.md) | leaf critical path start/end + logic stages, with chip-scale framing |
-| [`synth/v_hand/`](synth/v_hand/) | **Attempt 4** -- 33 hand-flattened Verilog 2005 modules (no `logic`, no structs, no SV-isms). Every module elaborates clean in yosys. |
-| [`synth/config_top_small_v_hand.json`](synth/config_top_small_v_hand.json) | OpenLane config for the hand-flattened flat top_small synth (memory-OOM on this host) |
+| [`synth/v_hand/`](synth/v_hand/) | **Attempt 4** -- 33 hand-flattened Verilog 2005 modules (no `logic`, no structs, no SV-isms). Every module elaborates clean in yosys. Plus M4 LUT-based drop-ins staged for the M4 sweep: [`synth/v_hand/softmax_unit_lut.v`](synth/v_hand/softmax_unit_lut.v) (LUT exp + sequential 1/sum), [`synth/v_hand/gelu_unit_lut.v`](synth/v_hand/gelu_unit_lut.v) and [`synth/v_hand/gelu_grad_unit_lut.v`](synth/v_hand/gelu_grad_unit_lut.v) (256-entry direct LUT + linear interp), plus the two ROM modules + .mem contents. |
+| [`synth/config_top_small_v_hand.json`](synth/config_top_small_v_hand.json) | OpenLane config for the hand-flattened flat top_small synth (**Attempt 6**: passes through Yosys.Synthesis at 1 GiB peak RSS with M4 LUT swaps wired into the chain; previously OOM'd at 5.7 GiB with the Padé chain) |
+| [`synth/top_small_M4_LUT_synth/`](synth/top_small_M4_LUT_synth/) | **Attempt 6 artifacts** -- snapshot of the first successful flat OpenLane Yosys.Synthesis of `top_small.v` (gate-level netlist + reports + log). 41,537 Sky130 cells, 0.47 mm² cell area, 3 min 45 s wall-clock |
+| [`synth/top_small_M4_LUT_full/`](synth/top_small_M4_LUT_full/) | **Attempt 7 artifacts** -- first end-to-end OpenLane full flow on `top_small.v` (74/78 steps including GDS streamout). Clean DRC + LVS. Setup violations at 10 ns target (chip f_max ≈ 15 MHz, divider bottleneck). KLayout GDS (63 MB), final DEF (60 MB), post-PnR netlist, STA + power summaries |
 | [`synth/verify_v_hand.sh`](synth/verify_v_hand.sh) | yosys elaboration check per module (`hierarchy -check; stat`) |
 | [`synth/synth_per_module_scoped.sh`](synth/synth_per_module_scoped.sh) | **Attempt 5** -- per-module Sky130A synthesis sweep with scope-down `chparam` overrides |
 | [`synth/synth_remaining_small.sh`](synth/synth_remaining_small.sh) | follow-up sweep for the small control modules |
@@ -51,7 +53,7 @@ Q16.16) transformer accelerator chiplet. Three things live here:
 | [`synth/per_module/SUMMARY.md`](synth/per_module/SUMMARY.md) | sortable cell-count / area table across all 28 modules |
 | [`synth/per_module/summary.csv`](synth/per_module/summary.csv) | machine-readable summary (module, cells, area, scope) |
 | [`chip_scale_rollup.md`](chip_scale_rollup.md) | bottom-up chip-area projection from the per-module measurements; cross-PDK validation against the SAED32 Genus sweep in `project/RTL/` |
-| [`synthesis_notes.md`](synthesis_notes.md) | narrative: five synthesis attempts, what failed and why, what passed, chip-scale rollup, what carries into M4 (≥3,100 words) |
+| [`synthesis_notes.md`](synthesis_notes.md) | narrative: seven synthesis attempts (Attempt 7 = full OpenLane PnR + GDS streamout on top_small with M4 LUT swaps; DRC/LVS clean; setup timing requires M5 divider pipeline), what failed and why, what passed, chip-scale rollup, what carries forward |
 
 ## Tool versions
 

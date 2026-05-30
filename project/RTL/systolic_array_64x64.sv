@@ -5,7 +5,15 @@ module systolic_array_64x64
 #(
   parameter int ROWS       = ARRAY_ROWS,
   parameter int COLS       = ARRAY_COLS,
-  parameter int DATA_WIDTH = 32
+  parameter int DATA_WIDTH = 32,
+  // M5: 0 = legacy 1-cycle mac_pe (combinational mul + add to acc_r,
+  //         ~50-gate-level critical path -- the SS-corner setup limit);
+  //     1 = mac_pe_piped (mid-MAC pipeline register split, +1 cycle
+  //         latency, ~half the critical path). Caller MUST bump
+  //         stream_pipeline.DRAIN_CYCLES by 1 to drain the deeper PE.
+  //
+  // M5 default is 1 -- matches the v_hand path and the M5 deliverable.
+  parameter int USE_PIPED_MAC = 1
 )(
   input  logic                            clk,
   input  logic                            rst_n,
@@ -38,21 +46,39 @@ module systolic_array_64x64
     end
   endgenerate
 
-  // Instantiate PE grid
+  // Instantiate PE grid.
+  // USE_PIPED_MAC swaps between the legacy 1-cycle mac_pe and the M5
+  // mac_pe_piped (+1 cycle of MAC latency, ~half the leaf critical
+  // path). Both PE flavors share the same port list so the grid
+  // wiring above (a_wire/b_wire) is unchanged.
   generate
     for (r = 0; r < ROWS; r++) begin : gen_row
       for (c = 0; c < COLS; c++) begin : gen_col
-        mac_pe #(.DATA_WIDTH(DATA_WIDTH)) u_pe (
-          .clk       (clk),
-          .rst_n     (rst_n),
-          .en        (en),
-          .clear_acc (clear_acc),
-          .a_in      (a_wire[r][c]),
-          .a_out     (a_wire[r][c+1]),
-          .b_in      (b_wire[r][c]),
-          .b_out     (b_wire[r+1][c]),
-          .acc_out   (c_out[r][c])
-        );
+        if (USE_PIPED_MAC) begin : g_piped_pe
+          mac_pe_piped #(.DATA_WIDTH(DATA_WIDTH)) u_pe (
+            .clk       (clk),
+            .rst_n     (rst_n),
+            .en        (en),
+            .clear_acc (clear_acc),
+            .a_in      (a_wire[r][c]),
+            .a_out     (a_wire[r][c+1]),
+            .b_in      (b_wire[r][c]),
+            .b_out     (b_wire[r+1][c]),
+            .acc_out   (c_out[r][c])
+          );
+        end else begin : g_legacy_pe
+          mac_pe #(.DATA_WIDTH(DATA_WIDTH)) u_pe (
+            .clk       (clk),
+            .rst_n     (rst_n),
+            .en        (en),
+            .clear_acc (clear_acc),
+            .a_in      (a_wire[r][c]),
+            .a_out     (a_wire[r][c+1]),
+            .b_in      (b_wire[r][c]),
+            .b_out     (b_wire[r+1][c]),
+            .acc_out   (c_out[r][c])
+          );
+        end
       end
     end
   endgenerate
