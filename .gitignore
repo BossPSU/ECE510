@@ -51,6 +51,23 @@ logs_sweep/
 fv/
 **/fv/
 
+# ---- Cadence Innovus (phobos hierarchical PnR flow) ----
+# Phase 4/5 outputs from run_phobos_hier.sh: DEF (60 MB), GDS (100+ MB),
+# SPEF, post-route netlist, per-stage .enc snapshots. All regeneratable
+# from the Genus netlist + SDC by re-running phase 4. We keep the
+# reports/ and sta/ subdirs because those carry the headline numbers
+# (mc_summary.rpt, timing/power per corner).
+**/out_innovus/**/*.def
+**/out_innovus/**/*.gds
+**/out_innovus/**/*.gds.gz
+**/out_innovus/**/*.spef
+**/out_innovus/**/*.v
+**/out_innovus/**/*.enc
+**/out_innovus/**/*.enc.dat/
+# Per-phase Genus/Innovus stdout transcripts from run_phobos_hier.sh
+logs_hier/
+**/logs_hier/
+
 # ---- Python ----
 __pycache__/
 **/__pycache__/

@@ -239,7 +239,18 @@ puts ">>> Writing reports..."
 report_area                      > $outdir/reports/area.rpt
 report_area      -depth 6        > $outdir/reports/area_hier.rpt
 report_timing    -max_paths 20   > $outdir/reports/timing.rpt
-report_timing    -max_paths 20 -path_group reg2reg > $outdir/reports/timing_reg2reg.rpt
+# Reg-to-reg-only report. Genus 21.1 doesn't take `-path_group`; use the
+# `-from`/`-to` endpoint filter against the design's edge-triggered regs
+# to scope the report. Defensively wrapped in catch -- in environments
+# where the registers collection is empty (purely combinational top),
+# we fall back to the default report_timing.
+if { [catch {
+    report_timing -from [all_registers -edge_triggered] \
+                  -to   [all_registers -edge_triggered] \
+                  -max_paths 20 > $outdir/reports/timing_reg2reg.rpt
+} err] } {
+    puts "WARNING: reg2reg timing report skipped ($err)"
+}
 report_power                     > $outdir/reports/power.rpt
 report_gates                     > $outdir/reports/gates.rpt
 report_qor                       > $outdir/reports/qor.rpt
