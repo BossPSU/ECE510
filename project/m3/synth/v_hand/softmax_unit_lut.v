@@ -176,8 +176,13 @@ module softmax_unit_lut (
     reg               s2_valid;
     reg [7:0]         s2_len;
     reg signed [31:0] s2_max_held;
-    reg signed [31:0] s2_scores_held [0:VEC_LEN-1];
-    reg signed [31:0] s2_exp         [0:VEC_LEN-1];
+    reg signed [31:0] s2_scores_held    [0:VEC_LEN-1];
+    // M6 Tier 3: pre-shifted scores (= s1_scores[i] - s1_max), captured
+    // once at the s1->s2 row boundary. Lets the per-phase LUT address-gen
+    // skip the 32-bit subtract that previously sat on the
+    // s2_max_held -> q_to_lut_addr critical path.
+    reg signed [31:0] s2_shifted_scores [0:VEC_LEN-1];
+    reg signed [31:0] s2_exp            [0:VEC_LEN-1];
 
     // LUT bank wires
     reg  [7:0]         lut_addr [0:N_LUT_BANKS-1];
@@ -196,17 +201,13 @@ module softmax_unit_lut (
         end
     endgenerate
 
-    // Combinational address generation for the current phase.
-    // The (score - max) difference is computed inline inside the
-    // q_to_lut_addr call rather than via an intermediate reg, because
-    // an intermediate written only in the "if" branch infers a latch
-    // (the else branch needs every reg either assigned or held).
+    // M6 Tier 3: combinational address generation consumes the pre-shifted
+    // scores directly. No per-phase subtract on the critical path.
     always @* begin
         for (aw_b = 0; aw_b < N_LUT_BANKS; aw_b = aw_b + 1) begin
             aw_lane_idx = s2_phase * N_LUT_BANKS + aw_b;
             if (s2_busy && (aw_lane_idx < VEC_LEN) && (aw_lane_idx < s2_len))
-                lut_addr[aw_b] = q_to_lut_addr(
-                    s2_scores_held[aw_lane_idx] - s2_max_held);
+                lut_addr[aw_b] = q_to_lut_addr(s2_shifted_scores[aw_lane_idx]);
             else
                 lut_addr[aw_b] = 8'd0;
         end
@@ -254,18 +255,25 @@ module softmax_unit_lut (
         end
     end
 
-    // --- Held state captured at start of a row ---
+    // --- Held state captured at start of a row.
+    // M6 Tier 3 also pre-computes (s1_scores - s1_max) here so the
+    // per-phase LUT address-gen has no 32-bit subtract. The subtract
+    // happens once per row at the s1->s2 capture, not every phase cycle.
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             s2_len      <= 8'd0;
             s2_max_held <= 32'h0;
-            for (s2h_i = 0; s2h_i < VEC_LEN; s2h_i = s2h_i + 1)
-                s2_scores_held[s2h_i] <= 32'h0;
+            for (s2h_i = 0; s2h_i < VEC_LEN; s2h_i = s2h_i + 1) begin
+                s2_scores_held[s2h_i]    <= 32'h0;
+                s2_shifted_scores[s2h_i] <= 32'h0;
+            end
         end else if (en && !s2_busy && s1_valid) begin
             s2_len      <= s1_len;
             s2_max_held <= s1_max;
-            for (s2h_i = 0; s2h_i < VEC_LEN; s2h_i = s2h_i + 1)
-                s2_scores_held[s2h_i] <= s1_scores[s2h_i];
+            for (s2h_i = 0; s2h_i < VEC_LEN; s2h_i = s2h_i + 1) begin
+                s2_scores_held[s2h_i]    <= s1_scores[s2h_i];
+                s2_shifted_scores[s2h_i] <= s1_scores[s2h_i] - s1_max;
+            end
         end
     end
 
@@ -399,34 +407,55 @@ module softmax_unit_lut (
         end
     end
 
-    // ===== Stage 5: multiply each held exp by recip on recip_valid =====
-    reg signed [31:0] uniform_r;
+    // ===== Stage 5a (M6 Tier 3): register multiplier products + uniform =====
+    // Breaks the s4_wait_exp[*] -> q_mul -> probs_out chain that drove
+    // 33 Sky130 SS >5 ns violators on Attempt 9 (including the recip
+    // output path). +1 cycle softmax latency; caller's SOFTMAX_LAT
+    // bumped to (8 + LUT_N_PHASES).
+    integer s5a_i;
+    reg               s5a_valid;
+    reg               s5a_sum_zero;
+    reg [7:0]         s5a_len;
+    reg signed [31:0] s5a_uniform;
+    reg signed [31:0] s5a_products [0:VEC_LEN-1];
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            s5a_valid    <= 1'b0;
+            s5a_sum_zero <= 1'b0;
+            s5a_len      <= 8'd0;
+            s5a_uniform  <= 32'h0;
+            for (s5a_i = 0; s5a_i < VEC_LEN; s5a_i = s5a_i + 1)
+                s5a_products[s5a_i] <= 32'h0;
+        end else if (en) begin
+            s5a_valid    <= recip_valid;
+            s5a_sum_zero <= s4_wait_sum_zero;
+            s5a_len      <= s4_wait_len;
+            if (s4_wait_len == 8'd0)
+                s5a_uniform <= 32'h0;
+            else
+                s5a_uniform <= q_uniform_recip(s4_wait_len);
+            if (recip_valid) begin
+                for (s5a_i = 0; s5a_i < VEC_LEN; s5a_i = s5a_i + 1)
+                    s5a_products[s5a_i] <= q_mul(s4_wait_exp[s5a_i], recip);
+            end
+        end
+    end
+
+    // ===== Stage 5b: mux to probs_out =====
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             out_valid <= 1'b0;
             probs_out <= {(VEC_LEN*DATA_WIDTH){1'b0}};
         end else if (en) begin
-            out_valid <= recip_valid;
-            if (recip_valid) begin
-                if (!s4_wait_sum_zero) begin
-                    for (s5_i = 0; s5_i < VEC_LEN; s5_i = s5_i + 1) begin
-                        if (s5_i < s4_wait_len)
-                            probs_out[(s5_i*DATA_WIDTH) +: DATA_WIDTH]
-                                <= q_mul(s4_wait_exp[s5_i], recip);
-                        else
-                            probs_out[(s5_i*DATA_WIDTH) +: DATA_WIDTH] <= 32'h0;
-                    end
-                end else begin
-                    if (s4_wait_len == 8'd0)
-                        uniform_r = 32'h0;
+            out_valid <= s5a_valid;
+            if (s5a_valid) begin
+                for (s5_i = 0; s5_i < VEC_LEN; s5_i = s5_i + 1) begin
+                    if (s5_i < s5a_len)
+                        probs_out[(s5_i*DATA_WIDTH) +: DATA_WIDTH]
+                            <= s5a_sum_zero ? s5a_uniform : s5a_products[s5_i];
                     else
-                        uniform_r = q_uniform_recip(s4_wait_len);
-                    for (s5_i = 0; s5_i < VEC_LEN; s5_i = s5_i + 1) begin
-                        if (s5_i < s4_wait_len)
-                            probs_out[(s5_i*DATA_WIDTH) +: DATA_WIDTH] <= uniform_r;
-                        else
-                            probs_out[(s5_i*DATA_WIDTH) +: DATA_WIDTH] <= 32'h0;
-                    end
+                        probs_out[(s5_i*DATA_WIDTH) +: DATA_WIDTH] <= 32'h0;
                 end
             end
         end

@@ -107,20 +107,36 @@ module fused_postproc_unit (
         end
     end
 
-    // Output MUX
+    // Combinational MUX (drives data_out_c / out_valid_c).
+    reg signed [DATA_WIDTH-1:0] data_out_c;
+    reg                         out_valid_c;
     always @* begin
-        data_out  = 32'h0;
-        out_valid = 1'b0;
+        data_out_c  = 32'h0;
+        out_valid_c = 1'b0;
         if (gelu_valid) begin
-            data_out  = gelu_out;
-            out_valid = 1'b1;
+            data_out_c  = gelu_out;
+            out_valid_c = 1'b1;
         end else if (gelu_grad_valid) begin
-            data_out  = q_mul(data_delay[GRAD_DELAY-1], gelu_grad_out);
-            out_valid = 1'b1;
+            data_out_c  = q_mul(data_delay[GRAD_DELAY-1], gelu_grad_out);
+            out_valid_c = 1'b1;
         end else if (in_valid &&
                      ((op_sel == FUSED_BYPASS) || (op_sel == FUSED_MASK))) begin
-            data_out  = data_in;
-            out_valid = 1'b1;
+            data_out_c  = data_in;
+            out_valid_c = 1'b1;
+        end
+    end
+
+    // M6 Tier 2A: output pipeline register. Cuts the
+    // data_delay[5][12] -> q_mul -> output critical path that drove 71
+    // Sky130 SS >5 ns violators on Attempt 9. Adds +1 cycle of latency;
+    // caller's FUSED_DEPTH bumped to 9 (stream_pipeline.v).
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            data_out  <= 32'h0;
+            out_valid <= 1'b0;
+        end else if (en) begin
+            data_out  <= data_out_c;
+            out_valid <= out_valid_c;
         end
     end
 

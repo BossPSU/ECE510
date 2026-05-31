@@ -1,9 +1,12 @@
-// gelu_grad_unit_lut.sv — LUT-based Q16.16 GELU derivative (M4 update)
+// gelu_grad_unit_lut.sv — LUT-based Q16.16 GELU derivative (M4 + M6 Tier 2B)
 //
 // Drop-in replacement for gelu_grad_unit.sv. Same port list, same Q16.16
 // numerical contract. Same architecture as gelu_unit_lut: 256-entry
 // direct GELU'(x) ROM with adjacent-entry linear interpolation;
-// 3-cycle pipeline (vs 6 for the Pade chain it replaces).
+// 4-cycle pipeline after M6 Tier 2B (was 3 in M4) -- stage 3 split into
+// 3a (subtract + multiply, registered) and 3b (final add + saturation
+// override). Cuts the s2_data_hi/s2_data_lo -> 32-bit sub -> 32x32 mul
+// -> 32-bit add -> grad_out chain.
 //
 // Saturation tails for GELU':
 //   x -> -inf : GELU'(x) -> 0       (clamp negative side to 0)
@@ -112,25 +115,50 @@ module gelu_grad_unit_lut
   end
 
   // ---------------------------------------------------------------------
-  // Stage 3: linear interpolation + saturation override
+  // Stage 3a (M6 Tier 2B): subtract + multiply, registered.
+  // ---------------------------------------------------------------------
+  logic                       s3a_valid;
+  logic signed [31:0]         s3a_data_lo;
+  logic signed [31:0]         s3a_delta;
+  logic                       s3a_sat_pos;
+  logic                       s3a_sat_neg;
+
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      s3a_valid   <= 1'b0;
+      s3a_data_lo <= '0;
+      s3a_delta   <= '0;
+      s3a_sat_pos <= 1'b0;
+      s3a_sat_neg <= 1'b0;
+    end else if (en) begin
+      s3a_valid <= s2_valid;
+      if (s2_valid) begin
+        logic signed [31:0] diff;
+        diff       = s2_data_hi - s2_data_lo;
+        s3a_data_lo <= s2_data_lo;
+        s3a_delta   <= q_mul(diff, s2_frac_q16);
+        s3a_sat_pos <= s2_sat_pos;
+        s3a_sat_neg <= s2_sat_neg;
+      end
+    end
+  end
+
+  // ---------------------------------------------------------------------
+  // Stage 3b: linear interpolation final add + saturation override
   // ---------------------------------------------------------------------
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       out_valid <= 1'b0;
-      grad_out     <= '0;
+      grad_out  <= '0;
     end else if (en) begin
-      out_valid <= s2_valid;
-      if (s2_valid) begin
-        logic signed [31:0] diff;
-        logic signed [31:0] delta;
+      out_valid <= s3a_valid;
+      if (s3a_valid) begin
         logic signed [31:0] interp;
-        diff   = s2_data_hi - s2_data_lo;
-        delta  = q_mul(diff, s2_frac_q16);
-        interp = s2_data_lo + delta;
+        interp = s3a_data_lo + s3a_delta;
         // Override saturation tails: x < -4 -> 0, x > +4 -> 1.
-        if (s2_sat_pos)
+        if (s3a_sat_pos)
           grad_out <= Q_ONE;
-        else if (s2_sat_neg)
+        else if (s3a_sat_neg)
           grad_out <= Q_ZERO;
         else
           grad_out <= interp;

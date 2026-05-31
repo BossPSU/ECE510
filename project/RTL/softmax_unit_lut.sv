@@ -137,8 +137,14 @@ module softmax_unit_lut
   logic [7:0]         s2_phase_cap_d1;
   logic               s2_valid;
   logic [7:0]         s2_len;
-  logic signed [31:0] s2_max_held;
+  logic signed [31:0] s2_max_held;          // kept for waveform/debug visibility
   logic signed [31:0] s2_scores_held [VEC_LEN];
+  // M6 Tier 3: pre-shifted scores (= score - max), computed once when the
+  // held state latches. Eliminates the per-phase subtract from the LUT
+  // address-gen combinational chain that drove the
+  // s2_max_held/s2_scores_held -> q_to_lut_addr critical path
+  // (47 of 833 Sky130 SS >5 ns violators on Attempt 9 landed here).
+  logic signed [31:0] s2_shifted_scores [VEC_LEN];
   logic signed [31:0] s2_exp [VEC_LEN];
 
   logic [7:0]         lut_addr [N_LUT_BANKS];
@@ -157,19 +163,15 @@ module softmax_unit_lut
     end
   endgenerate
 
-  // Combinational address generation for the current phase.
-  // The (score - max) difference is computed inline inside the
-  // q_to_lut_addr call rather than via an intermediate reg, because
-  // the hand-flatten path (project/m3/synth/v_hand/softmax_unit_lut.v)
-  // has to hoist temporaries to module scope where a write only in
-  // the "if" branch infers a latch. Keep the structure identical in
-  // both flows to avoid divergence.
+  // M6 Tier 3: combinational address generation now consumes the
+  // pre-shifted scores directly (no per-phase subtract). This is the
+  // path that was bottlenecking softmax on Sky130 SS.
   always_comb begin
     for (int b = 0; b < N_LUT_BANKS; b++) begin
       int lane;
       lane = int'(s2_phase) * N_LUT_BANKS + b;
       if (s2_busy && (lane < VEC_LEN) && (lane < int'(s2_len)))
-        lut_addr[b] = q_to_lut_addr(s2_scores_held[lane] - s2_max_held);
+        lut_addr[b] = q_to_lut_addr(s2_shifted_scores[lane]);
       else
         lut_addr[b] = 8'd0;
     end
@@ -216,18 +218,26 @@ module softmax_unit_lut
     end
   end
 
-  // --- Held state captured at start of a row
+  // --- Held state captured at start of a row.
+  // M6 Tier 3 also pre-computes the (score - max) shift here, so the
+  // per-phase LUT address-gen no longer has a 32-bit subtract in its
+  // critical path. The subtract still happens, but only once per row
+  // (at the s1->s2 capture edge) instead of every phase cycle.
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       s2_len      <= '0;
       s2_max_held <= '0;
-      for (int i = 0; i < VEC_LEN; i++)
-        s2_scores_held[i] <= '0;
+      for (int i = 0; i < VEC_LEN; i++) begin
+        s2_scores_held[i]    <= '0;
+        s2_shifted_scores[i] <= '0;
+      end
     end else if (en && !s2_busy && s1_valid) begin
       s2_len      <= s1_len;
       s2_max_held <= s1_max;
-      for (int i = 0; i < VEC_LEN; i++)
-        s2_scores_held[i] <= s1_scores[i];
+      for (int i = 0; i < VEC_LEN; i++) begin
+        s2_scores_held[i]    <= s1_scores[i];
+        s2_shifted_scores[i] <= s1_scores[i] - s1_max;
+      end
     end
   end
 
@@ -467,30 +477,54 @@ module softmax_unit_lut
     end
   endgenerate
 
+  // M6 Tier 3 stage-5 split:
+  //   5a (NEW) -- compute and register multiplier products + the uniform
+  //               fallback. Cuts the s4_wait_exp[*] -> q_mul(s5_exp, recip)
+  //               -> probs_out chain that drove 33+ Sky130 SS >5 ns
+  //               violators on Attempt 9 (including the 17 from
+  //               u_recip.recip[1]).
+  //   5b -- drive probs_out from registered products or uniform.
+  // Adds +1 cycle to softmax latency; caller's SOFTMAX_LAT bumped to
+  // (8 + LUT_N_PHASES) when USE_LUT_SOFTMAX=1.
+  logic                       s5a_valid;
+  logic                       s5a_sum_zero;
+  logic [7:0]                 s5a_len;
+  logic signed [31:0]         s5a_uniform;
+  logic signed [31:0]         s5a_products [VEC_LEN];
+
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      s5a_valid    <= 1'b0;
+      s5a_sum_zero <= 1'b0;
+      s5a_len      <= '0;
+      s5a_uniform  <= '0;
+      for (int i = 0; i < VEC_LEN; i++)
+        s5a_products[i] <= '0;
+    end else if (en) begin
+      s5a_valid    <= recip_valid;
+      s5a_sum_zero <= s5_sum_zero;
+      s5a_len      <= s5_len;
+      s5a_uniform  <= (s5_len == 0) ? '0 : q_uniform_recip(s5_len);
+      if (recip_valid) begin
+        for (int i = 0; i < VEC_LEN; i++)
+          s5a_products[i] <= q_mul(s5_exp[i], recip);
+      end
+    end
+  end
+
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       out_valid <= 1'b0;
       for (int i = 0; i < VEC_LEN; i++)
         probs_out[i] <= '0;
     end else if (en) begin
-      out_valid <= recip_valid;
-      if (recip_valid) begin
-        if (!s5_sum_zero) begin
-          for (int i = 0; i < VEC_LEN; i++) begin
-            if (i < int'(s5_len))
-              probs_out[i] <= q_mul(s5_exp[i], recip);
-            else
-              probs_out[i] <= '0;
-          end
-        end else begin
-          logic signed [31:0] uniform;
-          uniform = (s5_len == 0) ? '0 : q_uniform_recip(s5_len);
-          for (int i = 0; i < VEC_LEN; i++) begin
-            if (i < int'(s5_len))
-              probs_out[i] <= uniform;
-            else
-              probs_out[i] <= '0;
-          end
+      out_valid <= s5a_valid;
+      if (s5a_valid) begin
+        for (int i = 0; i < VEC_LEN; i++) begin
+          if (i < int'(s5a_len))
+            probs_out[i] <= s5a_sum_zero ? s5a_uniform : s5a_products[i];
+          else
+            probs_out[i] <= '0;
         end
       end
     end

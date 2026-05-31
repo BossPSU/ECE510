@@ -10,7 +10,13 @@
 // Drop-in port-compatible replacement for gelu_unit.v. Replaces the
 // Pade[3,2] tanh chain (10 mults + 1 combinational divider, ~500 gate
 // levels) with a 256-entry direct GELU LUT + adjacent-entry linear
-// interpolation. 3-cycle pipeline.
+// interpolation.
+//
+// M6 Tier 2B (this version): 4-stage pipeline (was 3 in M4). Stage 3
+// split into 3a (subtract + multiplier, registered) and 3b (final add
+// + saturation override). Cuts the s2_data_hi/s2_data_lo -> 32-bit
+// sub -> 32x32 mul -> 32-bit add chain that drove 26 Sky130 SS >5 ns
+// violators on Attempt 9. Caller bumps FUSED_DEPTH by 1.
 //
 // Hand-flatten conversions:
 //   - dropped `import accel_pkg::*`; Q_FOUR / Q_NEG_FOUR / Q_FOUR_MINUS1
@@ -137,19 +143,43 @@ module gelu_unit_lut (
         end
     end
 
-    // ===== Stage 3: linear interp + saturation override =====
+    // ===== Stage 3a (M6 Tier 2B): subtract + multiply, registered =====
+    reg               s3a_valid;
+    reg signed [31:0] s3a_data_lo;
+    reg signed [31:0] s3a_delta;
+    reg signed [31:0] s3a_x_in;
+    reg               s3a_sat_pos;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            s3a_valid   <= 1'b0;
+            s3a_data_lo <= 32'h0;
+            s3a_delta   <= 32'h0;
+            s3a_x_in    <= 32'h0;
+            s3a_sat_pos <= 1'b0;
+        end else if (en) begin
+            s3a_valid <= s2_valid;
+            if (s2_valid) begin
+                diff        = s2_data_hi - s2_data_lo;
+                s3a_data_lo <= s2_data_lo;
+                s3a_delta   <= q_mul(diff, s2_frac_q16);
+                s3a_x_in    <= s2_x_in;
+                s3a_sat_pos <= s2_sat_pos;
+            end
+        end
+    end
+
+    // ===== Stage 3b: linear interp final add + saturation override =====
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             out_valid <= 1'b0;
             y_out     <= 32'h0;
         end else if (en) begin
-            out_valid <= s2_valid;
-            if (s2_valid) begin
-                diff   = s2_data_hi - s2_data_lo;
-                delta  = q_mul(diff, s2_frac_q16);
-                interp = s2_data_lo + delta;
-                if (s2_sat_pos)
-                    y_out <= s2_x_in;
+            out_valid <= s3a_valid;
+            if (s3a_valid) begin
+                interp = s3a_data_lo + s3a_delta;
+                if (s3a_sat_pos)
+                    y_out <= s3a_x_in;
                 else
                     y_out <= interp;
             end

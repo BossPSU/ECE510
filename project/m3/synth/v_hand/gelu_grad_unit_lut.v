@@ -127,20 +127,44 @@ module gelu_grad_unit_lut (
         end
     end
 
-    // ===== Stage 3: linear interp + saturation override =====
+    // ===== Stage 3a (M6 Tier 2B): subtract + multiply, registered =====
+    reg               s3a_valid;
+    reg signed [31:0] s3a_data_lo;
+    reg signed [31:0] s3a_delta;
+    reg               s3a_sat_pos;
+    reg               s3a_sat_neg;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            s3a_valid   <= 1'b0;
+            s3a_data_lo <= 32'h0;
+            s3a_delta   <= 32'h0;
+            s3a_sat_pos <= 1'b0;
+            s3a_sat_neg <= 1'b0;
+        end else if (en) begin
+            s3a_valid <= s2_valid;
+            if (s2_valid) begin
+                diff        = s2_data_hi - s2_data_lo;
+                s3a_data_lo <= s2_data_lo;
+                s3a_delta   <= q_mul(diff, s2_frac_q16);
+                s3a_sat_pos <= s2_sat_pos;
+                s3a_sat_neg <= s2_sat_neg;
+            end
+        end
+    end
+
+    // ===== Stage 3b: linear interp final add + saturation override =====
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             out_valid <= 1'b0;
             grad_out  <= 32'h0;
         end else if (en) begin
-            out_valid <= s2_valid;
-            if (s2_valid) begin
-                diff   = s2_data_hi - s2_data_lo;
-                delta  = q_mul(diff, s2_frac_q16);
-                interp = s2_data_lo + delta;
-                if (s2_sat_pos)
+            out_valid <= s3a_valid;
+            if (s3a_valid) begin
+                interp = s3a_data_lo + s3a_delta;
+                if (s3a_sat_pos)
                     grad_out <= Q_ONE;
-                else if (s2_sat_neg)
+                else if (s3a_sat_neg)
                     grad_out <= Q_ZERO;
                 else
                     grad_out <= interp;

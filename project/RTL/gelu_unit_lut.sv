@@ -1,4 +1,4 @@
-// gelu_unit_lut.sv — LUT-based Q16.16 GELU activation (M4 update)
+// gelu_unit_lut.sv — LUT-based Q16.16 GELU activation (M4 + M6 Tier 2B)
 //
 // Drop-in replacement for gelu_unit.sv. Same port list, same Q16.16
 // numerical contract. Structural change: the Pade[3,2] tanh chain
@@ -8,15 +8,21 @@
 //
 // Architecture
 // ------------
-// Pipeline (3 cycles, vs 6 for the Pade version):
+// Pipeline (4 cycles after M6 Tier 2B; was 3 in M4):
 //   Stage 1 (registered): clamp x_in to [-4, +4 - eps], compute
 //     8-bit address (addr_lo) + adjacent address (addr_hi) into the
 //     direct GELU LUT, plus 16-bit Q16.16 fractional position frac.
 //     Also latches x_in and a "saturation > +4" flag.
 //   Stage 2 (LUT registered read): gelu_direct_lut emits LUT[addr_lo]
 //     and LUT[addr_hi] in parallel. frac, x_in, sat_pos forwarded.
-//   Stage 3 (registered): linear interpolation
-//        y_interp = LUT[addr_lo] + (LUT[addr_hi] - LUT[addr_lo]) * frac
+//   Stage 3a (registered, NEW): subtract diff = data_hi - data_lo and
+//     compute the interpolation product delta = q_mul(diff, frac).
+//     Register delta + data_lo + x_in + sat_pos. Cuts the
+//     s2_data_hi/s2_data_lo -> 32-bit sub -> 32x32 mul -> 32-bit add
+//     -> y_out chain that drove 49 of the Sky130 SS >5 ns violators
+//     on Attempt 9.
+//   Stage 3b (registered): linear interp final add + saturation override.
+//        y_interp = data_lo + delta
 //     plus saturation override: for x_in > +4, return x_in (since
 //     GELU(x) -> x there); for x_in < -4, the LUT itself returns
 //     near-zero so no override is needed.
@@ -148,24 +154,53 @@ module gelu_unit_lut
   end
 
   // ---------------------------------------------------------------------
-  // Stage 3: linear interpolation + saturation override
+  // Stage 3a (M6 Tier 2B): compute and register interpolation product.
+  //   diff  = data_hi - data_lo
+  //   delta = q_mul(diff, frac)
+  // delta_r + data_lo_r3a + x_in_r3a + sat_pos_r3a + valid_r3a passed
+  // to Stage 3b.
+  // ---------------------------------------------------------------------
+  logic                       s3a_valid;
+  logic signed [31:0]         s3a_data_lo;
+  logic signed [31:0]         s3a_delta;
+  logic signed [31:0]         s3a_x_in;
+  logic                       s3a_sat_pos;
+
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      s3a_valid   <= 1'b0;
+      s3a_data_lo <= '0;
+      s3a_delta   <= '0;
+      s3a_x_in    <= '0;
+      s3a_sat_pos <= 1'b0;
+    end else if (en) begin
+      s3a_valid <= s2_valid;
+      if (s2_valid) begin
+        logic signed [31:0] diff;
+        diff       = s2_data_hi - s2_data_lo;
+        s3a_data_lo <= s2_data_lo;
+        s3a_delta   <= q_mul(diff, s2_frac_q16);
+        s3a_x_in    <= s2_x_in;
+        s3a_sat_pos <= s2_sat_pos;
+      end
+    end
+  end
+
+  // ---------------------------------------------------------------------
+  // Stage 3b: linear interpolation final add + saturation override
   // ---------------------------------------------------------------------
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       out_valid <= 1'b0;
       y_out     <= '0;
     end else if (en) begin
-      out_valid <= s2_valid;
-      if (s2_valid) begin
-        logic signed [31:0] diff;
-        logic signed [31:0] delta;
+      out_valid <= s3a_valid;
+      if (s3a_valid) begin
         logic signed [31:0] interp;
-        diff   = s2_data_hi - s2_data_lo;          // adjacent LUT step (<= 1 LSB-of-x scaled)
-        delta  = q_mul(diff, s2_frac_q16);          // (data_hi - data_lo) * frac
-        interp = s2_data_lo + delta;                // linear interp
+        interp = s3a_data_lo + s3a_delta;
         // For x > +4, GELU(x) -> x. Override the LUT result so the
         // saturation tail tracks the input exactly.
-        y_out <= s2_sat_pos ? s2_x_in : interp;
+        y_out <= s3a_sat_pos ? s3a_x_in : interp;
       end
     end
   end

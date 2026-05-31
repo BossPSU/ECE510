@@ -95,33 +95,73 @@ module stream_pipeline
   //   mac_pe_piped4 (+3)  -> drain 7
   localparam int DRAIN_CYCLES   = USE_PIPED4_MAC ? 7 :
                                   (USE_PIPED_MAC ? 5 : 4);
-  localparam int FUSED_DEPTH    = 7;
+  // M6 Tier 2: +2 vs M5 -- one for the new fused_postproc output register
+  // (Tier 2A) and one for the gelu LUT stage-3 split (Tier 2B).
+  localparam int FUSED_DEPTH    = 9;
   // Padé softmax_unit: in_valid -> out_valid = 4 cycles.
-  // LUT softmax_unit_lut: latency = 7 + N_PHASES, where
-  //   N_PHASES = ceil(ARRAY_DIM / N_LUT_BANKS), N_LUT_BANKS = min(ARRAY_DIM, 8).
+  // LUT softmax_unit_lut M6 Tier 3: latency = 8 + N_PHASES (was 7 + N_PHASES;
+  // +1 from the new s5 multiplier-output register that breaks the
+  // s4_wait_exp -> q_mul -> probs_out chain).
   localparam int LUT_N_BANKS    = (ARRAY_DIM < 8) ? ARRAY_DIM : 8;
   localparam int LUT_N_PHASES   = (ARRAY_DIM + LUT_N_BANKS - 1) / LUT_N_BANKS;
-  localparam int SOFTMAX_LAT    = USE_LUT_SOFTMAX ? (7 + LUT_N_PHASES) : 4;
+  localparam int SOFTMAX_LAT    = USE_LUT_SOFTMAX ? (8 + LUT_N_PHASES) : 4;
 
   logic        softmax_mode;
   assign softmax_mode = (op_sel == FUSED_SOFTMAX);
 
-  logic [15:0] feed_end, output_start, output_end, elemwise_end;
-  assign feed_end     = {8'b0, tile_m} + {8'b0, tile_n} + {8'b0, tile_k} + 16'd2;
-  assign output_start = feed_end + 16'(DRAIN_CYCLES);
-  assign output_end   = output_start + ({8'b0, tile_m} * {8'b0, tile_n});
-  assign elemwise_end = output_end + 16'(FUSED_DEPTH);
+  // M6 Tier 1: register all cycle-boundary values at `start` so the
+  // tile_m*tile_n product (the ~12 ns Sky130-SS chip critical path on
+  // Attempt 9 -- 461 of 833 violators >5 ns landed here) drops off
+  // the per-cycle comparator cone. The bounds are stable for the
+  // entire tile, so latching them once at start is functionally
+  // identical to the original combinational version.
+  logic [15:0] feed_end_c, output_start_c, output_end_c, elemwise_end_c;
+  logic [15:0] sm_feed_end_c, sm_capture_start_c, sm_capture_end_c;
+  logic [15:0] sm_walk_start_c, sm_walk_end_c;
 
-  // Softmax phase boundaries
+  assign feed_end_c         = {8'b0, tile_m} + {8'b0, tile_n}
+                            + {8'b0, tile_k} + 16'd2;
+  assign output_start_c     = feed_end_c + 16'(DRAIN_CYCLES);
+  assign output_end_c       = output_start_c
+                            + ({8'b0, tile_m} * {8'b0, tile_n});
+  assign elemwise_end_c     = output_end_c + 16'(FUSED_DEPTH);
+  assign sm_feed_end_c      = output_start_c + {8'b0, tile_m};
+  assign sm_capture_start_c = output_start_c + 16'(SOFTMAX_LAT);
+  assign sm_capture_end_c   = sm_capture_start_c + {8'b0, tile_m};
+  assign sm_walk_start_c    = sm_capture_end_c;
+  assign sm_walk_end_c      = sm_walk_start_c
+                            + ({8'b0, tile_m} * {8'b0, tile_n});
+
+  logic [15:0] feed_end, output_start, output_end, elemwise_end;
   logic [15:0] sm_feed_end, sm_capture_start, sm_capture_end;
   logic [15:0] sm_walk_start, sm_walk_end;
-  assign sm_feed_end      = output_start + {8'b0, tile_m};
-  assign sm_capture_start = output_start + 16'(SOFTMAX_LAT);
-  assign sm_capture_end   = sm_capture_start + {8'b0, tile_m};
-  assign sm_walk_start    = sm_capture_end;
-  assign sm_walk_end      = sm_walk_start + ({8'b0, tile_m} * {8'b0, tile_n});
 
-  // all_end picks the longer path
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      feed_end         <= 16'd0;
+      output_start     <= 16'd0;
+      output_end       <= 16'd0;
+      elemwise_end     <= 16'd0;
+      sm_feed_end      <= 16'd0;
+      sm_capture_start <= 16'd0;
+      sm_capture_end   <= 16'd0;
+      sm_walk_start    <= 16'd0;
+      sm_walk_end      <= 16'd0;
+    end else if (start && !running) begin
+      feed_end         <= feed_end_c;
+      output_start     <= output_start_c;
+      output_end       <= output_end_c;
+      elemwise_end     <= elemwise_end_c;
+      sm_feed_end      <= sm_feed_end_c;
+      sm_capture_start <= sm_capture_start_c;
+      sm_capture_end   <= sm_capture_end_c;
+      sm_walk_start    <= sm_walk_start_c;
+      sm_walk_end      <= sm_walk_end_c;
+    end
+  end
+
+  // all_end picks the longer path (combinational select, but both
+  // operands are now registered).
   logic [15:0] all_end;
   assign all_end = softmax_mode ? sm_walk_end : elemwise_end;
 

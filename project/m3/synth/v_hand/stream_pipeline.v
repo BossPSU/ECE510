@@ -54,14 +54,14 @@ module stream_pipeline (
     // (current v_hand selection); revert to 5 if mac_pe_piped is
     // restored, or 4 if legacy mac_pe is restored.
     localparam DRAIN_CYCLES = 7;
-    localparam FUSED_DEPTH  = 7;
-    // M4: softmax_unit_lut latency = 7 + N_PHASES, where
-    // N_PHASES = ceil(ARRAY_DIM / min(ARRAY_DIM, 8)). At default
-    // top_small scope ARRAY_DIM=2 -> N_PHASES=1 -> SOFTMAX_LAT=8.
-    // At ARRAY_DIM=64 -> N_PHASES=8 -> SOFTMAX_LAT=15.
+    // M6 Tier 2: +2 vs M5 (one for the new fused_postproc output reg,
+    // one for the gelu LUT stage-3 split).
+    localparam FUSED_DEPTH  = 9;
+    // M6 Tier 3: softmax_unit_lut latency now 8 + N_PHASES (was 7 + N_PHASES)
+    // -- +1 from the new s5 multiplier-output register.
     localparam LUT_N_BANKS  = (ARRAY_DIM < 8) ? ARRAY_DIM : 8;
     localparam LUT_N_PHASES = (ARRAY_DIM + LUT_N_BANKS - 1) / LUT_N_BANKS;
-    localparam SOFTMAX_LAT  = 7 + LUT_N_PHASES;
+    localparam SOFTMAX_LAT  = 8 + LUT_N_PHASES;
 
     input  wire                                  clk;
     input  wire                                  rst_n;
@@ -97,19 +97,57 @@ module stream_pipeline (
 
     wire softmax_mode = (op_sel == FUSED_SOFTMAX);
 
-    wire [15:0] feed_end       = {8'b0, tile_m} + {8'b0, tile_n}
-                                                + {8'b0, tile_k} + 16'd2;
-    wire [15:0] output_start   = feed_end + DRAIN_CYCLES;
-    wire [15:0] output_end     = output_start +
-                                 ({8'b0, tile_m} * {8'b0, tile_n});
-    wire [15:0] elemwise_end   = output_end + FUSED_DEPTH;
-
-    wire [15:0] sm_feed_end      = output_start + {8'b0, tile_m};
-    wire [15:0] sm_capture_start = output_start + SOFTMAX_LAT;
-    wire [15:0] sm_capture_end   = sm_capture_start + {8'b0, tile_m};
-    wire [15:0] sm_walk_start    = sm_capture_end;
-    wire [15:0] sm_walk_end      = sm_walk_start +
+    // M6 Tier 1: register the per-tile cycle bounds at `start` so the
+    // tile_m*tile_n product drops out of the per-cycle comparator cone.
+    // This was the chip critical path on Sky130 SS Attempt 9 (656 of 833
+    // >5 ns violators were on accel_engine ctrl_tile_*/FSM paths that
+    // funneled into the cycle_cnt comparator network here).
+    wire [15:0] feed_end_c       = {8'b0, tile_m} + {8'b0, tile_n}
+                                                   + {8'b0, tile_k} + 16'd2;
+    wire [15:0] output_start_c   = feed_end_c + DRAIN_CYCLES;
+    wire [15:0] output_end_c     = output_start_c +
                                    ({8'b0, tile_m} * {8'b0, tile_n});
+    wire [15:0] elemwise_end_c   = output_end_c + FUSED_DEPTH;
+    wire [15:0] sm_feed_end_c      = output_start_c + {8'b0, tile_m};
+    wire [15:0] sm_capture_start_c = output_start_c + SOFTMAX_LAT;
+    wire [15:0] sm_capture_end_c   = sm_capture_start_c + {8'b0, tile_m};
+    wire [15:0] sm_walk_start_c    = sm_capture_end_c;
+    wire [15:0] sm_walk_end_c      = sm_walk_start_c +
+                                     ({8'b0, tile_m} * {8'b0, tile_n});
+
+    reg [15:0] feed_end;
+    reg [15:0] output_start;
+    reg [15:0] output_end;
+    reg [15:0] elemwise_end;
+    reg [15:0] sm_feed_end;
+    reg [15:0] sm_capture_start;
+    reg [15:0] sm_capture_end;
+    reg [15:0] sm_walk_start;
+    reg [15:0] sm_walk_end;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            feed_end         <= 16'd0;
+            output_start     <= 16'd0;
+            output_end       <= 16'd0;
+            elemwise_end     <= 16'd0;
+            sm_feed_end      <= 16'd0;
+            sm_capture_start <= 16'd0;
+            sm_capture_end   <= 16'd0;
+            sm_walk_start    <= 16'd0;
+            sm_walk_end      <= 16'd0;
+        end else if (start && !running) begin
+            feed_end         <= feed_end_c;
+            output_start     <= output_start_c;
+            output_end       <= output_end_c;
+            elemwise_end     <= elemwise_end_c;
+            sm_feed_end      <= sm_feed_end_c;
+            sm_capture_start <= sm_capture_start_c;
+            sm_capture_end   <= sm_capture_end_c;
+            sm_walk_start    <= sm_walk_start_c;
+            sm_walk_end      <= sm_walk_end_c;
+        end
+    end
 
     wire [15:0] all_end = softmax_mode ? sm_walk_end : elemwise_end;
 
