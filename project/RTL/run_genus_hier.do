@@ -39,10 +39,16 @@
 set_db init_lib_search_path { . $env(LIB_PATH) }
 set_db init_hdl_search_path { . }
 
-# Conservative worker count -- matches run_genus_sweep.do post-OOM tuning.
-# Higher counts COW-balloon peak RSS during PBS partitioning.
-set_db max_cpus_per_server 4
+# Worker count. The prior 64x64 stream_pipeline synth peaked at ~31 GB
+# RSS on 4 workers, leaving ~33 GB headroom on phobos's 64 GB. Bumping
+# to 8 workers cuts wall-clock by ~30-50 % at the cost of ~10-15 GB
+# more peak RSS (COW page sharing keeps the scaling sublinear). Override
+# with GENUS_WORKERS=N if memory is tight or others are using the box.
+set NWORKERS 8
+if { [info exists env(GENUS_WORKERS)] } { set NWORKERS $env(GENUS_WORKERS) }
+set_db max_cpus_per_server $NWORKERS
 set_db super_thread_servers "localhost"
+puts "INFO: Genus workers = $NWORKERS (override via GENUS_WORKERS env)"
 
 set_db hdl_error_on_blackbox  true
 set_db hdl_track_filename_row_col true
