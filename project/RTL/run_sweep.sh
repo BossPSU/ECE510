@@ -180,10 +180,15 @@ phase2f() {
     # cells: ~3K (vs the 16K combinational baseline). Critical path
     # collapses from ~65 ns to ~0.5 ns. Single-instance leaf top.
     run_point "divider_or_reciprocal_seq" "SYNTH_TOP=divider_or_reciprocal_seq ARRAY_N=1"
-    # mac_pe_piped -- mid-MAC pipeline register insertion. +1 cycle
-    # latency, no throughput change. Expected: ~1500 cells (vs 1478
-    # for legacy mac_pe), SS-corner WNS comfortably met.
+    # mac_pe_piped (option C) -- mid-MAC pipeline register. +1 cycle
+    # latency. Expected: ~1500 cells (vs 1478 for legacy mac_pe),
+    # SS-corner WNS ~7-8 ns Sky130 / ~3 ns SAED32 SS.
     run_point "mac_pe_piped" "SYNTH_TOP=mac_pe_piped ARRAY_N=1"
+    # mac_pe_piped4 (option D) -- 4-stage MAC (split multiplier +
+    # split accumulator add). +3 cycles latency. Expected: ~1550 cells
+    # (+50 vs legacy from 3 extra registers). SS-corner WNS ~3 ns
+    # Sky130 / ~1.5-2 ns SAED32 SS -- meets the M1 500 MHz target at SS.
+    run_point "mac_pe_piped4" "SYNTH_TOP=mac_pe_piped4 ARRAY_N=1"
 }
 
 phase3() {

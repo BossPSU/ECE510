@@ -3,6 +3,7 @@
   "VERILOG_FILES": [
     "dir::v_hand/mac_pe.v",
     "dir::v_hand/mac_pe_piped.v",
+    "dir::v_hand/mac_pe_piped4.v",
     "dir::v_hand/systolic_array_64x64.v",
     "dir::v_hand/adder_tree.v",
     "dir::v_hand/exp_lut.v",

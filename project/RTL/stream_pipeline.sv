@@ -28,10 +28,20 @@ module stream_pipeline
   parameter int ARRAY_DIM       = ARRAY_ROWS,  // square array
   // 0 = current Padé+comb-divide softmax (default; unchanged behavior)
   // 1 = LUT+seq-divide softmax (softmax_unit_lut, M4 Option C)
-  parameter int USE_LUT_SOFTMAX = 0,
-  // M5: when systolic_array_64x64 is built with USE_PIPED_MAC=1 the MAC
-  // has +1 cycle of latency, so the array needs one extra cycle to
-  // drain its last accumulator. Caller threads this parameter down.
+  parameter int USE_LUT_SOFTMAX = 1,
+  // 0 = current Padé+comb-divide gelu / gelu_grad
+  // 1 = direct LUT+linterp gelu_unit_lut / gelu_grad_unit_lut (M4)
+  // Threaded into fused_postproc_unit so the chip-level synth actually
+  // picks up the M4 LUT swap. Without this, fused_postproc_unit defaults
+  // to the Padé path and the gelu_grad combinational divider becomes the
+  // chip critical path (M5 phobos run observed -14.85 ns slack at TT).
+  parameter int USE_LUT_GELU    = 1,
+  // M5 MAC pipeline selector. Threaded to systolic_array_64x64 and used
+  // to size DRAIN_CYCLES locally.
+  //   USE_PIPED4_MAC == 1 -> mac_pe_piped4 (4-stage, option D)
+  //   USE_PIPED_MAC  == 1 -> mac_pe_piped  (2-stage, option C)
+  //   neither         -> legacy mac_pe (1-stage)
+  parameter int USE_PIPED4_MAC  = 1,
   parameter int USE_PIPED_MAC   = 1
 )(
   input  logic                            clk,
@@ -79,7 +89,12 @@ module stream_pipeline
   logic        running;
   assign running_o = running;
 
-  localparam int DRAIN_CYCLES   = USE_PIPED_MAC ? 5 : 4;
+  // Drain depth grows with the MAC pipeline depth:
+  //   legacy mac_pe       -> drain 4
+  //   mac_pe_piped (+1)   -> drain 5
+  //   mac_pe_piped4 (+3)  -> drain 7
+  localparam int DRAIN_CYCLES   = USE_PIPED4_MAC ? 7 :
+                                  (USE_PIPED_MAC ? 5 : 4);
   localparam int FUSED_DEPTH    = 7;
   // Padé softmax_unit: in_valid -> out_valid = 4 cycles.
   // LUT softmax_unit_lut: latency = 7 + N_PHASES, where
@@ -180,10 +195,11 @@ module stream_pipeline
   logic signed [31:0] c_out_array [ARRAY_DIM][ARRAY_DIM];
 
   systolic_array_64x64 #(
-    .ROWS          (ARRAY_DIM),
-    .COLS          (ARRAY_DIM),
-    .DATA_WIDTH    (32),
-    .USE_PIPED_MAC (USE_PIPED_MAC)
+    .ROWS           (ARRAY_DIM),
+    .COLS           (ARRAY_DIM),
+    .DATA_WIDTH     (32),
+    .USE_PIPED4_MAC (USE_PIPED4_MAC),
+    .USE_PIPED_MAC  (USE_PIPED_MAC)
   ) u_array (
     .clk       (clk),
     .rst_n     (rst_n),
@@ -235,7 +251,10 @@ module stream_pipeline
   logic signed [31:0] fused_out;
   logic               fused_valid;
 
-  fused_postproc_unit #(.DATA_WIDTH(32)) u_fused (
+  fused_postproc_unit #(
+    .DATA_WIDTH   (32),
+    .USE_LUT_GELU (USE_LUT_GELU)
+  ) u_fused (
     .clk       (clk),
     .rst_n     (rst_n),
     .en        (1'b1),

@@ -48,11 +48,12 @@ module stream_pipeline (
     parameter ARRAY_DIM  = 64;
 
     localparam [2:0] FUSED_SOFTMAX = 3'd3;
-    // M5 Item B: mac_pe_piped adds +1 cycle of MAC latency, so the
-    // systolic array needs one more cycle to drain its last accumulator.
-    // 5 instead of the legacy 4 -- back to 4 if mac_pe (not _piped) is
-    // restored in v_hand/systolic_array_64x64.v.
-    localparam DRAIN_CYCLES = 5;
+    // M5 option D: mac_pe_piped4 adds +3 cycles of MAC latency vs legacy
+    // (+2 vs mac_pe_piped), so the systolic array needs three extra
+    // cycles to drain its last accumulator. 7 with mac_pe_piped4
+    // (current v_hand selection); revert to 5 if mac_pe_piped is
+    // restored, or 4 if legacy mac_pe is restored.
+    localparam DRAIN_CYCLES = 7;
     localparam FUSED_DEPTH  = 7;
     // M4: softmax_unit_lut latency = 7 + N_PHASES, where
     // N_PHASES = ceil(ARRAY_DIM / min(ARRAY_DIM, 8)). At default

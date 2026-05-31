@@ -62,6 +62,12 @@ if { [info exists env(ARRAY_N)] } { set N $env(ARRAY_N) }
 set USE_LUT_SM 1
 if { [info exists env(USE_LUT_SM)] } { set USE_LUT_SM $env(USE_LUT_SM) }
 
+set USE_LUT_GELU 1
+if { [info exists env(USE_LUT_GELU)] } { set USE_LUT_GELU $env(USE_LUT_GELU) }
+
+set USE_PIPED4 1
+if { [info exists env(USE_PIPED4)] } { set USE_PIPED4 $env(USE_PIPED4) }
+
 set USE_PIPED 1
 if { [info exists env(USE_PIPED)] } { set USE_PIPED $env(USE_PIPED) }
 
@@ -69,7 +75,9 @@ set CLK_PER 1.0
 if { [info exists env(CLK_PER)] } { set CLK_PER $env(CLK_PER) }
 
 set tag "stream_pipeline_${N}x${N}_hier"
-puts "INFO: hierarchical synth -- tag=$tag  ARRAY_DIM=$N  USE_LUT_SOFTMAX=$USE_LUT_SM  USE_PIPED_MAC=$USE_PIPED  CLK_PER=$CLK_PER"
+puts "INFO: hierarchical synth -- tag=$tag  ARRAY_DIM=$N"
+puts "      USE_LUT_SOFTMAX=$USE_LUT_SM  USE_LUT_GELU=$USE_LUT_GELU"
+puts "      USE_PIPED4_MAC=$USE_PIPED4  USE_PIPED_MAC=$USE_PIPED  CLK_PER=$CLK_PER"
 
 # -----------------------------------------------------------------------------
 # 3. Technology library (SAED32 RVT TT @ 0.85V / 25C)
@@ -113,6 +121,7 @@ read_hdl -sv status_if.sv
 # Datapath leaves (both M4 baseline + M4+M5 LUT/piped variants)
 read_hdl -sv mac_pe.sv
 read_hdl -sv mac_pe_piped.sv
+read_hdl -sv mac_pe_piped4.sv
 read_hdl -sv systolic_array_64x64.sv
 read_hdl -sv exp_lut.sv
 read_hdl -sv gelu_lut.sv
@@ -139,10 +148,15 @@ read_hdl -sv stream_pipeline.sv
 
 # -----------------------------------------------------------------------------
 # 5. Elaborate stream_pipeline with M5 params explicit
-#    Parameter order = (DATA_WIDTH, ARRAY_DIM, USE_LUT_SOFTMAX, USE_PIPED_MAC).
+#    Parameter order =
+#      (DATA_WIDTH, ARRAY_DIM, USE_LUT_SOFTMAX, USE_LUT_GELU,
+#       USE_PIPED4_MAC, USE_PIPED_MAC).
+#    Defaults set above pick the option-D path:
+#      USE_LUT_SOFTMAX=1, USE_LUT_GELU=1, USE_PIPED4_MAC=1, USE_PIPED_MAC=1.
 # -----------------------------------------------------------------------------
-puts ">>> Elaborating stream_pipeline (ARRAY_DIM=$N, USE_LUT_SOFTMAX=$USE_LUT_SM, USE_PIPED_MAC=$USE_PIPED)..."
-elaborate stream_pipeline -parameters [list 32 $N $USE_LUT_SM $USE_PIPED]
+puts ">>> Elaborating stream_pipeline (ARRAY_DIM=$N, USE_LUT_SOFTMAX=$USE_LUT_SM, USE_LUT_GELU=$USE_LUT_GELU, USE_PIPED4_MAC=$USE_PIPED4, USE_PIPED_MAC=$USE_PIPED)..."
+elaborate stream_pipeline -parameters \
+    [list 32 $N $USE_LUT_SM $USE_LUT_GELU $USE_PIPED4 $USE_PIPED]
 puts ">>> Elaboration done."
 
 # -----------------------------------------------------------------------------
@@ -156,12 +170,16 @@ puts ">>> Elaboration done."
 #    largest single module, not the flattened design.
 #
 #    Modules picked for preserve:
-#      mac_pe_piped              -- 4,096 instances at N=64 (biggest win)
+#      mac_pe_piped4             -- 4,096 instances at N=64 (biggest win,
+#                                   option-D variant)
+#      mac_pe_piped              -- kept for fallback (option-C path)
 #      systolic_array_64x64      -- top-level shell for the PE grid; preserve
 #                                   here lets Innovus partition cleanly later
 #      exp_lut                   -- 8 instances (N_LUT_BANKS) inside softmax_unit_lut
 #      gelu_direct_lut           -- 256x32 ROM, one instance
 #      gelu_grad_direct_lut      -- 256x32 ROM, one instance
+#      gelu_unit_lut             -- single instance, LUT+linterp gelu (M4)
+#      gelu_grad_unit_lut        -- single instance, LUT+linterp gelu_grad (M4)
 #      divider_or_reciprocal_seq -- M5 iterative divider, 1-2 instances
 #      softmax_unit_lut          -- big leaf, isolating it bounds the worst case
 #      fused_postproc_unit       -- big leaf, same reason
@@ -169,11 +187,14 @@ puts ">>> Elaboration done."
 # -----------------------------------------------------------------------------
 puts ">>> Setting preserve = true on hierarchical boundaries..."
 set preserve_mods {
+    mac_pe_piped4
     mac_pe_piped
     systolic_array_64x64
     exp_lut
     gelu_direct_lut
     gelu_grad_direct_lut
+    gelu_unit_lut
+    gelu_grad_unit_lut
     divider_or_reciprocal_seq
     softmax_unit_lut
     fused_postproc_unit

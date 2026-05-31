@@ -35,6 +35,7 @@ vlog -sv status_if.sv
 # Datapath building blocks
 vlog -sv mac_pe.sv
 vlog -sv mac_pe_piped.sv
+vlog -sv mac_pe_piped4.sv
 vlog -sv systolic_array_64x64.sv
 vlog -sv gelu_lut.sv
 vlog -sv exp_lut.sv
@@ -93,6 +94,7 @@ echo ">>> Compiling testbenches..."
 
 vlog -sv tb_mac_pe.sv
 vlog -sv tb_mac_pe_piped.sv
+vlog -sv tb_mac_pe_piped4.sv
 vlog -sv tb_divider_or_reciprocal_seq.sv
 vlog -sv tb_gelu_unit.sv
 vlog -sv tb_gelu_unit_lut.sv
@@ -142,6 +144,7 @@ echo "=============================================="
 
 run_tb tb_mac_pe
 run_tb tb_mac_pe_piped
+run_tb tb_mac_pe_piped4
 run_tb tb_divider_or_reciprocal_seq
 run_tb tb_causal_mask
 run_tb tb_gelu_unit

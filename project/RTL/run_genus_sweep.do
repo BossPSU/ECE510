@@ -162,6 +162,7 @@ read_hdl -sv status_if.sv
 # Datapath leaves
 read_hdl -sv mac_pe.sv
 read_hdl -sv mac_pe_piped.sv
+read_hdl -sv mac_pe_piped4.sv
 read_hdl -sv systolic_array_64x64.sv
 read_hdl -sv gelu_lut.sv
 read_hdl -sv exp_lut.sv

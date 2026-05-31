@@ -34,6 +34,7 @@ SCOPE[compute_core]="chparam -set N_LANES 1 compute_core; chparam -set TILE_DIM 
 TOPS=(
     mac_pe
     mac_pe_piped
+    mac_pe_piped4
     adder_tree
     sram_bank
     exp_lut
