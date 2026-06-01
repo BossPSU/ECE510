@@ -100,7 +100,8 @@ if { [info exists env(CAPTABLE)] } {
 }
 create_delay_corner   -name dc_typ -library_set lib_tt -rc_corner rc_typ
 create_analysis_view  -name av_typ -constraint_mode func_mode -delay_corner dc_typ
-set_analysis_view     -setup [list av_typ] -hold [list av_typ]
+# NOTE: set_analysis_view requires an initialized design (Innovus
+# TCLCMD-1230). Moved below init_design.
 
 # -----------------------------------------------------------------------------
 # 3. Read netlist + LEF, link the design
@@ -114,6 +115,9 @@ set init_pwr_net        VDD
 set init_gnd_net        VSS
 
 init_design
+
+# Now the design is initialized -- bind the MMMC views to the timer.
+set_analysis_view -setup [list av_typ] -hold [list av_typ]
 
 # Propagate Genus preserve boundaries into Innovus's design hierarchy view
 # so the placer treats mac_pe_piped, softmax_unit_lut, etc. as soft blocks.
