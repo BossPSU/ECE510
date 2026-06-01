@@ -40,11 +40,10 @@ set_db init_lib_search_path { . $env(LIB_PATH) }
 set_db init_hdl_search_path { . }
 
 # Worker count. The prior 64x64 stream_pipeline synth peaked at ~31 GB
-# RSS on 4 workers, leaving ~33 GB headroom on phobos's 64 GB. Bumping
-# to 8 workers cuts wall-clock by ~30-50 % at the cost of ~10-15 GB
-# more peak RSS (COW page sharing keeps the scaling sublinear). Override
-# with GENUS_WORKERS=N if memory is tight or others are using the box.
-set NWORKERS 8
+# RSS on 4 workers, leaving ~33 GB headroom on phobos's 64 GB. Reverting
+# to 4 here -- the 8-worker bump on the previous run interacted poorly
+# with shared phobos load. Override with GENUS_WORKERS=N to scale back up.
+set NWORKERS 4
 if { [info exists env(GENUS_WORKERS)] } { set NWORKERS $env(GENUS_WORKERS) }
 set_db max_cpus_per_server $NWORKERS
 set_db super_thread_servers "localhost"
@@ -77,7 +76,7 @@ if { [info exists env(USE_PIPED4)] } { set USE_PIPED4 $env(USE_PIPED4) }
 set USE_PIPED 1
 if { [info exists env(USE_PIPED)] } { set USE_PIPED $env(USE_PIPED) }
 
-set CLK_PER 1.0
+set CLK_PER 1.333
 if { [info exists env(CLK_PER)] } { set CLK_PER $env(CLK_PER) }
 
 set tag "stream_pipeline_${N}x${N}_hier"
@@ -218,8 +217,12 @@ foreach mod $preserve_mods {
 }
 
 # -----------------------------------------------------------------------------
-# 7. Constraints -- 1 GHz clock, async-low reset, modest I/O delays.
-#    Single-clock domain (clk), reset active-low (rst_n).
+# 7. Constraints -- 750 MHz clock (1.333 ns period), async-low reset,
+#    modest I/O delays. Single-clock domain (clk), reset active-low (rst_n).
+#    Target dropped from 1 GHz to 750 MHz after M6 Tier 1.5 (option B) --
+#    the prior 1 ns target produced WNS = -1305 ps (impossible to close);
+#    750 MHz is a realistic next-attempt that still beats the M1 Heilmeier
+#    500 MHz target with ~250 MHz of margin.
 # -----------------------------------------------------------------------------
 puts ">>> Applying constraints..."
 set IO_DELAY [expr {$CLK_PER * 0.3}]

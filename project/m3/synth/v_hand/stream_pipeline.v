@@ -49,11 +49,13 @@ module stream_pipeline (
 
     localparam [2:0] FUSED_SOFTMAX = 3'd3;
     // M5 option D: mac_pe_piped4 adds +3 cycles of MAC latency vs legacy
-    // (+2 vs mac_pe_piped), so the systolic array needs three extra
-    // cycles to drain its last accumulator. 7 with mac_pe_piped4
-    // (current v_hand selection); revert to 5 if mac_pe_piped is
-    // restored, or 4 if legacy mac_pe is restored.
-    localparam DRAIN_CYCLES = 7;
+    // (+2 vs mac_pe_piped). M6 Tier 1.5 (option B) adds +1 more for the
+    // registered systolic-array input stage that breaks the
+    // cycle_cnt -> comparator -> MUX -> multiplier critical path.
+    //   legacy mac_pe        -> 5
+    //   mac_pe_piped (+1)    -> 6
+    //   mac_pe_piped4 (+3)   -> 8  (current v_hand selection)
+    localparam DRAIN_CYCLES = 8;
     // M6 Tier 2: +2 vs M5 (one for the new fused_postproc output reg,
     // one for the gelu LUT stage-3 split).
     localparam FUSED_DEPTH  = 9;
@@ -213,6 +215,31 @@ module stream_pipeline (
         end
     endgenerate
 
+    // ===== Stage 1.5: pipeline register between feeder and systolic array =====
+    // M6 Tier 1.5 (option B in the phobos critical-path analysis).
+    // Breaks the cycle_cnt -> comparator -> MUX -> multiplier chain at
+    // the stream_pipeline / systolic_array boundary. Cost: +1 cycle of
+    // array-fill latency (absorbed by DRAIN_CYCLES += 1 above), ~4,200
+    // extra flops, ~0.02 mm^2 / ~5-10 mW at SAED32.
+    reg                                  feed_active_r;
+    reg                                  array_clear_r;
+    reg  [(ARRAY_DIM*DATA_WIDTH)-1:0]    a_in_array_pkt_r;
+    reg  [(ARRAY_DIM*DATA_WIDTH)-1:0]    b_in_array_pkt_r;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            feed_active_r    <= 1'b0;
+            array_clear_r    <= 1'b0;
+            a_in_array_pkt_r <= {(ARRAY_DIM*DATA_WIDTH){1'b0}};
+            b_in_array_pkt_r <= {(ARRAY_DIM*DATA_WIDTH){1'b0}};
+        end else begin
+            feed_active_r    <= feed_active;
+            array_clear_r    <= array_clear;
+            a_in_array_pkt_r <= a_in_array_pkt;
+            b_in_array_pkt_r <= b_in_array_pkt;
+        end
+    end
+
     // ===== Stage 2: systolic array =====
     wire [(ARRAY_DIM*ARRAY_DIM*DATA_WIDTH)-1:0] c_out_pkt;
 
@@ -223,10 +250,10 @@ module stream_pipeline (
     ) u_array (
         .clk       (clk),
         .rst_n     (rst_n),
-        .en        (feed_active),
-        .clear_acc (array_clear),
-        .a_in      (a_in_array_pkt),
-        .b_in      (b_in_array_pkt),
+        .en        (feed_active_r),
+        .clear_acc (array_clear_r),
+        .a_in      (a_in_array_pkt_r),
+        .b_in      (b_in_array_pkt_r),
         .c_out     (c_out_pkt)
     );
 

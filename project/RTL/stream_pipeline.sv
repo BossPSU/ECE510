@@ -93,8 +93,12 @@ module stream_pipeline
   //   legacy mac_pe       -> drain 4
   //   mac_pe_piped (+1)   -> drain 5
   //   mac_pe_piped4 (+3)  -> drain 7
-  localparam int DRAIN_CYCLES   = USE_PIPED4_MAC ? 7 :
-                                  (USE_PIPED_MAC ? 5 : 4);
+  // M6 Tier 1.5 adds +1: the systolic array's en/clear_acc/a_in/b_in
+  // are now driven by registered versions of feed_active/array_clear/
+  // feed_valid_a_r*a_rd_data / feed_valid_b_r*b_rd_data, so the array
+  // sees its first valid input one cycle later than before.
+  localparam int DRAIN_CYCLES   = USE_PIPED4_MAC ? 8 :
+                                  (USE_PIPED_MAC ? 6 : 5);
   // M6 Tier 2: +2 vs M5 -- one for the new fused_postproc output register
   // (Tier 2A) and one for the gelu LUT stage-3 split (Tier 2B).
   localparam int FUSED_DEPTH    = 9;
@@ -230,6 +234,47 @@ module stream_pipeline
   endgenerate
 
   // ==========================================================
+  // Stage 1.5: pipeline register between feeder and systolic array
+  //
+  // M6 Tier 1.5 (option B in the phobos critical-path analysis).
+  // The latest phobos run's top 20 violating paths all looked like
+  //   cycle_cnt_reg[1..2] -> comparator -> feed_valid gating -> MUX
+  //                       -> mac_pe_piped4/prod_lower_r_reg[*]
+  // with ~2,100 ps of comb chain (about two-thirds of that lives
+  // outside the multiplier). Registering the array-input vectors
+  // and the array's en/clear_acc here breaks the chain at the
+  // stream_pipeline / systolic_array boundary -- the comparator
+  // cone collapses into this stage's flops, and the array side
+  // starts every path from a clean flop.
+  //
+  // Cost: +1 cycle of array-fill latency (absorbed by DRAIN_CYCLES
+  // += 1 above), ~4,200 extra flops (~0.02 mm^2 at SAED32, ~0.2 %
+  // of the current 12 mm^2 cell area), ~5-10 mW dynamic power.
+  // ==========================================================
+  logic                feed_active_r;
+  logic                array_clear_r;
+  logic signed [31:0]  a_in_array_r [ARRAY_DIM];
+  logic signed [31:0]  b_in_array_r [ARRAY_DIM];
+
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      feed_active_r <= 1'b0;
+      array_clear_r <= 1'b0;
+      for (int i = 0; i < ARRAY_DIM; i++) begin
+        a_in_array_r[i] <= 32'sd0;
+        b_in_array_r[i] <= 32'sd0;
+      end
+    end else begin
+      feed_active_r <= feed_active;
+      array_clear_r <= array_clear;
+      for (int i = 0; i < ARRAY_DIM; i++) begin
+        a_in_array_r[i] <= a_in_array[i];
+        b_in_array_r[i] <= b_in_array[i];
+      end
+    end
+  end
+
+  // ==========================================================
   // Stage 2: Systolic array — output-stationary, full ARRAY_DIM x ARRAY_DIM
   // ==========================================================
   logic signed [31:0] c_out_array [ARRAY_DIM][ARRAY_DIM];
@@ -243,10 +288,10 @@ module stream_pipeline
   ) u_array (
     .clk       (clk),
     .rst_n     (rst_n),
-    .en        (feed_active),
-    .clear_acc (array_clear),
-    .a_in      (a_in_array),
-    .b_in      (b_in_array),
+    .en        (feed_active_r),
+    .clear_acc (array_clear_r),
+    .a_in      (a_in_array_r),
+    .b_in      (b_in_array_r),
     .c_out     (c_out_array)
   );
 
