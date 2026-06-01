@@ -49,8 +49,10 @@ ACC_SRAM_GBPS    = 256.0       # Heilmeier on-chip SRAM target
 ACC_UCIE_GBPS    = 8.0         # M1 interface_selection.md
 
 # ff_backward kernel AI on the chip (Q16.16, 4 B/element):
-KERNEL_AI_CHIP_NO_REUSE   = 0.25    # lower bound: every operand re-fetched
-KERNEL_AI_CHIP_FULL_REUSE = 82.0    # upper bound: tile_buffer holds intermediates
+# (2*M*N*K + M*N) * 4 B per GEMM no-reuse; (M*K + K*N + M*N) * 4 B full-reuse.
+# Summed over the 4 GEMMs + element-wise GELU' multiply across M1 dims.
+KERNEL_AI_CHIP_NO_REUSE   = 0.52    # lower bound: every operand re-fetched
+KERNEL_AI_CHIP_FULL_REUSE = 75.0    # upper bound: tile_buffer holds intermediates
 
 # Sustained accelerator throughput (post-PnR projection at 60% util):
 ACC_SUSTAINED_GOPS_SKY130 = 221.0   # Sky130 SS, full 64x64 spec
@@ -106,7 +108,8 @@ ax.annotate("CPU sustained: 3.4 GFLOP/s\n(M1 measured, ~25x below roofline)",
 chip_lower_y = min(ACC_SRAM_GBPS * KERNEL_AI_CHIP_NO_REUSE, ACC_PEAK_GOPS_SKY130_SS)
 ax.scatter([KERNEL_AI_CHIP_NO_REUSE], [chip_lower_y], s=100, marker="s",
            color="C2", zorder=6, edgecolor="black", lw=0.8)
-ax.annotate("ff_backward chip lower-bound\n(0.25 FLOP/B, no off-chip reuse)\n-> 64 GOPS (mem-bound)",
+chip_lower_attain = ACC_SRAM_GBPS * KERNEL_AI_CHIP_NO_REUSE
+ax.annotate(f"ff_backward chip lower-bound\n({KERNEL_AI_CHIP_NO_REUSE:.2f} FLOP/B, no off-chip reuse)\n-> {chip_lower_attain:.0f} GOPS (mem-bound)",
             (KERNEL_AI_CHIP_NO_REUSE, chip_lower_y),
             xytext=(-90, -55), textcoords="offset points", fontsize=8, color="C2")
 
@@ -114,7 +117,7 @@ ax.annotate("ff_backward chip lower-bound\n(0.25 FLOP/B, no off-chip reuse)\n-> 
 chip_upper_y = min(ACC_SRAM_GBPS * KERNEL_AI_CHIP_FULL_REUSE, ACC_PEAK_GOPS_SKY130_SS)
 ax.scatter([KERNEL_AI_CHIP_FULL_REUSE], [chip_upper_y], s=130, marker="*",
            color="C1", zorder=7, edgecolor="black", lw=1.0)
-ax.annotate("ff_backward chip upper-bound\n(82 FLOP/B, full tile_buffer reuse)\nPROJECTED accelerator point\n-> 369 GOPS peak / 221 GOPS sustained",
+ax.annotate(f"ff_backward chip upper-bound\n({KERNEL_AI_CHIP_FULL_REUSE:.0f} FLOP/B, full tile_buffer reuse)\nPROJECTED accelerator point\n-> {ACC_PEAK_GOPS_SKY130_SS:.0f} GOPS peak / {ACC_SUSTAINED_GOPS_SKY130:.0f} GOPS sustained",
             (KERNEL_AI_CHIP_FULL_REUSE, chip_upper_y),
             xytext=(-220, -55), textcoords="offset points", fontsize=8.5, color="C1",
             arrowprops=dict(arrowstyle="->", color="C1", lw=0.8))

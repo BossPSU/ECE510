@@ -95,14 +95,20 @@ overlapping with every cycle of the GEMM streams.
 
 Same kernel, different precision (Q16.16 = 4 B/element vs fp64 = 8 B/element)
 and different memory hierarchy (chip's on-chip `tile_buffer` provides
-within-tile reuse the CPU doesn't have):
+within-tile reuse the CPU doesn't have).
+
+Per-GEMM no-reuse byte cost = `(2·M·N·K + M·N) × 4 B` (each input
+element re-fetched per use; output written once). Per-GEMM full-reuse
+byte cost = `(M·K + K·N + M·N) × 4 B` (each input loaded once, output
+written once). Summed across the 4 ff_backward GEMMs + the element-wise
+GELU' multiply:
 
 ```
-Chip no-reuse lower bound : 33.7 MFLOP / 135 MB ≈ 0.25 FLOP/B
-Chip full-reuse upper bound: 33.7 MFLOP / 410 KB ≈ 82 FLOP/B
+Chip no-reuse lower bound : 33.7 MFLOP / 65 MB  ≈ 0.52 FLOP/B
+Chip full-reuse upper bound: 33.7 MFLOP / 448 KB ≈ 75   FLOP/B
 ```
 
-The chip operates at the **full-reuse upper bound (~82 FLOP/B)** because
+The chip operates at the **full-reuse upper bound (~75 FLOP/B)** because
 `tile_buffer` is exactly architected for this; per the Sky130 roofline
 ridge of 1.44 FLOP/B, this puts the chip squarely in the **compute-bound
 region** — adding off-chip bandwidth gains nothing, only compute does.

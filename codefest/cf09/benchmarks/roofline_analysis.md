@@ -18,12 +18,14 @@ on CPU (LayerNorm, residual, embedding lookup, optimizer step).
 ## Where the chip landed on its roofline
 
 Two ff_backward AI bounds at the chip's chiplet-interface boundary,
-Q16.16 (4 B/element) precision:
+Q16.16 (4 B/element) precision. Per-GEMM no-reuse byte count =
+`(2·M·N·K + M·N) × 4 B`; per-GEMM full-reuse = `(M·K + K·N + M·N) × 4 B`;
+summed over the 4 GEMMs + element-wise GELU' multiply:
 
 | Bound | AI | Where on chip's roofline |
 |---|---:|---|
-| no-reuse lower (every operand re-fetched per use) | 0.25 FLOP/B | **memory-bound** at 64 GOPS (well below 1.44 ridge) |
-| full-reuse upper (`tile_buffer` holds intermediates) | 82 FLOP/B | **compute-bound** at 369 GOPS ceiling (well above ridge) |
+| no-reuse lower (every operand re-fetched per use) | **0.52 FLOP/B** | **memory-bound** at 133 GOPS (well below 1.44 ridge) |
+| full-reuse upper (`tile_buffer` holds intermediates) | **75 FLOP/B** | **compute-bound** at 369 GOPS ceiling (well above ridge) |
 
 The chip's `tile_buffer` architecture is designed exactly for the
 full-reuse case: each of X, W₁, W₂, dy loads from off-chip exactly once
