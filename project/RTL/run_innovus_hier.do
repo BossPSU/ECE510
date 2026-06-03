@@ -84,10 +84,17 @@ set LEF_DIR    "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/lef"
 # LEF_DIR) or an absolute path (used as-is).
 set TECH_LEF   [expr {[info exists env(TECH_LEF)]   ? $env(TECH_LEF)   : "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/src/oa/saed32_sram_lp_dual_oa/new/newtech.lef"}]
 set LEF_FILE   [expr {[info exists env(LEF_FILE)]   ? $env(LEF_FILE)   : "saed32nm_rvt_1p9m.lef"}]
+# Timing library: default to the PG-pin variant. Innovus's physical
+# init (globalNetConnect + sroute) wants explicit PG pins in the .lib;
+# without them init_design falls back to physical-only mode and
+# set_analysis_view errors out (TCLCMD-1239).
+set LIB_TIMING_FILE [expr {[info exists env(LIB_FILE)] ? $env(LIB_FILE) : "saed32rvt_pg_tt0p85v25c.lib"}]
 
-# Resolve to absolute paths -- prepend LEF_DIR only for bare filenames.
-set TECH_LEF_PATH [expr {[string index $TECH_LEF 0] eq "/" ? $TECH_LEF : "${LEF_DIR}/${TECH_LEF}"}]
-set LEF_FILE_PATH [expr {[string index $LEF_FILE 0] eq "/" ? $LEF_FILE : "${LEF_DIR}/${LEF_FILE}"}]
+# Resolve to absolute paths -- prepend LEF_DIR (or LIB_PATH) only for
+# bare filenames.
+set TECH_LEF_PATH      [expr {[string index $TECH_LEF        0] eq "/" ? $TECH_LEF        : "${LEF_DIR}/${TECH_LEF}"}]
+set LEF_FILE_PATH      [expr {[string index $LEF_FILE        0] eq "/" ? $LEF_FILE        : "${LEF_DIR}/${LEF_FILE}"}]
+set LIB_TIMING_PATH    [expr {[string index $LIB_TIMING_FILE 0] eq "/" ? $LIB_TIMING_FILE : "${LIB_PATH}/${LIB_TIMING_FILE}"}]
 set CLK_PER    [expr {[info exists env(CLK_PER)]    ? $env(CLK_PER)    : 1.333}]
 set DIE_UTIL   [expr {[info exists env(DIE_UTIL)]   ? $env(DIE_UTIL)   : 0.60}]
 
@@ -103,7 +110,7 @@ puts "=========================================="
 puts "Innovus hierarchical P&R for ${TARGET}"
 puts "  netlist : $NETLIST"
 puts "  SDC     : $SDC"
-puts "  lib     : ${LIB_PATH}/saed32rvt_tt0p85v25c.lib"
+puts "  lib     : ${LIB_TIMING_PATH}"
 puts "  techLEF : ${TECH_LEF_PATH}"
 puts "  cellLEF : ${LEF_FILE_PATH}"
 puts "  clock   : ${CLK_PER} ns"
@@ -117,7 +124,7 @@ puts "=========================================="
 #    (Innovus's TT-driven opt closes worst-case SS within a few % already).
 # -----------------------------------------------------------------------------
 create_constraint_mode -name func_mode -sdc_files [list $SDC]
-create_library_set    -name lib_tt -timing [list "${LIB_PATH}/saed32rvt_tt0p85v25c.lib"]
+create_library_set    -name lib_tt -timing [list $LIB_TIMING_PATH]
 create_rc_corner      -name rc_typ -T 25
 if { [info exists env(CAPTABLE)] } {
     set_rc_corner_property -name rc_typ -cap_table $env(CAPTABLE)
