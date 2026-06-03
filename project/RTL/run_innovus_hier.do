@@ -58,7 +58,16 @@
 # -----------------------------------------------------------------------------
 set ARRAY_N    [expr {[info exists env(ARRAY_N)]    ? $env(ARRAY_N)    : 64}]
 set TARGET     [expr {[info exists env(TARGET)]     ? $env(TARGET)     : "stream_pipeline_${ARRAY_N}x${ARRAY_N}_hier"}]
-set TOP        [expr {[info exists env(TOP_MODULE)] ? $env(TOP_MODULE) : "stream_pipeline"}]
+# TOP_MODULE = the cell name as it appears *inside* the netlist. Genus
+# embeds parameter values into the module name during elaboration, so
+# the elaborated top is, e.g.,
+#   stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_..._USE_PIPED_MAC1
+# Innovus's init_top_cell needs that mangled name. The netlist FILE
+# on disk is still named stream_pipeline.v though, so NETLIST_NAME is
+# tracked separately.
+set TOP_DEFAULT "stream_pipeline_DATA_WIDTH32_ARRAY_DIM${ARRAY_N}_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1"
+set TOP        [expr {[info exists env(TOP_MODULE)]   ? $env(TOP_MODULE)   : $TOP_DEFAULT}]
+set NETLIST_NAME [expr {[info exists env(NETLIST_NAME)] ? $env(NETLIST_NAME) : "stream_pipeline"}]
 set LIB_PATH   [expr {[info exists env(LIB_PATH)]   ? $env(LIB_PATH)   : "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm"}]
 set LEF_DIR    "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/lef"
 # SAED32 ships LEFs in two tiers:
@@ -82,8 +91,8 @@ set LEF_FILE_PATH [expr {[string index $LEF_FILE 0] eq "/" ? $LEF_FILE : "${LEF_
 set CLK_PER    [expr {[info exists env(CLK_PER)]    ? $env(CLK_PER)    : 1.333}]
 set DIE_UTIL   [expr {[info exists env(DIE_UTIL)]   ? $env(DIE_UTIL)   : 0.60}]
 
-set NETLIST    "out_sweep/${TARGET}/${TOP}.v"
-set SDC        "out_sweep/${TARGET}/${TOP}.sdc"
+set NETLIST    "out_sweep/${TARGET}/${NETLIST_NAME}.v"
+set SDC        "out_sweep/${TARGET}/${NETLIST_NAME}.sdc"
 set OUT_DIR    "out_innovus/${TARGET}"
 set RPT_DIR    "${OUT_DIR}/reports"
 
