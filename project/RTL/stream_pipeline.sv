@@ -89,16 +89,45 @@ module stream_pipeline
   logic        running;
   assign running_o = running;
 
+  // ==========================================================
+  // Tile-dim shadow registers (Option F)
+  //
+  // Local flop snapshots of tile_m / tile_n / tile_k. All downstream
+  // logic (cycle-bound calculation, per-cycle comparators, output
+  // counter terminators, softmax vec_len) reads the _r versions
+  // instead of the input ports, so every path that previously
+  // launched from a primary input pin now launches from a local
+  // flop CK->Q (~50 ps) instead of input_delay (~400 ps).
+  //
+  // FSM assumption: tile_m / tile_n / tile_k are stable for at least
+  // 2 cycles before `start` is pulsed. The accel_engine writes the
+  // tile config in one FSM state and pulses `start` in a later state,
+  // so this is naturally satisfied.
+  // ==========================================================
+  logic [7:0]  tile_m_r, tile_n_r, tile_k_r;
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      tile_m_r <= 8'd0;
+      tile_n_r <= 8'd0;
+      tile_k_r <= 8'd0;
+    end else begin
+      tile_m_r <= tile_m;
+      tile_n_r <= tile_n;
+      tile_k_r <= tile_k;
+    end
+  end
+
   // Drain depth grows with the MAC pipeline depth:
   //   legacy mac_pe       -> drain 4
   //   mac_pe_piped (+1)   -> drain 5
   //   mac_pe_piped4 (+3)  -> drain 7
-  // M6 Tier 1.5 adds +1: the systolic array's en/clear_acc/a_in/b_in
-  // are now driven by registered versions of feed_active/array_clear/
-  // feed_valid_a_r*a_rd_data / feed_valid_b_r*b_rd_data, so the array
-  // sees its first valid input one cycle later than before.
-  localparam int DRAIN_CYCLES   = USE_PIPED4_MAC ? 8 :
-                                  (USE_PIPED_MAC ? 6 : 5);
+  // M6 Tier 1.5 (Option B) adds +1: array inputs registered at
+  // stream_pipeline boundary -> array sees data 1 cycle late.
+  // M6 Tier 1.6 (extended Option B) adds +1 more: tile_buffer
+  // address ports also registered -> array data path is now 2
+  // cycles delayed from the cycle_cnt that drove the address.
+  localparam int DRAIN_CYCLES   = USE_PIPED4_MAC ? 9 :
+                                  (USE_PIPED_MAC ? 7 : 6);
   // M6 Tier 2: +2 vs M5 -- one for the new fused_postproc output register
   // (Tier 2A) and one for the gelu LUT stage-3 split (Tier 2B).
   localparam int FUSED_DEPTH    = 9;
@@ -123,18 +152,24 @@ module stream_pipeline
   logic [15:0] sm_feed_end_c, sm_capture_start_c, sm_capture_end_c;
   logic [15:0] sm_walk_start_c, sm_walk_end_c;
 
-  assign feed_end_c         = {8'b0, tile_m} + {8'b0, tile_n}
-                            + {8'b0, tile_k} + 16'd2;
+  // Option F: bound calculation reads tile_m_r/n_r/k_r (local flops)
+  // instead of the input ports. The 8x8 multiplier (tile_m * tile_n)
+  // -- the worst path in the c06bfee run at -349 ps slack -- now
+  // launches from a flop instead of an input port, saving the 400 ps
+  // input_delay charge and dropping the bound-calc path delay from
+  // 1,111 ps to ~750 ps (multiplier + adder only).
+  assign feed_end_c         = {8'b0, tile_m_r} + {8'b0, tile_n_r}
+                            + {8'b0, tile_k_r} + 16'd2;
   assign output_start_c     = feed_end_c + 16'(DRAIN_CYCLES);
   assign output_end_c       = output_start_c
-                            + ({8'b0, tile_m} * {8'b0, tile_n});
+                            + ({8'b0, tile_m_r} * {8'b0, tile_n_r});
   assign elemwise_end_c     = output_end_c + 16'(FUSED_DEPTH);
-  assign sm_feed_end_c      = output_start_c + {8'b0, tile_m};
+  assign sm_feed_end_c      = output_start_c + {8'b0, tile_m_r};
   assign sm_capture_start_c = output_start_c + 16'(SOFTMAX_LAT);
-  assign sm_capture_end_c   = sm_capture_start_c + {8'b0, tile_m};
+  assign sm_capture_end_c   = sm_capture_start_c + {8'b0, tile_m_r};
   assign sm_walk_start_c    = sm_capture_end_c;
   assign sm_walk_end_c      = sm_walk_start_c
-                            + ({8'b0, tile_m} * {8'b0, tile_n});
+                            + ({8'b0, tile_m_r} * {8'b0, tile_n_r});
 
   logic [15:0] feed_end, output_start, output_end, elemwise_end;
   logic [15:0] sm_feed_end, sm_capture_start, sm_capture_end;
@@ -207,49 +242,117 @@ module stream_pipeline
   logic [15:0] feed_idx_a   [ARRAY_DIM];  // s - r
   logic [15:0] feed_idx_b   [ARRAY_DIM];  // s - c
 
+  // Combinational tile_buffer-address candidates (before registering).
+  logic [7:0]  a_rd_col_int [ARRAY_DIM];
+  logic [7:0]  b_rd_row_int [ARRAY_DIM];
+
   genvar gr, gc;
   generate
     for (gr = 0; gr < ARRAY_DIM; gr++) begin : gen_feed_a
       assign feed_idx_a[gr]   = cycle_cnt - 16'd1 - 16'(gr);
+      // Option F: per-cycle comparators read tile_m_r / tile_k_r (local
+      // flops) instead of the input ports -- collapses the 400 ps
+      // input_delay charge on every per-row feed_valid.
       assign feed_valid_a[gr] = feed_active &&
                                 (cycle_cnt > 16'(gr)) &&
-                                (16'(gr) < {8'b0, tile_m}) &&
-                                (feed_idx_a[gr] < {8'b0, tile_k});
-      // Drive A buffer's read port: row = gr, col = feed_idx_a (or 0 when
-      // not feeding so we don't toggle pointlessly into the mux fabric).
-      assign a_rd_row[gr] = 8'(gr);
-      assign a_rd_col[gr] = feed_valid_a[gr] ? feed_idx_a[gr][7:0] : 8'd0;
-      assign a_in_array[gr] = feed_valid_a[gr] ? a_rd_data[gr] : 32'sd0;
+                                (16'(gr) < {8'b0, tile_m_r}) &&
+                                (feed_idx_a[gr] < {8'b0, tile_k_r});
+      assign a_rd_col_int[gr] = feed_valid_a[gr] ? feed_idx_a[gr][7:0]
+                                                 : 8'd0;
     end
     for (gc = 0; gc < ARRAY_DIM; gc++) begin : gen_feed_b
       assign feed_idx_b[gc]   = cycle_cnt - 16'd1 - 16'(gc);
       assign feed_valid_b[gc] = feed_active &&
                                 (cycle_cnt > 16'(gc)) &&
-                                (16'(gc) < {8'b0, tile_n}) &&
-                                (feed_idx_b[gc] < {8'b0, tile_k});
-      assign b_rd_row[gc] = feed_valid_b[gc] ? feed_idx_b[gc][7:0] : 8'd0;
-      assign b_rd_col[gc] = 8'(gc);
-      assign b_in_array[gc] = feed_valid_b[gc] ? b_rd_data[gc] : 32'sd0;
+                                (16'(gc) < {8'b0, tile_n_r}) &&
+                                (feed_idx_b[gc] < {8'b0, tile_k_r});
+      assign b_rd_row_int[gc] = feed_valid_b[gc] ? feed_idx_b[gc][7:0]
+                                                 : 8'd0;
     end
   endgenerate
 
   // ==========================================================
-  // Stage 1.5: pipeline register between feeder and systolic array
+  // Stage 1.5a: tile_buffer address + feed_valid register
   //
-  // M6 Tier 1.5 (option B in the phobos critical-path analysis).
-  // The latest phobos run's top 20 violating paths all looked like
-  //   cycle_cnt_reg[1..2] -> comparator -> feed_valid gating -> MUX
-  //                       -> mac_pe_piped4/prod_lower_r_reg[*]
-  // with ~2,100 ps of comb chain (about two-thirds of that lives
-  // outside the multiplier). Registering the array-input vectors
-  // and the array's en/clear_acc here breaks the chain at the
-  // stream_pipeline / systolic_array boundary -- the comparator
-  // cone collapses into this stage's flops, and the array side
-  // starts every path from a clean flop.
+  // M6 Tier 1.6 (extended Option B). The c06bfee run had 5 of the top
+  // 20 violators at -329 to -340 ps on `a_rd_col[*]` / `b_rd_row[*]`
+  // primary output ports -- the same comparator cone Option B broke
+  // for `a_in_array`, but launched from a different exit. Registering
+  // the tile_buffer address ports (and the per-row feed_valid bit so
+  // the data side can re-AND with the right qualifier) collapses the
+  // output-port path to 0 ps of combinational delay from this flop.
   //
   // Cost: +1 cycle of array-fill latency (absorbed by DRAIN_CYCLES
-  // += 1 above), ~4,200 extra flops (~0.02 mm^2 at SAED32, ~0.2 %
-  // of the current 12 mm^2 cell area), ~5-10 mW dynamic power.
+  // += 1 above), ~1,150 extra flops chip-wide (~0.006 mm^2 at SAED32).
+  // ==========================================================
+  logic        feed_valid_a_r [ARRAY_DIM];
+  logic        feed_valid_b_r [ARRAY_DIM];
+  logic [7:0]  a_rd_col_r     [ARRAY_DIM];
+  logic [7:0]  b_rd_row_r     [ARRAY_DIM];
+  // feed_active / array_clear get a first stage here so the second
+  // stage below (the original Option B flop) keeps them aligned with
+  // the data path after this extra pipeline cycle.
+  logic        feed_active_p1;
+  logic        array_clear_p1;
+
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      feed_active_p1 <= 1'b0;
+      array_clear_p1 <= 1'b0;
+      for (int i = 0; i < ARRAY_DIM; i++) begin
+        feed_valid_a_r[i] <= 1'b0;
+        feed_valid_b_r[i] <= 1'b0;
+        a_rd_col_r[i]     <= 8'd0;
+        b_rd_row_r[i]     <= 8'd0;
+      end
+    end else begin
+      feed_active_p1 <= feed_active;
+      array_clear_p1 <= array_clear;
+      for (int i = 0; i < ARRAY_DIM; i++) begin
+        feed_valid_a_r[i] <= feed_valid_a[i];
+        feed_valid_b_r[i] <= feed_valid_b[i];
+        a_rd_col_r[i]     <= a_rd_col_int[i];
+        b_rd_row_r[i]     <= b_rd_row_int[i];
+      end
+    end
+  end
+
+  // Drive tile_buffer address output ports from registers (Class B fix).
+  generate
+    for (gr = 0; gr < ARRAY_DIM; gr++) begin : gen_addr_a
+      assign a_rd_row[gr] = 8'(gr);
+      assign a_rd_col[gr] = a_rd_col_r[gr];
+    end
+    for (gc = 0; gc < ARRAY_DIM; gc++) begin : gen_addr_b
+      assign b_rd_row[gc] = b_rd_row_r[gc];
+      assign b_rd_col[gc] = 8'(gc);
+    end
+  endgenerate
+
+  // tile_buffer combinationally reads a_rd_data/b_rd_data from the
+  // registered addresses. The qualifier we AND against is the
+  // registered feed_valid, so a_in_array / b_in_array now reflect the
+  // intent of cycle (current - 1).
+  generate
+    for (gr = 0; gr < ARRAY_DIM; gr++) begin : gen_a_in
+      assign a_in_array[gr] = feed_valid_a_r[gr] ? a_rd_data[gr]
+                                                 : 32'sd0;
+    end
+    for (gc = 0; gc < ARRAY_DIM; gc++) begin : gen_b_in
+      assign b_in_array[gc] = feed_valid_b_r[gc] ? b_rd_data[gc]
+                                                 : 32'sd0;
+    end
+  endgenerate
+
+  // ==========================================================
+  // Stage 1.5b: pipeline register between feeder and systolic array
+  //
+  // M6 Tier 1.5 (original Option B). The c06bfee run measured this
+  // stage already in place; it brought the cycle_cnt -> MUX -> MAC
+  // path from 1,833 ps down to 1,111 ps. Kept here verbatim --
+  // feeds the array `en` / `clear_acc` / `a_in` / `b_in` from a
+  // second pipeline stage that aligns with the address-side flops
+  // above.
   // ==========================================================
   logic                feed_active_r;
   logic                array_clear_r;
@@ -265,8 +368,8 @@ module stream_pipeline
         b_in_array_r[i] <= 32'sd0;
       end
     end else begin
-      feed_active_r <= feed_active;
-      array_clear_r <= array_clear;
+      feed_active_r <= feed_active_p1;
+      array_clear_r <= array_clear_p1;
       for (int i = 0; i < ARRAY_DIM; i++) begin
         a_in_array_r[i] <= a_in_array[i];
         b_in_array_r[i] <= b_in_array[i];
@@ -314,7 +417,7 @@ module stream_pipeline
       out_row_cnt <= '0;
       out_col_cnt <= '0;
     end else if (out_active) begin
-      if (out_col_cnt + 8'd1 >= tile_n) begin
+      if (out_col_cnt + 8'd1 >= tile_n_r) begin
         out_col_cnt <= '0;
         out_row_cnt <= out_row_cnt + 8'd1;
       end else begin
@@ -362,7 +465,7 @@ module stream_pipeline
       coll_row_cnt <= '0;
       coll_col_cnt <= '0;
     end else if (fused_valid && running && !softmax_mode) begin
-      if (coll_col_cnt + 8'd1 >= tile_n) begin
+      if (coll_col_cnt + 8'd1 >= tile_n_r) begin
         coll_col_cnt <= '0;
         coll_row_cnt <= coll_row_cnt + 8'd1;
       end else begin
@@ -410,7 +513,7 @@ module stream_pipeline
         .rst_n     (rst_n),
         .en        (1'b1),
         .start     (1'b0),
-        .vec_len   (tile_n),
+        .vec_len   (tile_n_r),
         .scores_in (sm_scores_in),
         .in_valid  (sm_in_valid),
         .probs_out (sm_probs_out),
@@ -425,7 +528,7 @@ module stream_pipeline
         .rst_n     (rst_n),
         .en        (1'b1),
         .start     (1'b0),
-        .vec_len   (tile_n),
+        .vec_len   (tile_n_r),
         .scores_in (sm_scores_in),
         .in_valid  (sm_in_valid),
         .probs_out (sm_probs_out),
@@ -471,7 +574,7 @@ module stream_pipeline
       sm_walk_row_cnt <= '0;
       sm_walk_col_cnt <= '0;
     end else if (sm_walk_active) begin
-      if (sm_walk_col_cnt + 8'd1 >= tile_n) begin
+      if (sm_walk_col_cnt + 8'd1 >= tile_n_r) begin
         sm_walk_col_cnt <= '0;
         sm_walk_row_cnt <= sm_walk_row_cnt + 8'd1;
       end else begin

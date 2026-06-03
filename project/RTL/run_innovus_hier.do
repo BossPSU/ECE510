@@ -61,8 +61,16 @@ set TARGET     [expr {[info exists env(TARGET)]     ? $env(TARGET)     : "stream
 set TOP        [expr {[info exists env(TOP_MODULE)] ? $env(TOP_MODULE) : "stream_pipeline"}]
 set LIB_PATH   [expr {[info exists env(LIB_PATH)]   ? $env(LIB_PATH)   : "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm"}]
 set LEF_DIR    "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/lef"
+# SAED32 ships LEFs in two tiers:
+#   1. Technology LEF (TECH_LEF): defines metal layers, vias, sites, routing
+#      rules. Innovus MUST load this first or layer 'M1' is unknown.
+#   2. Standard-cell LEF (LEF_FILE): macros that reference the tech layers.
+# The previous version only loaded tier 2 and crashed with IMPLF-26 /
+# IMPLF-53 in init_design. Override TECH_LEF if the on-phobos filename
+# differs from the SAED32 default.
+set TECH_LEF   [expr {[info exists env(TECH_LEF)]   ? $env(TECH_LEF)   : "saed32nm_1p9m_mc.lef"}]
 set LEF_FILE   [expr {[info exists env(LEF_FILE)]   ? $env(LEF_FILE)   : "saed32nm_rvt_1p9m.lef"}]
-set CLK_PER    [expr {[info exists env(CLK_PER)]    ? $env(CLK_PER)    : 1.0}]
+set CLK_PER    [expr {[info exists env(CLK_PER)]    ? $env(CLK_PER)    : 1.333}]
 set DIE_UTIL   [expr {[info exists env(DIE_UTIL)]   ? $env(DIE_UTIL)   : 0.60}]
 
 set NETLIST    "out_sweep/${TARGET}/${TOP}.v"
@@ -78,7 +86,8 @@ puts "Innovus hierarchical P&R for ${TARGET}"
 puts "  netlist : $NETLIST"
 puts "  SDC     : $SDC"
 puts "  lib     : ${LIB_PATH}/saed32rvt_tt0p85v25c.lib"
-puts "  LEF     : ${LEF_DIR}/${LEF_FILE}"
+puts "  techLEF : ${LEF_DIR}/${TECH_LEF}"
+puts "  cellLEF : ${LEF_DIR}/${LEF_FILE}"
 puts "  clock   : ${CLK_PER} ns"
 puts "  util    : $DIE_UTIL"
 puts "=========================================="
@@ -106,7 +115,12 @@ create_analysis_view  -name av_typ -constraint_mode func_mode -delay_corner dc_t
 # -----------------------------------------------------------------------------
 # 3. Read netlist + LEF, link the design
 # -----------------------------------------------------------------------------
-set init_lef_file       [list "${LEF_DIR}/${LEF_FILE}"]
+# Tech LEF MUST come first so 'M1', 'VIA12', etc. are defined before any
+# cell macro references them. Cell LEF second.
+set init_lef_file       [list \
+    "${LEF_DIR}/${TECH_LEF}" \
+    "${LEF_DIR}/${LEF_FILE}" \
+]
 set init_verilog        $NETLIST
 set init_top_cell       $TOP
 set init_design_netlisttype "Verilog"

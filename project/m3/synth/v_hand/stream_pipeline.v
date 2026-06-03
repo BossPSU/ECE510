@@ -48,14 +48,14 @@ module stream_pipeline (
     parameter ARRAY_DIM  = 64;
 
     localparam [2:0] FUSED_SOFTMAX = 3'd3;
-    // M5 option D: mac_pe_piped4 adds +3 cycles of MAC latency vs legacy
-    // (+2 vs mac_pe_piped). M6 Tier 1.5 (option B) adds +1 more for the
-    // registered systolic-array input stage that breaks the
-    // cycle_cnt -> comparator -> MUX -> multiplier critical path.
-    //   legacy mac_pe        -> 5
-    //   mac_pe_piped (+1)    -> 6
-    //   mac_pe_piped4 (+3)   -> 8  (current v_hand selection)
-    localparam DRAIN_CYCLES = 8;
+    // M5 option D: mac_pe_piped4 adds +3 cycles of MAC latency vs legacy.
+    // M6 Tier 1.5 (option B) adds +1 for registered systolic-array
+    // input stage. M6 Tier 1.6 (extended option B) adds +1 for the
+    // registered tile_buffer address ports.
+    //   legacy mac_pe        -> 6
+    //   mac_pe_piped (+1)    -> 7
+    //   mac_pe_piped4 (+3)   -> 9  (current v_hand selection)
+    localparam DRAIN_CYCLES = 9;
     // M6 Tier 2: +2 vs M5 (one for the new fused_postproc output reg,
     // one for the gelu LUT stage-3 split).
     localparam FUSED_DEPTH  = 9;
@@ -99,23 +99,41 @@ module stream_pipeline (
 
     wire softmax_mode = (op_sel == FUSED_SOFTMAX);
 
-    // M6 Tier 1: register the per-tile cycle bounds at `start` so the
-    // tile_m*tile_n product drops out of the per-cycle comparator cone.
-    // This was the chip critical path on Sky130 SS Attempt 9 (656 of 833
-    // >5 ns violators were on accel_engine ctrl_tile_*/FSM paths that
-    // funneled into the cycle_cnt comparator network here).
-    wire [15:0] feed_end_c       = {8'b0, tile_m} + {8'b0, tile_n}
-                                                   + {8'b0, tile_k} + 16'd2;
+    // ===== Tile-dim shadow registers (Option F) =====
+    // Local flops shadowing tile_m / tile_n / tile_k. All downstream
+    // logic reads the _r versions so every path that previously
+    // launched from a primary input pin now launches from a flop.
+    // FSM assumption: tile_m / tile_n / tile_k stable for at least 2
+    // cycles before `start` is pulsed.
+    reg [7:0] tile_m_r, tile_n_r, tile_k_r;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            tile_m_r <= 8'd0;
+            tile_n_r <= 8'd0;
+            tile_k_r <= 8'd0;
+        end else begin
+            tile_m_r <= tile_m;
+            tile_n_r <= tile_n;
+            tile_k_r <= tile_k;
+        end
+    end
+
+    // M6 Tier 1 + Option F: register the per-tile cycle bounds at `start`,
+    // and source the bound combinational from tile_m_r / tile_n_r /
+    // tile_k_r so the 8x8 multiplier launches from local flops instead
+    // of primary input ports.
+    wire [15:0] feed_end_c       = {8'b0, tile_m_r} + {8'b0, tile_n_r}
+                                                     + {8'b0, tile_k_r} + 16'd2;
     wire [15:0] output_start_c   = feed_end_c + DRAIN_CYCLES;
     wire [15:0] output_end_c     = output_start_c +
-                                   ({8'b0, tile_m} * {8'b0, tile_n});
+                                   ({8'b0, tile_m_r} * {8'b0, tile_n_r});
     wire [15:0] elemwise_end_c   = output_end_c + FUSED_DEPTH;
-    wire [15:0] sm_feed_end_c      = output_start_c + {8'b0, tile_m};
+    wire [15:0] sm_feed_end_c      = output_start_c + {8'b0, tile_m_r};
     wire [15:0] sm_capture_start_c = output_start_c + SOFTMAX_LAT;
-    wire [15:0] sm_capture_end_c   = sm_capture_start_c + {8'b0, tile_m};
+    wire [15:0] sm_capture_end_c   = sm_capture_start_c + {8'b0, tile_m_r};
     wire [15:0] sm_walk_start_c    = sm_capture_end_c;
     wire [15:0] sm_walk_end_c      = sm_walk_start_c +
-                                     ({8'b0, tile_m} * {8'b0, tile_n});
+                                     ({8'b0, tile_m_r} * {8'b0, tile_n_r});
 
     reg [15:0] feed_end;
     reg [15:0] output_start;
@@ -173,54 +191,109 @@ module stream_pipeline (
         end
     end
 
-    // ===== Stage 1: skewed-feed driving tile_buffer multi-port reads =====
+    // ===== Stage 1: skewed-feed combinational =====
     wire feed_active  = running && (cycle_cnt < feed_end);
     wire array_clear  = running && (cycle_cnt == 16'd0);
 
-    // Packed forms of the systolic input vectors.
-    wire [(ARRAY_DIM*DATA_WIDTH)-1:0] a_in_array_pkt;
-    wire [(ARRAY_DIM*DATA_WIDTH)-1:0] b_in_array_pkt;
+    // Per-row combinational feed_valid + tile_buffer-address candidates.
+    // Option F: comparators read tile_m_r / tile_n_r / tile_k_r (local
+    // flops) instead of input ports -- collapses the 400 ps input_delay
+    // charge on every per-row feed_valid.
+    wire [ARRAY_DIM-1:0]       feed_valid_a_pkt;
+    wire [ARRAY_DIM-1:0]       feed_valid_b_pkt;
+    wire [(ARRAY_DIM*8)-1:0]   a_rd_col_int_pkt;
+    wire [(ARRAY_DIM*8)-1:0]   b_rd_row_int_pkt;
 
     genvar gr, gc;
     generate
         for (gr = 0; gr < ARRAY_DIM; gr = gr + 1) begin : gen_feed_a
             wire [15:0] feed_idx_a = cycle_cnt - 16'd1 - gr;
-            wire feed_valid_a = feed_active &&
-                                (cycle_cnt > gr) &&
-                                (gr < {8'b0, tile_m}) &&
-                                (feed_idx_a < {8'b0, tile_k});
-
-            assign a_rd_row[(gr*8) +: 8] = gr[7:0];
-            assign a_rd_col[(gr*8) +: 8] =
-                feed_valid_a ? feed_idx_a[7:0] : 8'd0;
-
-            assign a_in_array_pkt[(gr*DATA_WIDTH) +: DATA_WIDTH] =
-                feed_valid_a ? a_rd_data[(gr*DATA_WIDTH) +: DATA_WIDTH]
-                             : {DATA_WIDTH{1'b0}};
+            assign feed_valid_a_pkt[gr] =
+                feed_active && (cycle_cnt > gr) &&
+                (gr < {8'b0, tile_m_r}) &&
+                (feed_idx_a < {8'b0, tile_k_r});
+            assign a_rd_col_int_pkt[(gr*8) +: 8] =
+                feed_valid_a_pkt[gr] ? feed_idx_a[7:0] : 8'd0;
         end
         for (gc = 0; gc < ARRAY_DIM; gc = gc + 1) begin : gen_feed_b
             wire [15:0] feed_idx_b = cycle_cnt - 16'd1 - gc;
-            wire feed_valid_b = feed_active &&
-                                (cycle_cnt > gc) &&
-                                (gc < {8'b0, tile_n}) &&
-                                (feed_idx_b < {8'b0, tile_k});
-
-            assign b_rd_row[(gc*8) +: 8] =
-                feed_valid_b ? feed_idx_b[7:0] : 8'd0;
-            assign b_rd_col[(gc*8) +: 8] = gc[7:0];
-
-            assign b_in_array_pkt[(gc*DATA_WIDTH) +: DATA_WIDTH] =
-                feed_valid_b ? b_rd_data[(gc*DATA_WIDTH) +: DATA_WIDTH]
-                             : {DATA_WIDTH{1'b0}};
+            assign feed_valid_b_pkt[gc] =
+                feed_active && (cycle_cnt > gc) &&
+                (gc < {8'b0, tile_n_r}) &&
+                (feed_idx_b < {8'b0, tile_k_r});
+            assign b_rd_row_int_pkt[(gc*8) +: 8] =
+                feed_valid_b_pkt[gc] ? feed_idx_b[7:0] : 8'd0;
         end
     endgenerate
 
-    // ===== Stage 1.5: pipeline register between feeder and systolic array =====
-    // M6 Tier 1.5 (option B in the phobos critical-path analysis).
-    // Breaks the cycle_cnt -> comparator -> MUX -> multiplier chain at
-    // the stream_pipeline / systolic_array boundary. Cost: +1 cycle of
-    // array-fill latency (absorbed by DRAIN_CYCLES += 1 above), ~4,200
-    // extra flops, ~0.02 mm^2 / ~5-10 mW at SAED32.
+    // ===== Stage 1.5a: register tile_buffer address + feed_valid =====
+    // M6 Tier 1.6 (extended option B). The c06bfee run had 5 of the top
+    // 20 violators on a_rd_col / b_rd_row primary output ports at
+    // ~-330 ps slack. Registering the address ports collapses the
+    // output-port comb path to 0 ps. The qualifier (feed_valid) is
+    // registered alongside so the data side AND-gates against the
+    // address-aligned bit one cycle later.
+    reg  [ARRAY_DIM-1:0]       feed_valid_a_r_pkt;
+    reg  [ARRAY_DIM-1:0]       feed_valid_b_r_pkt;
+    reg  [(ARRAY_DIM*8)-1:0]   a_rd_col_r_pkt;
+    reg  [(ARRAY_DIM*8)-1:0]   b_rd_row_r_pkt;
+    reg                        feed_active_p1;
+    reg                        array_clear_p1;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            feed_valid_a_r_pkt <= {ARRAY_DIM{1'b0}};
+            feed_valid_b_r_pkt <= {ARRAY_DIM{1'b0}};
+            a_rd_col_r_pkt     <= {(ARRAY_DIM*8){1'b0}};
+            b_rd_row_r_pkt     <= {(ARRAY_DIM*8){1'b0}};
+            feed_active_p1     <= 1'b0;
+            array_clear_p1     <= 1'b0;
+        end else begin
+            feed_valid_a_r_pkt <= feed_valid_a_pkt;
+            feed_valid_b_r_pkt <= feed_valid_b_pkt;
+            a_rd_col_r_pkt     <= a_rd_col_int_pkt;
+            b_rd_row_r_pkt     <= b_rd_row_int_pkt;
+            feed_active_p1     <= feed_active;
+            array_clear_p1     <= array_clear;
+        end
+    end
+
+    // Drive tile_buffer address output ports from registered values.
+    assign a_rd_col = a_rd_col_r_pkt;
+    assign b_rd_row = b_rd_row_r_pkt;
+    generate
+        for (gr = 0; gr < ARRAY_DIM; gr = gr + 1) begin : gen_a_rd_row
+            assign a_rd_row[(gr*8) +: 8] = gr[7:0];
+        end
+        for (gc = 0; gc < ARRAY_DIM; gc = gc + 1) begin : gen_b_rd_col
+            assign b_rd_col[(gc*8) +: 8] = gc[7:0];
+        end
+    endgenerate
+
+    // tile_buffer combinationally reads a_rd_data / b_rd_data from the
+    // registered addresses. AND-gate against the registered feed_valid
+    // to produce a_in_array_pkt / b_in_array_pkt.
+    wire [(ARRAY_DIM*DATA_WIDTH)-1:0] a_in_array_pkt;
+    wire [(ARRAY_DIM*DATA_WIDTH)-1:0] b_in_array_pkt;
+    generate
+        for (gr = 0; gr < ARRAY_DIM; gr = gr + 1) begin : gen_a_in_pkt
+            assign a_in_array_pkt[(gr*DATA_WIDTH) +: DATA_WIDTH] =
+                feed_valid_a_r_pkt[gr]
+                    ? a_rd_data[(gr*DATA_WIDTH) +: DATA_WIDTH]
+                    : {DATA_WIDTH{1'b0}};
+        end
+        for (gc = 0; gc < ARRAY_DIM; gc = gc + 1) begin : gen_b_in_pkt
+            assign b_in_array_pkt[(gc*DATA_WIDTH) +: DATA_WIDTH] =
+                feed_valid_b_r_pkt[gc]
+                    ? b_rd_data[(gc*DATA_WIDTH) +: DATA_WIDTH]
+                    : {DATA_WIDTH{1'b0}};
+        end
+    endgenerate
+
+    // ===== Stage 1.5b: pipeline register between feeder and systolic array =====
+    // M6 Tier 1.5 (original option B). Captures a_in_array / b_in_array
+    // and the aligned feed_active / array_clear (sourced from the p1
+    // stage above so the array sees them aligned with the data path).
     reg                                  feed_active_r;
     reg                                  array_clear_r;
     reg  [(ARRAY_DIM*DATA_WIDTH)-1:0]    a_in_array_pkt_r;
@@ -233,8 +306,8 @@ module stream_pipeline (
             a_in_array_pkt_r <= {(ARRAY_DIM*DATA_WIDTH){1'b0}};
             b_in_array_pkt_r <= {(ARRAY_DIM*DATA_WIDTH){1'b0}};
         end else begin
-            feed_active_r    <= feed_active;
-            array_clear_r    <= array_clear;
+            feed_active_r    <= feed_active_p1;
+            array_clear_r    <= array_clear_p1;
             a_in_array_pkt_r <= a_in_array_pkt;
             b_in_array_pkt_r <= b_in_array_pkt;
         end
@@ -271,7 +344,7 @@ module stream_pipeline (
             out_row_cnt <= 8'd0;
             out_col_cnt <= 8'd0;
         end else if (out_active) begin
-            if (out_col_cnt + 8'd1 >= tile_n) begin
+            if (out_col_cnt + 8'd1 >= tile_n_r) begin
                 out_col_cnt <= 8'd0;
                 out_row_cnt <= out_row_cnt + 8'd1;
             end else begin
@@ -314,7 +387,7 @@ module stream_pipeline (
             coll_row_cnt <= 8'd0;
             coll_col_cnt <= 8'd0;
         end else if (fused_valid && running && !softmax_mode) begin
-            if (coll_col_cnt + 8'd1 >= tile_n) begin
+            if (coll_col_cnt + 8'd1 >= tile_n_r) begin
                 coll_col_cnt <= 8'd0;
                 coll_row_cnt <= coll_row_cnt + 8'd1;
             end else begin
@@ -358,7 +431,7 @@ module stream_pipeline (
         .rst_n     (rst_n),
         .en        (1'b1),
         .start     (1'b0),
-        .vec_len   (tile_n),
+        .vec_len   (tile_n_r),
         .scores_in (sm_scores_in_pkt),
         .in_valid  (sm_in_valid),
         .probs_out (sm_probs_out_pkt),
@@ -400,7 +473,7 @@ module stream_pipeline (
             sm_walk_row_cnt <= 8'd0;
             sm_walk_col_cnt <= 8'd0;
         end else if (sm_walk_active) begin
-            if (sm_walk_col_cnt + 8'd1 >= tile_n) begin
+            if (sm_walk_col_cnt + 8'd1 >= tile_n_r) begin
                 sm_walk_col_cnt <= 8'd0;
                 sm_walk_row_cnt <= sm_walk_row_cnt + 8'd1;
             end else begin
