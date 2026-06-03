@@ -65,11 +65,20 @@ set LEF_DIR    "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/lef"
 #   1. Technology LEF (TECH_LEF): defines metal layers, vias, sites, routing
 #      rules. Innovus MUST load this first or layer 'M1' is unknown.
 #   2. Standard-cell LEF (LEF_FILE): macros that reference the tech layers.
-# The previous version only loaded tier 2 and crashed with IMPLF-26 /
-# IMPLF-53 in init_design. Override TECH_LEF if the on-phobos filename
-# differs from the SAED32 default.
-set TECH_LEF   [expr {[info exists env(TECH_LEF)]   ? $env(TECH_LEF)   : "saed32nm_1p9m_mc.lef"}]
+#
+# On the phobos PDK install, the only tech LEF found is at
+#   /pkgs/synopsys/2020/32_28nm/SAED32_EDK/src/oa/saed32_sram_lp_dual_oa/new/newtech.lef
+# (a different subtree from the std-cell LEF in lib/stdcell_rvt/lef/),
+# so TECH_LEF defaults to that absolute path here.
+#
+# TECH_LEF / LEF_FILE may be either a bare filename (resolved against
+# LEF_DIR) or an absolute path (used as-is).
+set TECH_LEF   [expr {[info exists env(TECH_LEF)]   ? $env(TECH_LEF)   : "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/src/oa/saed32_sram_lp_dual_oa/new/newtech.lef"}]
 set LEF_FILE   [expr {[info exists env(LEF_FILE)]   ? $env(LEF_FILE)   : "saed32nm_rvt_1p9m.lef"}]
+
+# Resolve to absolute paths -- prepend LEF_DIR only for bare filenames.
+set TECH_LEF_PATH [expr {[string index $TECH_LEF 0] eq "/" ? $TECH_LEF : "${LEF_DIR}/${TECH_LEF}"}]
+set LEF_FILE_PATH [expr {[string index $LEF_FILE 0] eq "/" ? $LEF_FILE : "${LEF_DIR}/${LEF_FILE}"}]
 set CLK_PER    [expr {[info exists env(CLK_PER)]    ? $env(CLK_PER)    : 1.333}]
 set DIE_UTIL   [expr {[info exists env(DIE_UTIL)]   ? $env(DIE_UTIL)   : 0.60}]
 
@@ -86,8 +95,8 @@ puts "Innovus hierarchical P&R for ${TARGET}"
 puts "  netlist : $NETLIST"
 puts "  SDC     : $SDC"
 puts "  lib     : ${LIB_PATH}/saed32rvt_tt0p85v25c.lib"
-puts "  techLEF : ${LEF_DIR}/${TECH_LEF}"
-puts "  cellLEF : ${LEF_DIR}/${LEF_FILE}"
+puts "  techLEF : ${TECH_LEF_PATH}"
+puts "  cellLEF : ${LEF_FILE_PATH}"
 puts "  clock   : ${CLK_PER} ns"
 puts "  util    : $DIE_UTIL"
 puts "=========================================="
@@ -118,8 +127,8 @@ create_analysis_view  -name av_typ -constraint_mode func_mode -delay_corner dc_t
 # Tech LEF MUST come first so 'M1', 'VIA12', etc. are defined before any
 # cell macro references them. Cell LEF second.
 set init_lef_file       [list \
-    "${LEF_DIR}/${TECH_LEF}" \
-    "${LEF_DIR}/${LEF_FILE}" \
+    "${TECH_LEF_PATH}" \
+    "${LEF_FILE_PATH}" \
 ]
 set init_verilog        $NETLIST
 set init_top_cell       $TOP
