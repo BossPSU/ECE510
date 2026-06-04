@@ -86,11 +86,22 @@ echo ""
 
 # -----------------------------------------------------------------------------
 # Compile RTL once into a shared work library.
+#
+# IMPORTANT: project/RTL/ holds the LATEST RTL with all M5/M6 changes
+# (Option B / Option F / Tier 1.6 / Tier 2A / Tier 2B / Tier 3 +
+# mac_pe_piped4). The latest Genus + Innovus runs synthesized exactly
+# this tree. project/m2/rtl/ is the M2 BASELINE -- older versions of
+# the same modules without M5/M6 fixes.
+#
+# We pull EVERYTHING from project/RTL/ except compute_core.sv and
+# interface.sv, which only exist in project/m2/rtl/ (those higher-level
+# wrappers were never re-pushed into project/RTL/). That keeps the
+# verification target aligned 1:1 with what was synthesized.
 # -----------------------------------------------------------------------------
-M2_RTL=../../m2/rtl
-M3_RTL=../rtl
+M2_RTL=../../m2/rtl     # ONLY for compute_core.sv + interface.sv
+M3_RTL=../rtl           # ONLY for top.sv (M3 integration wrapper)
 M3_TB=../tb
-RTL=../../RTL          # latest stream_pipeline + M5/M6 modules
+RTL=../../RTL           # primary RTL source -- matches latest synth
 
 COMPILE_LOG="logs/compile.log"
 echo ">>> Compiling RTL (log: $COMPILE_LOG)..."
@@ -99,10 +110,18 @@ echo ">>> Compiling RTL (log: $COMPILE_LOG)..."
     vlib work
     vmap work work
 
-    # Latest RTL (M5/M6 with Option B + Option F + Tier 1.6)
+    # Package
     vlog -sv -work work $RTL/accel_pkg.sv
 
-    # Datapath leaves
+    # Interfaces
+    vlog -sv -work work $RTL/stream_if.sv
+    vlog -sv -work work $RTL/sram_if.sv
+    vlog -sv -work work $RTL/cmd_if.sv
+    vlog -sv -work work $RTL/tile_if.sv
+    vlog -sv -work work $RTL/ctrl_if.sv
+    vlog -sv -work work $RTL/status_if.sv
+
+    # Datapath leaves (M5/M6 versions live in project/RTL/)
     vlog -sv -work work $RTL/mac_pe.sv
     vlog -sv -work work $RTL/mac_pe_piped.sv
     vlog -sv -work work $RTL/mac_pe_piped4.sv
@@ -129,44 +148,37 @@ echo ">>> Compiling RTL (log: $COMPILE_LOG)..."
     vlog -sv -work work $RTL/skid_buffer.sv
     vlog -sv -work work $RTL/stream_mux.sv
 
-    # Top-of-stream
-    vlog -sv -work work $RTL/stream_pipeline.sv
-
-    # M2 modules needed only for tb_top / tb_compute_core / tb_ff_backward_e2e
-    # (the M2 RTL is unchanged; the top.sv integration wrapper from M3 wires
-    # the M2 chiplet_interface + compute_core path).
-    # Interfaces
-    vlog -sv -work work $M2_RTL/stream_if.sv
-    vlog -sv -work work $M2_RTL/sram_if.sv
-    vlog -sv -work work $M2_RTL/cmd_if.sv
-    vlog -sv -work work $M2_RTL/tile_if.sv
-    vlog -sv -work work $M2_RTL/ctrl_if.sv
-    vlog -sv -work work $M2_RTL/status_if.sv
-
     # Tile movers
-    vlog -sv -work work $M2_RTL/tile_loader.sv
-    vlog -sv -work work $M2_RTL/tile_writer.sv
+    vlog -sv -work work $RTL/tile_loader.sv
+    vlog -sv -work work $RTL/tile_writer.sv
 
     # Memory subsystem
-    vlog -sv -work work $M2_RTL/sram_bank.sv
-    vlog -sv -work work $M2_RTL/scratchpad_ctrl.sv
-    vlog -sv -work work $M2_RTL/address_gen.sv
-    vlog -sv -work work $M2_RTL/dma_engine.sv
-    vlog -sv -work work $M2_RTL/double_buffer_ctrl.sv
+    vlog -sv -work work $RTL/sram_bank.sv
+    vlog -sv -work work $RTL/scratchpad_ctrl.sv
+    vlog -sv -work work $RTL/address_gen.sv
+    vlog -sv -work work $RTL/dma_engine.sv
+    vlog -sv -work work $RTL/double_buffer_ctrl.sv
+
+    # Top-of-stream (the M6 modifications all converge here)
+    vlog -sv -work work $RTL/stream_pipeline.sv
 
     # Control plane
-    vlog -sv -work work $M2_RTL/mode_decoder.sv
-    vlog -sv -work work $M2_RTL/tile_scheduler.sv
-    vlog -sv -work work $M2_RTL/tile_dispatcher.sv
-    vlog -sv -work work $M2_RTL/accel_controller.sv
-    vlog -sv -work work $M2_RTL/perf_counter_block.sv
-    vlog -sv -work work $M2_RTL/csr_block.sv
+    vlog -sv -work work $RTL/mode_decoder.sv
+    vlog -sv -work work $RTL/tile_scheduler.sv
+    vlog -sv -work work $RTL/tile_dispatcher.sv
+    vlog -sv -work work $RTL/accel_controller.sv
+    vlog -sv -work work $RTL/perf_counter_block.sv
+    vlog -sv -work work $RTL/csr_block.sv
 
-    # Per-lane engine and accelerator top
-    vlog -sv -work work $M2_RTL/accel_engine.sv
-    vlog -sv -work work $M2_RTL/accel_top.sv
+    # Per-lane engine + accelerator top + chiplet wrapper
+    vlog -sv -work work $RTL/accel_engine.sv
+    vlog -sv -work work $RTL/accel_top.sv
+    vlog -sv -work work $RTL/accel_chiplet_wrapper.sv
 
-    # Compute core + chiplet interface
+    # compute_core + chiplet_interface live only in m2/rtl/ (M2 baseline
+    # wrappers that weren't re-pushed into project/RTL/). These have not
+    # changed since M2; their interfaces match the latest project/RTL/
+    # modules they instantiate, so mixing them is safe.
     vlog -sv -work work $M2_RTL/compute_core.sv
     vlog -sv -work work $M2_RTL/interface.sv
 
