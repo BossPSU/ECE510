@@ -28740,3 +28740,1549 @@ Error info: run_innovus_hier.do:
     invoked from within
 "namespace inscope :: eval "uplevel #0 source $fileName"".
 innovus 1> 
+##################################################################
+## run_phobos_hier.sh session start: 2026-06-03T16:02:29-07:00
+## host: phobos.ece.pdx.edu  cwd: /home/dboss/common/Documents/ECE510/ECE510/project/RTL
+## args: phase4
+## env : ARRAY_N=64  CLK_PER=1.0
+##################################################################
+
+==================================================================
+ >> PHASE 4: Innovus P&R -- stream_pipeline_64x64_hier
+    log: logs_hier/stream_pipeline_64x64_hier_pnr.log
+    started: 2026-06-03T16:02:29-07:00
+==================================================================
+2026/06/03 16:02:30 System is not a supported distribution
+2026/06/03 16:02:30 An error occurred. We don't recognize OS 
+2026/06/03 16:02:30 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:02:30 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+
+Cadence Innovus(TM) Implementation System.
+Copyright 2021 Cadence Design Systems, Inc. All rights reserved worldwide.
+
+Version:	v21.14-s109_1, built Wed Jun 29 09:53:08 PDT 2022
+Options:	-nowin -files run_innovus_hier.do -log logs_hier/stream_pipeline_64x64_hier_pnr.log 
+Date:		Wed Jun  3 16:02:31 2026
+Host:		phobos.ece.pdx.edu (x86_64 w/Linux 5.14.0-611.54.1.el9_7.x86_64) (1core*32cpus*Intel Xeon Processor (Cascadelake) 16384KB)
+OS:		Rocky Linux release 9.8 (Blue Onyx)
+
+License:
+		[16:02:31.480105] Configured Lic search path (21.01-s002): 5280@cadence-lic.cecs.pdx.edu
+
+		invs	Innovus Implementation System	21.1	checkout succeeded
+		8 CPU jobs allowed with the current license(s). Use setMultiCpuUsage to set your required CPU count.
+Create and set the environment variable TMPDIR to /tmp/innovus_temp_3714208_phobos.ece.pdx.edu_dboss_tA5bOO.
+
+Change the soft stacksize limit to 0.2%RAM (127 mbytes). Set global soft_stack_size_limit to change the value.
+
+**INFO:  MMMC transition support version v31-84 
+
+Sourcing file "run_innovus_hier.do" ...
+==========================================
+Innovus hierarchical P&R for stream_pipeline_64x64_hier
+  netlist : out_sweep/stream_pipeline_64x64_hier/stream_pipeline.v
+  SDC     : out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc
+  lib     : /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib
+  techLEF : /pkgs/synopsys/2020/32_28nm/SAED32_EDK/src/oa/saed32_sram_lp_dual_oa/new/newtech.lef
+  cellLEF : /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/lef/saed32nm_rvt_1p9m.lef
+  clock   : 1.333 ns
+  util    : 0.6
+==========================================
+INFO: No CAPTABLE env var; using LEF-based estimated RC.
+
+Loading LEF file /pkgs/synopsys/2020/32_28nm/SAED32_EDK/src/oa/saed32_sram_lp_dual_oa/new/newtech.lef ...
+**WARN: (IMPLF-105):	The layer 'PO' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+**WARN: (IMPLF-105):	The layer 'DIFF' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+**WARN: (IMPLF-105):	The layer 'PO' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+**WARN: (IMPLF-105):	The layer 'PIMP' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+
+Loading LEF file /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/lef/saed32nm_rvt_1p9m.lef ...
+**ERROR: (IMPLF-285):	The layer 'MRDL' does not have SPACING or
+SPACINGTABLE statement, so there is no spacing rule for this layer,
+which is a semantic error. A minimum spacing value of 1.000000um has been
+set to avoid application failures. This value is almost certainly wrong
+and can cause real DRC errors to be missed. It is highly recommended to
+fix this problem before going further.
+Set DBUPerIGU to M2 pitch 152.
+**ERROR: (IMPDB-2059):	lef/def name 'TNBUFFX2_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'TNBUFFX32_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'TNBUFFX4_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'TNBUFFX8_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'XNOR2X1_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'XNOR2X2_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'XNOR3X1_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'XNOR3X2_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'XOR2X1_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'XOR2X2_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'XOR3X1_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'XOR3X2_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'SDFFSSRX1_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'SDFFSSRX2_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'SDFFX1_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'SDFFX2_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'SHFILL128_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'SHFILL1_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'SHFILL2_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**ERROR: (IMPDB-2059):	lef/def name 'SHFILL3_RVT' cannot be converted to a legal verilog name because there is non-digit character inside bus bits. Fix the error in the lef/def name before converting to verilog name.
+**WARN: (EMS-27):	Message (IMPDB-2059) has exceeded the current message display limit of 20.
+To increase the message display limit, refer to the product command reference manual.
+
+viaInitial starts at Wed Jun  3 16:02:48 2026
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR1_C' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR2_C' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12LG_C' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR1' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR2' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12LG' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR1_C' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR2_C' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23LG_C' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR1' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR2' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23LG' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR1_C' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR2_C' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34LG_C' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR1' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR2' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34LG' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA45BAR1_C' and 'VIA45SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA45BAR2_C' and 'VIA45SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (EMS-27):	Message (IMPPP-543) has exceeded the current message display limit of 20.
+To increase the message display limit, refer to the product command reference manual.
+viaInitial ends at Wed Jun  3 16:02:48 2026
+
+##  Check design process and node:  
+##  Both design process and tech node are not set.
+
+*** End library_loading (cpu=0.00min, real=0.00min, mem=0.0M, fe_cpu=0.27min, fe_real=0.28min, fe_mem=855.3M) ***
+#% Begin Load netlist data ... (date=06/03 16:02:48, mem=895.2M)
+*** Begin netlist parsing (mem=855.3M) ***
+Created 0 new cells from 0 timing libraries.
+Reading netlist ...
+Backslashed names will retain backslash and a trailing blank character.
+Reading verilog netlist 'out_sweep/stream_pipeline_64x64_hier/stream_pipeline.v'
+
+*** Memory Usage v#1 (Current mem = 2710.633M, initial mem = 397.906M) ***
+*** End netlist parsing (cpu=0:00:19.1, real=0:00:20.0, mem=2710.6M) ***
+#% End Load netlist data ... (date=06/03 16:03:08, total cpu=0:00:19.1, real=0:00:20.0, peak res=2745.3M, current mem=2743.7M)
+**ERROR: (IMPSYC-300):	Cell stream_pipeline not found.
+**ERROR: (IMPVL-904):	Can't set top cell to "stream_pipeline" because it does not exist.  Exiting!
+
+*** Memory Usage v#1 (Current mem = 2710.633M, initial mem = 397.906M) ***
+*** Message Summary: 46 warning(s), 353 error(s)
+
+--- Ending "Innovus" (totcpu=0:00:35.6, real=0:00:37.0, mem=2710.6M) ---
+E << PHASE 4 done (42 s)
+
+All requested phases complete.
+
+##################################################################
+## run_phobos_hier.sh session start: 2026-06-03T16:07:24-07:00
+## host: phobos.ece.pdx.edu  cwd: /home/dboss/common/Documents/ECE510/ECE510/project/RTL
+## args: phase4
+## env : ARRAY_N=64  CLK_PER=1.333
+##################################################################
+
+==================================================================
+ >> PHASE 4: Innovus P&R -- stream_pipeline_64x64_hier
+    log: logs_hier/stream_pipeline_64x64_hier_pnr.log
+    started: 2026-06-03T16:07:24-07:00
+==================================================================
+2026/06/03 16:07:25 System is not a supported distribution
+2026/06/03 16:07:25 An error occurred. We don't recognize OS 
+2026/06/03 16:07:25 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:07:25 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+
+Cadence Innovus(TM) Implementation System.
+Copyright 2021 Cadence Design Systems, Inc. All rights reserved worldwide.
+
+Version:	v21.14-s109_1, built Wed Jun 29 09:53:08 PDT 2022
+Options:	-nowin -files run_innovus_hier.do -log logs_hier/stream_pipeline_64x64_hier_pnr.log 
+Date:		Wed Jun  3 16:07:25 2026
+Host:		phobos.ece.pdx.edu (x86_64 w/Linux 5.14.0-611.54.1.el9_7.x86_64) (1core*32cpus*Intel Xeon Processor (Cascadelake) 16384KB)
+OS:		Rocky Linux release 9.8 (Blue Onyx)
+
+License:
+		[16:07:25.480169] Configured Lic search path (21.01-s002): 5280@cadence-lic.cecs.pdx.edu
+
+		invs	Innovus Implementation System	21.1	checkout succeeded
+		8 CPU jobs allowed with the current license(s). Use setMultiCpuUsage to set your required CPU count.
+Create and set the environment variable TMPDIR to /tmp/innovus_temp_3721104_phobos.ece.pdx.edu_dboss_tFY1T0.
+
+Change the soft stacksize limit to 0.2%RAM (127 mbytes). Set global soft_stack_size_limit to change the value.
+
+**INFO:  MMMC transition support version v31-84 
+
+Sourcing file "run_innovus_hier.do" ...
+==========================================
+Innovus hierarchical P&R for stream_pipeline_64x64_hier
+  netlist : out_sweep/stream_pipeline_64x64_hier/stream_pipeline.v
+  SDC     : out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc
+  lib     : /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib
+  techLEF : /u/dboss/local_lef/newtech.lef
+  cellLEF : /u/dboss/local_lef/saed32nm_rvt_1p9m.lef
+  clock   : 1.333 ns
+  util    : 0.6
+==========================================
+INFO: No CAPTABLE env var; using LEF-based estimated RC.
+
+Loading LEF file /u/dboss/local_lef/newtech.lef ...
+**WARN: (IMPLF-105):	The layer 'PO' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+**WARN: (IMPLF-105):	The layer 'DIFF' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+**WARN: (IMPLF-105):	The layer 'PO' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+**WARN: (IMPLF-105):	The layer 'PIMP' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+
+Loading LEF file /u/dboss/local_lef/saed32nm_rvt_1p9m.lef ...
+**ERROR: (IMPLF-285):	The layer 'MRDL' does not have SPACING or
+SPACINGTABLE statement, so there is no spacing rule for this layer,
+which is a semantic error. A minimum spacing value of 1.000000um has been
+set to avoid application failures. This value is almost certainly wrong
+and can cause real DRC errors to be missed. It is highly recommended to
+fix this problem before going further.
+Set DBUPerIGU to M2 pitch 152.
+
+viaInitial starts at Wed Jun  3 16:07:41 2026
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR1_C' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR2_C' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12LG_C' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR1' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR2' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12LG' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR1_C' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR2_C' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23LG_C' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR1' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR2' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23LG' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR1_C' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR2_C' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34LG_C' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR1' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR2' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34LG' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA45BAR1_C' and 'VIA45SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA45BAR2_C' and 'VIA45SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (EMS-27):	Message (IMPPP-543) has exceeded the current message display limit of 20.
+To increase the message display limit, refer to the product command reference manual.
+viaInitial ends at Wed Jun  3 16:07:41 2026
+
+##  Check design process and node:  
+##  Both design process and tech node are not set.
+
+*** End library_loading (cpu=0.00min, real=0.00min, mem=0.0M, fe_cpu=0.25min, fe_real=0.27min, fe_mem=855.9M) ***
+#% Begin Load netlist data ... (date=06/03 16:07:41, mem=899.6M)
+*** Begin netlist parsing (mem=855.9M) ***
+Created 0 new cells from 0 timing libraries.
+Reading netlist ...
+Backslashed names will retain backslash and a trailing blank character.
+Reading verilog netlist 'out_sweep/stream_pipeline_64x64_hier/stream_pipeline.v'
+
+*** Memory Usage v#1 (Current mem = 2710.266M, initial mem = 397.906M) ***
+*** End netlist parsing (cpu=0:00:16.7, real=0:00:17.0, mem=2710.3M) ***
+#% End Load netlist data ... (date=06/03 16:07:58, total cpu=0:00:16.8, real=0:00:17.0, peak res=2749.9M, current mem=2747.2M)
+**ERROR: (IMPSYC-300):	Cell stream_pipeline not found.
+**ERROR: (IMPVL-904):	Can't set top cell to "stream_pipeline" because it does not exist.  Exiting!
+
+*** Memory Usage v#1 (Current mem = 2710.266M, initial mem = 397.906M) ***
+*** Message Summary: 46 warning(s), 3 error(s)
+
+--- Ending "Innovus" (totcpu=0:00:32.0, real=0:00:33.0, mem=2710.3M) ---
+E << PHASE 4 done (33 s)
+
+All requested phases complete.
+
+##################################################################
+## run_phobos_hier.sh session start: 2026-06-03T16:09:15-07:00
+## host: phobos.ece.pdx.edu  cwd: /home/dboss/common/Documents/ECE510/ECE510/project/RTL
+## args: phase4
+## env : ARRAY_N=64  CLK_PER=1.333
+##################################################################
+
+==================================================================
+ >> PHASE 4: Innovus P&R -- stream_pipeline_64x64_hier
+    log: logs_hier/stream_pipeline_64x64_hier_pnr.log
+    started: 2026-06-03T16:09:15-07:00
+==================================================================
+2026/06/03 16:09:16 System is not a supported distribution
+2026/06/03 16:09:16 An error occurred. We don't recognize OS 
+2026/06/03 16:09:16 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:09:16 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+
+Cadence Innovus(TM) Implementation System.
+Copyright 2021 Cadence Design Systems, Inc. All rights reserved worldwide.
+
+Version:	v21.14-s109_1, built Wed Jun 29 09:53:08 PDT 2022
+Options:	-nowin -files run_innovus_hier.do -log logs_hier/stream_pipeline_64x64_hier_pnr.log 
+Date:		Wed Jun  3 16:09:16 2026
+Host:		phobos.ece.pdx.edu (x86_64 w/Linux 5.14.0-611.54.1.el9_7.x86_64) (1core*32cpus*Intel Xeon Processor (Cascadelake) 16384KB)
+OS:		Rocky Linux release 9.8 (Blue Onyx)
+
+License:
+		[16:09:16.480185] Configured Lic search path (21.01-s002): 5280@cadence-lic.cecs.pdx.edu
+
+		invs	Innovus Implementation System	21.1	checkout succeeded
+		8 CPU jobs allowed with the current license(s). Use setMultiCpuUsage to set your required CPU count.
+Create and set the environment variable TMPDIR to /tmp/innovus_temp_3723380_phobos.ece.pdx.edu_dboss_2sx1OA.
+
+Change the soft stacksize limit to 0.2%RAM (127 mbytes). Set global soft_stack_size_limit to change the value.
+
+**INFO:  MMMC transition support version v31-84 
+
+Sourcing file "run_innovus_hier.do" ...
+==========================================
+Innovus hierarchical P&R for stream_pipeline_64x64_hier
+  netlist : out_sweep/stream_pipeline_64x64_hier/stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1.v
+  SDC     : out_sweep/stream_pipeline_64x64_hier/stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1.sdc
+  lib     : /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib
+  techLEF : /u/dboss/local_lef/newtech.lef
+  cellLEF : /u/dboss/local_lef/saed32nm_rvt_1p9m.lef
+  clock   : 1.333 ns
+  util    : 0.6
+==========================================
+**ERROR: (TCLCMD-989):	cannot open SDC file 'out_sweep/stream_pipeline_64x64_hier/stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1.sdc' for mode 'func_mode'
+**ERROR: (IMPSYT-6692):	Invalid return code while executing 'run_innovus_hier.do' was returned and script processing was stopped. Review the following error in 'run_innovus_hier.do' then restart.
+Error info: run_innovus_hier.do: 
+    while executing
+"create_constraint_mode -name func_mode -sdc_files [list $SDC]"
+    (file "run_innovus_hier.do" line 110)
+    invoked from within
+"::se_source_orig run_innovus_hier.do"
+    ("uplevel" body line 1)
+    invoked from within
+"uplevel [concat ::se_source_orig $args]"
+    (procedure "source" line 188)
+    invoked from within
+"source run_innovus_hier.do"
+    ("uplevel" body line 1)
+    invoked from within
+"uplevel #0 source run_innovus_hier.do"
+    ("eval" body line 1)
+    invoked from within
+"eval {uplevel #0 source run_innovus_hier.do}"
+    (in namespace inscope "::" script line 1)
+    invoked from within
+"namespace inscope :: eval "uplevel #0 source $fileName"".
+innovus 1> 
+##################################################################
+## run_phobos_hier.sh session start: 2026-06-03T16:27:34-07:00
+## host: phobos.ece.pdx.edu  cwd: /home/dboss/common/Documents/ECE510/ECE510/project/RTL
+## args: phase4
+## env : ARRAY_N=64  CLK_PER=1.333
+##################################################################
+
+==================================================================
+ >> PHASE 4: Innovus P&R -- stream_pipeline_64x64_hier
+    log: logs_hier/stream_pipeline_64x64_hier_pnr.log
+    started: 2026-06-03T16:27:34-07:00
+==================================================================
+2026/06/03 16:27:34 System is not a supported distribution
+2026/06/03 16:27:34 An error occurred. We don't recognize OS 
+2026/06/03 16:27:34 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:27:34 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+
+Cadence Innovus(TM) Implementation System.
+Copyright 2021 Cadence Design Systems, Inc. All rights reserved worldwide.
+
+Version:	v21.14-s109_1, built Wed Jun 29 09:53:08 PDT 2022
+Options:	-nowin -files run_innovus_hier.do -log logs_hier/stream_pipeline_64x64_hier_pnr.log 
+Date:		Wed Jun  3 16:27:35 2026
+Host:		phobos.ece.pdx.edu (x86_64 w/Linux 5.14.0-611.54.1.el9_7.x86_64) (1core*32cpus*Intel Xeon Processor (Cascadelake) 16384KB)
+OS:		Rocky Linux release 9.8 (Blue Onyx)
+
+License:
+		[16:27:35.480193] Configured Lic search path (21.01-s002): 5280@cadence-lic.cecs.pdx.edu
+
+		invs	Innovus Implementation System	21.1	checkout succeeded
+		8 CPU jobs allowed with the current license(s). Use setMultiCpuUsage to set your required CPU count.
+Create and set the environment variable TMPDIR to /tmp/innovus_temp_3748530_phobos.ece.pdx.edu_dboss_lBzRHe.
+
+Change the soft stacksize limit to 0.2%RAM (127 mbytes). Set global soft_stack_size_limit to change the value.
+
+**INFO:  MMMC transition support version v31-84 
+
+Sourcing file "run_innovus_hier.do" ...
+==========================================
+Innovus hierarchical P&R for stream_pipeline_64x64_hier
+  netlist : out_sweep/stream_pipeline_64x64_hier/stream_pipeline.v
+  SDC     : out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc
+  lib     : /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt0p85v25c.lib
+  techLEF : /u/dboss/local_lef/newtech.lef
+  cellLEF : /u/dboss/local_lef/saed32nm_rvt_1p9m.lef
+  clock   : 1.333 ns
+  util    : 0.6
+==========================================
+INFO: No CAPTABLE env var; using LEF-based estimated RC.
+
+Loading LEF file /u/dboss/local_lef/newtech.lef ...
+**WARN: (IMPLF-105):	The layer 'PO' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+**WARN: (IMPLF-105):	The layer 'DIFF' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+**WARN: (IMPLF-105):	The layer 'PO' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+**WARN: (IMPLF-105):	The layer 'PIMP' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+
+Loading LEF file /u/dboss/local_lef/saed32nm_rvt_1p9m.lef ...
+**ERROR: (IMPLF-285):	The layer 'MRDL' does not have SPACING or
+SPACINGTABLE statement, so there is no spacing rule for this layer,
+which is a semantic error. A minimum spacing value of 1.000000um has been
+set to avoid application failures. This value is almost certainly wrong
+and can cause real DRC errors to be missed. It is highly recommended to
+fix this problem before going further.
+Set DBUPerIGU to M2 pitch 152.
+
+viaInitial starts at Wed Jun  3 16:27:50 2026
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR1_C' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR2_C' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12LG_C' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR1' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR2' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12LG' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR1_C' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR2_C' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23LG_C' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR1' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR2' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23LG' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR1_C' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR2_C' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34LG_C' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR1' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR2' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34LG' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA45BAR1_C' and 'VIA45SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA45BAR2_C' and 'VIA45SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (EMS-27):	Message (IMPPP-543) has exceeded the current message display limit of 20.
+To increase the message display limit, refer to the product command reference manual.
+viaInitial ends at Wed Jun  3 16:27:50 2026
+
+##  Check design process and node:  
+##  Both design process and tech node are not set.
+
+*** End library_loading (cpu=0.00min, real=0.00min, mem=0.0M, fe_cpu=0.24min, fe_real=0.25min, fe_mem=855.6M) ***
+#% Begin Load netlist data ... (date=06/03 16:27:50, mem=898.7M)
+*** Begin netlist parsing (mem=855.6M) ***
+Created 0 new cells from 0 timing libraries.
+Reading netlist ...
+Backslashed names will retain backslash and a trailing blank character.
+Reading verilog netlist 'out_sweep/stream_pipeline_64x64_hier/stream_pipeline.v'
+
+*** Memory Usage v#1 (Current mem = 2709.977M, initial mem = 397.906M) ***
+*** End netlist parsing (cpu=0:00:17.2, real=0:00:17.0, mem=2710.0M) ***
+#% End Load netlist data ... (date=06/03 16:28:07, total cpu=0:00:17.2, real=0:00:17.0, peak res=2749.8M, current mem=2747.3M)
+Set top cell to stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1.
+Hooked 0 DB cells to tlib cells.
+Starting recursive module instantiation check.
+No recursion found.
+Building hierarchical netlist for Cell stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1 ...
+*** Netlist is unique.
+** info: there are 4453 modules.
+** info: there are 2696547 stdCell insts.
+
+*** Memory Usage v#1 (Current mem = 4322.648M, initial mem = 397.906M) ***
+Horizontal Layer M1 offset = 0 (derived)
+Vertical Layer M2 offset = 76 (guessed)
+Suggestion: specify LAYER OFFSET in LEF file
+Reason: hard to extract LAYER OFFSET from standard cells
+Start create_tracks
+Generated pitch 0.38 in M9 is different from 2.432 defined in technology file in preferred direction.
+Generated pitch 0.152 in M8 is different from 1.216 defined in technology file in preferred direction.
+Generated pitch 0.152 in M7 is different from 1.216 defined in technology file in preferred direction.
+Generated pitch 0.152 in M6 is different from 0.608 defined in technology file in preferred direction.
+Generated pitch 0.152 in M5 is different from 0.608 defined in technology file in preferred direction.
+Generated pitch 0.152 in M4 is different from 0.304 defined in technology file in preferred direction.
+Generated pitch 0.152 in M3 is different from 0.304 defined in technology file in preferred direction.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO221X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO21X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO21X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND4X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND3X4_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND3X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND3X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND2X4_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND2X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND2X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI21X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO22X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO22X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO222X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO221X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI22X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI222X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI221X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI221X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI21X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (EMS-27):	Message (IMPSYC-2) has exceeded the current message display limit of 20.
+To increase the message display limit, refer to the product command reference manual.
+**WARN: (IMPSYT-7328):	The design has been initialized in physical-only mode because the init_mmmc_file global variable was not defined. Timing analysis will not be possible within this session. You can only use commands that do not depend on timing data. If you need to use timing, you need to restart with an init_mmmc_file to define the timing setup, or you can save this design and use restoreDesign -mmmc_file <viewDef.tcl> to add the timing setup information.
+Extraction setup Started 
+
+*** Summary of all messages that are not suppressed in this session:
+Severity  ID               Count  Summary                                  
+ERROR     IMPLF-285            1  The layer '%s' does not have SPACING or ...
+WARNING   IMPLF-105            4  The layer '%s' specified in SAMENET spac...
+WARNING   IMPSYT-7328          1  The design has been initialized in physi...
+WARNING   IMPSYC-2            96  Timing information is not defined for ce...
+WARNING   IMPPP-543           42  Inconsistent cut size definition in VIAR...
+*** Message Summary: 143 warning(s), 1 error(s)
+
+**ERROR: (TCLCMD-1239):	The software has been initialized without timing library information into a physical-only mode of operation. Access to timing analysis related commands and functionality is not available in this mode.  To operate the software with full functionality you must exit or issue the freeDesign command - then reinitialize the system with a design configuration that includes a valid timing library configuration.
+**ERROR: (IMPSYT-6692):	Invalid return code while executing 'run_innovus_hier.do' was returned and script processing was stopped. Review the following error in 'run_innovus_hier.do' then restart.
+**ERROR: (IMPSYT-6693):	Error message: run_innovus_hier.do: {}.
+innovus 1> 
+##################################################################
+## run_phobos_hier.sh session start: 2026-06-03T16:38:00-07:00
+## host: phobos.ece.pdx.edu  cwd: /home/dboss/common/Documents/ECE510/ECE510/project/RTL
+## args: phase4
+## env : ARRAY_N=64  CLK_PER=1.333
+##################################################################
+
+==================================================================
+ >> PHASE 4: Innovus P&R -- stream_pipeline_64x64_hier
+    log: logs_hier/stream_pipeline_64x64_hier_pnr.log
+    started: 2026-06-03T16:38:00-07:00
+==================================================================
+2026/06/03 16:38:00 System is not a supported distribution
+2026/06/03 16:38:00 An error occurred. We don't recognize OS 
+2026/06/03 16:38:00 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:38:00 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+
+Cadence Innovus(TM) Implementation System.
+Copyright 2021 Cadence Design Systems, Inc. All rights reserved worldwide.
+
+Version:	v21.14-s109_1, built Wed Jun 29 09:53:08 PDT 2022
+Options:	-nowin -files run_innovus_hier.do -log logs_hier/stream_pipeline_64x64_hier_pnr.log 
+Date:		Wed Jun  3 16:38:01 2026
+Host:		phobos.ece.pdx.edu (x86_64 w/Linux 5.14.0-611.54.1.el9_7.x86_64) (1core*32cpus*Intel Xeon Processor (Cascadelake) 16384KB)
+OS:		Rocky Linux release 9.8 (Blue Onyx)
+
+License:
+		[16:38:01.480153] Configured Lic search path (21.01-s002): 5280@cadence-lic.cecs.pdx.edu
+
+		invs	Innovus Implementation System	21.1	checkout succeeded
+		8 CPU jobs allowed with the current license(s). Use setMultiCpuUsage to set your required CPU count.
+Create and set the environment variable TMPDIR to /tmp/innovus_temp_3762746_phobos.ece.pdx.edu_dboss_ex5uy9.
+
+Change the soft stacksize limit to 0.2%RAM (127 mbytes). Set global soft_stack_size_limit to change the value.
+
+**INFO:  MMMC transition support version v31-84 
+
+Sourcing file "run_innovus_hier.do" ...
+==========================================
+Innovus hierarchical P&R for stream_pipeline_64x64_hier
+  netlist : out_sweep/stream_pipeline_64x64_hier/stream_pipeline.v
+  SDC     : out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc
+  lib     : /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_pg_tt0p85v25c.lib
+  techLEF : /u/dboss/local_lef/newtech.lef
+  cellLEF : /u/dboss/local_lef/saed32nm_rvt_1p9m.lef
+  clock   : 1.333 ns
+  util    : 0.6
+==========================================
+INFO: No CAPTABLE env var; using LEF-based estimated RC.
+
+Loading LEF file /u/dboss/local_lef/newtech.lef ...
+**WARN: (IMPLF-105):	The layer 'PO' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+**WARN: (IMPLF-105):	The layer 'DIFF' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+**WARN: (IMPLF-105):	The layer 'PO' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+**WARN: (IMPLF-105):	The layer 'PIMP' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+
+Loading LEF file /u/dboss/local_lef/saed32nm_rvt_1p9m.lef ...
+**ERROR: (IMPLF-285):	The layer 'MRDL' does not have SPACING or
+SPACINGTABLE statement, so there is no spacing rule for this layer,
+which is a semantic error. A minimum spacing value of 1.000000um has been
+set to avoid application failures. This value is almost certainly wrong
+and can cause real DRC errors to be missed. It is highly recommended to
+fix this problem before going further.
+Set DBUPerIGU to M2 pitch 152.
+
+viaInitial starts at Wed Jun  3 16:38:19 2026
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR1_C' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR2_C' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12LG_C' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR1' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR2' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12LG' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR1_C' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR2_C' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23LG_C' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR1' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR2' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23LG' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR1_C' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR2_C' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34LG_C' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR1' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR2' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34LG' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA45BAR1_C' and 'VIA45SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA45BAR2_C' and 'VIA45SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (EMS-27):	Message (IMPPP-543) has exceeded the current message display limit of 20.
+To increase the message display limit, refer to the product command reference manual.
+viaInitial ends at Wed Jun  3 16:38:19 2026
+
+##  Check design process and node:  
+##  Both design process and tech node are not set.
+
+*** End library_loading (cpu=0.00min, real=0.00min, mem=0.0M, fe_cpu=0.27min, fe_real=0.30min, fe_mem=847.7M) ***
+#% Begin Load netlist data ... (date=06/03 16:38:19, mem=897.3M)
+*** Begin netlist parsing (mem=847.7M) ***
+Created 0 new cells from 0 timing libraries.
+Reading netlist ...
+Backslashed names will retain backslash and a trailing blank character.
+Reading verilog netlist 'out_sweep/stream_pipeline_64x64_hier/stream_pipeline.v'
+
+*** Memory Usage v#1 (Current mem = 2702.062M, initial mem = 397.906M) ***
+*** End netlist parsing (cpu=0:00:16.7, real=0:00:16.0, mem=2702.1M) ***
+#% End Load netlist data ... (date=06/03 16:38:35, total cpu=0:00:16.8, real=0:00:16.0, peak res=2747.2M, current mem=2745.4M)
+Set top cell to stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1.
+Hooked 0 DB cells to tlib cells.
+Starting recursive module instantiation check.
+No recursion found.
+Building hierarchical netlist for Cell stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1 ...
+*** Netlist is unique.
+** info: there are 4453 modules.
+** info: there are 2696547 stdCell insts.
+
+*** Memory Usage v#1 (Current mem = 4323.820M, initial mem = 397.906M) ***
+Horizontal Layer M1 offset = 0 (derived)
+Vertical Layer M2 offset = 76 (guessed)
+Suggestion: specify LAYER OFFSET in LEF file
+Reason: hard to extract LAYER OFFSET from standard cells
+Start create_tracks
+Generated pitch 0.38 in M9 is different from 2.432 defined in technology file in preferred direction.
+Generated pitch 0.152 in M8 is different from 1.216 defined in technology file in preferred direction.
+Generated pitch 0.152 in M7 is different from 1.216 defined in technology file in preferred direction.
+Generated pitch 0.152 in M6 is different from 0.608 defined in technology file in preferred direction.
+Generated pitch 0.152 in M5 is different from 0.608 defined in technology file in preferred direction.
+Generated pitch 0.152 in M4 is different from 0.304 defined in technology file in preferred direction.
+Generated pitch 0.152 in M3 is different from 0.304 defined in technology file in preferred direction.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO221X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO21X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO21X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND4X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND3X4_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND3X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND3X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND2X4_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND2X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND2X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI21X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO22X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO22X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO222X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO221X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI22X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI222X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI221X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI221X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI21X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (EMS-27):	Message (IMPSYC-2) has exceeded the current message display limit of 20.
+To increase the message display limit, refer to the product command reference manual.
+**WARN: (IMPSYT-7328):	The design has been initialized in physical-only mode because the init_mmmc_file global variable was not defined. Timing analysis will not be possible within this session. You can only use commands that do not depend on timing data. If you need to use timing, you need to restart with an init_mmmc_file to define the timing setup, or you can save this design and use restoreDesign -mmmc_file <viewDef.tcl> to add the timing setup information.
+Extraction setup Started 
+
+*** Summary of all messages that are not suppressed in this session:
+Severity  ID               Count  Summary                                  
+ERROR     IMPLF-285            1  The layer '%s' does not have SPACING or ...
+WARNING   IMPLF-105            4  The layer '%s' specified in SAMENET spac...
+WARNING   IMPSYT-7328          1  The design has been initialized in physi...
+WARNING   IMPSYC-2            96  Timing information is not defined for ce...
+WARNING   IMPPP-543           42  Inconsistent cut size definition in VIAR...
+*** Message Summary: 143 warning(s), 1 error(s)
+
+**ERROR: (TCLCMD-1239):	The software has been initialized without timing library information into a physical-only mode of operation. Access to timing analysis related commands and functionality is not available in this mode.  To operate the software with full functionality you must exit or issue the freeDesign command - then reinitialize the system with a design configuration that includes a valid timing library configuration.
+**ERROR: (IMPSYT-6692):	Invalid return code while executing 'run_innovus_hier.do' was returned and script processing was stopped. Review the following error in 'run_innovus_hier.do' then restart.
+**ERROR: (IMPSYT-6693):	Error message: run_innovus_hier.do: {}.
+innovus 1> 
+##################################################################
+## run_phobos_hier.sh session start: 2026-06-03T16:41:42-07:00
+## host: phobos.ece.pdx.edu  cwd: /home/dboss/common/Documents/ECE510/ECE510/project/RTL
+## args: phase4
+## env : ARRAY_N=64  CLK_PER=1.333
+##################################################################
+
+==================================================================
+ >> PHASE 4: Innovus P&R -- stream_pipeline_64x64_hier
+    log: logs_hier/stream_pipeline_64x64_hier_pnr.log
+    started: 2026-06-03T16:41:42-07:00
+==================================================================
+2026/06/03 16:41:43 System is not a supported distribution
+2026/06/03 16:41:43 An error occurred. We don't recognize OS 
+2026/06/03 16:41:43 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:41:43 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+
+Cadence Innovus(TM) Implementation System.
+Copyright 2021 Cadence Design Systems, Inc. All rights reserved worldwide.
+
+Version:	v21.14-s109_1, built Wed Jun 29 09:53:08 PDT 2022
+Options:	-nowin -files run_innovus_hier.do -log logs_hier/stream_pipeline_64x64_hier_pnr.log 
+Date:		Wed Jun  3 16:41:43 2026
+Host:		phobos.ece.pdx.edu (x86_64 w/Linux 5.14.0-611.54.1.el9_7.x86_64) (1core*32cpus*Intel Xeon Processor (Cascadelake) 16384KB)
+OS:		Rocky Linux release 9.8 (Blue Onyx)
+
+License:
+		[16:41:43.480153] Configured Lic search path (21.01-s002): 5280@cadence-lic.cecs.pdx.edu
+
+		invs	Innovus Implementation System	21.1	checkout succeeded
+		8 CPU jobs allowed with the current license(s). Use setMultiCpuUsage to set your required CPU count.
+Create and set the environment variable TMPDIR to /tmp/innovus_temp_3768066_phobos.ece.pdx.edu_dboss_3nKJcE.
+
+Change the soft stacksize limit to 0.2%RAM (127 mbytes). Set global soft_stack_size_limit to change the value.
+
+**INFO:  MMMC transition support version v31-84 
+
+Sourcing file "run_innovus_hier.do" ...
+==========================================
+Innovus hierarchical P&R for stream_pipeline_64x64_hier
+  netlist : out_sweep/stream_pipeline_64x64_hier/stream_pipeline.v
+  SDC     : out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc
+  lib     : /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_pg_tt0p85v25c.lib
+  techLEF : /u/dboss/local_lef/newtech.lef
+  cellLEF : /u/dboss/local_lef/saed32nm_rvt_1p9m.lef
+  clock   : 1.333 ns
+  util    : 0.6
+==========================================
+INFO: No CAPTABLE env var; using LEF-based estimated RC.
+>>> Wrote MMMC setup to out_innovus/stream_pipeline_64x64_hier/mmmc.tcl
+#% Begin Load MMMC data ... (date=06/03 16:42:00, mem=883.6M)
+#% End Load MMMC data ... (date=06/03 16:42:00, total cpu=0:00:00.0, real=0:00:00.0, peak res=884.9M, current mem=884.9M)
+
+Loading LEF file /u/dboss/local_lef/newtech.lef ...
+**WARN: (IMPLF-105):	The layer 'PO' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+**WARN: (IMPLF-105):	The layer 'DIFF' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+**WARN: (IMPLF-105):	The layer 'PO' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+**WARN: (IMPLF-105):	The layer 'PIMP' specified in SAMENET spacing
+rule is neither a routing layer nor a cut layer. The rule is ignored.
+
+Loading LEF file /u/dboss/local_lef/saed32nm_rvt_1p9m.lef ...
+**ERROR: (IMPLF-285):	The layer 'MRDL' does not have SPACING or
+SPACINGTABLE statement, so there is no spacing rule for this layer,
+which is a semantic error. A minimum spacing value of 1.000000um has been
+set to avoid application failures. This value is almost certainly wrong
+and can cause real DRC errors to be missed. It is highly recommended to
+fix this problem before going further.
+Set DBUPerIGU to M2 pitch 152.
+
+viaInitial starts at Wed Jun  3 16:42:00 2026
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR1_C' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR2_C' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12LG_C' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR1' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12BAR2' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA12LG' and 'VIA12SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR1_C' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR2_C' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23LG_C' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR1' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23BAR2' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA23LG' and 'VIA23SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR1_C' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR2_C' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34LG_C' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR1' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34BAR2' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA34LG' and 'VIA34SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA45BAR1_C' and 'VIA45SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (IMPPP-543):	Inconsistent cut size definition in VIARULE 'VIA45BAR2_C' and 'VIA45SQ_C'.
+Type 'man IMPPP-543' for more detail.
+**WARN: (EMS-27):	Message (IMPPP-543) has exceeded the current message display limit of 20.
+To increase the message display limit, refer to the product command reference manual.
+viaInitial ends at Wed Jun  3 16:42:00 2026
+
+##  Check design process and node:  
+##  Both design process and tech node are not set.
+
+Loading view definition file from out_innovus/stream_pipeline_64x64_hier/mmmc.tcl
+Reading lib_tt timing library '/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_pg_tt0p85v25c.lib' ...
+**WARN: (TECHLIB-1161):	The library level attribute default_operating_conditions on line 3451 is defined after at least one cell definition. The attribute will be ignored. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_pg_tt0p85v25c.lib)
+**WARN: (TECHLIB-1161):	The library level attribute default_wire_load on line 3452 is defined after at least one cell definition. The attribute will be ignored. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_pg_tt0p85v25c.lib)
+**WARN: (TECHLIB-1161):	The library level attribute default_wire_load_selection on line 3453 is defined after at least one cell definition. The attribute will be ignored. (File /pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_pg_tt0p85v25c.lib)
+Read 20 cells in library 'saed32rvt_pg_tt0p85v25c' 
+*** End library_loading (cpu=0.00min, real=0.00min, mem=26.5M, fe_cpu=0.27min, fe_real=0.28min, fe_mem=872.4M) ***
+#% Begin Load netlist data ... (date=06/03 16:42:00, mem=908.4M)
+*** Begin netlist parsing (mem=872.4M) ***
+Created 20 new cells from 1 timing libraries.
+Reading netlist ...
+Backslashed names will retain backslash and a trailing blank character.
+Reading verilog netlist 'out_sweep/stream_pipeline_64x64_hier/stream_pipeline.v'
+
+*** Memory Usage v#1 (Current mem = 2725.738M, initial mem = 397.906M) ***
+*** End netlist parsing (cpu=0:00:17.9, real=0:00:18.0, mem=2725.7M) ***
+#% End Load netlist data ... (date=06/03 16:42:18, total cpu=0:00:18.0, real=0:00:18.0, peak res=2757.7M, current mem=2755.8M)
+Set top cell to stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1.
+Hooked 20 DB cells to tlib cells.
+Starting recursive module instantiation check.
+No recursion found.
+Building hierarchical netlist for Cell stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1 ...
+*** Netlist is unique.
+** info: there are 4453 modules.
+** info: there are 2696547 stdCell insts.
+
+*** Memory Usage v#1 (Current mem = 4350.410M, initial mem = 397.906M) ***
+Horizontal Layer M1 offset = 0 (derived)
+Vertical Layer M2 offset = 76 (guessed)
+Suggestion: specify LAYER OFFSET in LEF file
+Reason: hard to extract LAYER OFFSET from standard cells
+Start create_tracks
+Generated pitch 0.38 in M9 is different from 2.432 defined in technology file in preferred direction.
+Generated pitch 0.152 in M8 is different from 1.216 defined in technology file in preferred direction.
+Generated pitch 0.152 in M7 is different from 1.216 defined in technology file in preferred direction.
+Generated pitch 0.152 in M6 is different from 0.608 defined in technology file in preferred direction.
+Generated pitch 0.152 in M5 is different from 0.608 defined in technology file in preferred direction.
+Generated pitch 0.152 in M4 is different from 0.304 defined in technology file in preferred direction.
+Generated pitch 0.152 in M3 is different from 0.304 defined in technology file in preferred direction.
+Extraction setup Started 
+Initializing multi-corner RC extraction with 1 active RC Corners ...
+**WARN: (IMPEXT-2773):	The via resistance between layers M0 and M1 could not be determined from the LEF technology file because the via resistance specification is missing. A default of 4 Ohms will be used as via resistance between these layers.
+Type 'man IMPEXT-2773' for more detail.
+**WARN: (IMPEXT-2776):	The via resistance between layers M1 and M2 is not defined in the capacitance table file. The via resistance of 1.6 Ohms defined in the LEF technology file will be used as via resistance between these layers.
+Type 'man IMPEXT-2776' for more detail.
+**WARN: (IMPEXT-2776):	The via resistance between layers M2 and M3 is not defined in the capacitance table file. The via resistance of 1.6 Ohms defined in the LEF technology file will be used as via resistance between these layers.
+Type 'man IMPEXT-2776' for more detail.
+**WARN: (IMPEXT-2776):	The via resistance between layers M3 and M4 is not defined in the capacitance table file. The via resistance of 1.6 Ohms defined in the LEF technology file will be used as via resistance between these layers.
+Type 'man IMPEXT-2776' for more detail.
+**WARN: (IMPEXT-2776):	The via resistance between layers M4 and M5 is not defined in the capacitance table file. The via resistance of 1.6 Ohms defined in the LEF technology file will be used as via resistance between these layers.
+Type 'man IMPEXT-2776' for more detail.
+**WARN: (IMPEXT-2776):	The via resistance between layers M5 and M6 is not defined in the capacitance table file. The via resistance of 1.6 Ohms defined in the LEF technology file will be used as via resistance between these layers.
+Type 'man IMPEXT-2776' for more detail.
+**WARN: (IMPEXT-2776):	The via resistance between layers M6 and M7 is not defined in the capacitance table file. The via resistance of 1.6 Ohms defined in the LEF technology file will be used as via resistance between these layers.
+Type 'man IMPEXT-2776' for more detail.
+**WARN: (IMPEXT-2776):	The via resistance between layers M7 and M8 is not defined in the capacitance table file. The via resistance of 1.6 Ohms defined in the LEF technology file will be used as via resistance between these layers.
+Type 'man IMPEXT-2776' for more detail.
+**WARN: (IMPEXT-2776):	The via resistance between layers M8 and M9 is not defined in the capacitance table file. The via resistance of 1.6 Ohms defined in the LEF technology file will be used as via resistance between these layers.
+Type 'man IMPEXT-2776' for more detail.
+**WARN: (IMPEXT-2776):	The via resistance between layers M9 and M10 is not defined in the capacitance table file. The via resistance of 1.6 Ohms defined in the LEF technology file will be used as via resistance between these layers.
+Type 'man IMPEXT-2776' for more detail.
+**WARN: (IMPEXT-2766):	The sheet resistance for layer M1 is not defined in the cap table. Therefore, the LEF value 0.076 will be used instead. To avoid this message, update the relevant cap table to include the sheet resistance for the specified layer and read it back in.
+**WARN: (IMPEXT-2766):	The sheet resistance for layer M2 is not defined in the cap table. Therefore, the LEF value 0.076 will be used instead. To avoid this message, update the relevant cap table to include the sheet resistance for the specified layer and read it back in.
+**WARN: (IMPEXT-2766):	The sheet resistance for layer M3 is not defined in the cap table. Therefore, the LEF value 0.076 will be used instead. To avoid this message, update the relevant cap table to include the sheet resistance for the specified layer and read it back in.
+**WARN: (IMPEXT-2766):	The sheet resistance for layer M4 is not defined in the cap table. Therefore, the LEF value 0.076 will be used instead. To avoid this message, update the relevant cap table to include the sheet resistance for the specified layer and read it back in.
+**WARN: (IMPEXT-2766):	The sheet resistance for layer M5 is not defined in the cap table. Therefore, the LEF value 0.044 will be used instead. To avoid this message, update the relevant cap table to include the sheet resistance for the specified layer and read it back in.
+**WARN: (IMPEXT-2766):	The sheet resistance for layer M6 is not defined in the cap table. Therefore, the LEF value 0.076 will be used instead. To avoid this message, update the relevant cap table to include the sheet resistance for the specified layer and read it back in.
+**WARN: (IMPEXT-2766):	The sheet resistance for layer M7 is not defined in the cap table. Therefore, the LEF value 0.076 will be used instead. To avoid this message, update the relevant cap table to include the sheet resistance for the specified layer and read it back in.
+**WARN: (IMPEXT-2766):	The sheet resistance for layer M8 is not defined in the cap table. Therefore, the LEF value 0.076 will be used instead. To avoid this message, update the relevant cap table to include the sheet resistance for the specified layer and read it back in.
+**WARN: (IMPEXT-2766):	The sheet resistance for layer M9 is not defined in the cap table. Therefore, the LEF value 0.076 will be used instead. To avoid this message, update the relevant cap table to include the sheet resistance for the specified layer and read it back in.
+**WARN: (IMPEXT-2766):	The sheet resistance for layer M10 is not defined in the cap table. Therefore, the LEF value 0.076 will be used instead. To avoid this message, update the relevant cap table to include the sheet resistance for the specified layer and read it back in.
+Summary of Active RC-Corners : 
+ 
+ Analysis View: av_typ
+    RC-Corner Name        : rc_typ
+    RC-Corner Index       : 0
+    RC-Corner Temperature : 25 Celsius
+    RC-Corner Cap Table   : ''
+    RC-Corner PreRoute Res Factor         : 1
+    RC-Corner PreRoute Cap Factor         : 1
+    RC-Corner PostRoute Res Factor        : 1 {1 1 1}
+    RC-Corner PostRoute Cap Factor        : 1 {1 1 1}
+    RC-Corner PostRoute XCap Factor       : 1 {1 1 1}
+    RC-Corner PreRoute Clock Res Factor   : 1	[Derived from Cap Table]
+    RC-Corner PreRoute Clock Cap Factor   : 1	[Derived from Cap Table]
+    RC-Corner PostRoute Clock Cap Factor  : 1 {1 1 1} 	[Derived from postRoute_cap (effortLevel low)]
+    RC-Corner PostRoute Clock Res Factor  : 1 {1 1 1} 	[Derived from postRoute_res (effortLevel low)]
+    RC-Corner PostRoute Clock coupling capacitance Factor : 1 {1 1 1} 
+Updating RC grid for preRoute extraction ...
+Initializing multi-corner resistance tables ...
+*Info: initialize multi-corner CTS.
+Reading timing constraints file 'out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc' ...
+Current (total cpu=0:00:52.8, real=0:00:47.0, peak res=4689.1M, current mem=4689.1M)
+**WARN: (TCLCMD-1461):	Skipped unsupported command: set_units (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 9).
+
+**WARN: (TCLCMD-1461):	Skipped unsupported command: set_units (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 10).
+
+stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8397).
+
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8398).
+
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8399).
+
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8400).
+
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8401).
+
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8402).
+
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8403).
+
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8404).
+
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8405).
+
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**WARN: (IMPCTE-290):	Could not locate cell INVX1_RVT in any library for view av_typ.
+Type 'man IMPCTE-290' for more detail.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8406).
+
+**WARN: (EMS-27):	Message (IMPCTE-290) has exceeded the current message display limit of 20.
+To increase the message display limit, refer to the product command reference manual.
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8407).
+
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8408).
+
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8409).
+
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8410).
+
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8411).
+
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8412).
+
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8413).
+
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8414).
+
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8415).
+
+**WARN: (IMPCTE-288):	Could not locate the library saed32rvt_tt0p85v25c.
+**ERROR: (TCLCMD-221):	set_driving_cell: Could not find driving cell 'INVX1_RVT' in any library (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8416).
+
+**WARN: (EMS-27):	Message (IMPCTE-288) has exceeded the current message display limit of 20.
+To increase the message display limit, refer to the product command reference manual.
+Message <TCLCMD-221> has exceeded the message display limit of '20'. Use 'set_message -no_limit -id list_of_msgIDs' to reset the message limit. (File out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc, Line 8417).
+
+INFO (CTE): Reading of timing constraints file out_sweep/stream_pipeline_64x64_hier/stream_pipeline.sdc completed, with 2 Warnings and 20 Errors.
+Ending "Constraint file reading stats" (total cpu=0:00:00.8, real=0:00:01.0, peak res=4752.5M, current mem=4752.5M)
+Current (total cpu=0:00:53.7, real=0:00:48.0, peak res=4752.5M, current mem=4752.5M)
+Total number of combinational cells: 0
+Total number of sequential cells: 0
+Total number of tristate cells: 0
+Total number of level shifter cells: 0
+Total number of power gating cells: 0
+Total number of isolation cells: 0
+Total number of power switch cells: 20
+Total number of pulse generator cells: 0
+Total number of always on buffers: 0
+Total number of retention cells: 0
+List of usable buffers:
+Total number of usable buffers: 0
+List of unusable buffers:
+Total number of unusable buffers: 0
+List of usable inverters:
+Total number of usable inverters: 0
+List of unusable inverters:
+Total number of unusable inverters: 0
+List of identified usable delay cells:
+Total number of identified usable delay cells: 0
+List of identified unusable delay cells:
+Total number of identified unusable delay cells: 0
+No delay cells were detected in the set of buffers. Buffers will be used to fix hold violations.
+**WARN: (IMPOPT-3000):	Buffer footprint is not defined or is an invalid buffer footprint.
+Type 'man IMPOPT-3000' for more detail.
+**WARN: (IMPOPT-3001):	Inverter footprint is not defined or is an invalid inverter footprint.
+Type 'man IMPOPT-3001' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO221X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO21X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO21X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND4X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND3X4_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND3X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND3X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND2X4_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND2X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AND2X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI21X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO22X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO22X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO222X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AO221X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI22X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI222X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI221X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI221X1_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (IMPSYC-2):	Timing information is not defined for cell AOI21X2_RVT; Check the timing library (.lib) file and make sure the timing information exists for the cell and you can run the checkTimingLibrary command to verify if the timing library has complete information after the design is loaded.
+Type 'man IMPSYC-2' for more detail.
+**WARN: (EMS-27):	Message (IMPSYC-2) has exceeded the current message display limit of 20.
+To increase the message display limit, refer to the product command reference manual.
+
+*** Summary of all messages that are not suppressed in this session:
+Severity  ID               Count  Summary                                  
+ERROR     IMPLF-285            1  The layer '%s' does not have SPACING or ...
+WARNING   IMPLF-105            4  The layer '%s' specified in SAMENET spac...
+WARNING   IMPEXT-2766         10  The sheet resistance for layer %s is not...
+WARNING   IMPEXT-2773          1  The via resistance between layers %s and...
+WARNING   IMPEXT-2776          9  The via resistance between layers %s and...
+WARNING   IMPSYC-2            96  Timing information is not defined for ce...
+WARNING   IMPPP-543           42  Inconsistent cut size definition in VIAR...
+WARNING   IMPOPT-3000          1  Buffer footprint is not defined or is an...
+WARNING   IMPOPT-3001          1  Inverter footprint is not defined or is ...
+WARNING   IMPCTE-288        4158  Could not locate the library %s.         
+WARNING   IMPCTE-290        8316  Could not locate cell %s in any library ...
+ERROR     TCLCMD-221        4158  %s: Could not find driving cell '%s' in ...
+WARNING   TCLCMD-1461          2  Skipped unsupported command: %s          
+WARNING   TECHLIB-1161         3  The library level attribute %s on line %...
+*** Message Summary: 12643 warning(s), 4159 error(s)
+
+
+Usage: set_proto_mode [-help] [-reset] [-allow_model_with_io {true|false}]
+                      [-allow_powerdomain_in_flexmodel {true|false}]
+                      [-create_dir <dir>]
+                      [-create_high_fanout_psPM {true|false}]
+                      [-create_lib <libName>] [-create_metal_fill_NDR <double>]
+                      [-create_metal_fill_nominal <double>]
+                      [-create_multi_corner_psPM {true|false}]
+                      [-create_NDR_psPM_model {auto|on|off}]
+                      [-create_no_flex_filler {true|false}]
+                      [-create_partition_as_flexmodel {true|false}]
+                      [-create_pipeline_flop {*AB*}]
+                      [-create_powerdomain_psPM {true|false}]
+                      [-identify_algorithm {auto|module_based|instgroup_based}]
+                      [-identify_estimated_flexmodel_number <number>]
+                      [-identify_exclude_module {<mod1> <mod2> ...}]
+                      [-identify_exclude_module_and_parent {<mod1> <mod2> ...}]
+                      [-identify_exclude_module_tree {<mod1> <mod2> ...}]
+                      [-identify_honor_objects_hierarchy {object_list}]
+                      [-identify_max_inst <maxInsts>]
+                      [-identify_min_inst <minInsts>]
+                      [-keep_inst_file_only {true|false}]
+                      [-keep_instance_defined_in_sdc {true|false}]
+                      [-keep_slack_improve_NDR {true|false}]
+                      [-max_report_NDR_net <double>]
+                      [-place_effort {fp|default|center}]
+                      [-route_net_NDR <rule_name>]
+                      [-timing_net_delay_model {best_layer_no_detour|best_layer_blockage_aware|use_actual_wire}]
+                      [-timing_ps_per_micron {M<num1>[:M<num2>] <psPerMicron> ...}, {MetalLayerName1[:MetalLayerName2] <psPerMicron> ...} {1[:2] <psPerMicron> ...}, or {view {M<num1>[:M<num2>] <psPerMicron> ...} ...}, {view {MetalLayerName1[:MetalLayerName2] <psPerMicron> ...} ...} {view {1[:2] <psPerMicron> ...} ...}]
+                      [-verbose {true|false}]
+
+**ERROR: (IMPTCM-48):	"-default" is not a legal option for command "set_proto_mode". Either the current option or an option prior to it is not specified correctly.
+WARNING: set_proto_mode keep_design failed () -- continuing with default.
+Adjusting coreMargin left    to finFet grid (PlacementGrid) : after adjusting :10.032
+Adjusting coreMargin bottom  to finFet grid (PlacementGrid) : after adjusting :10.032
+Adjusting coreMargin right   to finFet grid (PlacementGrid) : after adjusting :10.032
+Adjusting coreMargin top     to finFet grid (PlacementGrid) : after adjusting :10.032
+Adjusting core size to PlacementGrid : width :4095.03 height : 4093.06
+Horizontal Layer M1 offset = 0 (derived)
+Vertical Layer M2 offset = 76 (guessed)
+Suggestion: specify LAYER OFFSET in LEF file
+Reason: hard to extract LAYER OFFSET from standard cells
+Start create_tracks
+Generated pitch 0.38 in M9 is different from 2.432 defined in technology file in preferred direction.
+Generated pitch 0.152 in M8 is different from 1.216 defined in technology file in preferred direction.
+Generated pitch 0.152 in M7 is different from 1.216 defined in technology file in preferred direction.
+Generated pitch 0.152 in M6 is different from 0.608 defined in technology file in preferred direction.
+Generated pitch 0.152 in M5 is different from 0.608 defined in technology file in preferred direction.
+Generated pitch 0.152 in M4 is different from 0.304 defined in technology file in preferred direction.
+Generated pitch 0.152 in M3 is different from 0.304 defined in technology file in preferred direction.
+**WARN: (IMPFP-325):	Floorplan of the design is resized. All current floorplan objects are automatically derived based on specified new floorplan. This may change blocks, fixed standard cells, existing routes and blockages.
+#% Begin save design ... (date=06/03 16:42:37, mem=4760.8M)
+% Begin Save ccopt configuration ... (date=06/03 16:42:37, mem=4760.9M)
+% End Save ccopt configuration ... (date=06/03 16:42:37, total cpu=0:00:00.1, real=0:00:00.0, peak res=4762.4M, current mem=4762.4M)
+% Begin Save netlist data ... (date=06/03 16:42:37, mem=4762.5M)
+Writing Binary DB to out_innovus/stream_pipeline_64x64_hier/floorplan.enc.dat/stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1.v.bin in single-threaded mode...
+% End Save netlist data ... (date=06/03 16:42:41, total cpu=0:00:03.5, real=0:00:04.0, peak res=4765.0M, current mem=4762.1M)
+Saving symbol-table file ...
+2026/06/03 16:42:41 System is not a supported distribution
+2026/06/03 16:42:41 An error occurred. We don't recognize OS 
+2026/06/03 16:42:41 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:42:41 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+Saving congestion map file out_innovus/stream_pipeline_64x64_hier/floorplan.enc.dat/stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1.route.congmap.gz ...
+2026/06/03 16:42:44 System is not a supported distribution
+2026/06/03 16:42:44 An error occurred. We don't recognize OS 
+2026/06/03 16:42:44 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:42:44 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+% Begin Save AAE data ... (date=06/03 16:42:44, mem=4810.9M)
+Saving AAE Data ...
+% End Save AAE data ... (date=06/03 16:42:44, total cpu=0:00:00.1, real=0:00:00.0, peak res=4810.9M, current mem=4810.9M)
+Saving preference file out_innovus/stream_pipeline_64x64_hier/floorplan.enc.dat/gui.pref.tcl ...
+Saving mode setting ...
+Saving global file ...
+2026/06/03 16:42:49 System is not a supported distribution
+2026/06/03 16:42:49 An error occurred. We don't recognize OS 
+2026/06/03 16:42:49 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:42:49 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+% Begin Save floorplan data ... (date=06/03 16:42:49, mem=4840.8M)
+Saving floorplan file ...
+2026/06/03 16:42:49 System is not a supported distribution
+2026/06/03 16:42:49 An error occurred. We don't recognize OS 
+2026/06/03 16:42:49 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:42:49 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+% End Save floorplan data ... (date=06/03 16:42:52, total cpu=0:00:02.6, real=0:00:03.0, peak res=4840.8M, current mem=4840.8M)
+Saving Drc markers ...
+... No Drc file written since there is no markers found.
+% Begin Save placement data ... (date=06/03 16:42:52, mem=4841.3M)
+** Saving stdCellPlacement_binary (version# 2) ...
+Save Adaptive View Pruning View Names to Binary file
+% End Save placement data ... (date=06/03 16:42:53, total cpu=0:00:00.5, real=0:00:01.0, peak res=4841.4M, current mem=4841.4M)
+% Begin Save routing data ... (date=06/03 16:42:53, mem=4841.4M)
+Saving route file ...
+2026/06/03 16:42:53 System is not a supported distribution
+2026/06/03 16:42:53 An error occurred. We don't recognize OS 
+2026/06/03 16:42:53 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:42:53 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+*** Completed saveRoute (cpu=0:00:04.0 real=0:00:04.0 mem=4836.5M) ***
+% End Save routing data ... (date=06/03 16:42:57, total cpu=0:00:04.1, real=0:00:04.0, peak res=4856.5M, current mem=4856.5M)
+Saving property file out_innovus/stream_pipeline_64x64_hier/floorplan.enc.dat/stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1.prop
+*** Completed saveProperty (cpu=0:00:00.3 real=0:00:01.0 mem=4839.5M) ***
+% Begin Save power constraints data ... (date=06/03 16:42:58, mem=4858.0M)
+% End Save power constraints data ... (date=06/03 16:42:58, total cpu=0:00:00.2, real=0:00:00.0, peak res=4858.2M, current mem=4858.2M)
+Generated self-contained design floorplan.enc.dat
+#% End save design ... (date=06/03 16:43:02, total cpu=0:00:19.8, real=0:00:25.0, peak res=4870.0M, current mem=4821.3M)
+*** Message Summary: 0 warning(s), 0 error(s)
+
+>>> floorplan done
+#% Begin addRing (date=06/03 16:43:18, mem=4821.8M)
+
+Loading cell geometries (cpu: 0:00:00.1, real: 0:00:00.0, peak mem: 4858.6M)
+Ring generation is complete.
+vias are now being generated.
+addRing created 8 wires.
+ViaGen created 8 vias, deleted 0 via to avoid violation.
++--------+----------------+----------------+
+|  Layer |     Created    |     Deleted    |
++--------+----------------+----------------+
+|   M8   |        4       |       NA       |
+|  VIA8  |        8       |        0       |
+|   M9   |        4       |       NA       |
++--------+----------------+----------------+
+innovus 1> #% End addRing (date=06/03 16:43:18, total cpu=0:00:00.2, real=0:00:01.0, peak res=4824.8M, current mem=4824.8M)
+#% Begin addStripe (date=06/03 16:43:19, mem=4824.8M)
+
+Initialize fgc environment(mem: 4858.6M) ...  fail and won't use fgc to check drc(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Loading cell geometries (cpu: 0:00:00.1, real: 0:00:00.0, peak mem: 4858.6M)
+Loading wires (cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Loading via instances (cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Starting stripe generation ...
+Non-Default Mode Option Settings :
+  NONE
+**WARN: (IMPPP-354):	The power planner did not generate the vertical stripe at 10.432000 6.532000 10.432000 4103.587891 with width 0.800000 due to one of these reasons: the stripe would merge with rings, the stripe could not connect to any legal target, or the stripe would break the design rule.
+Type 'man IMPPP-354' for more detail.
+Completing 10% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 20% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 30% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 40% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 50% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 60% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 70% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 80% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 90% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 100% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Stripe generation is complete.
+vias are now being generated.
+addStripe created 1023 wires.
+ViaGen created 2046 vias, deleted 0 via to avoid violation.
++--------+----------------+----------------+
+|  Layer |     Created    |     Deleted    |
++--------+----------------+----------------+
+|   M8   |      1023      |       NA       |
+|  VIA8  |      2046      |        0       |
++--------+----------------+----------------+
+innovus 1> #% End addStripe (date=06/03 16:43:19, total cpu=0:00:00.6, real=0:00:00.0, peak res=4826.7M, current mem=4826.7M)
+#% Begin addStripe (date=06/03 16:43:19, mem=4826.7M)
+
+Initialize fgc environment(mem: 4858.6M) ...  fail and won't use fgc to check drc(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Loading cell geometries (cpu: 0:00:00.1, real: 0:00:00.0, peak mem: 4858.6M)
+Loading wires (cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Loading via instances (cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Starting stripe generation ...
+Non-Default Mode Option Settings :
+  NONE
+Completing 10% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 20% stripe generation(cpu: 0:00:00.0, real: 0:00:01.0, peak mem: 4858.6M)
+Completing 30% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 40% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 50% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 60% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 70% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 80% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 90% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Completing 100% stripe generation(cpu: 0:00:00.0, real: 0:00:00.0, peak mem: 4858.6M)
+Stripe generation is complete.
+vias are now being generated.
+addStripe created 1024 wires.
+ViaGen created 525824 vias, deleted 0 via to avoid violation.
++--------+----------------+----------------+
+|  Layer |     Created    |     Deleted    |
++--------+----------------+----------------+
+|  VIA8  |     525824     |        0       |
+|   M9   |      1024      |       NA       |
++--------+----------------+----------------+
+innovus 1> #% End addStripe (date=06/03 16:43:27, total cpu=0:00:07.5, real=0:00:08.0, peak res=4827.1M, current mem=4827.1M)
+#% Begin sroute (date=06/03 16:43:27, mem=4827.1M)
+*** Begin SPECIAL ROUTE on Wed Jun  3 16:43:27 2026 ***
+SPECIAL ROUTE ran on directory: /home/dboss/common/Documents/ECE510/ECE510/project/RTL
+SPECIAL ROUTE ran on machine: phobos.ece.pdx.edu (Linux 5.14.0-611.54.1.el9_7.x86_64 Xeon 2.50Ghz)
+
+Begin option processing ...
+srouteConnectPowerBump set to false
+routeSelectNet set to "VDD VSS"
+routeSpecial set to true
+srouteBottomLayerLimit set to 1
+srouteConnectBlockPin set to false
+srouteConnectConverterPin set to false
+srouteConnectPadPin set to false
+srouteFollowCorePinEnd set to 3
+srouteFollowPadPin set to false
+srouteJogControl set to "preferWithChanges differentLayer"
+sroutePadPinAllPorts set to true
+sroutePreserveExistingRoutes set to true
+srouteRoutePowerBarPortOnBothDir set to true
+srouteTopLayerLimit set to 9
+End option processing: cpu: 0:00:00, real: 0:00:00, peak: 1944.00 megs.
+
+Reading DB technology information...
+Finished reading DB technology information.
+Reading floorplan and netlist information...
+**WARN: (IMPSR-1478):	Large amount of pre-routed wires. Long running time might be introduced.
+Finished reading floorplan and netlist information.
+Read in 21 layers, 10 routing layers, 1 overlap layer
+Read in 350 macros, 96 used
+Read in 96 components
+  96 core components: 96 unplaced, 0 placed, 0 fixed
+Read in 6269 logical pins
+Read in 5239 nets
+Read in 2 special nets, 2 routed
+Read in 192 terminals
+2 nets selected.
+
+Begin power routing ...
+**WARN: (IMPSR-554):	The specified top target layer is beyond top routing layer. Set top target layer to 9.
+CPU time for VDD FollowPin 78 seconds
+CPU time for VSS FollowPin 84 seconds
+  Number of Stripe ports routed: 0
+  Number of Core ports routed: 4898
+  Number of Followpin connections: 2449
+End power routing: cpu: 0:02:53, real: 0:02:53, peak: 4036.00 megs.
+
+
+
+ Begin updating DB with routing results ...
+ Updating DB with 0 via definition ...Extracting standard cell pins and blockage ...... 
+Pin and blockage extraction finished
+
+sroute created 7347 wires.
+ViaGen created 8802927 vias, deleted 0 via to avoid violation.
++--------+----------------+----------------+
+|  Layer |     Created    |     Deleted    |
++--------+----------------+----------------+
+|   M1   |      7347      |       NA       |
+|  VIA1  |     1257561    |        0       |
+|  VIA2  |     1257561    |        0       |
+|  VIA3  |     1257561    |        0       |
+|  VIA4  |     1257561    |        0       |
+|  VIA5  |     1257561    |        0       |
+|  VIA6  |     1257561    |        0       |
+|  VIA7  |     1257561    |        0       |
++--------+----------------+----------------+
+innovus 1> #% End sroute (date=06/03 16:46:25, total cpu=0:02:58, real=0:02:58, peak res=6868.5M, current mem=5236.1M)
+#% Begin save design ... (date=06/03 16:46:26, mem=5236.1M)
+% Begin Save ccopt configuration ... (date=06/03 16:46:26, mem=5236.1M)
+% End Save ccopt configuration ... (date=06/03 16:46:26, total cpu=0:00:00.1, real=0:00:00.0, peak res=5236.3M, current mem=5236.3M)
+% Begin Save netlist data ... (date=06/03 16:46:26, mem=5236.3M)
+Writing Binary DB to out_innovus/stream_pipeline_64x64_hier/pdn.enc.dat/stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1.v.bin in single-threaded mode...
+% End Save netlist data ... (date=06/03 16:46:29, total cpu=0:00:03.5, real=0:00:03.0, peak res=5237.1M, current mem=5237.1M)
+Saving symbol-table file ...
+2026/06/03 16:46:30 System is not a supported distribution
+2026/06/03 16:46:30 An error occurred. We don't recognize OS 
+2026/06/03 16:46:30 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:46:30 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+Saving congestion map file out_innovus/stream_pipeline_64x64_hier/pdn.enc.dat/stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1.route.congmap.gz ...
+2026/06/03 16:46:33 System is not a supported distribution
+2026/06/03 16:46:33 An error occurred. We don't recognize OS 
+2026/06/03 16:46:33 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:46:33 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+% Begin Save AAE data ... (date=06/03 16:46:33, mem=5283.2M)
+Saving AAE Data ...
+% End Save AAE data ... (date=06/03 16:46:33, total cpu=0:00:00.1, real=0:00:00.0, peak res=5283.2M, current mem=5283.2M)
+Saving preference file out_innovus/stream_pipeline_64x64_hier/pdn.enc.dat/gui.pref.tcl ...
+Saving mode setting ...
+Saving global file ...
+2026/06/03 16:46:38 System is not a supported distribution
+2026/06/03 16:46:38 An error occurred. We don't recognize OS 
+2026/06/03 16:46:38 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:46:38 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+% Begin Save floorplan data ... (date=06/03 16:46:38, mem=5283.6M)
+Saving floorplan file ...
+2026/06/03 16:46:38 System is not a supported distribution
+2026/06/03 16:46:38 An error occurred. We don't recognize OS 
+2026/06/03 16:46:38 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:46:38 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+% End Save floorplan data ... (date=06/03 16:46:43, total cpu=0:00:04.6, real=0:00:05.0, peak res=5288.5M, current mem=5288.5M)
+Saving PG file out_innovus/stream_pipeline_64x64_hier/pdn.enc.dat/stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1.pg.gz, version#2, (Created by Innovus v21.14-s109_1 on Wed Jun  3 16:46:43 2026)
+2026/06/03 16:46:43 System is not a supported distribution
+2026/06/03 16:46:43 An error occurred. We don't recognize OS 
+2026/06/03 16:46:43 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:46:43 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+*** Completed savePGFile (cpu=0:00:01.1 real=0:00:01.0 mem=5792.5M) ***
+Saving Drc markers ...
+... No Drc file written since there is no markers found.
+% Begin Save placement data ... (date=06/03 16:46:44, mem=5294.0M)
+** Saving stdCellPlacement_binary (version# 2) ...
+Save Adaptive View Pruning View Names to Binary file
+% End Save placement data ... (date=06/03 16:46:45, total cpu=0:00:00.4, real=0:00:01.0, peak res=5296.7M, current mem=5294.0M)
+% Begin Save routing data ... (date=06/03 16:46:45, mem=5294.0M)
+Saving route file ...
+2026/06/03 16:46:45 System is not a supported distribution
+2026/06/03 16:46:45 An error occurred. We don't recognize OS 
+2026/06/03 16:46:45 WARNING This OS does not appear to be a Cadence supported Linux configuration.
+2026/06/03 16:46:45 For more info, please run CheckSysConf in <cdsRoot/tools.lnx86/bin/checkSysConf <productId>
+*** Completed saveRoute (cpu=0:00:03.0 real=0:00:03.0 mem=5689.5M) ***
+% End Save routing data ... (date=06/03 16:46:48, total cpu=0:00:03.1, real=0:00:03.0, peak res=5294.0M, current mem=5288.1M)
+Saving property file out_innovus/stream_pipeline_64x64_hier/pdn.enc.dat/stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1.prop
+*** Completed saveProperty (cpu=0:00:00.3 real=0:00:00.0 mem=5692.5M) ***
+% Begin Save power constraints data ... (date=06/03 16:46:49, mem=5288.1M)
+% End Save power constraints data ... (date=06/03 16:46:49, total cpu=0:00:00.2, real=0:00:00.0, peak res=5288.1M, current mem=5288.1M)
+Generated self-contained design pdn.enc.dat
+#% End save design ... (date=06/03 16:46:53, total cpu=0:00:21.8, real=0:00:27.0, peak res=5296.7M, current mem=5246.6M)
+*** Message Summary: 0 warning(s), 0 error(s)
+
+>>> PDN done
+*** placeDesign #1 [begin] : totSession cpu/real = 0:05:06.6/0:05:11.2 (1.0), mem = 5689.5M
+#ERROR (NRDB-416) spacing for LAYER MRDL is not defined. It is required and need to be defined before continuing.
+*** Starting placeDesign default flow ***
+*** Start deleteBufferTree ***
+Info: Detect buffers to remove automatically.
+Analyzing netlist ...
+Updating netlist
+
+*summary: 0 instances (buffers/inverters) removed
+*** Finish deleteBufferTree (0:00:59.3) ***
+**INFO: Enable pre-place timing setting for timing analysis
+Set Using Default Delay Limit as 101.
+**WARN: (IMPDC-1629):	The default delay limit was set to 101. This is less than the default of 1000 and may result in inaccurate delay calculation for nets with a fanout higher than the setting.  If needed, the default delay limit may be adjusted by running the command 'set delaycal_use_default_delay_limit'.
+Set Default Net Delay as 0 ps.
+Set Default Net Load as 0 pF. 
+Set Default Input Pin Transition as 1 ps.
+**INFO: Analyzing IO path groups for slack adjustment
+AAE_INFO: opIsDesignInPostRouteState() is 0
+AAE DB initialization (MEM=6839.77 CPU=0:00:01.7 REAL=0:00:02.0) 
+#################################################################################
+# Design Stage: PreRoute
+# Design Name: stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1
+# Design Mode: 90nm
+# Analysis Mode: MMMC Non-OCV 
+# Parasitics Mode: No SPEF/RCDB 
+# Signoff Settings: SI Off 
+#################################################################################
+Calculate delays in Single mode...
+Start delay calculation (fullDC) (1 T). (MEM=7056.85)
+siFlow : Timing analysis mode is single, using late cdB files
