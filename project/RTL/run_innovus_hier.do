@@ -98,6 +98,20 @@ set LIB_TIMING_PATH    [expr {[string index $LIB_TIMING_FILE 0] eq "/" ? $LIB_TI
 set CLK_PER    [expr {[info exists env(CLK_PER)]    ? $env(CLK_PER)    : 1.333}]
 set DIE_UTIL   [expr {[info exists env(DIE_UTIL)]   ? $env(DIE_UTIL)   : 0.60}]
 
+# Resume from a checkpoint instead of restarting from init_design.
+# Pass RESUME_FROM=pdn to skip init/floorplan/PDN and start at place_design.
+# Pass RESUME_FROM=place to skip up through pre-CTS opt.
+# Pass RESUME_FROM=cts   to skip up through CTS.
+# Pass RESUME_FROM=route to skip up through routing (i.e. just rerun final opt
+#                                                  + reports).
+# Default = "none" (full flow from init_design).
+set RESUME_FROM [expr {[info exists env(RESUME_FROM)] ? $env(RESUME_FROM) : "none"}]
+
+# Place effort (low / medium / high). low cuts placement runtime ~3x at a
+# modest QoR cost; good for a first-pass closure check. medium is the
+# Innovus default.
+set PLACE_EFFORT [expr {[info exists env(PLACE_EFFORT)] ? $env(PLACE_EFFORT) : "medium"}]
+
 set NETLIST    "out_sweep/${TARGET}/${NETLIST_NAME}.v"
 set SDC        "out_sweep/${TARGET}/${NETLIST_NAME}.sdc"
 set OUT_DIR    "out_innovus/${TARGET}"
@@ -115,6 +129,8 @@ puts "  techLEF : ${TECH_LEF_PATH}"
 puts "  cellLEF : ${LEF_FILE_PATH}"
 puts "  clock   : ${CLK_PER} ns"
 puts "  util    : $DIE_UTIL"
+puts "  resume  : $RESUME_FROM"
+puts "  pleffort: $PLACE_EFFORT"
 puts "=========================================="
 
 # -----------------------------------------------------------------------------
@@ -151,23 +167,52 @@ close $fh
 puts ">>> Wrote MMMC setup to $MMMC_FILE"
 
 # -----------------------------------------------------------------------------
-# 3. Read netlist + LEF, link the design
+# 3. Init / read netlist / load checkpoint
+#
+# Default: run init_design from scratch (LEF + Verilog + MMMC).
+#
+# Resume modes (set via RESUME_FROM env var, see top of script):
+#   pdn    -> skip init/floorplan/PDN; restoreDesign from pdn.enc.dat,
+#             jump straight to placement
+#   place  -> restoreDesign from place.enc.dat, jump to CTS
+#   cts    -> restoreDesign from cts.enc.dat, jump to routing
+#   route  -> restoreDesign from route.enc.dat, jump to final opt/reports
 # -----------------------------------------------------------------------------
-# Tech LEF MUST come first so 'M1', 'VIA12', etc. are defined before any
-# cell macro references them. Cell LEF second.
-set init_lef_file       [list \
-    "${TECH_LEF_PATH}" \
-    "${LEF_FILE_PATH}" \
-]
-set init_verilog        $NETLIST
-set init_top_cell       $TOP
-set init_design_netlisttype "Verilog"
-set init_design_settop  1
-set init_pwr_net        VDD
-set init_gnd_net        VSS
-set init_mmmc_file      $MMMC_FILE
+if { $RESUME_FROM eq "none" } {
+    # Full flow from init_design
+    # Tech LEF MUST come first so 'M1', 'VIA12', etc. are defined before any
+    # cell macro references them. Cell LEF second.
+    set init_lef_file       [list \
+        "${TECH_LEF_PATH}" \
+        "${LEF_FILE_PATH}" \
+    ]
+    set init_verilog        $NETLIST
+    set init_top_cell       $TOP
+    set init_design_netlisttype "Verilog"
+    set init_design_settop  1
+    set init_pwr_net        VDD
+    set init_gnd_net        VSS
+    set init_mmmc_file      $MMMC_FILE
 
-init_design
+    init_design
+} else {
+    # Resume from a saved checkpoint. The checkpoint name maps from
+    # RESUME_FROM:
+    set ckpt_map(pdn)    "${OUT_DIR}/pdn.enc.dat"
+    set ckpt_map(place)  "${OUT_DIR}/place.enc.dat"
+    set ckpt_map(cts)    "${OUT_DIR}/cts.enc.dat"
+    set ckpt_map(route)  "${OUT_DIR}/route.enc.dat"
+    if { ![info exists ckpt_map($RESUME_FROM)] } {
+        error "RESUME_FROM='$RESUME_FROM' invalid (use pdn|place|cts|route)"
+    }
+    set ckpt $ckpt_map($RESUME_FROM)
+    if { ![file exists $ckpt] } {
+        error "Checkpoint $ckpt not found -- run the prior stage first."
+    }
+    puts ">>> Restoring checkpoint $ckpt..."
+    restoreDesign $ckpt $TOP
+    puts ">>> Restore complete."
+}
 
 # -----------------------------------------------------------------------------
 # Post-init fixes for SAED32 PDK quirks
@@ -213,15 +258,17 @@ if { [catch {set_proto_mode -default keep_design} err] } {
 }
 
 # -----------------------------------------------------------------------------
-# 4. Floorplan
+# 4. Floorplan (skipped if resuming from pdn/place/cts/route)
 #    Square aspect, target utilization DIE_UTIL. Innovus auto-sizes the core
 #    from the total cell area in the netlist; the explicit margins (10 um
 #    on each side) leave room for the power ring.
 # -----------------------------------------------------------------------------
-floorPlan -site unit -r 1.0 $DIE_UTIL 10 10 10 10
-saveDesign "${OUT_DIR}/floorplan.enc"
-report_area > "${RPT_DIR}/area_floorplan.rpt"
-puts ">>> floorplan done"
+if { $RESUME_FROM eq "none" } {
+    floorPlan -site unit -r 1.0 $DIE_UTIL 10 10 10 10
+    saveDesign "${OUT_DIR}/floorplan.enc"
+    report_area > "${RPT_DIR}/area_floorplan.rpt"
+    puts ">>> floorplan done"
+}
 
 # -----------------------------------------------------------------------------
 # 5. Power planning -- denser PDN than the per-leaf script.
@@ -229,75 +276,87 @@ puts ">>> floorplan done"
 #    softmax + postproc). Stripe spacing dropped from 20 um (leaf) to
 #    8 um to keep IR-drop under 5%.
 # -----------------------------------------------------------------------------
-globalNetConnect VDD -type pgpin -pin VDD -inst * -override
-globalNetConnect VSS -type pgpin -pin VSS -inst * -override
-globalNetConnect VDD -type tiehi
-globalNetConnect VSS -type tielo
+if { $RESUME_FROM eq "none" } {
+    globalNetConnect VDD -type pgpin -pin VDD -inst * -override
+    globalNetConnect VSS -type pgpin -pin VSS -inst * -override
+    globalNetConnect VDD -type tiehi
+    globalNetConnect VSS -type tielo
 
-# Ring on top two metal layers (M9 top/bottom, M8 left/right)
-addRing -nets {VDD VSS} -type core_rings \
-        -follow core -layer {top M9 bottom M9 left M8 right M8} \
-        -width 3.0 -spacing 1.0 -offset 0.5
+    # Ring on top two metal layers (M9 top/bottom, M8 left/right)
+    addRing -nets {VDD VSS} -type core_rings \
+            -follow core -layer {top M9 bottom M9 left M8 right M8} \
+            -width 3.0 -spacing 1.0 -offset 0.5
 
-# Denser stripes (8 um pitch vs 20 um in the leaf script)
-addStripe -nets {VDD VSS} -layer M8 -direction vertical \
-          -width 0.8 -spacing 2.0 -set_to_set_distance 8 \
-          -start_from left -switch_layer_over_obs 1
-addStripe -nets {VDD VSS} -layer M9 -direction horizontal \
-          -width 0.8 -spacing 2.0 -set_to_set_distance 8 \
-          -start_from bottom -switch_layer_over_obs 1
+    # Denser stripes (8 um pitch vs 20 um in the leaf script)
+    addStripe -nets {VDD VSS} -layer M8 -direction vertical \
+              -width 0.8 -spacing 2.0 -set_to_set_distance 8 \
+              -start_from left -switch_layer_over_obs 1
+    addStripe -nets {VDD VSS} -layer M9 -direction horizontal \
+              -width 0.8 -spacing 2.0 -set_to_set_distance 8 \
+              -start_from bottom -switch_layer_over_obs 1
 
-# M1 power rails (follow standard-cell rows)
-sroute -nets {VDD VSS} -allowJogging 1 -allowLayerChange 1 \
-       -connect {corePin floatingStripe} -layerChangeRange {M1 M9}
+    # M1 power rails (follow standard-cell rows)
+    sroute -nets {VDD VSS} -allowJogging 1 -allowLayerChange 1 \
+           -connect {corePin floatingStripe} -layerChangeRange {M1 M9}
 
-saveDesign "${OUT_DIR}/pdn.enc"
-puts ">>> PDN done"
+    saveDesign "${OUT_DIR}/pdn.enc"
+    puts ">>> PDN done"
+}
 
 # -----------------------------------------------------------------------------
 # 6. Placement
 #    -fp false -> don't auto-re-floorplan; honor the one we just built.
 #    Pre-CTS opt with -drv only -- hold violations are addressed post-CTS.
+#
+# Skipped if resuming from place/cts/route checkpoint.
 # -----------------------------------------------------------------------------
-setPlaceMode -fp false
-place_design
+if { $RESUME_FROM eq "none" || $RESUME_FROM eq "pdn" } {
+    setPlaceMode -fp false -placeEffort $PLACE_EFFORT
+    puts ">>> place_design (effort=$PLACE_EFFORT)..."
+    place_design
 
 opt_design -pre_cts -drv
 report_timing -max_paths 10 > "${RPT_DIR}/timing_post_place.rpt"
-report_area                 > "${RPT_DIR}/area_post_place.rpt"
-saveDesign "${OUT_DIR}/place.enc"
-puts ">>> placement done"
+    report_area                 > "${RPT_DIR}/area_post_place.rpt"
+    saveDesign "${OUT_DIR}/place.enc"
+    puts ">>> placement done"
+}
 
 # -----------------------------------------------------------------------------
-# 7. Clock tree synthesis
+# 7. Clock tree synthesis (skipped if resuming from cts/route)
 #    100k+ flop endpoints in stream_pipeline at N=64 -- ccopt_design will
 #    auto-build a multi-level H-tree. Default effort is sufficient; higher
 #    effort levels mainly trade runtime for skew, which is already <50 ps.
 # -----------------------------------------------------------------------------
-create_ccopt_clock_tree_spec
-ccopt_design
+if { $RESUME_FROM eq "none" || $RESUME_FROM eq "pdn"
+                            || $RESUME_FROM eq "place" } {
+    create_ccopt_clock_tree_spec
+    ccopt_design
 
-opt_design -post_cts -drv -hold
-report_timing -max_paths 10        > "${RPT_DIR}/timing_post_cts.rpt"
-report_clock_tree                  > "${RPT_DIR}/clock_tree.rpt"
-saveDesign "${OUT_DIR}/cts.enc"
-puts ">>> CTS done"
+    opt_design -post_cts -drv -hold
+    report_timing -max_paths 10        > "${RPT_DIR}/timing_post_cts.rpt"
+    report_clock_tree                  > "${RPT_DIR}/clock_tree.rpt"
+    saveDesign "${OUT_DIR}/cts.enc"
+    puts ">>> CTS done"
+}
 
 # -----------------------------------------------------------------------------
-# 8. Routing
+# 8. Routing (skipped if resuming from route checkpoint)
 #    Timing-driven + SI-driven match the per-leaf script.
 # -----------------------------------------------------------------------------
-setNanoRouteMode -drouteStartIteration default
-setNanoRouteMode -routeWithTimingDriven true
-setNanoRouteMode -routeWithSiDriven true
-routeDesign
+if { $RESUME_FROM ne "route" } {
+    setNanoRouteMode -drouteStartIteration default
+    setNanoRouteMode -routeWithTimingDriven true
+    setNanoRouteMode -routeWithSiDriven true
+    routeDesign
 
-opt_design -post_route -drv -hold -setup
-report_timing -max_paths 20         > "${RPT_DIR}/timing_post_route.rpt"
-report_power                        > "${RPT_DIR}/power_post_route.rpt"
-report_area                         > "${RPT_DIR}/area_post_route.rpt"
-saveDesign "${OUT_DIR}/route.enc"
-puts ">>> route done"
+    opt_design -post_route -drv -hold -setup
+    report_timing -max_paths 20         > "${RPT_DIR}/timing_post_route.rpt"
+    report_power                        > "${RPT_DIR}/power_post_route.rpt"
+    report_area                         > "${RPT_DIR}/area_post_route.rpt"
+    saveDesign "${OUT_DIR}/route.enc"
+    puts ">>> route done"
+}
 
 # -----------------------------------------------------------------------------
 # 9. Verification (Innovus-internal)
