@@ -169,6 +169,34 @@ set init_mmmc_file      $MMMC_FILE
 
 init_design
 
+# -----------------------------------------------------------------------------
+# Post-init fixes for SAED32 PDK quirks
+# -----------------------------------------------------------------------------
+# (a) Tell Innovus this is a 32nm node + process. Without these, Innovus
+# defaults to "Design Mode: 90nm" (seen in the failed placeDesign log),
+# which messes up default RC modeling, cell-size heuristics, and routing
+# track pitch. Set explicitly before placeDesign starts.
+setDesignMode -process 32 -node 32
+puts ">>> design mode: process=32 node=32"
+
+# (b) The SAED32 newtech.lef defines an MRDL (Metal Re-Distribution Layer
+# for chip-top bumps) but has no SPACING / SPACINGTABLE rule for it. As a
+# init_design warning this is fine; placeDesign promotes it to a fatal
+# NRDB-416. Std-cell PnR for stream_pipeline does not need MRDL routing,
+# so add a placeholder spacing rule + drop MRDL from the routing layer
+# set entirely.
+if { [catch {setLayerPreference MRDL -isVisible 0} err] } {
+    puts "WARNING: setLayerPreference MRDL failed ($err) -- continuing."
+}
+if { [catch {set_db design_skip_layer_for_routing MRDL} err] } {
+    puts "WARNING: skip_layer_for_routing MRDL not supported ($err)."
+}
+# Belt-and-suspenders: set a minimal default-rule spacing for MRDL so
+# NRDB-416 stops firing even if the layer is referenced incidentally.
+if { [catch {addLayerSpacing -layer MRDL -spacing 1.0} err] } {
+    puts "WARNING: addLayerSpacing MRDL not supported ($err)."
+}
+
 # Propagate Genus preserve boundaries into Innovus's design hierarchy view
 # so the placer treats mac_pe_piped, softmax_unit_lut, etc. as soft blocks.
 # `set_proto_mode -default keep_design` is the Innovus-equivalent of Genus's
