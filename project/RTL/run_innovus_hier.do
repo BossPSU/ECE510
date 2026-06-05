@@ -97,6 +97,11 @@ set LEF_FILE_PATH      [expr {[string index $LEF_FILE        0] eq "/" ? $LEF_FI
 set LIB_TIMING_PATH    [expr {[string index $LIB_TIMING_FILE 0] eq "/" ? $LIB_TIMING_FILE : "${LIB_PATH}/${LIB_TIMING_FILE}"}]
 set CLK_PER    [expr {[info exists env(CLK_PER)]    ? $env(CLK_PER)    : 1.333}]
 set DIE_UTIL   [expr {[info exists env(DIE_UTIL)]   ? $env(DIE_UTIL)   : 0.60}]
+# CPU count for the placement / route / CTS multi-threaded engines.
+# Without setMultiCpuUsage, Innovus defaults to single-threaded; on this
+# design that turns ~2-4h of placement into 8-16h. Phobos's Innovus
+# license allows up to 8 jobs.
+set NCPU       [expr {[info exists env(NCPU)]       ? $env(NCPU)       : 8}]
 
 # Resume from a checkpoint instead of restarting from init_design.
 # Pass RESUME_FROM=pdn to skip init/floorplan/PDN and start at place_design.
@@ -228,6 +233,22 @@ if { $RESUME_FROM eq "none" } {
 # node target.
 setDesignMode -process 32
 puts ">>> design mode: process=32"
+
+# Enable multi-CPU. Default is single-thread, which makes placement
+# 4-8x slower than it needs to be. setMultiCpuUsage drives every
+# Innovus multi-threaded engine (place, opt, route, CTS).
+if { [catch {setMultiCpuUsage -localCpu $NCPU} err] } {
+    puts "WARNING: setMultiCpuUsage failed ($err) -- single-threaded fallback."
+} else {
+    puts ">>> setMultiCpuUsage -localCpu $NCPU"
+}
+
+# Bump Innovus progress verbosity so multi-hour silent stretches stop
+# being a mystery. Default verbosity 1 prints major stage markers only;
+# 3 adds intermediate placement / route progress lines every minute or so.
+if { [catch {set_db design_io_verbosity high} err] } {
+    puts "WARNING: design_io_verbosity high not supported ($err)."
+}
 
 # (b) The SAED32 newtech.lef defines an MRDL (Metal Re-Distribution Layer
 # for chip-top bumps) but has no SPACING / SPACINGTABLE rule for it. As a
