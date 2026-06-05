@@ -172,12 +172,17 @@ init_design
 # -----------------------------------------------------------------------------
 # Post-init fixes for SAED32 PDK quirks
 # -----------------------------------------------------------------------------
-# (a) Tell Innovus this is a 32nm node + process. Without these, Innovus
+# (a) Tell Innovus this is a 32nm design. Without -process, Innovus
 # defaults to "Design Mode: 90nm" (seen in the failed placeDesign log),
 # which messes up default RC modeling, cell-size heuristics, and routing
-# track pitch. Set explicitly before placeDesign starts.
-setDesignMode -process 32 -node 32
-puts ">>> design mode: process=32 node=32"
+# track pitch.
+#
+# Innovus 21.1's -node flag is enumerated (N22 / N12 / N10 / ... no N32),
+# so we drop -node and rely on -process 32 alone. That sets the RC and
+# heuristic defaults to 32nm-class without picking a specific tape-out
+# node target.
+setDesignMode -process 32
+puts ">>> design mode: process=32"
 
 # (b) The SAED32 newtech.lef defines an MRDL (Metal Re-Distribution Layer
 # for chip-top bumps) but has no SPACING / SPACINGTABLE rule for it. As a
