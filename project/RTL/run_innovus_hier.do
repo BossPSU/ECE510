@@ -112,10 +112,17 @@ set NCPU       [expr {[info exists env(NCPU)]       ? $env(NCPU)       : 8}]
 # Default = "none" (full flow from init_design).
 set RESUME_FROM [expr {[info exists env(RESUME_FROM)] ? $env(RESUME_FROM) : "none"}]
 
-# Place effort (low / medium / high). low cuts placement runtime ~3x at a
-# modest QoR cost; good for a first-pass closure check. medium is the
-# Innovus default.
-set PLACE_EFFORT [expr {[info exists env(PLACE_EFFORT)] ? $env(PLACE_EFFORT) : "medium"}]
+# Flow effort (express / standard / extreme). express cuts placement +
+# CTS + route runtime ~3x at a modest QoR cost; good for a first-pass
+# closure check. standard is the Innovus default. extreme is for
+# sign-off.
+#
+# Innovus 21.1 implements this via setDesignMode -flowEffort, NOT
+# setPlaceMode -placeEffort (which doesn't exist in this version).
+set FLOW_EFFORT [expr {[info exists env(FLOW_EFFORT)] ? $env(FLOW_EFFORT) :
+                       [expr {[info exists env(PLACE_EFFORT)] ?
+                              [string map {low express medium standard high extreme} $env(PLACE_EFFORT)] :
+                              "standard"}]}]
 
 set NETLIST    "out_sweep/${TARGET}/${NETLIST_NAME}.v"
 set SDC        "out_sweep/${TARGET}/${NETLIST_NAME}.sdc"
@@ -135,7 +142,7 @@ puts "  cellLEF : ${LEF_FILE_PATH}"
 puts "  clock   : ${CLK_PER} ns"
 puts "  util    : $DIE_UTIL"
 puts "  resume  : $RESUME_FROM"
-puts "  pleffort: $PLACE_EFFORT"
+puts "  flow eff: $FLOW_EFFORT"
 puts "=========================================="
 
 # -----------------------------------------------------------------------------
@@ -231,8 +238,8 @@ if { $RESUME_FROM eq "none" } {
 # so we drop -node and rely on -process 32 alone. That sets the RC and
 # heuristic defaults to 32nm-class without picking a specific tape-out
 # node target.
-setDesignMode -process 32
-puts ">>> design mode: process=32"
+setDesignMode -process 32 -flowEffort $FLOW_EFFORT
+puts ">>> design mode: process=32 flowEffort=$FLOW_EFFORT"
 
 # Enable multi-CPU. Default is single-thread, which makes placement
 # 4-8x slower than it needs to be. setMultiCpuUsage drives every
@@ -332,8 +339,8 @@ if { $RESUME_FROM eq "none" } {
 # Skipped if resuming from place/cts/route checkpoint.
 # -----------------------------------------------------------------------------
 if { $RESUME_FROM eq "none" || $RESUME_FROM eq "pdn" } {
-    setPlaceMode -fp false -placeEffort $PLACE_EFFORT
-    puts ">>> place_design (effort=$PLACE_EFFORT)..."
+    setPlaceMode -fp false
+    puts ">>> place_design (flowEffort=$FLOW_EFFORT from setDesignMode)..."
     place_design
 
 opt_design -pre_cts -drv
