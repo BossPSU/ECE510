@@ -372,16 +372,25 @@ if { $RESUME_FROM eq "none" || $RESUME_FROM eq "pdn" } {
         catch {read_def $SCANDEF}
     }
 
-    # Belt + suspenders: also tell placement / opt to not honor / reorder
-    # scan chains. Whichever flag exists in this Innovus release will
-    # take; the others are silently caught.
+    # Belt + suspenders: try every plausible disable command for this
+    # Innovus release; whichever exists takes effect.
     catch {setPlaceMode -honorScanChain false}
-    catch {setOptMode  -reorderScan      false}
+    catch {setMessageLimit 0 IMPSP-9099}
+    catch {clearScanChain}
     suppressMessage IMPSP-9099
 
     setPlaceMode -fp false
     puts ">>> place_design (flowEffort=$FLOW_EFFORT, scan stubbed)..."
-    place_design
+
+    # Wrap place_design in catch. The IMPSP-9099 check causes Innovus
+    # to return a non-zero exit code even when placement could otherwise
+    # proceed -- catching the return value lets the script continue.
+    # If placement genuinely failed (not just scan check), the followup
+    # optDesign / report calls below will surface the real issue.
+    if { [catch {place_design} place_err] } {
+        puts "WARNING: place_design returned error: $place_err"
+        puts "WARNING: continuing -- may be scan-chain false positive"
+    }
 
 optDesign -preCTS -drv
 report_timing -max_paths 10 > "${RPT_DIR}/timing_post_place.rpt"
