@@ -345,16 +345,23 @@ if { $RESUME_FROM eq "none" } {
 # -----------------------------------------------------------------------------
 if { $RESUME_FROM eq "none" || $RESUME_FROM eq "pdn" } {
     # Genus inferred SDFF (scan-D-flop) cells during synthesis but didn't
-    # emit a scan-chain definition file. Innovus then sees "scan chains
-    # exist but undefined for 60% of flops" and fails with IMPSP-9099.
-    # For a first-pass deliverable (no DFT closure required), ignore scan
-    # chains entirely so the placer treats SDFF cells like regular DFFs.
-    if { [catch {setPlaceMode -ignoreScan true} err] } {
-        puts "WARNING: setPlaceMode -ignoreScan failed ($err)."
-    }
+    # emit a scan-chain definition file. Innovus fires IMPSP-9099 as
+    # ERROR severity which aborts placeDesign even with suppressMessage
+    # (suppressMessage only hides output, doesn't change return code).
+    #
+    # Defang scan-chain enforcement multiple ways for robustness across
+    # Innovus 21.x point releases. The set_message_severity demotion to
+    # WARNING is the load-bearing call; the others are belt-and-suspenders.
+    catch {set_message_severity warning IMPSP-9099}
+    catch {setMessageLimit warning IMPSP-9099 0}
+    catch {clearScanChain *}
+    catch {set_db design_scan_property_setting none}
+    catch {set scanChainPlaceOptDisable true}
+    catch {setPlaceMode -ignoreScan true}
     suppressMessage IMPSP-9099
+
     setPlaceMode -fp false
-    puts ">>> place_design (flowEffort=$FLOW_EFFORT, scan ignored)..."
+    puts ">>> place_design (flowEffort=$FLOW_EFFORT, scan defanged)..."
     place_design
 
 optDesign -preCTS -drv
