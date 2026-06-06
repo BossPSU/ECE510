@@ -84,11 +84,16 @@ set LEF_DIR    "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/lef"
 # LEF_DIR) or an absolute path (used as-is).
 set TECH_LEF   [expr {[info exists env(TECH_LEF)]   ? $env(TECH_LEF)   : "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/src/oa/saed32_sram_lp_dual_oa/new/newtech.lef"}]
 set LEF_FILE   [expr {[info exists env(LEF_FILE)]   ? $env(LEF_FILE)   : "saed32nm_rvt_1p9m.lef"}]
-# Timing library: default to the PG-pin variant. Innovus's physical
-# init (globalNetConnect + sroute) wants explicit PG pins in the .lib;
-# without them init_design falls back to physical-only mode and
-# set_analysis_view errors out (TCLCMD-1239).
-set LIB_TIMING_FILE [expr {[info exists env(LIB_FILE)] ? $env(LIB_FILE) : "saed32rvt_pg_tt0p85v25c.lib"}]
+# Timing library: use the regular (non-PG) TT 0.85V/25C variant.
+#
+# History: defaulted to the _pg_ variant earlier in this flow, thinking
+# Innovus's globalNetConnect + sroute would want explicit PG pins. Turns
+# out on this PDK install the _pg_ file is a 150 KB stub with no cell
+# bodies at all (vs 11 MB for the non-PG variant), so it loaded "fine"
+# but CTS later failed with IMPCCOPT-4334 -- the buffer/inverter cells
+# specified in cts_*_cells weren't in the loaded lib because no cells
+# were in the loaded lib. Switching back to the non-PG variant.
+set LIB_TIMING_FILE [expr {[info exists env(LIB_FILE)] ? $env(LIB_FILE) : "saed32rvt_tt0p85v25c.lib"}]
 
 # Resolve to absolute paths -- prepend LEF_DIR (or LIB_PATH) only for
 # bare filenames.
