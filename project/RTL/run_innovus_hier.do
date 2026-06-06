@@ -345,23 +345,42 @@ if { $RESUME_FROM eq "none" } {
 # -----------------------------------------------------------------------------
 if { $RESUME_FROM eq "none" || $RESUME_FROM eq "pdn" } {
     # Genus inferred SDFF (scan-D-flop) cells during synthesis but didn't
-    # emit a scan-chain definition file. Innovus fires IMPSP-9099 as
-    # ERROR severity which aborts placeDesign even with suppressMessage
-    # (suppressMessage only hides output, doesn't change return code).
+    # emit a scan-chain definition file. Innovus fires IMPSP-9099 as a
+    # hard ERROR which aborts placeDesign even with suppressMessage
+    # (suppressMessage only hides output, doesn't change exit code).
+    # Earlier attempts to demote severity via setMessageLimit /
+    # set_message_severity / set_db design_scan_property_setting all
+    # failed with bad-syntax errors in this Innovus point release.
     #
-    # Defang scan-chain enforcement multiple ways for robustness across
-    # Innovus 21.x point releases. The set_message_severity demotion to
-    # WARNING is the load-bearing call; the others are belt-and-suspenders.
-    catch {set_message_severity warning IMPSP-9099}
-    catch {setMessageLimit warning IMPSP-9099 0}
-    catch {clearScanChain *}
-    catch {set_db design_scan_property_setting none}
-    catch {set scanChainPlaceOptDisable true}
-    catch {setPlaceMode -ignoreScan true}
+    # Workaround: write a stub scan.def declaring zero scan chains, then
+    # defIn it. This tells Innovus "I checked, there are no scan chains
+    # to honor" instead of "I detected scan flops but don't know what
+    # to do with them."
+    set SCANDEF "${OUT_DIR}/empty_scan.def"
+    set sdfh [open $SCANDEF w]
+    puts $sdfh "VERSION 5.7 ;"
+    puts $sdfh "DIVIDERCHAR \"/\" ;"
+    puts $sdfh "BUSBITCHARS \"\[\]\" ;"
+    puts $sdfh "DESIGN ${TOP} ;"
+    puts $sdfh "SCANCHAINS 0 ;"
+    puts $sdfh "END SCANCHAINS"
+    puts $sdfh "END DESIGN"
+    close $sdfh
+    puts ">>> Wrote stub scan.def: $SCANDEF (0 chains)"
+    if { [catch {defIn $SCANDEF -scanChain} err] } {
+        puts "WARNING: defIn $SCANDEF failed ($err) -- trying alternate."
+        catch {read_def $SCANDEF}
+    }
+
+    # Belt + suspenders: also tell placement / opt to not honor / reorder
+    # scan chains. Whichever flag exists in this Innovus release will
+    # take; the others are silently caught.
+    catch {setPlaceMode -honorScanChain false}
+    catch {setOptMode  -reorderScan      false}
     suppressMessage IMPSP-9099
 
     setPlaceMode -fp false
-    puts ">>> place_design (flowEffort=$FLOW_EFFORT, scan defanged)..."
+    puts ">>> place_design (flowEffort=$FLOW_EFFORT, scan stubbed)..."
     place_design
 
 optDesign -preCTS -drv
