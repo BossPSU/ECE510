@@ -344,8 +344,17 @@ if { $RESUME_FROM eq "none" } {
 # Skipped if resuming from place/cts/route checkpoint.
 # -----------------------------------------------------------------------------
 if { $RESUME_FROM eq "none" || $RESUME_FROM eq "pdn" } {
+    # Genus inferred SDFF (scan-D-flop) cells during synthesis but didn't
+    # emit a scan-chain definition file. Innovus then sees "scan chains
+    # exist but undefined for 60% of flops" and fails with IMPSP-9099.
+    # For a first-pass deliverable (no DFT closure required), ignore scan
+    # chains entirely so the placer treats SDFF cells like regular DFFs.
+    if { [catch {setPlaceMode -ignoreScan true} err] } {
+        puts "WARNING: setPlaceMode -ignoreScan failed ($err)."
+    }
+    suppressMessage IMPSP-9099
     setPlaceMode -fp false
-    puts ">>> place_design (flowEffort=$FLOW_EFFORT from setDesignMode)..."
+    puts ">>> place_design (flowEffort=$FLOW_EFFORT, scan ignored)..."
     place_design
 
 optDesign -preCTS -drv
