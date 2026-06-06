@@ -358,6 +358,32 @@ report_timing -max_paths 10 > "${RPT_DIR}/timing_post_place.rpt"
 # -----------------------------------------------------------------------------
 if { $RESUME_FROM eq "none" || $RESUME_FROM eq "pdn"
                             || $RESUME_FROM eq "place" } {
+    # Tell CTS which cells in the SAED32 RVT library are usable as clock
+    # buffers / inverters. Without this, Innovus fires IMPCCOPT-1135 and
+    # friends ("CTS found neither inverters nor buffers") because the
+    # Liberty file doesn't auto-flag them.
+    #
+    # SAED32 RVT naming: NBUFFXn_RVT for buffers, INVXn_RVT for inverters.
+    # n = 1, 2, 4, 8, 16 covers the drive-strength range CTS needs.
+    if { [catch {
+        set_db cts_buffer_cells \
+            "NBUFFX1_RVT NBUFFX2_RVT NBUFFX4_RVT NBUFFX8_RVT NBUFFX16_RVT"
+        set_db cts_inverter_cells \
+            "INVX1_RVT INVX2_RVT INVX4_RVT INVX8_RVT"
+        # No clock gates synthesized in this design.
+        set_db cts_clock_gating_cells ""
+    } err] } {
+        puts "WARNING: set_db cts_*_cells failed ($err); trying legacy syntax."
+        # Fall back to older specifyClockTree-style globals if set_db is
+        # unsupported in this Innovus version.
+        catch {set_ccopt_property buffer_cells \
+            {NBUFFX1_RVT NBUFFX2_RVT NBUFFX4_RVT NBUFFX8_RVT NBUFFX16_RVT}}
+        catch {set_ccopt_property inverter_cells \
+            {INVX1_RVT INVX2_RVT INVX4_RVT INVX8_RVT}}
+        catch {set_ccopt_property clock_gating_cells {}}
+    }
+    puts ">>> CTS cell-lists: buffer=NBUFFXn_RVT inverter=INVXn_RVT"
+
     create_ccopt_clock_tree_spec
     ccopt_design
 
