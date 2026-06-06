@@ -343,7 +343,7 @@ if { $RESUME_FROM eq "none" || $RESUME_FROM eq "pdn" } {
     puts ">>> place_design (flowEffort=$FLOW_EFFORT from setDesignMode)..."
     place_design
 
-opt_design -pre_cts -drv
+optDesign -preCTS -drv
 report_timing -max_paths 10 > "${RPT_DIR}/timing_post_place.rpt"
     report_area                 > "${RPT_DIR}/area_post_place.rpt"
     saveDesign "${OUT_DIR}/place.enc"
@@ -361,7 +361,7 @@ if { $RESUME_FROM eq "none" || $RESUME_FROM eq "pdn"
     create_ccopt_clock_tree_spec
     ccopt_design
 
-    opt_design -post_cts -drv -hold
+    optDesign -postCTS -drv -hold
     report_timing -max_paths 10        > "${RPT_DIR}/timing_post_cts.rpt"
     report_clock_tree                  > "${RPT_DIR}/clock_tree.rpt"
     saveDesign "${OUT_DIR}/cts.enc"
@@ -378,7 +378,7 @@ if { $RESUME_FROM ne "route" } {
     setNanoRouteMode -routeWithSiDriven true
     routeDesign
 
-    opt_design -post_route -drv -hold -setup
+    optDesign -postRoute -drv -hold -setup
     report_timing -max_paths 20         > "${RPT_DIR}/timing_post_route.rpt"
     report_power                        > "${RPT_DIR}/power_post_route.rpt"
     report_area                         > "${RPT_DIR}/area_post_route.rpt"
