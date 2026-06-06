@@ -49,7 +49,13 @@
 # -----------------------------------------------------------------------------
 set ARRAY_N    [expr {[info exists env(ARRAY_N)]    ? $env(ARRAY_N)    : 64}]
 set TARGET     [expr {[info exists env(TARGET)]     ? $env(TARGET)     : "stream_pipeline_${ARRAY_N}x${ARRAY_N}_hier"}]
-set TOP        [expr {[info exists env(TOP_MODULE)] ? $env(TOP_MODULE) : "stream_pipeline"}]
+# TOP_MODULE = the mangled cell name as it appears inside the netlist.
+# Genus embeds parameter values into the top module name; the resulting
+# elaborated name is, e.g.,
+#   stream_pipeline_DATA_WIDTH32_ARRAY_DIM${N}_USE_LUT_SOFTMAX1_..._USE_PIPED_MAC1
+# restoreDesign needs that name (matching run_innovus_hier.do's TOP_DEFAULT).
+set TOP_DEFAULT "stream_pipeline_DATA_WIDTH32_ARRAY_DIM${ARRAY_N}_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1"
+set TOP        [expr {[info exists env(TOP_MODULE)] ? $env(TOP_MODULE) : $TOP_DEFAULT}]
 set LIB_PATH   [expr {[info exists env(LIB_PATH)]   ? $env(LIB_PATH)   : "/pkgs/synopsys/2020/32_28nm/SAED32_EDK/lib/stdcell_rvt/db_nldm"}]
 set SLACK_LIM  [expr {[info exists env(SLACK_LIM)]  ? $env(SLACK_LIM)  : 50}]
 

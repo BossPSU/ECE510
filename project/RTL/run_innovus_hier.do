@@ -100,7 +100,7 @@ set LIB_TIMING_FILE [expr {[info exists env(LIB_FILE)] ? $env(LIB_FILE) : "saed3
 set TECH_LEF_PATH      [expr {[string index $TECH_LEF        0] eq "/" ? $TECH_LEF        : "${LEF_DIR}/${TECH_LEF}"}]
 set LEF_FILE_PATH      [expr {[string index $LEF_FILE        0] eq "/" ? $LEF_FILE        : "${LEF_DIR}/${LEF_FILE}"}]
 set LIB_TIMING_PATH    [expr {[string index $LIB_TIMING_FILE 0] eq "/" ? $LIB_TIMING_FILE : "${LIB_PATH}/${LIB_TIMING_FILE}"}]
-set CLK_PER    [expr {[info exists env(CLK_PER)]    ? $env(CLK_PER)    : 1.333}]
+set CLK_PER    [expr {[info exists env(CLK_PER)]    ? $env(CLK_PER)    : 2.0}]
 set DIE_UTIL   [expr {[info exists env(DIE_UTIL)]   ? $env(DIE_UTIL)   : 0.60}]
 # CPU count for the placement / route / CTS multi-threaded engines.
 # Without setMultiCpuUsage, Innovus defaults to single-threaded; on this

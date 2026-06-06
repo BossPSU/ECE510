@@ -76,7 +76,7 @@ if { [info exists env(USE_PIPED4)] } { set USE_PIPED4 $env(USE_PIPED4) }
 set USE_PIPED 1
 if { [info exists env(USE_PIPED)] } { set USE_PIPED $env(USE_PIPED) }
 
-set CLK_PER 1.333
+set CLK_PER 2.0
 if { [info exists env(CLK_PER)] } { set CLK_PER $env(CLK_PER) }
 
 set tag "stream_pipeline_${N}x${N}_hier"
@@ -108,6 +108,28 @@ if { [llength $lib_files] == 0 } {
 }
 set_db library $lib_files
 puts ">>> Loaded [llength $lib_files] standard-cell library file(s)."
+
+# -----------------------------------------------------------------------------
+# Forbid Genus from picking SDFF (scan-D-flop) cell variants. We are not
+# closing DFT for this deliverable, so SDFF cells provide no benefit --
+# but they trigger Innovus's IMPSP-9099 'scan chains exist but undefined'
+# check during placeDesign, which aborts the run even with every
+# suppressMessage / severity-demote workaround we tried.
+#
+# Marking SDFF* lib cells .dont_use forces Genus to map sequential
+# elements onto plain DFFAR* / DFFASR* etc. instead. SAED32 RVT has
+# non-scan equivalents of every SDFF variant we'd use.
+if { [catch {
+    set sdff_cells [get_lib_cells "SDFF*"]
+    if { [llength $sdff_cells] > 0 } {
+        set_db $sdff_cells .dont_use true
+        puts ">>> Marked [llength $sdff_cells] SDFF* cells as dont_use"
+    } else {
+        puts ">>> No SDFF* cells matched in library -- nothing to ban"
+    }
+} err] } {
+    puts "WARNING: set_db dont_use on SDFF* failed ($err)"
+}
 
 # -----------------------------------------------------------------------------
 # 4. Read RTL (full superset; Genus only elaborates what is reachable)
