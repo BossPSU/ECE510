@@ -264,8 +264,8 @@ module tb_compute_core;
     // result independent of preceding tiles.
     $display(">>> Scenario 3: ff_fwd -> ff_bwd -> ff_fwd back-to-back");
     for (int i = 0; i < 3; i++) begin
-      mode_t mode = (i == 1) ? MODE_FFN_BWD : MODE_FFN_FWD;
-      string label;
+      automatic mode_t mode = (i == 1) ? MODE_FFN_BWD : MODE_FFN_FWD;
+      automatic string label;
       load_ones_identity(ADDR_A, ADDR_B);
       load_aux_ones(ADDR_AUX);
       issue_macro(mode,

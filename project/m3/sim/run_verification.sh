@@ -196,9 +196,14 @@ echo ">>> Compiling RTL (log: $COMPILE_LOG)..."
     vlog -sv -work work $M3_TB/tb_softmax_unit_lut.sv
 } > "$COMPILE_LOG" 2>&1
 
-if [ $? -ne 0 ]; then
-    echo "    COMPILE FAILED -- see $COMPILE_LOG"
-    tail -20 "$COMPILE_LOG"
+# Questa's vlog returns nonzero per failed file, but the {} group only
+# surfaces the LAST vlog's exit code. Grep the transcript for hard errors
+# instead -- catches mid-compile failures the exit code hides.
+N_ERR=$(grep -cE "^\*\* Error( \(suppressible\))?:" "$COMPILE_LOG" || true)
+if [ "$N_ERR" -gt 0 ]; then
+    echo "    COMPILE FAILED -- ${N_ERR} error line(s) in $COMPILE_LOG"
+    echo "    First few errors:"
+    grep -E "^\*\* Error( \(suppressible\))?:" "$COMPILE_LOG" | head -10 | sed 's/^/        /'
     exit 1
 fi
 echo "    compile OK"

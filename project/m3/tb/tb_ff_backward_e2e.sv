@@ -234,8 +234,7 @@ module tb_ff_backward_e2e;
       if ((got - expected) < TOL && (got - expected) > -TOL) begin
         ok++;
       end else begin
-        $display("    [%s] out[%0d][%0d] = %0.4f vs expected %0.4f "
-                 "(err %0.4f, tol %0.2f)",
+        $display("    [%s] out[%0d][%0d] = %0.4f vs expected %0.4f (err %0.4f, tol %0.2f)",
                  label, sample_r, sample_c, got, expected,
                  got - expected, TOL);
       end

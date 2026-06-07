@@ -154,6 +154,10 @@ module mac_pe_piped4
   logic [15:0] acc_hi_operand;
   logic [16:0] lo_sum_comb;     // 17-bit to capture carry-out
 
+  // Forward-declare the stage-3 accumulator (assigned at line ~190) so that
+  // Questa's strict elaborator accepts the stage-2 operand reads below.
+  logic signed [DATA_WIDTH-1:0] acc_r;
+
   assign acc_lo_operand = clear_acc_r2 ? 16'h0 : acc_r[15:0];
   assign acc_hi_operand = clear_acc_r2 ? 16'h0 : acc_r[31:16];
   assign lo_sum_comb    = {1'b0, acc_lo_operand} + {1'b0, product_q[15:0]};
@@ -187,7 +191,7 @@ module mac_pe_piped4
   assign hi_sum_comb = product_hi_r + $signed({15'h0, carry_r}) + $signed(acc_hi_r2);
 
   // ----- Stage 3 register (the accumulator itself) -----
-  logic signed [DATA_WIDTH-1:0] acc_r;
+  // (acc_r declared above at the stage-2 operand read site.)
 
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
