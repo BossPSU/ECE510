@@ -28,11 +28,10 @@ module fused_postproc_unit
   logic               gelu_valid, gelu_grad_valid;
 
   // GELU forward + gradient. USE_LUT_GELU picks between the original
-  // Pade-chain modules and the M4 LUT+interp drop-ins. SOFTMAX_LAT-style
-  // pipeline-depth handling isn't needed here because both variants
-  // converge to the same downstream out_valid; the data_delay tap below
-  // assumes 6-stage gelu_grad latency (the new LUT version is only 3
-  // stages so output arrives earlier, which is benign for the MUX).
+  // Pade-chain modules and the M4 LUT+interp drop-ins. Both converge to
+  // the same downstream out_valid via gelu_grad_valid, but the
+  // data_delay tap below must be sized per-variant so data_in arrives
+  // at the q_mul on the same cycle gelu_grad_valid pulses.
   generate
     if (USE_LUT_GELU) begin : g_gelu_lut
       gelu_unit_lut #(.DATA_WIDTH(DATA_WIDTH)) u_gelu (
@@ -77,8 +76,15 @@ module fused_postproc_unit
     end
   endgenerate
 
-  // 6-stage delay for data_in to align with gelu_grad pipeline
-  localparam int GRAD_DELAY = 6;
+  // Delay data_in by exactly the gelu_grad pipeline depth so the
+  // q_mul on the GELU_GRAD path sees data_in and grad_out aligned in
+  // the same cycle the combinational MUX captures them. Pade
+  // (gelu_grad_unit) is 6 stages, LUT (gelu_grad_unit_lut, post-Tier-2B)
+  // is 4 stages. Earlier comment claimed the 2-cycle misalignment was
+  // "benign" -- it is not. data_delay[GRAD_DELAY-1] held 0 at the
+  // moment gelu_grad_valid pulsed, so the multiplier output collapsed
+  // to 0.
+  localparam int GRAD_DELAY = USE_LUT_GELU ? 4 : 6;
   logic signed [31:0] data_delay [GRAD_DELAY];
 
   always_ff @(posedge clk or negedge rst_n) begin

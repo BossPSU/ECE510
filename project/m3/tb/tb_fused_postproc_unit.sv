@@ -160,18 +160,18 @@ module tb_fused_postproc_unit;
     // ----- Test 5: GELU_GRAD -----
     // Output = data_in * GELU'(aux_in). data_in=1.0, aux_in=1.0 ->
     // expected = 1.0 * GELU'(1.0) ~= 1.0828.
-    // Latency: gelu_grad_unit_lut = 4 cycles, plus output reg = 5 cycles,
-    // BUT the data_delay path uses GRAD_DELAY=6 stages so data_in arrives
-    // at the q_mul aligned with grad_out. Effective end-to-end latency
-    // is GRAD_DELAY (=6) + output reg (=1) = 7 cycles.
-    drive_and_capture(FUSED_GELU_GRAD, 1.0, 1.0, 7, got, saw_valid);
-    check_real("T5: GELU_GRAD(1.0 * G'(1.0)) latency=7",
+    // Latency (USE_LUT_GELU=1): gelu_grad_unit_lut = 4 cycles + output
+    // reg = 5 cycles. data_delay is now sized to match (GRAD_DELAY=4),
+    // so data_in and grad_out arrive at the q_mul on the same posedge
+    // gelu_grad_valid pulses.
+    drive_and_capture(FUSED_GELU_GRAD, 1.0, 1.0, 5, got, saw_valid);
+    check_real("T5: GELU_GRAD(1.0 * G'(1.0)) latency=5",
                got, 1.0 * ref_gelu_prime(1.0), saw_valid);
 
     repeat (10) @(posedge clk);
 
     // ----- Test 6: GELU_GRAD with non-trivial dh and h -----
-    drive_and_capture(FUSED_GELU_GRAD, 2.0, 0.5, 7, got, saw_valid);
+    drive_and_capture(FUSED_GELU_GRAD, 2.0, 0.5, 5, got, saw_valid);
     check_real("T6: GELU_GRAD(2.0 * G'(0.5))",
                got, 2.0 * ref_gelu_prime(0.5), saw_valid);
 
@@ -179,7 +179,7 @@ module tb_fused_postproc_unit;
 
     // ----- Test 7: GELU_GRAD negative h_pre (sign alignment test) -----
     // This is the path most exposed to Tier 2B + data_delay alignment.
-    drive_and_capture(FUSED_GELU_GRAD, 1.0, -1.0, 7, got, saw_valid);
+    drive_and_capture(FUSED_GELU_GRAD, 1.0, -1.0, 5, got, saw_valid);
     check_real("T7: GELU_GRAD(1.0 * G'(-1.0)) sign test",
                got, 1.0 * ref_gelu_prime(-1.0), saw_valid);
 
