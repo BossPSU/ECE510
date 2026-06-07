@@ -112,6 +112,13 @@ module tb_stream_pipeline_tile;
   logic signed [31:0] aux_mem [MAX_DIM-1:0][MAX_DIM-1:0];
   logic signed [31:0] out_mem [MAX_DIM-1:0][MAX_DIM-1:0];
   bit                 out_seen [MAX_DIM-1:0][MAX_DIM-1:0];
+  int                 out_writes_per_cell [MAX_DIM-1:0][MAX_DIM-1:0];
+  // First and last (row, col) idx the DUT emits (raw, before bit slicing).
+  // Plus a global write count -- catches whether the DUT actually pushes
+  // out the expected ~m*n writes.
+  int                 total_writes;
+  int                 first_idx_seen;
+  int                 last_idx_seen;
 
   // Combinational read paths (the stream_pipeline drives addresses
   // continuously; we serve data combinationally same cycle).
@@ -131,8 +138,13 @@ module tb_stream_pipeline_tile;
     if (out_wr_en) begin
       automatic int row = out_wr_idx[11:6];
       automatic int col = out_wr_idx[5:0];
-      out_mem[row][col]  <= out_wr_data;
-      out_seen[row][col] <= 1'b1;
+      out_mem[row][col]              <= out_wr_data;
+      out_seen[row][col]             <= 1'b1;
+      out_writes_per_cell[row][col]  <= out_writes_per_cell[row][col] + 1;
+      total_writes                   <= total_writes + 1;
+      if (total_writes == 0)
+        first_idx_seen <= out_wr_idx;
+      last_idx_seen <= out_wr_idx;
     end
   end
 
@@ -171,7 +183,11 @@ module tb_stream_pipeline_tile;
         aux_mem[r][c] = '0;
         out_mem[r][c] = '0;
         out_seen[r][c] = 1'b0;
+        out_writes_per_cell[r][c] = 0;
       end
+    total_writes   = 0;
+    first_idx_seen = -1;
+    last_idx_seen  = -1;
   endtask
 
   task automatic run_tile(input int m, input int n, input int k,
@@ -259,8 +275,91 @@ module tb_stream_pipeline_tile;
     if (errors == 0)
       $display("    [%s] PASS -- all %0d outputs match (tol 0.125)",
                label, m * n);
-    else
+    else begin
       $display("    [%s] FAIL -- %0d/%0d errors", label, errors, m * n);
+      $display("    [%s] -- diag: total DUT writes captured: %0d (expected ~%0d)",
+               label, total_writes, m * n);
+      $display("    [%s] -- diag: first out_wr_idx = %0d (= 0x%h, row=%0d col=%0d)",
+               label, first_idx_seen, first_idx_seen,
+               (first_idx_seen >> 6) & 6'h3f, first_idx_seen & 6'h3f);
+      $display("    [%s] -- diag: last  out_wr_idx = %0d (= 0x%h, row=%0d col=%0d)",
+               label, last_idx_seen, last_idx_seen,
+               (last_idx_seen >> 6) & 6'h3f, last_idx_seen & 6'h3f);
+      // Write-count histogram by row.
+      begin : diag_writes_per_row
+        int writes_in_row;
+        $display("    [%s] -- diag: writes-per-row counts (only nonzero):",
+                 label);
+        for (int rr = 0; rr < 64; rr++) begin
+          writes_in_row = 0;
+          for (int cc = 0; cc < 64; cc++)
+            writes_in_row += out_writes_per_cell[rr][cc];
+          if (writes_in_row > 0)
+            $display("      row %0d: %0d total writes (over all cols)",
+                     rr, writes_in_row);
+        end
+      end
+      // Diagnostic: per-row pass count + per-col pass count + sample of
+      // passing cells. Lets us see whether the 1/16-of-cells survival
+      // pattern is row-aligned, col-aligned, or some other structure.
+      begin : diag
+        int row_pass [64];
+        int col_pass [64];
+        int dumped;
+        for (int rr = 0; rr < 64; rr++) begin
+          row_pass[rr] = 0;
+          col_pass[rr] = 0;
+        end
+        for (int rr = 0; rr < m; rr++)
+          for (int cc = 0; cc < n; cc++) begin
+            real g, e;
+            if (!out_seen[rr][cc]) continue;
+            g = from_q(out_mem[rr][cc]);
+            e = real'(rr + 1);
+            if ((g - e) <= 0.125 && (g - e) >= -0.125) begin
+              row_pass[rr]++;
+              col_pass[cc]++;
+            end
+          end
+        $display("    [%s] -- diag: per-row PASS counts:", label);
+        for (int rr = 0; rr < m; rr++)
+          if (row_pass[rr] > 0)
+            $display("      row %0d: %0d/%0d cells pass",
+                     rr, row_pass[rr], n);
+        $display("    [%s] -- diag: per-col PASS counts:", label);
+        for (int cc = 0; cc < n; cc++)
+          if (col_pass[cc] > 0)
+            $display("      col %0d: %0d/%0d cells pass",
+                     cc, col_pass[cc], m);
+        // Dump first 8 cells where out_seen is true but value is wrong.
+        $display("    [%s] -- diag: first 8 'seen but wrong' cells:",
+                 label);
+        dumped = 0;
+        for (int rr = 0; rr < m && dumped < 8; rr++)
+          for (int cc = 0; cc < n && dumped < 8; cc++) begin
+            real g, e;
+            if (!out_seen[rr][cc]) continue;
+            g = from_q(out_mem[rr][cc]);
+            e = real'(rr + 1);
+            if ((g - e) > 0.125 || (g - e) < -0.125) begin
+              $display("      out[%0d][%0d] seen=1 got=%0.4f want=%0.4f",
+                       rr, cc, g, e);
+              dumped++;
+            end
+          end
+        // Dump first 8 cells where out_seen is false (never written).
+        $display("    [%s] -- diag: first 8 'never written' cells:",
+                 label);
+        dumped = 0;
+        for (int rr = 0; rr < m && dumped < 8; rr++)
+          for (int cc = 0; cc < n && dumped < 8; cc++) begin
+            if (!out_seen[rr][cc]) begin
+              $display("      out[%0d][%0d] out_seen=0", rr, cc);
+              dumped++;
+            end
+          end
+      end
+    end
     return errors;
   endfunction
 
