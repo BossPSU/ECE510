@@ -253,10 +253,13 @@ run_tb() {
          > "$logfile" 2>&1
     dt=$(( $(date +%s) - t0 ))
 
-    if grep -qE "^=== ${pass_prefix}: PASS ===" "$logfile"; then
+    # vsim -c prefixes every transcript line with "# ", so the PASS/FAIL
+    # marker emitted by $display appears as "# === TB_xxx: PASS ===".
+    # Match optionally with that prefix.
+    if grep -qE "^(# )?=== ${pass_prefix}: PASS ===" "$logfile"; then
         result="PASS"
         PASS=$((PASS + 1))
-    elif grep -qE "^=== ${pass_prefix}: FAIL" "$logfile"; then
+    elif grep -qE "^(# )?=== ${pass_prefix}: FAIL" "$logfile"; then
         result="FAIL"
         FAIL=$((FAIL + 1))
     else
