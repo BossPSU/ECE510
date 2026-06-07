@@ -26,6 +26,23 @@ cd "$(dirname "$0")"
 mkdir -p logs
 
 # -----------------------------------------------------------------------------
+# Stage LUT memory files into the sim CWD.
+#
+# gelu_direct_lut.sv / gelu_grad_direct_lut.sv use $readmemh with a relative
+# path ("gelu_lut_direct.mem"). Vsim's CWD is project/m3/sim/, but the .mem
+# files live in project/RTL/. Without these symlinks, $readmemh silently
+# fails, LUTs init to X, and X poisons out_valid -- every TB on the LUT
+# path fails with "out_valid not asserted".
+#
+# Symlinks (not copies) so a regenerated .mem in project/RTL/ is picked up
+# automatically on the next run.
+# -----------------------------------------------------------------------------
+ln -sf ../../RTL/exp_lut.mem              exp_lut.mem
+ln -sf ../../RTL/gelu_lut_direct.mem      gelu_lut_direct.mem
+ln -sf ../../RTL/gelu_grad_lut_direct.mem gelu_grad_lut_direct.mem
+ln -sf ../../RTL/gelu_tanh_lut.mem        gelu_tanh_lut.mem
+
+# -----------------------------------------------------------------------------
 # Testbench inventory.
 # Order: leaf unit tests first (fastest), then subsystem, then chip-level.
 # Each entry: <vsim top-cell> <PASS-line-prefix>
