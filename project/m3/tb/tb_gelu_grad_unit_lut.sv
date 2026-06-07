@@ -69,6 +69,9 @@ module tb_gelu_grad_unit_lut;
     in_valid <= 1'b0;
     x_in     <= '0;
     repeat (LATENCY - 1) @(posedge clk);
+    // Sample at negedge so the DUT's NBA updates from the target posedge
+    // have settled (otherwise saw_valid reads the previous-cycle value).
+    @(negedge clk);
     saw_valid = out_valid;
     got       = from_q($signed(grad_out));
     @(posedge clk);

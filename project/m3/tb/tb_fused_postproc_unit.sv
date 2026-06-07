@@ -90,6 +90,11 @@ module tb_fused_postproc_unit;
     data_in   <= '0;
     aux_in    <= '0;
     repeat (latency - 1) @(posedge clk);
+    // Sample on negedge so the DUT's NBA updates from the target posedge
+    // have settled. Sampling immediately after @(posedge clk) reads the
+    // PREVIOUS-cycle out_valid because NBAs scheduled by always_ff in
+    // that same active region haven't fired yet.
+    @(negedge clk);
     saw_valid = out_valid;
     got       = from_q($signed(data_out));
     @(posedge clk);
