@@ -69,7 +69,7 @@ module tb_compute_core;
   ) duv (
     .clk                  (clk),
     .rst_n                (rst_n),
-    .macro_cmd            (core_macro_cmd),
+    .macro_cmd_in         (core_macro_cmd),
     .macro_cmd_valid      (core_macro_cmd_valid),
     .macro_cmd_ready      (core_macro_cmd_ready),
     .dma_wr_valid         (core_dma_wr_valid),
