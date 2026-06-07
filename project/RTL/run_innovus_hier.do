@@ -256,11 +256,17 @@ puts ">>> design mode: process=$INNOVUS_PROCESS flowEffort=$FLOW_EFFORT"
 # Lower extraction effort to LOW so optDesign doesn't demand a captable.
 # This uses LEF-derived RC (~10-15% pessimistic vs captable RC), which
 # closes timing with more margin -- fine for first-pass deliverable.
+#
+# CRITICAL: only set preRoute engine. ccopt_design (CTS) requires the
+# preRoute engine specifically and aborts with IMPCCOPT-2194 if a
+# postRoute call switched the engine. The previous run had a stray
+# `setExtractRCMode -engine postRoute` here that broke CTS silently --
+# the catch wrappers continued past it but the resulting "design"
+# never had a clock tree built, making the post-route timing report
+# meaningless.
 if { ![info exists env(CAPTABLE)] } {
     catch {setExtractRCMode -engine preRoute -effortLevel low}
-    catch {setExtractRCMode -effortLevel low}
-    catch {setExtractRCMode -engine postRoute -effortLevel low}
-    puts ">>> NOTE: no CAPTABLE; extraction set to LOW effort"
+    puts ">>> NOTE: no CAPTABLE; preRoute extraction set to LOW effort"
     puts ">>>       (LEF-derived RC, ~10-15% pessimistic). Pass CAPTABLE=/path"
     puts ">>>       env var to get true 32nm RC modeling."
 }
