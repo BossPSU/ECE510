@@ -243,8 +243,21 @@ if { $RESUME_FROM eq "none" } {
 # so we drop -node and rely on -process 32 alone. That sets the RC and
 # heuristic defaults to 32nm-class without picking a specific tape-out
 # node target.
-setDesignMode -process 32 -flowEffort $FLOW_EFFORT
-puts ">>> design mode: process=32 flowEffort=$FLOW_EFFORT"
+# Process node: at <=32nm Innovus REQUIRES a captable for preRoute
+# extraction (IMPEXT-6198) -- without it, optDesign aborts. If no
+# CAPTABLE was provided, use 45 to bypass the strict requirement at
+# the cost of slightly less accurate RC modeling. Both still avoid
+# the "Design Mode: 90nm" default fallback we hit earlier.
+set INNOVUS_PROCESS [expr {[info exists env(CAPTABLE)] ? 32 : 45}]
+setDesignMode -process $INNOVUS_PROCESS -flowEffort $FLOW_EFFORT
+puts ">>> design mode: process=$INNOVUS_PROCESS flowEffort=$FLOW_EFFORT"
+if { $INNOVUS_PROCESS == 45 } {
+    puts ">>> NOTE: no CAPTABLE env var; using -process 45 to bypass strict"
+    puts ">>>       captable requirement (IMPEXT-6198). Pass CAPTABLE=/path"
+    puts ">>>       for true 32nm RC. Pre-PnR/post-PnR f_max will still be"
+    puts ">>>       reasonable -- LEF-derived RC is ~10-15% pessimistic vs"
+    puts ">>>       captable-derived RC, so timing closes with more margin."
+}
 
 # Enable multi-CPU. Default is single-thread, which makes placement
 # 4-8x slower than it needs to be. setMultiCpuUsage drives every
