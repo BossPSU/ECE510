@@ -277,6 +277,21 @@ module tb_stream_pipeline_tile;
                label, m * n);
     else begin
       $display("    [%s] FAIL -- %0d/%0d errors", label, errors, m * n);
+      // Probe c_out_array directly via hierarchical ref. Tells us if the
+      // bug is in compute (math broken -- c_out is 0) or write-path
+      // (math OK -- c_out is 1 but never lands in out_mem).
+      $display("    [%s] -- diag: c_out_array[0][0]  = %0.4f (expect 1)",
+               label, from_q(duv.c_out_array[0][0]));
+      $display("    [%s] -- diag: c_out_array[0][1]  = %0.4f (expect 1)",
+               label, from_q(duv.c_out_array[0][1]));
+      $display("    [%s] -- diag: c_out_array[1][0]  = %0.4f (expect 2)",
+               label, from_q(duv.c_out_array[1][0]));
+      $display("    [%s] -- diag: c_out_array[1][1]  = %0.4f (expect 2)",
+               label, from_q(duv.c_out_array[1][1]));
+      $display("    [%s] -- diag: c_out_array[7][7]  = %0.4f (expect ~7.94 sat)",
+               label, from_q(duv.c_out_array[7][7]));
+      $display("    [%s] -- diag: c_out_array[63][63] = %0.4f (expect ~7.94 sat)",
+               label, from_q(duv.c_out_array[63][63]));
       $display("    [%s] -- diag: total DUT writes captured: %0d (expected ~%0d)",
                label, total_writes, m * n);
       $display("    [%s] -- diag: first out_wr_idx = %0d (= 0x%h, row=%0d col=%0d)",
