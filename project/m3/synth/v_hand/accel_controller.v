@@ -104,7 +104,12 @@ module accel_controller (
     reg [3:0]       state;
     reg [CMD_W-1:0] cmd_reg;
 
-    reg [11:0] load_cnt, write_cnt;
+    // M3-verified fix: widen counters and tile_size from 12 -> 13 bits.
+    // 64*64 = 4096 = 13'h1000 overflows a 12-bit register to 12'h000=0,
+    // which caused the LOAD/WRITE FSMs to exit after a single cycle.
+    // See project/RTL/accel_controller.sv for the original SystemVerilog
+    // fix (commit 199c40d).
+    reg [12:0] load_cnt, write_cnt;
     reg [7:0]  load_row, load_col;
     reg [7:0]  wr_row,   wr_col;
 
@@ -118,12 +123,12 @@ module accel_controller (
     wire [7:0]  cmd_reg_tile_n  = cmd_reg[75 +: 8];
     wire [7:0]  cmd_reg_tile_k  = cmd_reg[83 +: 8];
 
-    wire [11:0] tile_a_size   = {4'b0, cmd_reg_tile_m} *
-                                {4'b0, cmd_reg_tile_k};
-    wire [11:0] tile_b_size   = {4'b0, cmd_reg_tile_k} *
-                                {4'b0, cmd_reg_tile_n};
-    wire [11:0] tile_out_size = {4'b0, cmd_reg_tile_m} *
-                                {4'b0, cmd_reg_tile_n};
+    wire [12:0] tile_a_size   = {5'b0, cmd_reg_tile_m} *
+                                {5'b0, cmd_reg_tile_k};
+    wire [12:0] tile_b_size   = {5'b0, cmd_reg_tile_k} *
+                                {5'b0, cmd_reg_tile_n};
+    wire [12:0] tile_out_size = {5'b0, cmd_reg_tile_m} *
+                                {5'b0, cmd_reg_tile_n};
 
     assign cmd_tile_m = cmd_reg_tile_m;
     assign cmd_tile_n = cmd_reg_tile_n;
@@ -164,7 +169,7 @@ module accel_controller (
             S_LOAD_A: begin
                 busy        = 1'b1;
                 sram_req    = 1'b1;
-                sram_addr   = cmd_reg_addr_a + {4'b0, load_cnt};
+                sram_addr   = cmd_reg_addr_a + {3'b0, load_cnt};
                 buf_a_wr_en = sram_rvalid;
                 buf_wr_idx  = {load_row[5:0], load_col[5:0]};
                 buf_wr_data = sram_rdata;
@@ -172,7 +177,7 @@ module accel_controller (
             S_LOAD_B: begin
                 busy        = 1'b1;
                 sram_req    = 1'b1;
-                sram_addr   = cmd_reg_addr_b + {4'b0, load_cnt};
+                sram_addr   = cmd_reg_addr_b + {3'b0, load_cnt};
                 buf_b_wr_en = sram_rvalid;
                 buf_wr_idx  = {load_row[5:0], load_col[5:0]};
                 buf_wr_data = sram_rdata;
@@ -180,7 +185,7 @@ module accel_controller (
             S_LOAD_AUX: begin
                 busy          = 1'b1;
                 sram_req      = 1'b1;
-                sram_addr     = cmd_reg_addr_au + {4'b0, load_cnt};
+                sram_addr     = cmd_reg_addr_au + {3'b0, load_cnt};
                 buf_aux_wr_en = sram_rvalid;
                 buf_wr_idx    = {load_row[5:0], load_col[5:0]};
                 buf_wr_data   = sram_rdata;
@@ -196,7 +201,7 @@ module accel_controller (
                 busy       = 1'b1;
                 sram_req   = 1'b1;
                 sram_we    = 1'b1;
-                sram_addr  = cmd_reg_addr_o + {4'b0, write_cnt};
+                sram_addr  = cmd_reg_addr_o + {3'b0, write_cnt};
                 out_rd_idx = {wr_row[5:0], wr_col[5:0]};
                 sram_wdata = out_rd_data;
             end
@@ -212,8 +217,8 @@ module accel_controller (
         if (!rst_n) begin
             state     <= S_IDLE;
             cmd_reg   <= {CMD_W{1'b0}};
-            load_cnt  <= 12'd0;
-            write_cnt <= 12'd0;
+            load_cnt  <= 13'd0;
+            write_cnt <= 13'd0;
             load_row  <= 8'd0;
             load_col  <= 8'd0;
             wr_row    <= 8'd0;
@@ -223,7 +228,7 @@ module accel_controller (
                 S_IDLE: begin
                     if (cmd_valid) begin
                         cmd_reg  <= cmd;
-                        load_cnt <= 12'd0;
+                        load_cnt <= 13'd0;
                         load_row <= 8'd0;
                         load_col <= 8'd0;
                         state    <= S_LOAD_A;
@@ -231,13 +236,13 @@ module accel_controller (
                 end
                 S_LOAD_A: begin
                     if (sram_rvalid) begin
-                        if (load_cnt + 12'd1 >= tile_a_size) begin
-                            load_cnt <= 12'd0;
+                        if (load_cnt + 13'd1 >= tile_a_size) begin
+                            load_cnt <= 13'd0;
                             load_row <= 8'd0;
                             load_col <= 8'd0;
                             state    <= S_LOAD_B;
                         end else begin
-                            load_cnt <= load_cnt + 12'd1;
+                            load_cnt <= load_cnt + 13'd1;
                             if (load_col + 8'd1 >= cmd_reg_tile_k) begin
                                 load_col <= 8'd0;
                                 load_row <= load_row + 8'd1;
@@ -249,8 +254,8 @@ module accel_controller (
                 end
                 S_LOAD_B: begin
                     if (sram_rvalid) begin
-                        if (load_cnt + 12'd1 >= tile_b_size) begin
-                            load_cnt <= 12'd0;
+                        if (load_cnt + 13'd1 >= tile_b_size) begin
+                            load_cnt <= 13'd0;
                             load_row <= 8'd0;
                             load_col <= 8'd0;
                             if (cmd_reg_mode == MODE_FFN_BWD)
@@ -258,7 +263,7 @@ module accel_controller (
                             else
                                 state <= S_STREAM_START;
                         end else begin
-                            load_cnt <= load_cnt + 12'd1;
+                            load_cnt <= load_cnt + 13'd1;
                             if (load_col + 8'd1 >= cmd_reg_tile_n) begin
                                 load_col <= 8'd0;
                                 load_row <= load_row + 8'd1;
@@ -270,13 +275,13 @@ module accel_controller (
                 end
                 S_LOAD_AUX: begin
                     if (sram_rvalid) begin
-                        if (load_cnt + 12'd1 >= tile_out_size) begin
-                            load_cnt <= 12'd0;
+                        if (load_cnt + 13'd1 >= tile_out_size) begin
+                            load_cnt <= 13'd0;
                             load_row <= 8'd0;
                             load_col <= 8'd0;
                             state    <= S_STREAM_START;
                         end else begin
-                            load_cnt <= load_cnt + 12'd1;
+                            load_cnt <= load_cnt + 13'd1;
                             if (load_col + 8'd1 >= cmd_reg_tile_n) begin
                                 load_col <= 8'd0;
                                 load_row <= load_row + 8'd1;
@@ -291,17 +296,17 @@ module accel_controller (
                 end
                 S_STREAM_WAIT: begin
                     if (pipeline_done) begin
-                        write_cnt <= 12'd0;
+                        write_cnt <= 13'd0;
                         wr_row    <= 8'd0;
                         wr_col    <= 8'd0;
                         state     <= S_WRITE;
                     end
                 end
                 S_WRITE: begin
-                    if (write_cnt + 12'd1 >= tile_out_size) begin
+                    if (write_cnt + 13'd1 >= tile_out_size) begin
                         state <= S_DONE;
                     end else begin
-                        write_cnt <= write_cnt + 12'd1;
+                        write_cnt <= write_cnt + 13'd1;
                         if (wr_col + 8'd1 >= cmd_reg_tile_n) begin
                             wr_col <= 8'd0;
                             wr_row <= wr_row + 8'd1;

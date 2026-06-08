@@ -33,7 +33,7 @@ echo "  OpenLane clean run"
 echo "  Design:    $(grep DESIGN_NAME config.json | sed 's/[",]//g')"
 echo "  Tag:       $TAG"
 echo "  Log:       $LOG"
-echo "  RTL src:   project/RTL/ (latest, M5/M6/M7 fixes applied)"
+echo "  RTL src:   v_hand/ (plain Verilog, ACCEL_CONTROLLER PATCHED with M3 fix)"
 echo "  PDK:       sky130A"
 echo "  Clock:     10 ns target"
 echo "  Started:   $(date)"
@@ -62,12 +62,20 @@ echo ""
 #   2. flow.tcl -design $(pwd) -tag $TAG             (OL1 / older)
 #   3. docker run ... openlane:latest --tag $TAG     (containerized)
 
+# Use the pure-Verilog file set (v_hand/*.v) instead of the .sv set.
+# project/RTL/*.sv with Synlig has been historically flaky (10+ prior
+# failed attempts -- see openlane_M*_*.log files). v_hand is hand-
+# converted plain Verilog that Yosys parses natively, AND it has been
+# patched with the M3-verified accel_controller width fix (the same
+# 12->13 bit fix that's in project/RTL/accel_controller.sv).
+CONFIG="config_top_small_v_hand.json"
+
 if command -v openlane >/dev/null 2>&1; then
-    echo "  -> using 'openlane' CLI"
-    openlane --run-tag "$TAG" config.json 2>&1 | tee "$LOG"
+    echo "  -> using 'openlane' CLI with $CONFIG"
+    openlane --run-tag "$TAG" "$CONFIG" 2>&1 | tee "$LOG"
 elif command -v flow.tcl >/dev/null 2>&1; then
     echo "  -> using 'flow.tcl' CLI"
-    flow.tcl -design "$(pwd)" -tag "$TAG" -overwrite 2>&1 | tee "$LOG"
+    flow.tcl -design "$(pwd)" -tag "$TAG" -overwrite -config_file "$CONFIG" 2>&1 | tee "$LOG"
 else
     echo ""
     echo "ERROR: neither 'openlane' nor 'flow.tcl' found on PATH."
