@@ -78,26 +78,28 @@ run -all
 # signal change history rather than hard-coding cycle counts (the TB does
 # 4096+4096 writes so the absolute times shift with any TB tweak).
 #
-# searchlog returns the time of the next matching transition.
-proc time_of_first_rise {sig} {
-    set t [examine -time -now $sig]
-    set hits [searchlog -value 1 -startposition 0 $sig]
-    if {[llength $hits] > 0} { return [lindex $hits 0] }
-    return $t
+# searchlog returns the time of the first matching value as a string like
+# "12345 ns". Catch any errors so the script keeps going even if a signal
+# never asserts (some IRQ corner cases) -- cursors are nice-to-have, the
+# image is still useful without them.
+proc safe_first_rise {sig} {
+    if {[catch {searchlog -value 1 -startposition 0 $sig} hit]} {
+        return ""
+    }
+    return $hit
 }
 
-# Cursors (markers). The names appear in the wave header.
-set t_first_write [time_of_first_rise /tb_top/ucie_wr_valid]
-set t_macro_issue [time_of_first_rise /tb_top/ucie_cmd_valid]
-set t_irq         [time_of_first_rise /tb_top/ucie_irq]
-set t_first_read  [time_of_first_rise /tb_top/ucie_rd_valid]
+set t_first_write [safe_first_rise /tb_top/ucie_wr_valid]
+set t_macro_issue [safe_first_rise /tb_top/ucie_cmd_valid]
+set t_irq         [safe_first_rise /tb_top/ucie_irq]
+set t_first_read  [safe_first_rise /tb_top/ucie_rd_valid]
 
-catch { wave cursor add -time $t_first_write -name {A first host write} }
-catch { wave cursor add -time $t_macro_issue -name {B macro issue}      }
-catch { wave cursor add -time $t_irq         -name {C compute done/IRQ} }
-catch { wave cursor add -time $t_first_read  -name {D first read resp}  }
+if {$t_first_write ne ""} { catch { wave cursor add -time $t_first_write -name {A first host write} } }
+if {$t_macro_issue ne ""} { catch { wave cursor add -time $t_macro_issue -name {B macro issue}      } }
+if {$t_irq         ne ""} { catch { wave cursor add -time $t_irq         -name {C compute done/IRQ} } }
+if {$t_first_read  ne ""} { catch { wave cursor add -time $t_first_read  -name {D first read resp}  } }
 
-# Zoom to fit the whole run.
+# Zoom to fit the whole run (no matter what, this runs).
 wave zoom full
 
 # ------------------------------------------------------------------ export PS
