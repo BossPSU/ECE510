@@ -164,9 +164,19 @@ module stream_pipeline
   assign output_end_c       = output_start_c
                             + ({8'b0, tile_m_r} * {8'b0, tile_n_r});
   assign elemwise_end_c     = output_end_c + 16'(FUSED_DEPTH);
-  assign sm_feed_end_c      = output_start_c + {8'b0, tile_m_r};
+  // Softmax bounds: backpressured by the divider's ~48-cycle latency, so
+  // worst-case row period is SM_ROW_PERIOD cycles. We use a conservative
+  // 64 to cover divider iterations + Stage 2 LUT phases + sideband
+  // pipeline cycles. The actual schedule is data-driven (counters
+  // increment on accept/output_valid) but cycle_cnt-based bounds still
+  // form the outer "tile not done" window for the done-pulse generator.
+  localparam int SM_ROW_PERIOD = 64;
+  assign sm_feed_end_c      = output_start_c
+                            + ({8'b0, tile_m_r} * 16'(SM_ROW_PERIOD));
   assign sm_capture_start_c = output_start_c + 16'(SOFTMAX_LAT);
-  assign sm_capture_end_c   = sm_capture_start_c + {8'b0, tile_m_r};
+  // Capture window must cover the entire feed window (each fed row
+  // eventually produces an output_valid).
+  assign sm_capture_end_c   = sm_feed_end_c + 16'(SM_ROW_PERIOD);
   assign sm_walk_start_c    = sm_capture_end_c;
   assign sm_walk_end_c      = sm_walk_start_c
                             + ({8'b0, tile_m_r} * {8'b0, tile_n_r});
@@ -484,12 +494,33 @@ module stream_pipeline
   assign sm_in_offset      = cycle_cnt - output_start;
   assign sm_capture_offset = cycle_cnt - sm_capture_start;
 
+  // ---- Softmax feed: ready-gated, counter-driven ----
+  // Backpressure (M7-fix): the divider can't keep up with 1 row/cycle, so
+  // we throttle the feed using softmax_unit_lut.ready. sm_in_row_r is the
+  // index of the row we're trying to feed; it advances ONLY when the
+  // handshake fires (sm_in_valid && sm_ready). Replaces the original
+  // cycle-window scheme that silently dropped 56/64 rows.
   logic       sm_in_valid;
   logic [7:0] sm_in_row;
-  assign sm_in_valid = softmax_mode && running &&
-                       (cycle_cnt >= output_start) &&
-                       (cycle_cnt <  sm_feed_end);
-  assign sm_in_row   = sm_in_offset[7:0];
+  logic [7:0] sm_in_row_r;
+  logic       sm_feed_phase;
+  logic       sm_ready;          // forward-decl; assigned in generate below
+
+  assign sm_feed_phase = softmax_mode && running &&
+                         (cycle_cnt >= output_start) &&
+                         (sm_in_row_r < tile_m_r);
+  assign sm_in_valid   = sm_feed_phase && sm_ready;
+  assign sm_in_row     = sm_in_row_r;
+
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      sm_in_row_r <= 8'd0;
+    end else if (start && !running) begin
+      sm_in_row_r <= 8'd0;
+    end else if (sm_in_valid) begin
+      sm_in_row_r <= sm_in_row_r + 8'd1;
+    end
+  end
 
   logic signed [31:0] sm_scores_in [ARRAY_DIM];
   logic signed [31:0] sm_probs_out [ARRAY_DIM];
@@ -503,6 +534,13 @@ module stream_pipeline
     end
   endgenerate
 
+  // Softmax-side backpressure: the LUT softmax's internal divider takes
+  // ~48 cycles per row, so we MUST throttle the feed or rows get silently
+  // dropped (4032/4096 cell failures on tb_stream_pipeline_tile S6).
+  // The LUT softmax exposes a ready signal; the Pade variant doesn't, so
+  // we tie its ready high (matches the legacy assumption of one row at a
+  // time from upstream).
+  // (sm_ready forward-declared above with sm_in_valid.)
   generate
     if (USE_LUT_SOFTMAX) begin : g_softmax_lut
       softmax_unit_lut #(
@@ -517,7 +555,8 @@ module stream_pipeline
         .scores_in (sm_scores_in),
         .in_valid  (sm_in_valid),
         .probs_out (sm_probs_out),
-        .out_valid (sm_out_valid)
+        .out_valid (sm_out_valid),
+        .ready     (sm_ready)
       );
     end else begin : g_softmax_pade
       softmax_unit #(
@@ -534,16 +573,29 @@ module stream_pipeline
         .probs_out (sm_probs_out),
         .out_valid (sm_out_valid)
       );
+      assign sm_ready = 1'b1;
     end
   endgenerate
 
   // Capture softmax output rows
+  // ---- Softmax capture: data-driven on sm_out_valid ----
+  // Cycle-window approach can't track backpressured outputs (they arrive
+  // at irregular intervals depending on divider state). Count outputs as
+  // they fire; index sm_row_buf by the counter.
   logic       sm_capture_active;
   logic [7:0] sm_capture_row;
-  assign sm_capture_active = softmax_mode && sm_out_valid &&
-                             (cycle_cnt >= sm_capture_start) &&
-                             (cycle_cnt <  sm_capture_end);
-  assign sm_capture_row    = sm_capture_offset[7:0];
+  logic [7:0] sm_cap_row_r;
+  assign sm_capture_active = softmax_mode && running && sm_out_valid;
+  assign sm_capture_row    = sm_cap_row_r;
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      sm_cap_row_r <= 8'd0;
+    end else if (start && !running) begin
+      sm_cap_row_r <= 8'd0;
+    end else if (sm_capture_active) begin
+      sm_cap_row_r <= sm_cap_row_r + 8'd1;
+    end
+  end
 
   logic signed [31:0] sm_row_buf [ARRAY_DIM][ARRAY_DIM];
 
@@ -559,12 +611,39 @@ module stream_pipeline
   end
 
   // Walk softmax output buffer out one elem/cycle
+  // ---- Softmax walk: data-driven, fires after all rows captured ----
+  // Old cycle-window approach assumed captures finished at a fixed time.
+  // With backpressure, captures finish at variable times. Gate walk on
+  // a sticky "all rows captured" flag + its own walk counter.
   logic       sm_walk_active;
   logic [7:0] sm_walk_row_cnt, sm_walk_col_cnt;
+  logic       sm_capture_done_r;
+  logic [15:0] sm_walk_cnt;
 
-  assign sm_walk_active = softmax_mode && running &&
-                          (cycle_cnt >= sm_walk_start) &&
-                          (cycle_cnt <  sm_walk_end);
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      sm_capture_done_r <= 1'b0;
+    end else if (start && !running) begin
+      sm_capture_done_r <= 1'b0;
+    end else if (sm_capture_active &&
+                 (sm_cap_row_r + 8'd1 >= tile_m_r)) begin
+      sm_capture_done_r <= 1'b1;
+    end
+  end
+
+  assign sm_walk_active = softmax_mode && running && sm_capture_done_r &&
+                          (sm_walk_cnt < ({8'b0, tile_m_r} *
+                                          {8'b0, tile_n_r}));
+
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      sm_walk_cnt <= 16'd0;
+    end else if (start && !running) begin
+      sm_walk_cnt <= 16'd0;
+    end else if (sm_walk_active) begin
+      sm_walk_cnt <= sm_walk_cnt + 16'd1;
+    end
+  end
 
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin

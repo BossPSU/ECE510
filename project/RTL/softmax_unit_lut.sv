@@ -46,7 +46,13 @@ module softmax_unit_lut
   input  logic                            in_valid,
 
   output logic signed [DATA_WIDTH-1:0]    probs_out [VEC_LEN],
-  output logic                            out_valid
+  output logic                            out_valid,
+
+  // Backpressure: high when softmax can accept a new in_valid pulse.
+  // The internal divider takes ~48 cycles per row, so the upstream feed
+  // must wait between rows to avoid silently dropping inputs. Goes low
+  // when in_valid latches a row, returns high when out_valid pulses.
+  output logic                            ready
 );
 
   // Number of LUT cycles per row.
@@ -116,6 +122,27 @@ module softmax_unit_lut
       s1_valid <= 1'b0;
     end
   end
+
+  // ---------------------------------------------------------------------
+  // Backpressure: in_flight register tracks "we have a row in the pipe."
+  // Set when in_valid is accepted (gated by ready upstream so we don't
+  // accept while already in-flight). Cleared on out_valid. If both fire
+  // the same cycle (back-to-back rows), out_valid wins so ready stays
+  // high one cycle longer -- the upstream can then immediately drive the
+  // next in_valid.
+  // ---------------------------------------------------------------------
+  logic in_flight;
+  always_ff @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+      in_flight <= 1'b0;
+    end else if (en) begin
+      if (out_valid)
+        in_flight <= 1'b0;
+      else if (in_valid)
+        in_flight <= 1'b1;
+    end
+  end
+  assign ready = !in_flight;
 
   // ---------------------------------------------------------------------
   // Stage 2: time-multiplexed LUT lookups for exp(score - max)
