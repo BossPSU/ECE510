@@ -151,7 +151,20 @@ module accel_engine
     .mp_rd_row(aux_mp_row), .mp_rd_col(aux_mp_col), .mp_rd_data(aux_mp_data)
   );
 
-  stream_pipeline #(.DATA_WIDTH(32), .ARRAY_DIM(TILE_DIM)) u_pipe (
+  // OpenLane scope-down: lock stream_pipeline to legacy/Pade variants.
+  // project/RTL/stream_pipeline.sv defaults the LUT and PIPED4 params to 1
+  // (the SAED32 production target), but the OpenLane build uses the
+  // smaller legacy modules to fit Sky130's cell-count ceiling and to
+  // skip the $readmemh ROMs that Yosys can't synth without the .mem
+  // files staged in the run dir.
+  stream_pipeline #(
+    .DATA_WIDTH      (32),
+    .ARRAY_DIM       (TILE_DIM),
+    .USE_LUT_SOFTMAX (0),     // Pade softmax (legacy, no seq divider)
+    .USE_LUT_GELU    (0),     // Pade GELU   (legacy, no LUT ROM)
+    .USE_PIPED4_MAC  (0),     // legacy 1-stage mac_pe
+    .USE_PIPED_MAC   (0)      // legacy 1-stage mac_pe
+  ) u_pipe (
     .clk         (clk),
     .rst_n       (rst_n),
     .start       (pipeline_start),
