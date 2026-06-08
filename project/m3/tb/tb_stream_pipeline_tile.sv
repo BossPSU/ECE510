@@ -248,6 +248,7 @@ module tb_stream_pipeline_tile;
   // Tolerance accounts for Q4.4 multiplier quantization (1 LSB at Q4.4
   // = 1/16, but rows fit in Q4.4 cleanly).
   function automatic int check_identity_pattern(input int m, input int n,
+                                                input int k,
                                                 input string label);
     int errors = 0;
     real got, expected;
@@ -263,7 +264,19 @@ module tb_stream_pipeline_tile;
           continue;
         end
         got      = from_q(out_mem[r][c]);
-        expected = real'(r + 1);
+        // Reference: PE[r][c] = sum_j=0..k-1 A[r][j] * B[j][c]. For
+        // B=identity the only non-zero term is j=c, BUT only when c<k
+        // (the inner-product range). For c>=k the sum is 0.
+        if (c < k)
+          expected = real'(r + 1);
+        else
+          expected = 0.0;
+        // The Q4.4 MAC saturates inputs at +7.9375 / -8.0 (NVFP4-style
+        // mixed-precision). Without clamping the expected, rows 8+ would
+        // "fail" against the saturated DUT output even when the math is
+        // right.
+        if (expected >  7.9375) expected =  7.9375;
+        if (expected < -8.0   ) expected = -8.0;
         if ((got - expected) > 0.125 || (got - expected) < -0.125) begin
           if (bad_count < 4)
             $display("    [%s] out[%0d][%0d]=%0.4f vs %0.4f",
@@ -410,13 +423,13 @@ module tb_stream_pipeline_tile;
     clear_buffers();
     load_identity_pattern(64, 64, 64);
     run_tile(64, 64, 64, FUSED_BYPASS, 4400, "S2: (64,64,64) BYPASS");
-    test_failures += check_identity_pattern(64, 64, "S2");
+    test_failures += check_identity_pattern(64, 64, 64, "S2");
 
     // ----- Scenario 3: asymmetric tile (32,16,8) BYPASS -----
     clear_buffers();
     load_identity_pattern(32, 16, 8);
     run_tile(32, 16, 8, FUSED_BYPASS, 1000, "S3: (32,16,8) BYPASS");
-    test_failures += check_identity_pattern(32, 16, "S3");
+    test_failures += check_identity_pattern(32, 16, 8, "S3");
 
     // ----- Scenario 4: (64,64,64) GELU -----
     // C = A (identity B). Expected: out[r][c] = GELU(r+1) for r<64.
@@ -434,7 +447,15 @@ module tb_stream_pipeline_tile;
             errors++; continue;
           end
           got      = from_q(out_mem[r][c]);
-          expected = ref_gelu(real'(r + 1));
+          // PE[r][c] computes A[r][c] = r+1 in Q4.4 (saturated at 7.9375).
+          // Then fused_postproc applies GELU. Reference must clamp first.
+          begin
+            real sat_in;
+            sat_in = real'(r + 1);
+            if (sat_in >  7.9375) sat_in =  7.9375;
+            if (sat_in < -8.0   ) sat_in = -8.0;
+            expected = ref_gelu(sat_in);
+          end
           if ((got - expected) > 0.25 || (got - expected) < -0.25) begin
             if (bad_count < 4)
               $display("    [S4] out[%0d][%0d]=%0.4f vs %0.4f",
@@ -471,7 +492,19 @@ module tb_stream_pipeline_tile;
             errors++; continue;
           end
           got      = from_q(out_mem[r][c]);
-          expected = real'(r + 1) * ref_gelu_prime(real'(r + 1));
+          // dh2_pre (= A[r][c] = r+1) saturates in Q4.4. h_pre (= aux_mem
+          // = r+1) likewise. Reference: dh2_pre * GELU'(h_pre), both
+          // sat-clamped.
+          begin
+            real sat_dh, sat_h;
+            sat_dh = real'(r + 1);
+            sat_h  = real'(r + 1);
+            if (sat_dh >  7.9375) sat_dh =  7.9375;
+            if (sat_dh < -8.0   ) sat_dh = -8.0;
+            if (sat_h  >  7.9375) sat_h  =  7.9375;
+            if (sat_h  < -8.0   ) sat_h  = -8.0;
+            expected = sat_dh * ref_gelu_prime(sat_h);
+          end
           if ((got - expected) > 0.5 || (got - expected) < -0.5) begin
             if (bad_count < 4)
               $display("    [S5] out[%0d][%0d]=%0.4f vs %0.4f",
@@ -575,7 +608,7 @@ module tb_stream_pipeline_tile;
       load_identity_pattern(64, 64, 64);
       run_tile(64, 64, 64, FUSED_BYPASS, 4400,
                $sformatf("S8.%0d: back-to-back", tile + 1));
-      errs = check_identity_pattern(64, 64,
+      errs = check_identity_pattern(64, 64, 64,
                 $sformatf("S8.%0d", tile + 1));
       if (errs > 0) test_failures += 1;
     end
