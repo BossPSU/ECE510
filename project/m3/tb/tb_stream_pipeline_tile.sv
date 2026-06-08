@@ -556,6 +556,30 @@ module tb_stream_pipeline_tile;
       else begin
         $display("    [S6] FAIL -- %0d errors", errors);
         test_failures++;
+        // Probe softmax inputs and outputs to locate the failure.
+        $display("    [S6-DIAG] c_out_array (softmax INPUT) samples:");
+        $display("      c_out_array[0][0]  = %0.4f", from_q(duv.c_out_array[0][0]));
+        $display("      c_out_array[0][1]  = %0.4f", from_q(duv.c_out_array[0][1]));
+        $display("      c_out_array[1][0]  = %0.4f", from_q(duv.c_out_array[1][0]));
+        $display("      c_out_array[7][7]  = %0.4f", from_q(duv.c_out_array[7][7]));
+        $display("    [S6-DIAG] sm_row_buf (softmax OUTPUT, captured rows):");
+        $display("      sm_row_buf[0][0]   = %0.4f", from_q(duv.sm_row_buf[0][0]));
+        $display("      sm_row_buf[0][1]   = %0.4f", from_q(duv.sm_row_buf[0][1]));
+        $display("      sm_row_buf[1][0]   = %0.4f", from_q(duv.sm_row_buf[1][0]));
+        $display("      sm_row_buf[1][1]   = %0.4f", from_q(duv.sm_row_buf[1][1]));
+        $display("      sm_row_buf[63][63] = %0.4f", from_q(duv.sm_row_buf[63][63]));
+        // per-row out_seen count to see if walk-out fired for all rows
+        begin : sm_row_seen
+          int seen_per_row [64];
+          for (int rr = 0; rr < 64; rr++) seen_per_row[rr] = 0;
+          for (int rr = 0; rr < 64; rr++)
+            for (int cc = 0; cc < 64; cc++)
+              if (out_seen[rr][cc]) seen_per_row[rr]++;
+          $display("    [S6-DIAG] out_seen rows (only nonzero counts):");
+          for (int rr = 0; rr < 64; rr++)
+            if (seen_per_row[rr] > 0 && rr < 8)
+              $display("      row %0d seen: %0d/64", rr, seen_per_row[rr]);
+        end
       end
     end
 
