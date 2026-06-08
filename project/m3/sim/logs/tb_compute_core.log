@@ -1,0 +1,155 @@
+Reading pref.tcl
+
+# 2021.3_1
+
+# vsim -c -t 1ps -L work work.tb_compute_core -voptargs="+acc" -suppress 3839 -do "run -all; quit" 
+# Start time: 18:23:57 on Jun 07,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: ../../RTL/systolic_array_64x64.sv(33): (vopt-13314) Defaulting port 'a_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/systolic_array_64x64.sv(36): (vopt-13314) Defaulting port 'b_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/stream_pipeline.sv(62): (vopt-13314) Defaulting port 'a_rd_data' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/stream_pipeline.sv(67): (vopt-13314) Defaulting port 'b_rd_data' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/softmax_unit_lut.sv(45): (vopt-13314) Defaulting port 'scores_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/accel_top.sv(37): (vopt-13314) Defaulting port 'macro_cmd_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../tb/tb_compute_core.sv(222): (vopt-2244) Variable 'ADDR_A' is implicitly static. You must either explicitly declare it as static or automatic
+# or remove the initialization in the declaration of variable.
+# ** Warning: ../tb/tb_compute_core.sv(223): (vopt-2244) Variable 'ADDR_B' is implicitly static. You must either explicitly declare it as static or automatic
+# or remove the initialization in the declaration of variable.
+# ** Warning: ../tb/tb_compute_core.sv(224): (vopt-2244) Variable 'ADDR_AUX' is implicitly static. You must either explicitly declare it as static or automatic
+# or remove the initialization in the declaration of variable.
+# ** Warning: ../tb/tb_compute_core.sv(225): (vopt-2244) Variable 'ADDR_OUT' is implicitly static. You must either explicitly declare it as static or automatic
+# or remove the initialization in the declaration of variable.
+# ** Warning: ../tb/tb_compute_core.sv(69): (vopt-2685) [TFMPC] - Too few port connections for 'duv'.  Expected 19, found 16.
+# ** Warning: ../tb/tb_compute_core.sv(69): (vopt-2718) [TFMPC] - Missing connection for port 'perf_tiles_completed'.
+# ** Warning: ../tb/tb_compute_core.sv(69): (vopt-2718) [TFMPC] - Missing connection for port 'perf_stall_cycles'.
+# ** Warning: ../tb/tb_compute_core.sv(69): (vopt-2718) [TFMPC] - Missing connection for port 'perf_active_cycles'.
+# ** Warning: ../../RTL/tile_buffer.sv(41): (vopt-13314) Defaulting port 'mp_rd_row' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/tile_buffer.sv(42): (vopt-13314) Defaulting port 'mp_rd_col' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/accel_controller.sv(25): (vopt-13314) Defaulting port 'cmd' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Note: (vopt-143) Recognized 1 FSM in module "accel_controller(fast)".
+# ** Warning: ../../RTL/accel_controller.sv(25): (vopt-13314) Defaulting port 'cmd' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Note: (vopt-143) Recognized 1 FSM in module "accel_controller(fast__1)".
+# ** Warning: ../../RTL/tile_dispatcher.sv(31): (vopt-13314) Defaulting port 'macro_cmd' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/tile_dispatcher.sv(39): (vopt-13314) Defaulting port 'lane_cmd_ready' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/tile_dispatcher.sv(40): (vopt-13314) Defaulting port 'lane_done' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Note: (vopt-143) Recognized 1 FSM in module "tile_dispatcher(fast)".
+# ** Warning: ../../RTL/accel_engine.sv(18): (vopt-13314) Defaulting port 'cmd_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/accel_engine.sv(18): (vopt-13314) Defaulting port 'cmd_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/tile_buffer.sv(41): (vopt-13314) Defaulting port 'mp_rd_row' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/tile_buffer.sv(42): (vopt-13314) Defaulting port 'mp_rd_col' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/tile_buffer.sv(41): (vopt-13314) Defaulting port 'mp_rd_row' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/tile_buffer.sv(42): (vopt-13314) Defaulting port 'mp_rd_col' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../m2/rtl/compute_core.sv(57): (vopt-13314) Defaulting port 'macro_cmd_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=28.
+# //  Questa Sim-64
+# //  Version 2021.3_1 linux_x86_64 Aug 15 2021
+# //
+# //  Copyright 1991-2021 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.accel_pkg(fast)
+# Loading work.tb_compute_core(fast)
+# Loading work.compute_core(fast)
+# Loading work.accel_top(fast)
+# Loading work.tile_dispatcher(fast)
+# Loading work.dma_engine(fast)
+# Loading work.accel_engine(fast)
+# Loading work.accel_controller(fast)
+# Loading work.tile_buffer(fast)
+# Loading work.tile_buffer(fast__1)
+# Loading work.stream_pipeline(fast)
+# Loading work.systolic_array_64x64(fast)
+# Loading work.mac_pe_piped4(fast)
+# Loading work.fused_postproc_unit(fast)
+# Loading work.gelu_unit_lut(fast)
+# Loading work.gelu_direct_lut(fast)
+# Loading work.gelu_grad_unit_lut(fast)
+# Loading work.gelu_grad_direct_lut(fast)
+# Loading work.softmax_unit_lut(fast)
+# Loading work.exp_lut(fast)
+# Loading work.divider_or_reciprocal_seq(fast)
+# Loading work.tile_buffer(fast__2)
+# Loading work.perf_counter_block(fast)
+# Loading work.scratchpad_ctrl(fast)
+# Loading work.sram_bank(fast)
+# Loading work.accel_engine(fast__1)
+# Loading work.accel_controller(fast__1)
+# run -all
+# === tb_compute_core: START ===
+# >>> Scenario 1: single ff_forward 64x64 tile
+#     [S1: ff_forward] PASS -- 16/16 samples within tol
+#     [S1-DIAG] Lane scan:
+#       lane 0, ADDR_OUT[0] = 0.8413
+#     [S1-DIAG] Lane 0 ADDR_OUT[0..127] nonzero map:
+#       ADDR_OUT[0] = 0.8413  (row 0 col 0 if row-major)
+#       ADDR_OUT[1] = 0.8413  (row 0 col 1 if row-major)
+#       ADDR_OUT[2] = 0.8413  (row 0 col 2 if row-major)
+#       ADDR_OUT[3] = 0.8413  (row 0 col 3 if row-major)
+#       ADDR_OUT[4] = 0.8413  (row 0 col 4 if row-major)
+#       ADDR_OUT[5] = 0.8413  (row 0 col 5 if row-major)
+#       ADDR_OUT[6] = 0.8413  (row 0 col 6 if row-major)
+#       ADDR_OUT[7] = 0.8413  (row 0 col 7 if row-major)
+#       ADDR_OUT[8] = 0.8413  (row 0 col 8 if row-major)
+#       ADDR_OUT[9] = 0.8413  (row 0 col 9 if row-major)
+#       ADDR_OUT[10] = 0.8413  (row 0 col 10 if row-major)
+#       ADDR_OUT[11] = 0.8413  (row 0 col 11 if row-major)
+#       ADDR_OUT[12] = 0.8413  (row 0 col 12 if row-major)
+#       ADDR_OUT[13] = 0.8413  (row 0 col 13 if row-major)
+#       ADDR_OUT[14] = 0.8413  (row 0 col 14 if row-major)
+#     [S1-DIAG] nonzero in first 128 cells: 128
+#     [S1-DIAG] Lane 0 ADDR_OUT[0,64,128,...,4032] nonzero map:
+#       ADDR_OUT[0] (row 0 col 0 row-major) = 0.8413
+#       ADDR_OUT[64] (row 1 col 0 row-major) = 0.8413
+#       ADDR_OUT[128] (row 2 col 0 row-major) = 0.8413
+#       ADDR_OUT[192] (row 3 col 0 row-major) = 0.8413
+#       ADDR_OUT[256] (row 4 col 0 row-major) = 0.8413
+#       ADDR_OUT[320] (row 5 col 0 row-major) = 0.8413
+#       ADDR_OUT[384] (row 6 col 0 row-major) = 0.8413
+#       ADDR_OUT[448] (row 7 col 0 row-major) = 0.8413
+#       ADDR_OUT[512] (row 8 col 0 row-major) = 0.8413
+#       ADDR_OUT[576] (row 9 col 0 row-major) = 0.8413
+#       ADDR_OUT[640] (row 10 col 0 row-major) = 0.8413
+#       ADDR_OUT[704] (row 11 col 0 row-major) = 0.8413
+#       ADDR_OUT[768] (row 12 col 0 row-major) = 0.8413
+#       ADDR_OUT[832] (row 13 col 0 row-major) = 0.8413
+#       ADDR_OUT[896] (row 14 col 0 row-major) = 0.8413
+#     [S1-DIAG] nonzero col-0-rowmajor cells: 64
+#     [S1-DIAG] Lane 0 col-major scan ADDR_OUT[col*64+row]:
+#     [S1-DIAG] full lane-0 nonzero count needs broader scan
+#     [S1-DIAG] Lane 0 accel_controller final state:
+#       write_cnt    = 4095
+#       wr_row       = 63
+#       wr_col       = 63
+#       tile_out_sz  = 4096
+#       cmd_reg.tile_m = 64
+#       cmd_reg.tile_n = 64
+#       cmd_reg.addr_out = 0x3000
+#     [S1-DIAG] u_buf_out mem samples:
+#       mem[0][0]   = 0.8413
+#       mem[0][1]   = 0.8413
+#       mem[1][0]   = 0.8413
+#       mem[63][63] = 0.8413
+# >>> Scenario 2: single ff_backward 64x64 tile
+#     [S2: ff_backward (dh1=dy*GELU'(h_pre))] PASS -- 16/16 samples within tol
+# >>> Scenario 3: ff_fwd -> ff_bwd -> ff_fwd back-to-back
+#     [S3.1: ff_fwd] PASS -- 8/8 samples within tol
+#     [S3.2: ff_bwd] PASS -- 8/8 samples within tol
+#     [S3.3: ff_fwd] PASS -- 8/8 samples within tol
+# >>> Scenario 4: ff_backward with h_pre = 2.0
+#     [S4: ff_backward h_pre=2.0] PASS -- 16/16 samples within tol
+# 
+# === tb_compute_core: ALL TESTS DONE ===
+# === TB_CC: PASS ===
+# ** Note: $finish    : ../tb/tb_compute_core.sv(373)
+#    Time: 628019 ns  Iteration: 1  Instance: /tb_compute_core
+# End time: 18:24:08 on Jun 07,2026, Elapsed time: 0:00:11
+# Errors: 0, Warnings: 28

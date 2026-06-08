@@ -1,0 +1,84 @@
+Reading pref.tcl
+
+# 2021.3_1
+
+# vsim -c -t 1ps -L work work.tb_stream_pipeline_tile -voptargs="+acc" -suppress 3839 -do "run -all; quit" 
+# Start time: 18:23:50 on Jun 07,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: ../../RTL/systolic_array_64x64.sv(33): (vopt-13314) Defaulting port 'a_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/systolic_array_64x64.sv(36): (vopt-13314) Defaulting port 'b_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/stream_pipeline.sv(62): (vopt-13314) Defaulting port 'a_rd_data' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../../RTL/stream_pipeline.sv(67): (vopt-13314) Defaulting port 'b_rd_data' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../tb/tb_stream_pipeline_tile.sv(441): (vopt-2244) Variable 'errors' is implicitly static. You must either explicitly declare it as static or automatic
+# or remove the initialization in the declaration of variable.
+# ** Warning: ../tb/tb_stream_pipeline_tile.sv(442): (vopt-2244) Variable 'bad_count' is implicitly static. You must either explicitly declare it as static or automatic
+# or remove the initialization in the declaration of variable.
+# ** Warning: ../tb/tb_stream_pipeline_tile.sv(486): (vopt-2244) Variable 'errors' is implicitly static. You must either explicitly declare it as static or automatic
+# or remove the initialization in the declaration of variable.
+# ** Warning: ../tb/tb_stream_pipeline_tile.sv(487): (vopt-2244) Variable 'bad_count' is implicitly static. You must either explicitly declare it as static or automatic
+# or remove the initialization in the declaration of variable.
+# ** Warning: ../tb/tb_stream_pipeline_tile.sv(545): (vopt-2244) Variable 'errors' is implicitly static. You must either explicitly declare it as static or automatic
+# or remove the initialization in the declaration of variable.
+# ** Warning: ../tb/tb_stream_pipeline_tile.sv(604): (vopt-2244) Variable 'errors' is implicitly static. You must either explicitly declare it as static or automatic
+# or remove the initialization in the declaration of variable.
+# ** Warning: ../tb/tb_stream_pipeline_tile.sv(606): (vopt-2244) Variable 'bad_count' is implicitly static. You must either explicitly declare it as static or automatic
+# or remove the initialization in the declaration of variable.
+# ** Warning: ../../RTL/softmax_unit_lut.sv(45): (vopt-13314) Defaulting port 'scores_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=12.
+# //  Questa Sim-64
+# //  Version 2021.3_1 linux_x86_64 Aug 15 2021
+# //
+# //  Copyright 1991-2021 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.accel_pkg(fast)
+# Loading work.tb_stream_pipeline_tile(fast)
+# Loading work.stream_pipeline(fast)
+# Loading work.systolic_array_64x64(fast)
+# Loading work.mac_pe_piped4(fast)
+# Loading work.fused_postproc_unit(fast)
+# Loading work.gelu_unit_lut(fast)
+# Loading work.gelu_direct_lut(fast)
+# Loading work.gelu_grad_unit_lut(fast)
+# Loading work.gelu_grad_direct_lut(fast)
+# Loading work.softmax_unit_lut(fast)
+# Loading work.exp_lut(fast)
+# Loading work.divider_or_reciprocal_seq(fast)
+# run -all
+# === tb_stream_pipeline_tile: START ===
+#     [S1: (1,1,1) BYPASS] 25 cycles (predicted 200, 0.12x)
+#     [S1] PASS
+#     [S2: (64,64,64) BYPASS] 4309 cycles (predicted 4400, 0.98x)
+#     [S2] PASS -- all 4096 outputs match (tol 0.125)
+#     [S3: (32,16,8) BYPASS] 589 cycles (predicted 1000, 0.59x)
+#     [S3] PASS -- all 512 outputs match (tol 0.125)
+#     [S4: (64,64,64) GELU] 4309 cycles (predicted 4500, 0.96x)
+#     [S4] PASS -- GELU outputs match within tol
+#     [S5: (64,64,64) GELU_GRAD] 4309 cycles (predicted 4500, 0.96x)
+#     [S5] PASS -- GELU_GRAD outputs aligned with h_pre
+#     [S6: (64,64,64) SOFTMAX] 8460 cycles (predicted 8500, 1.00x)
+#     [S6] PASS -- softmax uniform distribution OK
+#     [S7: (64,64,64) MASK] 4309 cycles (predicted 4500, 0.96x)
+#     [S7] PASS -- FUSED_MASK passthrough matches BYPASS
+#     [S8.1: back-to-back] 4309 cycles (predicted 4400, 0.98x)
+#     [S8.1] PASS -- all 4096 outputs match (tol 0.125)
+#     [S8.2: back-to-back] 4309 cycles (predicted 4400, 0.98x)
+#     [S8.2] PASS -- all 4096 outputs match (tol 0.125)
+#     [S8.3: back-to-back] 4309 cycles (predicted 4400, 0.98x)
+#     [S8.3] PASS -- all 4096 outputs match (tol 0.125)
+# 
+# === tb_stream_pipeline_tile: ALL TESTS DONE ===
+# === TB_SP_TILE: PASS ===
+# ** Note: $finish    : ../tb/tb_stream_pipeline_tile.sv(650)
+#    Time: 78537 ns  Iteration: 2  Instance: /tb_stream_pipeline_tile
+# End time: 18:23:57 on Jun 07,2026, Elapsed time: 0:00:07
+# Errors: 0, Warnings: 12

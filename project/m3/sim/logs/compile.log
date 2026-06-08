@@ -1,0 +1,638 @@
+QuestaSim-64 vmap 2021.3_1 Lib Mapping Utility 2021.08 Aug 15 2021
+vmap work work 
+Modifying modelsim.ini
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:30 on Jun 07,2026
+vlog -sv -work work ../../RTL/accel_pkg.sv 
+-- Compiling package accel_pkg
+
+Top level modules:
+	--none--
+End time: 18:41:31 on Jun 07,2026, Elapsed time: 0:00:01
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:31 on Jun 07,2026
+vlog -sv -work work ../../RTL/stream_if.sv 
+-- Compiling interface stream_if
+-- Importing package accel_pkg
+
+Top level modules:
+	--none--
+End time: 18:41:31 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:31 on Jun 07,2026
+vlog -sv -work work ../../RTL/sram_if.sv 
+-- Compiling interface sram_if
+
+Top level modules:
+	--none--
+End time: 18:41:31 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:31 on Jun 07,2026
+vlog -sv -work work ../../RTL/cmd_if.sv 
+-- Compiling interface cmd_if
+-- Importing package accel_pkg
+
+Top level modules:
+	--none--
+End time: 18:41:31 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:31 on Jun 07,2026
+vlog -sv -work work ../../RTL/tile_if.sv 
+-- Compiling interface tile_if
+-- Importing package accel_pkg
+
+Top level modules:
+	--none--
+End time: 18:41:31 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:31 on Jun 07,2026
+vlog -sv -work work ../../RTL/ctrl_if.sv 
+-- Compiling interface ctrl_if
+-- Importing package accel_pkg
+
+Top level modules:
+	--none--
+End time: 18:41:32 on Jun 07,2026, Elapsed time: 0:00:01
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:32 on Jun 07,2026
+vlog -sv -work work ../../RTL/status_if.sv 
+-- Compiling interface status_if
+
+Top level modules:
+	--none--
+End time: 18:41:32 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:32 on Jun 07,2026
+vlog -sv -work work ../../RTL/mac_pe.sv 
+-- Compiling module mac_pe
+-- Importing package accel_pkg
+
+Top level modules:
+	mac_pe
+End time: 18:41:32 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:32 on Jun 07,2026
+vlog -sv -work work ../../RTL/mac_pe_piped.sv 
+-- Compiling module mac_pe_piped
+-- Importing package accel_pkg
+
+Top level modules:
+	mac_pe_piped
+End time: 18:41:32 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:32 on Jun 07,2026
+vlog -sv -work work ../../RTL/mac_pe_piped4.sv 
+-- Compiling module mac_pe_piped4
+-- Importing package accel_pkg
+
+Top level modules:
+	mac_pe_piped4
+End time: 18:41:32 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:32 on Jun 07,2026
+vlog -sv -work work ../../RTL/systolic_array_64x64.sv 
+-- Compiling module systolic_array_64x64
+-- Importing package accel_pkg
+** Warning: ../../RTL/systolic_array_64x64.sv(33): (vlog-13314) Defaulting port 'a_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: ../../RTL/systolic_array_64x64.sv(36): (vlog-13314) Defaulting port 'b_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+
+Top level modules:
+	systolic_array_64x64
+End time: 18:41:32 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 2
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:33 on Jun 07,2026
+vlog -sv -work work ../../RTL/exp_lut.sv 
+-- Compiling module exp_lut
+-- Importing package accel_pkg
+
+Top level modules:
+	exp_lut
+End time: 18:41:33 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:33 on Jun 07,2026
+vlog -sv -work work ../../RTL/gelu_lut.sv 
+-- Compiling module gelu_lut
+-- Importing package accel_pkg
+
+Top level modules:
+	gelu_lut
+End time: 18:41:33 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:33 on Jun 07,2026
+vlog -sv -work work ../../RTL/gelu_direct_lut.sv 
+-- Compiling module gelu_direct_lut
+-- Importing package accel_pkg
+
+Top level modules:
+	gelu_direct_lut
+End time: 18:41:33 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:33 on Jun 07,2026
+vlog -sv -work work ../../RTL/gelu_grad_direct_lut.sv 
+-- Compiling module gelu_grad_direct_lut
+-- Importing package accel_pkg
+
+Top level modules:
+	gelu_grad_direct_lut
+End time: 18:41:33 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:33 on Jun 07,2026
+vlog -sv -work work ../../RTL/adder_tree.sv 
+-- Compiling module adder_tree
+-- Importing package accel_pkg
+** Warning: ../../RTL/adder_tree.sv(11): (vlog-13314) Defaulting port 'in_data' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+
+Top level modules:
+	adder_tree
+End time: 18:41:33 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 1
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:33 on Jun 07,2026
+vlog -sv -work work ../../RTL/gelu_unit.sv 
+-- Compiling module gelu_unit
+-- Importing package accel_pkg
+
+Top level modules:
+	gelu_unit
+End time: 18:41:34 on Jun 07,2026, Elapsed time: 0:00:01
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:34 on Jun 07,2026
+vlog -sv -work work ../../RTL/gelu_unit_lut.sv 
+-- Compiling module gelu_unit_lut
+-- Importing package accel_pkg
+
+Top level modules:
+	gelu_unit_lut
+End time: 18:41:34 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:34 on Jun 07,2026
+vlog -sv -work work ../../RTL/gelu_grad_unit.sv 
+-- Compiling module gelu_grad_unit
+-- Importing package accel_pkg
+
+Top level modules:
+	gelu_grad_unit
+End time: 18:41:34 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:34 on Jun 07,2026
+vlog -sv -work work ../../RTL/gelu_grad_unit_lut.sv 
+-- Compiling module gelu_grad_unit_lut
+-- Importing package accel_pkg
+
+Top level modules:
+	gelu_grad_unit_lut
+End time: 18:41:34 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:34 on Jun 07,2026
+vlog -sv -work work ../../RTL/softmax_unit.sv 
+-- Compiling module softmax_unit
+-- Importing package accel_pkg
+** Warning: ../../RTL/softmax_unit.sv(19): (vlog-13314) Defaulting port 'scores_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+
+Top level modules:
+	softmax_unit
+End time: 18:41:34 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 1
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:34 on Jun 07,2026
+vlog -sv -work work ../../RTL/softmax_unit_lut.sv 
+-- Compiling module softmax_unit_lut
+-- Importing package accel_pkg
+** Warning: ../../RTL/softmax_unit_lut.sv(45): (vlog-13314) Defaulting port 'scores_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: ../../RTL/softmax_unit_lut.sv(438): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: ../../RTL/softmax_unit_lut.sv(439): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: ../../RTL/softmax_unit_lut.sv(440): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: ../../RTL/softmax_unit_lut.sv(441): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: ../../RTL/softmax_unit_lut.sv(442): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: ../../RTL/softmax_unit_lut.sv(443): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: ../../RTL/softmax_unit_lut.sv(444): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: ../../RTL/softmax_unit_lut.sv(444): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: ../../RTL/softmax_unit_lut.sv(445): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: ../../RTL/softmax_unit_lut.sv(446): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: ../../RTL/softmax_unit_lut.sv(477): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: ../../RTL/softmax_unit_lut.sv(478): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: ../../RTL/softmax_unit_lut.sv(479): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: ../../RTL/softmax_unit_lut.sv(480): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: ../../RTL/softmax_unit_lut.sv(480): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+** Warning: ../../RTL/softmax_unit_lut.sv(481): (vlog-2583) [SVCHK] - Extra checking for conflicts with always_comb and always_latch variables is done at vopt time.
+
+Top level modules:
+	softmax_unit_lut
+End time: 18:41:34 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 17
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:35 on Jun 07,2026
+vlog -sv -work work ../../RTL/causal_mask_unit.sv 
+-- Compiling module causal_mask_unit
+-- Importing package accel_pkg
+** Warning: ../../RTL/causal_mask_unit.sv(9): (vlog-13314) Defaulting port 'data_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+
+Top level modules:
+	causal_mask_unit
+End time: 18:41:35 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 1
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:35 on Jun 07,2026
+vlog -sv -work work ../../RTL/divider_or_reciprocal_unit.sv 
+-- Compiling module divider_or_reciprocal_unit
+-- Importing package accel_pkg
+
+Top level modules:
+	divider_or_reciprocal_unit
+End time: 18:41:35 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:35 on Jun 07,2026
+vlog -sv -work work ../../RTL/divider_or_reciprocal_seq.sv 
+-- Compiling module divider_or_reciprocal_seq
+-- Importing package accel_pkg
+
+Top level modules:
+	divider_or_reciprocal_seq
+End time: 18:41:35 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:35 on Jun 07,2026
+vlog -sv -work work ../../RTL/fused_postproc_unit.sv 
+-- Compiling module fused_postproc_unit
+-- Importing package accel_pkg
+
+Top level modules:
+	fused_postproc_unit
+End time: 18:41:35 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:35 on Jun 07,2026
+vlog -sv -work work ../../RTL/tile_buffer.sv 
+-- Compiling module tile_buffer
+-- Importing package accel_pkg
+** Warning: ../../RTL/tile_buffer.sv(41): (vlog-13314) Defaulting port 'mp_rd_row' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: ../../RTL/tile_buffer.sv(42): (vlog-13314) Defaulting port 'mp_rd_col' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+
+Top level modules:
+	tile_buffer
+End time: 18:41:35 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 2
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:35 on Jun 07,2026
+vlog -sv -work work ../../RTL/pipeline_stage.sv 
+-- Compiling module pipeline_stage
+-- Importing package accel_pkg
+
+Top level modules:
+	pipeline_stage
+End time: 18:41:36 on Jun 07,2026, Elapsed time: 0:00:01
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:36 on Jun 07,2026
+vlog -sv -work work ../../RTL/skid_buffer.sv 
+-- Compiling module skid_buffer
+-- Importing package accel_pkg
+
+Top level modules:
+	skid_buffer
+End time: 18:41:36 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:36 on Jun 07,2026
+vlog -sv -work work ../../RTL/stream_mux.sv 
+-- Compiling module stream_mux
+-- Importing package accel_pkg
+** Warning: ../../RTL/stream_mux.sv(11): (vlog-13314) Defaulting port 'in_data' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: ../../RTL/stream_mux.sv(12): (vlog-13314) Defaulting port 'in_valid' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+
+Top level modules:
+	stream_mux
+End time: 18:41:36 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 2
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:36 on Jun 07,2026
+vlog -sv -work work ../../RTL/tile_loader.sv 
+-- Compiling module tile_loader
+-- Importing package accel_pkg
+
+Top level modules:
+	tile_loader
+End time: 18:41:36 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:36 on Jun 07,2026
+vlog -sv -work work ../../RTL/tile_writer.sv 
+-- Compiling module tile_writer
+-- Importing package accel_pkg
+
+Top level modules:
+	tile_writer
+End time: 18:41:36 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:36 on Jun 07,2026
+vlog -sv -work work ../../RTL/sram_bank.sv 
+-- Compiling module sram_bank
+-- Importing package accel_pkg
+
+Top level modules:
+	sram_bank
+End time: 18:41:36 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:36 on Jun 07,2026
+vlog -sv -work work ../../RTL/scratchpad_ctrl.sv 
+-- Compiling module scratchpad_ctrl
+-- Importing package accel_pkg
+
+Top level modules:
+	scratchpad_ctrl
+End time: 18:41:37 on Jun 07,2026, Elapsed time: 0:00:01
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:37 on Jun 07,2026
+vlog -sv -work work ../../RTL/address_gen.sv 
+-- Compiling module address_gen
+-- Importing package accel_pkg
+
+Top level modules:
+	address_gen
+End time: 18:41:37 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:37 on Jun 07,2026
+vlog -sv -work work ../../RTL/dma_engine.sv 
+-- Compiling module dma_engine
+-- Importing package accel_pkg
+
+Top level modules:
+	dma_engine
+End time: 18:41:37 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:37 on Jun 07,2026
+vlog -sv -work work ../../RTL/double_buffer_ctrl.sv 
+-- Compiling module double_buffer_ctrl
+-- Importing package accel_pkg
+
+Top level modules:
+	double_buffer_ctrl
+End time: 18:41:37 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:37 on Jun 07,2026
+vlog -sv -work work ../../RTL/stream_pipeline.sv 
+-- Compiling module stream_pipeline
+-- Importing package accel_pkg
+** Warning: ../../RTL/stream_pipeline.sv(62): (vlog-13314) Defaulting port 'a_rd_data' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: ../../RTL/stream_pipeline.sv(67): (vlog-13314) Defaulting port 'b_rd_data' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+
+Top level modules:
+	stream_pipeline
+End time: 18:41:37 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 2
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:37 on Jun 07,2026
+vlog -sv -work work ../../RTL/mode_decoder.sv 
+-- Compiling module mode_decoder
+-- Importing package accel_pkg
+** Warning: ../../RTL/mode_decoder.sv(5): (vlog-13314) Defaulting port 'cmd' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+
+Top level modules:
+	mode_decoder
+End time: 18:41:38 on Jun 07,2026, Elapsed time: 0:00:01
+Errors: 0, Warnings: 1
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:38 on Jun 07,2026
+vlog -sv -work work ../../RTL/tile_scheduler.sv 
+-- Compiling module tile_scheduler
+-- Importing package accel_pkg
+
+Top level modules:
+	tile_scheduler
+End time: 18:41:38 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:38 on Jun 07,2026
+vlog -sv -work work ../../RTL/tile_dispatcher.sv 
+-- Compiling module tile_dispatcher
+-- Importing package accel_pkg
+** Warning: ../../RTL/tile_dispatcher.sv(31): (vlog-13314) Defaulting port 'macro_cmd' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: ../../RTL/tile_dispatcher.sv(39): (vlog-13314) Defaulting port 'lane_cmd_ready' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+** Warning: ../../RTL/tile_dispatcher.sv(40): (vlog-13314) Defaulting port 'lane_done' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+
+Top level modules:
+	tile_dispatcher
+End time: 18:41:38 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 3
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:38 on Jun 07,2026
+vlog -sv -work work ../../RTL/accel_controller.sv 
+-- Compiling module accel_controller
+-- Importing package accel_pkg
+** Warning: ../../RTL/accel_controller.sv(25): (vlog-13314) Defaulting port 'cmd' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+
+Top level modules:
+	accel_controller
+End time: 18:41:38 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 1
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:38 on Jun 07,2026
+vlog -sv -work work ../../RTL/perf_counter_block.sv 
+-- Compiling module perf_counter_block
+-- Importing package accel_pkg
+
+Top level modules:
+	perf_counter_block
+End time: 18:41:38 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:38 on Jun 07,2026
+vlog -sv -work work ../../RTL/csr_block.sv 
+-- Compiling module csr_block
+-- Importing package accel_pkg
+
+Top level modules:
+	csr_block
+End time: 18:41:38 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:38 on Jun 07,2026
+vlog -sv -work work ../../RTL/accel_engine.sv 
+-- Compiling module accel_engine
+-- Importing package accel_pkg
+** Warning: ../../RTL/accel_engine.sv(18): (vlog-13314) Defaulting port 'cmd_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+
+Top level modules:
+	accel_engine
+End time: 18:41:39 on Jun 07,2026, Elapsed time: 0:00:01
+Errors: 0, Warnings: 1
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:39 on Jun 07,2026
+vlog -sv -work work ../../RTL/accel_top.sv 
+-- Compiling module accel_top
+-- Importing package accel_pkg
+** Warning: ../../RTL/accel_top.sv(37): (vlog-13314) Defaulting port 'macro_cmd_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+
+Top level modules:
+	accel_top
+End time: 18:41:39 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 1
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:39 on Jun 07,2026
+vlog -sv -work work ../../RTL/accel_chiplet_wrapper.sv 
+-- Compiling module accel_chiplet_wrapper
+-- Importing package accel_pkg
+
+Top level modules:
+	accel_chiplet_wrapper
+End time: 18:41:39 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:39 on Jun 07,2026
+vlog -sv -work work ../../m2/rtl/compute_core.sv 
+-- Compiling module compute_core
+-- Importing package accel_pkg
+** Warning: ../../m2/rtl/compute_core.sv(57): (vlog-13314) Defaulting port 'macro_cmd_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+
+Top level modules:
+	compute_core
+End time: 18:41:39 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 1
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:39 on Jun 07,2026
+vlog -sv -work work ../../m2/rtl/interface.sv 
+-- Compiling module chiplet_interface
+-- Importing package accel_pkg
+
+Top level modules:
+	chiplet_interface
+End time: 18:41:39 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:39 on Jun 07,2026
+vlog -sv -work work ../rtl/top.sv 
+-- Compiling module top
+-- Importing package accel_pkg
+
+Top level modules:
+	top
+End time: 18:41:40 on Jun 07,2026, Elapsed time: 0:00:01
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:40 on Jun 07,2026
+vlog -sv -work work ../tb/tb_top.sv 
+-- Compiling module tb_top
+-- Importing package accel_pkg
+
+Top level modules:
+	tb_top
+End time: 18:41:40 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:40 on Jun 07,2026
+vlog -sv -work work ../tb/tb_ff_backward_e2e.sv 
+-- Compiling module tb_ff_backward_e2e
+-- Importing package accel_pkg
+
+Top level modules:
+	tb_ff_backward_e2e
+End time: 18:41:40 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:40 on Jun 07,2026
+vlog -sv -work work ../tb/tb_stream_pipeline_tile.sv 
+-- Compiling module tb_stream_pipeline_tile
+-- Importing package accel_pkg
+** Warning: ../tb/tb_stream_pipeline_tile.sv(441): (vlog-2244) Variable 'errors' is implicitly static. You must either explicitly declare it as static or automatic
+or remove the initialization in the declaration of variable.
+** Warning: ../tb/tb_stream_pipeline_tile.sv(442): (vlog-2244) Variable 'bad_count' is implicitly static. You must either explicitly declare it as static or automatic
+or remove the initialization in the declaration of variable.
+** Warning: ../tb/tb_stream_pipeline_tile.sv(486): (vlog-2244) Variable 'errors' is implicitly static. You must either explicitly declare it as static or automatic
+or remove the initialization in the declaration of variable.
+** Warning: ../tb/tb_stream_pipeline_tile.sv(487): (vlog-2244) Variable 'bad_count' is implicitly static. You must either explicitly declare it as static or automatic
+or remove the initialization in the declaration of variable.
+** Warning: ../tb/tb_stream_pipeline_tile.sv(545): (vlog-2244) Variable 'errors' is implicitly static. You must either explicitly declare it as static or automatic
+or remove the initialization in the declaration of variable.
+** Warning: ../tb/tb_stream_pipeline_tile.sv(604): (vlog-2244) Variable 'errors' is implicitly static. You must either explicitly declare it as static or automatic
+or remove the initialization in the declaration of variable.
+** Warning: ../tb/tb_stream_pipeline_tile.sv(606): (vlog-2244) Variable 'bad_count' is implicitly static. You must either explicitly declare it as static or automatic
+or remove the initialization in the declaration of variable.
+
+Top level modules:
+	tb_stream_pipeline_tile
+End time: 18:41:40 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 7
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:40 on Jun 07,2026
+vlog -sv -work work ../tb/tb_compute_core.sv 
+-- Compiling module tb_compute_core
+-- Importing package accel_pkg
+** Warning: ../tb/tb_compute_core.sv(222): (vlog-2244) Variable 'ADDR_A' is implicitly static. You must either explicitly declare it as static or automatic
+or remove the initialization in the declaration of variable.
+** Warning: ../tb/tb_compute_core.sv(223): (vlog-2244) Variable 'ADDR_B' is implicitly static. You must either explicitly declare it as static or automatic
+or remove the initialization in the declaration of variable.
+** Warning: ../tb/tb_compute_core.sv(224): (vlog-2244) Variable 'ADDR_AUX' is implicitly static. You must either explicitly declare it as static or automatic
+or remove the initialization in the declaration of variable.
+** Warning: ../tb/tb_compute_core.sv(225): (vlog-2244) Variable 'ADDR_OUT' is implicitly static. You must either explicitly declare it as static or automatic
+or remove the initialization in the declaration of variable.
+
+Top level modules:
+	tb_compute_core
+End time: 18:41:40 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 4
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:40 on Jun 07,2026
+vlog -sv -work work ../tb/tb_fused_postproc_unit.sv 
+-- Compiling module tb_fused_postproc_unit
+-- Importing package accel_pkg
+
+Top level modules:
+	tb_fused_postproc_unit
+End time: 18:41:40 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:40 on Jun 07,2026
+vlog -sv -work work ../tb/tb_gelu_unit_lut.sv 
+-- Compiling module tb_gelu_unit_lut
+-- Importing package accel_pkg
+
+Top level modules:
+	tb_gelu_unit_lut
+End time: 18:41:41 on Jun 07,2026, Elapsed time: 0:00:01
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:41 on Jun 07,2026
+vlog -sv -work work ../tb/tb_gelu_grad_unit_lut.sv 
+-- Compiling module tb_gelu_grad_unit_lut
+-- Importing package accel_pkg
+
+Top level modules:
+	tb_gelu_grad_unit_lut
+End time: 18:41:41 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0
+QuestaSim-64 vlog 2021.3_1 Compiler 2021.08 Aug 15 2021
+Start time: 18:41:41 on Jun 07,2026
+vlog -sv -work work ../tb/tb_softmax_unit_lut.sv 
+-- Compiling module tb_softmax_unit_lut
+-- Importing package accel_pkg
+
+Top level modules:
+	tb_softmax_unit_lut
+End time: 18:41:41 on Jun 07,2026, Elapsed time: 0:00:00
+Errors: 0, Warnings: 0

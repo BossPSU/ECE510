@@ -1,0 +1,51 @@
+Reading pref.tcl
+
+# 2021.3_1
+
+# vsim -c -t 1ps -L work work.tb_softmax_unit_lut -voptargs="+acc" -suppress 3839 -do "run -all; quit" 
+# Start time: 18:23:48 on Jun 07,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# ** Warning: ../../RTL/softmax_unit_lut.sv(45): (vopt-13314) Defaulting port 'scores_in' kind to 'var' rather than 'wire' due to default compile option setting of -svinputport=relaxed.
+# ** Warning: ../tb/tb_softmax_unit_lut.sv(48): (vopt-2685) [TFMPC] - Too few port connections for 'duv'.  Expected 10, found 9.
+# ** Warning: ../tb/tb_softmax_unit_lut.sv(48): (vopt-2718) [TFMPC] - Missing connection for port 'ready'.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=3.
+# //  Questa Sim-64
+# //  Version 2021.3_1 linux_x86_64 Aug 15 2021
+# //
+# //  Copyright 1991-2021 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.accel_pkg(fast)
+# Loading work.tb_softmax_unit_lut(fast)
+# Loading work.softmax_unit_lut(fast)
+# Loading work.exp_lut(fast)
+# Loading work.divider_or_reciprocal_seq(fast)
+# run -all
+# === tb_softmax_unit_lut: START ===
+#     T1: vec_len=64 uniform: latency=63 probs_sum=1.0000 max@0=0.0156
+#   PASS: T1: vec_len=64 uniform -- uniform 1/64, sum=1.0
+#     T2: vec_len=16 uniform: latency=63 probs_sum=1.0000 max@0=0.0625
+#   PASS: T2: vec_len=16 uniform -- uniform 1/16, sum=1.0
+#     T3: one-hot @17: latency=63 probs_sum=0.9995 max@17=0.9793
+#   PASS: T3: one-hot @17 -- dominant @17 = 0.9793
+#     T4: one-hot @0 edge: latency=63 probs_sum=0.9995 max@0=0.9793
+#   PASS: T4: one-hot @0 edge -- dominant @0 = 0.9793
+#     T5: one-hot @63 edge: latency=63 probs_sum=0.9995 max@63=0.9793
+#   PASS: T5: one-hot @63 edge -- dominant @63 = 0.9793
+#     T6: descending negatives: latency=63 probs_sum=0.9994 max@0=0.0941
+#   PASS: T6 -- descending negatives -> dominant @0
+# 
+# === TB_SOFTMAX_LUT: PASS ===
+# ** Note: $finish    : ../tb/tb_softmax_unit_lut.sv(236)
+#    Time: 791 ns  Iteration: 1  Instance: /tb_softmax_unit_lut
+# End time: 18:23:49 on Jun 07,2026, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 3

@@ -1,0 +1,26 @@
+
+##################################################################
+## run_verification.sh: 2026-06-07T18:41:30-07:00
+## host : phobos.ece.pdx.edu
+## cwd  : /home/dboss/common/Documents/ECE510/ECE510/project/m3/sim
+## TBs  : 1 testbench(es)
+##################################################################
+
+>>> Compiling RTL (log: logs/compile.log)...
+    compile OK
+
+------------------------------------------------------------------
+ >> tb_top
+    log: logs/tb_top.log
+    elapsed: 9s  result: PASS
+
+##################################################################
+## VERIFICATION SUMMARY
+##################################################################
+Testbench                      Result     Time
+----------------------------------------------
+tb_top                         PASS        9s
+----------------------------------------------
+Total: 1   Pass: 1   Fail: 0
+
+=== VERIFICATION: PASS (all 1 testbenches passed) ===

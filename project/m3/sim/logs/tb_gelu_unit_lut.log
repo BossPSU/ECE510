@@ -1,0 +1,50 @@
+Reading pref.tcl
+
+# 2021.3_1
+
+# vsim -c -t 1ps -L work work.tb_gelu_unit_lut -voptargs="+acc" -suppress 3839 -do "run -all; quit" 
+# Start time: 18:23:43 on Jun 07,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# //  Questa Sim-64
+# //  Version 2021.3_1 linux_x86_64 Aug 15 2021
+# //
+# //  Copyright 1991-2021 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.accel_pkg(fast)
+# Loading work.tb_gelu_unit_lut(fast)
+# Loading work.gelu_unit_lut(fast)
+# Loading work.gelu_direct_lut(fast)
+# run -all
+# === tb_gelu_unit_lut: START ===
+#   PASS: Sweep[0] GELU(-4.0000) = -0.0001 (expected -0.0001, err -0.00005)
+#   PASS: Sweep[1] GELU(-3.5000) = -0.0008 (expected -0.0006, err -0.00019)
+#   PASS: Sweep[2] GELU(-2.0000) = -0.0455 (expected -0.0454, err -0.00010)
+#   PASS: Sweep[3] GELU(-1.0000) = -0.1587 (expected -0.1588, err 0.00015)
+#   PASS: Sweep[4] GELU(-0.5000) = -0.1543 (expected -0.1543, err 0.00002)
+#   PASS: Sweep[5] GELU(-0.1250) = -0.0563 (expected -0.0563, err -0.00001)
+#   PASS: Sweep[6] GELU(0.0000) = 0.0000 (expected 0.0000, err 0.00000)
+#   PASS: Sweep[7] GELU(0.1250) = 0.0687 (expected 0.0687, err -0.00001)
+#   PASS: Sweep[8] GELU(0.5000) = 0.3457 (expected 0.3457, err 0.00002)
+#   PASS: Sweep[9] GELU(1.0000) = 0.8413 (expected 0.8412, err 0.00015)
+#   PASS: Sweep[10] GELU(2.0000) = 1.9545 (expected 1.9546, err -0.00010)
+#   PASS: Sweep[11] GELU(3.0000) = 2.9960 (expected 2.9964, err -0.00041)
+#   PASS: Sweep[12] GELU(3.9375) = 3.9373 (expected 3.9374, err -0.00007)
+#   PASS: Sweep[13] GELU(4.0100) = 4.0100 (expected 4.0099, err 0.00006)
+#   PASS: Sweep[14] GELU(5.0000) = 5.0000 (expected 5.0000, err 0.00000)
+#   PASS: Sweep[15] GELU(10.0000) = 10.0000 (expected 10.0000, err 0.00000)
+# 
+# === TB_GELU_LUT: PASS ===
+# ** Note: $finish    : ../tb/tb_gelu_unit_lut.sv(130)
+#    Time: 311 ns  Iteration: 1  Instance: /tb_gelu_unit_lut
+# End time: 18:23:45 on Jun 07,2026, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 0

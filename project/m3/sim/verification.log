@@ -1,0 +1,61 @@
+
+##################################################################
+## run_verification.sh: 2026-06-07T18:13:01-07:00
+## host : phobos.ece.pdx.edu
+## cwd  : /home/dboss/common/Documents/ECE510/ECE510/project/m3/sim
+## TBs  : 8 testbench(es)
+##################################################################
+
+>>> Compiling RTL (log: logs/compile.log)...
+    compile OK
+
+------------------------------------------------------------------
+ >> tb_fused_postproc_unit
+    log: logs/tb_fused_postproc_unit.log
+    elapsed: 2s  result: PASS
+------------------------------------------------------------------
+ >> tb_gelu_unit_lut
+    log: logs/tb_gelu_unit_lut.log
+    elapsed: 2s  result: PASS
+------------------------------------------------------------------
+ >> tb_gelu_grad_unit_lut
+    log: logs/tb_gelu_grad_unit_lut.log
+    elapsed: 2s  result: PASS
+------------------------------------------------------------------
+ >> tb_softmax_unit_lut
+    log: logs/tb_softmax_unit_lut.log
+    elapsed: 2s  result: PASS
+------------------------------------------------------------------
+ >> tb_stream_pipeline_tile
+    log: logs/tb_stream_pipeline_tile.log
+    elapsed: 8s  result: PASS
+------------------------------------------------------------------
+ >> tb_compute_core
+    log: logs/tb_compute_core.log
+    elapsed: 11s  result: PASS
+------------------------------------------------------------------
+ >> tb_top
+    log: logs/tb_top.log
+    elapsed: 9s  result: PASS
+------------------------------------------------------------------
+ >> tb_ff_backward_e2e
+    log: logs/tb_ff_backward_e2e.log
+    elapsed: 13s  result: PASS
+
+##################################################################
+## VERIFICATION SUMMARY
+##################################################################
+Testbench                      Result     Time
+----------------------------------------------
+tb_fused_postproc_unit         PASS        2s
+tb_gelu_unit_lut               PASS        2s
+tb_gelu_grad_unit_lut          PASS        2s
+tb_softmax_unit_lut            PASS        2s
+tb_stream_pipeline_tile        PASS        8s
+tb_compute_core                PASS       11s
+tb_top                         PASS        9s
+tb_ff_backward_e2e             PASS       13s
+----------------------------------------------
+Total: 8   Pass: 8   Fail: 0
+
+=== VERIFICATION: PASS (all 8 testbenches passed) ===

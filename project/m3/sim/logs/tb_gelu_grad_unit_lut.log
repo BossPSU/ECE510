@@ -1,0 +1,46 @@
+Reading pref.tcl
+
+# 2021.3_1
+
+# vsim -c -t 1ps -L work work.tb_gelu_grad_unit_lut -voptargs="+acc" -suppress 3839 -do "run -all; quit" 
+# Start time: 18:23:45 on Jun 07,2026
+# ** Note: (vsim-3812) Design is being optimized...
+# //  Questa Sim-64
+# //  Version 2021.3_1 linux_x86_64 Aug 15 2021
+# //
+# //  Copyright 1991-2021 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.accel_pkg(fast)
+# Loading work.tb_gelu_grad_unit_lut(fast)
+# Loading work.gelu_grad_unit_lut(fast)
+# Loading work.gelu_grad_direct_lut(fast)
+# run -all
+# === tb_gelu_grad_unit_lut: START ===
+#   PASS: T1: deep negative -> 0 G'(-10.0000) = 0.0000 (expected 0.0000)
+#   PASS: T2: just-below -4 -> 0 G'(-4.5000) = 0.0000 (expected 0.0000)
+#   PASS: T3: deep positive -> 1 G'(5.0000) = 1.0000 (expected 1.0000)
+#   PASS: T4: LUT boundary -4 G'(-4.0000) = -0.0005 (expected -0.0003)
+#   PASS: T5: G'(-2.0) G'(-2.0000) = -0.0852 (expected -0.0861)
+#   PASS: T6: G'(-1.0) -- sign-handling key test G'(-1.0000) = -0.0833 (expected -0.0830)
+#   PASS: T7: G'(-0.5) G'(-0.5000) = 0.1325 (expected 0.1326)
+#   PASS: T8: G'(0.0)=0.5 -- inflection point G'(0.0000) = 0.5000 (expected 0.5000)
+#   PASS: T9: G'(0.5) G'(0.5000) = 0.8675 (expected 0.8674)
+#   PASS: T10: G'(1.0) G'(1.0000) = 1.0833 (expected 1.0830)
+#   PASS: T11: G'(2.0) G'(2.0000) = 1.0852 (expected 1.0861)
+#   PASS: T12: near positive boundary G'(3.9375) = 1.0006 (expected 1.0004)
+# 
+# === TB_GELU_GRAD_LUT: PASS ===
+# ** Note: $finish    : ../tb/tb_gelu_grad_unit_lut.sv(124)
+#    Time: 239 ns  Iteration: 1  Instance: /tb_gelu_grad_unit_lut
+# End time: 18:23:47 on Jun 07,2026, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 0
