@@ -1,0 +1,265 @@
+
+Power Net Detected:
+        Voltage	    Name
+             0V	    VSS
+          0.85V	    VDD
+Using Power View: av_typ.
+
+Begin Power Analysis
+
+             0V	    VSS
+          0.85V	    VDD
+
+Begin Processing Timing Library for Power Calculation
+
+Begin Processing Timing Library for Power Calculation
+
+
+
+Begin Processing Power Net/Grid for Power Calculation
+
+Ended Processing Power Net/Grid for Power Calculation: (cpu=0:00:00, real=0:00:00, mem(process/total/peak)=13783.34MB/15210.64MB/15268.98MB)
+
+Begin Processing Timing Window Data for Power Calculation
+
+clk(750.188MHz) CK: assigning clock clk to net clk
+Ended Processing Timing Window Data for Power Calculation: (cpu=0:00:12, real=0:00:12, mem(process/total/peak)=14642.59MB/16237.64MB/15268.98MB)
+
+Begin Processing User Attributes
+
+Ended Processing User Attributes: (cpu=0:00:00, real=0:00:00, mem(process/total/peak)=14802.59MB/16398.64MB/15268.98MB)
+
+Begin Processing Signal Activity
+
+
+Starting Levelizing
+2026-Jun-07 11:12:42 (2026-Jun-07 18:12:42 GMT)
+2026-Jun-07 11:12:45 (2026-Jun-07 18:12:45 GMT): 10%
+2026-Jun-07 11:12:46 (2026-Jun-07 18:12:46 GMT): 20%
+2026-Jun-07 11:12:47 (2026-Jun-07 18:12:47 GMT): 30%
+2026-Jun-07 11:12:48 (2026-Jun-07 18:12:48 GMT): 40%
+2026-Jun-07 11:12:49 (2026-Jun-07 18:12:49 GMT): 50%
+2026-Jun-07 11:12:50 (2026-Jun-07 18:12:50 GMT): 60%
+2026-Jun-07 11:12:51 (2026-Jun-07 18:12:51 GMT): 70%
+2026-Jun-07 11:12:52 (2026-Jun-07 18:12:52 GMT): 80%
+2026-Jun-07 11:12:53 (2026-Jun-07 18:12:53 GMT): 90%
+
+Finished Levelizing
+2026-Jun-07 11:12:59 (2026-Jun-07 18:12:59 GMT)
+
+Starting Activity Propagation
+2026-Jun-07 11:12:59 (2026-Jun-07 18:12:59 GMT)
+
+Finished Activity Propagation
+2026-Jun-07 11:13:04 (2026-Jun-07 18:13:04 GMT)
+Ended Processing Signal Activity: (cpu=0:00:27, real=0:00:28, mem(process/total/peak)=15229.97MB/16834.54MB/15268.98MB)
+
+Begin Power Computation
+
+      ----------------------------------------------------------
+      # of cell(s) missing both power/leakage table: 0
+      # of cell(s) missing power table: 0
+      # of cell(s) missing leakage table: 0
+      ----------------------------------------------------------
+
+
+
+Starting Calculating power
+2026-Jun-07 11:13:06 (2026-Jun-07 18:13:06 GMT)
+2026-Jun-07 11:13:35 (2026-Jun-07 18:13:35 GMT): 10%
+2026-Jun-07 11:13:35 (2026-Jun-07 18:13:35 GMT): 20%
+2026-Jun-07 11:13:35 (2026-Jun-07 18:13:35 GMT): 30%
+2026-Jun-07 11:13:35 (2026-Jun-07 18:13:35 GMT): 40%
+2026-Jun-07 11:13:35 (2026-Jun-07 18:13:35 GMT): 50%
+2026-Jun-07 11:13:35 (2026-Jun-07 18:13:35 GMT): 60%
+2026-Jun-07 11:13:35 (2026-Jun-07 18:13:35 GMT): 70%
+2026-Jun-07 11:13:35 (2026-Jun-07 18:13:35 GMT): 80%
+2026-Jun-07 11:13:35 (2026-Jun-07 18:13:35 GMT): 90%
+
+Finished Calculating power
+2026-Jun-07 11:13:36 (2026-Jun-07 18:13:36 GMT)
+      # of MSMV cell(s) missing power_level: 0
+Ended Power Computation: (cpu=0:00:29, real=0:00:29, mem(process/total/peak)=15230.97MB/16836.54MB/15268.98MB)
+
+Begin Processing User Attributes
+
+Ended Processing User Attributes: (cpu=0:00:00, real=0:00:00, mem(process/total/peak)=15231.22MB/16836.54MB/15268.98MB)
+
+Ended Power Analysis: (cpu=0:01:19, real=0:01:19, mem(process/total/peak)=15231.22MB/16836.54MB/15268.98MB)
+
+Begin Boundary Leakage Calculation
+Ended Boundary Leakage Calculation: (cpu=0:00:00, real=0:00:00,
+mem(process/total/peak)=15231.22MB/16836.54MB/15268.98MB)
+Begin Static Power Report Generation
+*----------------------------------------------------------------------------------------
+*	Innovus 21.14-s109_1 (64bit) 06/29/2022 09:53 (Linux 3.10.0-693.el7.x86_64)
+*	
+*
+* 	Date & Time:	2026-Jun-07 11:13:36 (2026-Jun-07 18:13:36 GMT)
+*
+*----------------------------------------------------------------------------------------
+*
+*	Design: stream_pipeline_DATA_WIDTH32_ARRAY_DIM64_USE_LUT_SOFTMAX1_USE_LUT_GELU1_USE_PIPED4_MAC1_USE_PIPED_MAC1
+*
+*	Liberty Libraries used:
+*	        av_typ: /home/dboss/common/Documents/ECE510/ECE510/project/RTL/out_innovus/stream_pipeline_64x64_hier/place.enc.dat/libs/mmmc/saed32rvt_pg_tt0p85v25c.lib
+*
+*	Parasitic Files used:
+*
+*       Power View : av_typ
+*
+*       User-Defined Activity : N.A.
+*
+*       Activity File: N.A.
+*
+*       Hierarchical Global Activity: N.A.
+*
+*       Global Activity: N.A.
+*
+*       Sequential Element Activity: 0.200000
+*
+*       Primary Input Activity: N.A.
+*
+*       Default icg ratio: N.A.
+*
+*       Global Comb ClockGate Ratio: N.A.
+*
+*	Power Units = 1mW
+*
+*	Time Units = 1e-09 secs
+*
+*       report_power
+*
+-----------------------------------------------------------------------------------------
+  2696547 instances have no static power
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2977__2398 (AO21X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2978__5107 (AO21X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2979__6260 (AO21X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2980__4319 (AO21X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2981__8428 (AO21X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2982__5526 (AO21X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2983__6783 (AO21X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2984__3680 (AO21X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2985__1617 (AO21X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2986__2802 (AO21X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2987__1705 (AO21X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2988 (INVX0_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2989__5122 (OA21X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2990__8246 (OA21X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2991__7098 (OR2X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2992__6131 (OR2X2_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2994 (INVX0_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2997__1881 (NAND3X0_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2998__5115 (OR3X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (VOLTUS_POWR-2152): Instance u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2999__7482 (OR3X1_RVT) has no static power. This might be because either the duty cycle and activity of all the connected nets
+is 0 or the instance is connected to power off rails. If this is not the expected behaviour and static power is required, ensure that the instance is connected
+to power on rails and that the duty cycle and activity of at least one net is not 0.
+
+** WARN:  (EMS-27): Message (VOLTUS_POWR-2152) has exceeded the current message display limit of 20.
+To increase the message display limit, refer to the product command reference manual.
+
+*
+
+
+
+Total Power
+-----------------------------------------------------------------------------------------
+Total Internal Power:        0.00000000 	    0.0000%
+Total Switching Power:       0.00000000 	    0.0000%
+Total Leakage Power:         0.00000000 	    0.0000%
+Total Power:                 0.00000000
+-----------------------------------------------------------------------------------------
+
+
+Group                           Internal   Switching     Leakage       Total  Percentage 
+                                Power      Power         Power         Power  (%)        
+-----------------------------------------------------------------------------------------
+Sequential                             0           0           0           0           0
+Macro                                  0           0           0           0           0
+IO                                     0           0           0           0           0
+Combinational                          0           0           0           0           0
+Clock (Combinational)                  0           0           0           0           0
+Clock (Sequential)                     0           0           0           0           0
+-----------------------------------------------------------------------------------------
+Total                                  0           0           0           0         100
+-----------------------------------------------------------------------------------------
+ 
+ 
+-----------------------------------------------------------------------------------------
+*	Power Distribution Summary: 
+*              Highest Average Power: u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2977__2398 (AO21X1_RVT):                0
+*              Highest Leakage Power: u_array/gen_row[56].gen_col[27].g_piped4_pe.u_pe/g2977__2398 (AO21X1_RVT):                0
+*                Total Cap:      3.51286e-08 F
+*                Total instances in design: 2696547
+*                Total instances in design with no power: 2696547
+*                Total instances in design with no activty:     0
+
+*                Total Fillers and Decap: 2696547
+-----------------------------------------------------------------------------------------
+ 
+** INFO:  (VOLTUS_POWR-3465): There are 0 decaps and 2696547 fillers in the design
+
+Ended Static Power Report Generation: (cpu=0:00:17, real=0:00:17,
+mem(process/total/peak)=15231.68MB/16836.54MB/15268.98MB)
+
+**WARN: (IMPOPT-3000):	Buffer footprint is not defined or is an invalid buffer footprint.
+Type 'man IMPOPT-3000' for more detail.
+**WARN: (IMPOPT-3001):	Inverter footprint is not defined or is an invalid inverter footprint.
+Type 'man IMPOPT-3001' for more detail.

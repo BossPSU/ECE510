@@ -1,0 +1,53 @@
+Clock tree timing engine global stage delay update for dc_typ:both.late...
+Clock tree timing engine global stage delay update for dc_typ:both.late done. (took cpu=0:00:05.5 real=0:00:05.5)
+
+Section 1: Constraint summary
+=============================
+
+Transition constraints are active in the following delay corners:
+
+dc_typ:both.late
+
+Cap constraints are not active any delay corners.
+
+Transition constraint summary:
+
+----------------------------------------------------------------------------------------
+Delay corner                  Target (ns)    Num pins    Target source     Clock tree(s)
+----------------------------------------------------------------------------------------
+dc_typ:both.late (primary)         -            -              -                 -
+            -                    0.050        596185     auto extracted    all
+----------------------------------------------------------------------------------------
+
+Capacitance constraint summary:
+
+------------------------------------------------------------------------
+Delay corner    Limit (fF)    Num nets    Target source    Clock tree(s)
+------------------------------------------------------------------------
+  (empty table)
+------------------------------------------------------------------------
+
+Section 2: Violation summary
+============================
+
+DRV breakdown counts across nets and DRV types:
+
+--------------------------------------------------------------
+Applicable net DRV(s)       all    transition    cap    length
+--------------------------------------------------------------
+total violations by type     0         0          0       0
+--------------------------------------------------------------
+
+Transition violation histogram for dc_typ:both.late (primary):
+--------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Net Type    Target    Count    Average    Std. Dev.    Min      Max      Distribution                                                              Over Target
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Leaf        0.050       1       0.000       0.000      0.000    0.000    {1 <= 0.030ns, 0 <= 0.040ns, 0 <= 0.045ns, 0 <= 0.048ns, 0 <= 0.050ns}         -
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Section 3: Top 0 of 0 violations
+================================
+
+

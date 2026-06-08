@@ -1,0 +1,60 @@
+metric,value,unit,source,notes
+m1_baseline_median_iter,35.317,ms,project/m1/sw_baseline.md,Intel i5-10500H 6c/12t @ 4.5GHz boost; 100 runs after 5 warmup; full fwd+bwd transformer iter
+m1_baseline_mean_iter,37.145,ms,project/m1/sw_baseline.md,
+m1_baseline_min_iter,30.483,ms,project/m1/sw_baseline.md,
+m1_baseline_max_iter,54.869,ms,project/m1/sw_baseline.md,
+m1_baseline_tokens_per_sec,7249,tokens/s,project/m1/sw_baseline.md,256 tokens per iteration (batch=4 x seq=64)
+m1_baseline_samples_per_sec,113.3,samples/s,project/m1/sw_baseline.md,
+m1_baseline_sustained_gflops,3.398,GFLOP/s,project/m1/sw_baseline.md,full transformer iter (2 layers attn+FFN fwd+bwd)
+m1_baseline_dominant_kernel,ff_backward,name,codefest/cf02/analysis/ai_calculation.md,32.5% of runtime
+m1_baseline_dominant_kernel_AI,5.43,FLOP/byte,codefest/cf02/analysis/ai_calculation.md,arithmetic intensity FFN backward (FP64 8 B/elem)
+accel_measured_AI_chiplet_boundary,8.12,FLOP/byte,derived,FFN_BWD 1-tile macro = 532480 FLOP / 65536 B (Q16.16 4 B/elem x 4 tiles x 4096 elems)
+accel_interface_BW,2.0,GB/s,project/m4/rtl/interface.sv,32-bit Q16.16 per cycle x 500 MHz on wr and rd channels each
+accel_interface_ceiling_at_FFN_BWD,16.24,GFLOP/s,derived,2 GB/s x 8.12 FLOP/byte -- sustained ceiling at this kernel through this interface
+accel_interface_utilization_measured,49.7,percent,derived,8.07 / 16.24 -- chip is ~50% interface-bound today
+accel_onchip_SRAM_BW,128.0,GB/s,derived,64 Q16.16 elements/cycle x 4 B x 500 MHz feeding the systolic edges
+accel_SRAM_ridge_AI,32.0,FLOP/byte,derived,4096 GFLOP/s peak / 128 GB/s SRAM -- ridge point of on-chip SRAM roofline
+m1_baseline_cpu_roofline_attainable,139,GFLOP/s,codefest/cf02/analysis/ai_calculation.md,DRAM-bandwidth limited at AI=5.43
+m1_baseline_dram_bw,25.6,GB/s,project/m1/sw_baseline.md,single-channel DDR4-3200
+m1_baseline_seq_len,64,tokens,project/m1/sw_baseline.md,
+m1_baseline_d_model,64,dims,project/m1/sw_baseline.md,
+m1_baseline_d_ff,256,dims,project/m1/sw_baseline.md,
+m1_baseline_batch,4,sequences,project/m1/sw_baseline.md,
+m1_baseline_precision,fp64,format,project/m1/sw_baseline.md,8 B/element
+accel_macro_cycles,32989,cycles,project/m3/sim/logs/tb_ff_backward_e2e.log,measured by tb_ff_backward_e2e for 1 ffn_bwd 64x64 macro
+accel_clock_period,2.0,ns,project/m4/synth/qor_report.txt,Genus QoR SAED32 closed at 2 ns with 0 violators
+accel_clock_freq,500,MHz,project/m4/synth/qor_report.txt,
+accel_macro_wall_time,65.978,us,derived,32989 cycles x 2 ns
+accel_array_dim,64,PE,project/RTL/accel_pkg.sv,64x64 systolic array
+accel_pe_count,4096,PEs,derived,64 x 64
+accel_peak_throughput_macs,2.048,TMAC/s,derived,4096 PE x 500 MHz
+accel_peak_throughput_flops,4.096,TFLOP/s,derived,2 FLOP per MAC (Q4.4 x Q4.4 -> Q16.16 accumulate)
+accel_macro_flops,532480,FLOP,derived,64x64x64 GEMM = 524288 FLOP + 4096 GELU prime mul = 8192 FLOP
+accel_macro_sustained_gflops,8.07,GFLOP/s,derived,532480 FLOP / 65.978 us
+accel_speedup_vs_m1_sustained,2.37,ratio,derived,8.07 / 3.398
+accel_speedup_peak_vs_m1_sustained,1205,ratio,derived,4096 GFLOP/s / 3.398 GFLOP/s peak/sustained
+accel_speedup_peak_vs_cpu_roofline,29.5,ratio,derived,4096 GFLOP/s / 139 GFLOP/s attainable
+accel_power_genus_saed32_2ns,2.347,W,project/m4/synth/power_report.txt,Genus vectorless typ corner SAED32 tt0p85v25c
+accel_power_internal_pct,80.4,percent,project/m4/synth/power_report.txt,
+accel_power_leakage_pct,11.3,percent,project/m4/synth/power_report.txt,
+accel_power_switching_pct,8.3,percent,project/m4/synth/power_report.txt,
+accel_power_register_pct,69.4,percent,project/m4/synth/power_report.txt,register-dominated
+accel_power_logic_pct,30.6,percent,project/m4/synth/power_report.txt,
+accel_perf_per_watt_peak,1.745,TFLOP/s/W,derived,4.096 TFLOP/s / 2.347 W
+accel_perf_per_watt_measured,3.44,GFLOP/s/W,derived,8.07 GFLOP/s / 2.347 W
+accel_cell_area_genus_saed32,9069382,um^2,project/m4/synth/area_report.txt,Genus SAED32 RVT typ
+accel_cell_area_mm2,9.07,mm^2,project/m4/synth/area_report.txt,
+accel_leaf_cell_count,2372162,cells,project/m4/synth/qor_report.txt,
+accel_sequential_cell_count,596183,cells,project/m4/synth/qor_report.txt,~25% sequential
+accel_combinational_cell_count,1775979,cells,project/m4/synth/qor_report.txt,~75% combinational
+accel_wns,0.1,ps,project/m4/synth/qor_report.txt,positive slack
+accel_tns,0.0,ps,project/m4/synth/qor_report.txt,no violators
+accel_violators,0,paths,project/m4/synth/qor_report.txt,
+energy_m1_per_iter,0.882,J,estimated,35.317 ms x ~25 W CPU TDP estimate (i5-10500H 45W TDP partial load)
+energy_accel_per_macro,0.000155,J,derived,65.978 us x 2.347 W = 154.9 uJ
+energy_per_flop_m1,260,pJ/FLOP,derived,M1 estimate
+energy_per_flop_accel_macro,291,pJ/FLOP,derived,154.9 uJ / 532480 FLOP -- includes load/drain overhead
+energy_per_flop_accel_peak,0.573,pJ/FLOP,derived,2.347 W / 4.096 TFLOP/s -- steady-state pipeline
+verification_tbs_total,8,count,project/m4/sim/final_run.log,
+verification_tbs_pass,8,count,project/m4/sim/final_run.log,all PASS
+rtl_bugs_found_and_fixed,4,count,git log,accel_controller width / mac_pe_piped4 fwd / fused_postproc grad delay / softmax+stream_pipeline backpressure

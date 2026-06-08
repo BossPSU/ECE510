@@ -1,0 +1,63 @@
+{
+  "DESIGN_NAME": "top_small",
+  "VERILOG_FILES": [
+    "dir::v_hand/mac_pe.v",
+    "dir::v_hand/mac_pe_piped.v",
+    "dir::v_hand/mac_pe_piped4.v",
+    "dir::v_hand/systolic_array_64x64.v",
+    "dir::v_hand/adder_tree.v",
+    "dir::v_hand/exp_lut.v",
+    "dir::v_hand/gelu_lut.v",
+    "dir::v_hand/gelu_direct_lut.v",
+    "dir::v_hand/gelu_grad_direct_lut.v",
+    "dir::v_hand/gelu_unit.v",
+    "dir::v_hand/gelu_unit_lut.v",
+    "dir::v_hand/gelu_grad_unit.v",
+    "dir::v_hand/gelu_grad_unit_lut.v",
+    "dir::v_hand/softmax_unit.v",
+    "dir::v_hand/softmax_unit_lut.v",
+    "dir::v_hand/causal_mask_unit.v",
+    "dir::v_hand/divider_or_reciprocal_unit.v",
+    "dir::v_hand/divider_or_reciprocal_seq.v",
+    "dir::v_hand/fused_postproc_unit.v",
+    "dir::v_hand/pipeline_stage.v",
+    "dir::v_hand/skid_buffer.v",
+    "dir::v_hand/stream_mux.v",
+    "dir::v_hand/tile_loader.v",
+    "dir::v_hand/tile_writer.v",
+    "dir::v_hand/sram_bank.v",
+    "dir::v_hand/scratchpad_ctrl.v",
+    "dir::v_hand/address_gen.v",
+    "dir::v_hand/dma_engine.v",
+    "dir::v_hand/double_buffer_ctrl.v",
+    "dir::v_hand/tile_buffer.v",
+    "dir::v_hand/stream_pipeline.v",
+    "dir::v_hand/mode_decoder.v",
+    "dir::v_hand/tile_scheduler.v",
+    "dir::v_hand/tile_dispatcher.v",
+    "dir::v_hand/accel_controller.v",
+    "dir::v_hand/perf_counter_block.v",
+    "dir::v_hand/accel_engine.v",
+    "dir::v_hand/accel_top.v",
+    "dir::v_hand/compute_core.v",
+    "dir::v_hand/chiplet_interface.v",
+    "dir::v_hand/top_small.v"
+  ],
+
+  "USE_SYNLIG": false,
+  "LINTER_ERROR_ON_LATCH": false,
+
+  "CLOCK_PORT": "clk",
+  "CLOCK_NET": "clk",
+  "CLOCK_PERIOD": 10.0,
+
+  "PDK": "sky130A",
+  "STD_CELL_LIBRARY": "sky130_fd_sc_hd",
+
+  "FP_SIZING": "relative",
+  "FP_CORE_UTIL": 25,
+
+  "RUN_HEURISTIC_DIODE_INSERTION": false,
+
+  "VERILOG_INCLUDE_DIRS": ["dir::v_hand"]
+}
