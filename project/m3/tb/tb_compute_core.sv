@@ -244,6 +244,33 @@ module tb_compute_core;
     expected = ref_gelu(1.0);
     verify_uniform(ADDR_OUT, expected, 0.05, "S1: ff_forward", 16);
 
+    // ----- Diagnostic: where did the data go? -----
+    // The TB writes A/B to lane 0's scratchpad. With num_m=num_n=1 the
+    // tile_dispatcher sends ONE tile to some lane (depends on round-robin
+    // start). If that lane isn't lane 0, lane 0's compute never runs and
+    // its output stays 0. Probe each lane's compute_core to find which
+    // lane(s) actually saw activity.
+    begin : s1_diag
+      logic [31:0] sample_q;
+      real         sample_real;
+      // Per-lane scratchpad probe: read directly from each lane's SRAM
+      // via the dma engine to see whether anything was written.
+      $display("    [S1-DIAG] Sample readbacks per lane at addr_out base:");
+      for (int lane = 0; lane < N_LANES; lane++) begin
+        dma_read(dma_addr(lane, ADDR_OUT), sample_real);
+        if (sample_real != 0.0)
+          $display("      lane %0d, ADDR_OUT[0] = %0.4f (nonzero!)",
+                   lane, sample_real);
+      end
+      $display("    [S1-DIAG] Sample readbacks per lane at addr_a base:");
+      for (int lane = 0; lane < N_LANES; lane++) begin
+        dma_read(dma_addr(lane, ADDR_A), sample_real);
+        if (sample_real != 0.0)
+          $display("      lane %0d, ADDR_A[0] = %0.4f (matches input?)",
+                   lane, sample_real);
+      end
+    end
+
     // ----- Scenario 2: single ff_backward tile -----
     // C = A (identity B), dy = A (= 1.0). h_pre = 1.0.
     // ff_backward step on the elementwise path: out = dy * GELU'(h_pre).
