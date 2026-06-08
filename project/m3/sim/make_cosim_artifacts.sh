@@ -39,7 +39,9 @@ echo ""
 bash ./run_verification.sh tb_top 2>&1 | tee "$LOG_OUT"
 
 # Sanity check: did tb_top actually pass?
-if ! grep -qE "^=== TB_TOP: PASS ===" logs/tb_top.log; then
+# (vsim -c prefixes transcript lines with "# ", same workaround as
+# run_verification.sh's pass-marker grep.)
+if ! grep -qE "^(# )?=== TB_TOP: PASS ===" logs/tb_top.log; then
     echo ""
     echo "ERROR: tb_top did NOT print PASS. Cosim artifacts NOT produced."
     echo "  Investigate logs/tb_top.log first."
