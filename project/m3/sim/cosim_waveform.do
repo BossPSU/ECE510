@@ -138,11 +138,23 @@ if {$found ne ""} {
     puts "  Then commit:"
     puts "    git add cosim_run.log cosim_waveform.png"
     puts "==================================================================="
+    # Auto-quit only when the PS file was actually written; otherwise leave
+    # the GUI open so the user can File -> Export -> Image manually.
+    quit -force
 } else {
     puts ""
-    puts "WARNING: could not find wave canvas widget."
-    puts "Use File -> Export -> Image (PNG) manually from the Wave window."
+    puts "==================================================================="
+    puts "  WARNING: could not find wave canvas widget (.wave.tree.canvas,"
+    puts "           .wave.pane.right.canvas, .wave.workarea.canvas)."
+    puts ""
+    puts "  Leaving the GUI OPEN so you can:"
+    puts "    1. (already done) wave panel is populated and run -all finished"
+    puts "    2. Click 'Wave' window header to focus it"
+    puts "    3. File -> Export -> Image (PNG)"
+    puts "    4. Save as: project/m3/sim/cosim_waveform.png"
+    puts ""
+    puts "  Then quit Questa manually (File -> Quit) and commit:"
+    puts "    git add cosim_run.log cosim_waveform.png"
+    puts "==================================================================="
+    # DO NOT quit -- leave the GUI open for manual export.
 }
-
-# Quit (use -force so unsaved-state prompt doesn't block scripts).
-quit -force
