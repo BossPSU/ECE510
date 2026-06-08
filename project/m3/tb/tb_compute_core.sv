@@ -245,30 +245,56 @@ module tb_compute_core;
     verify_uniform(ADDR_OUT, expected, 0.05, "S1: ff_forward", 16);
 
     // ----- Diagnostic: where did the data go? -----
-    // The TB writes A/B to lane 0's scratchpad. With num_m=num_n=1 the
-    // tile_dispatcher sends ONE tile to some lane (depends on round-robin
-    // start). If that lane isn't lane 0, lane 0's compute never runs and
-    // its output stays 0. Probe each lane's compute_core to find which
-    // lane(s) actually saw activity.
+    // ADDR_OUT[0] = GELU(1.0) is correct, but verify_uniform's random
+    // samples come back 0. Either only one cell was written, or the TB's
+    // address scheme differs from what the DUT writes.
     begin : s1_diag
-      logic [31:0] sample_q;
       real         sample_real;
-      // Per-lane scratchpad probe: read directly from each lane's SRAM
-      // via the dma engine to see whether anything was written.
-      $display("    [S1-DIAG] Sample readbacks per lane at addr_out base:");
+      int          nonzero_count;
+      // 1. Confirm lane 0 has A and OUT[0] populated.
+      $display("    [S1-DIAG] Lane scan:");
       for (int lane = 0; lane < N_LANES; lane++) begin
         dma_read(dma_addr(lane, ADDR_OUT), sample_real);
         if (sample_real != 0.0)
-          $display("      lane %0d, ADDR_OUT[0] = %0.4f (nonzero!)",
-                   lane, sample_real);
+          $display("      lane %0d, ADDR_OUT[0] = %0.4f", lane, sample_real);
       end
-      $display("    [S1-DIAG] Sample readbacks per lane at addr_a base:");
-      for (int lane = 0; lane < N_LANES; lane++) begin
-        dma_read(dma_addr(lane, ADDR_A), sample_real);
+      // 2. Walk lane 0's output region from ADDR_OUT to ADDR_OUT+127.
+      //    If only first N (=64) cells have data, the output is row 0 only.
+      //    If every Nth cell has data, the output is column-major.
+      $display("    [S1-DIAG] Lane 0 ADDR_OUT[0..127] nonzero map:");
+      nonzero_count = 0;
+      for (int offset = 0; offset < 128; offset++) begin
+        dma_read(dma_addr(0, ADDR_OUT + offset[15:0]), sample_real);
+        if (sample_real != 0.0) begin
+          nonzero_count++;
+          if (nonzero_count < 16)
+            $display("      ADDR_OUT[%0d] = %0.4f  (row %0d col %0d if row-major)",
+                     offset, sample_real, offset/64, offset%64);
+        end
+      end
+      $display("    [S1-DIAG] nonzero in first 128 cells: %0d", nonzero_count);
+      // 3. Sweep stride 64 to detect column-major layout.
+      $display("    [S1-DIAG] Lane 0 ADDR_OUT[0,64,128,...,4032] nonzero map:");
+      nonzero_count = 0;
+      for (int r = 0; r < 64; r++) begin
+        dma_read(dma_addr(0, ADDR_OUT + (r*64)), sample_real);
+        if (sample_real != 0.0) begin
+          nonzero_count++;
+          if (nonzero_count < 16)
+            $display("      ADDR_OUT[%0d] (row %0d col 0 row-major) = %0.4f",
+                     r*64, r, sample_real);
+        end
+      end
+      $display("    [S1-DIAG] nonzero col-0-rowmajor cells: %0d", nonzero_count);
+      // 4. Try address scheme {col, row} (col-major flip).
+      $display("    [S1-DIAG] Lane 0 col-major scan ADDR_OUT[col*64+row]:");
+      nonzero_count = 0;
+      for (int c = 0; c < 64; c++) begin
+        dma_read(dma_addr(0, ADDR_OUT + (c*64)), sample_real);
         if (sample_real != 0.0)
-          $display("      lane %0d, ADDR_A[0] = %0.4f (matches input?)",
-                   lane, sample_real);
+          nonzero_count++;
       end
+      $display("    [S1-DIAG] full lane-0 nonzero count needs broader scan");
     end
 
     // ----- Scenario 2: single ff_backward tile -----
