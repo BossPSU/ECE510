@@ -295,6 +295,21 @@ module tb_compute_core;
           nonzero_count++;
       end
       $display("    [S1-DIAG] full lane-0 nonzero count needs broader scan");
+      // 5. Inspect lane 0's accel_controller state via hier ref.
+      $display("    [S1-DIAG] Lane 0 accel_controller final state:");
+      $display("      write_cnt    = %0d", duv.u_accel_top.gen_lane[0].u_engine.u_ctrl.write_cnt);
+      $display("      wr_row       = %0d", duv.u_accel_top.gen_lane[0].u_engine.u_ctrl.wr_row);
+      $display("      wr_col       = %0d", duv.u_accel_top.gen_lane[0].u_engine.u_ctrl.wr_col);
+      $display("      tile_out_sz  = %0d", duv.u_accel_top.gen_lane[0].u_engine.u_ctrl.tile_out_size);
+      $display("      cmd_reg.tile_m = %0d", duv.u_accel_top.gen_lane[0].u_engine.u_ctrl.cmd_reg.tile_m);
+      $display("      cmd_reg.tile_n = %0d", duv.u_accel_top.gen_lane[0].u_engine.u_ctrl.cmd_reg.tile_n);
+      $display("      cmd_reg.addr_out = 0x%0h", duv.u_accel_top.gen_lane[0].u_engine.u_ctrl.cmd_reg.addr_out);
+      // Confirm u_buf_out has all 4096 cells populated.
+      $display("    [S1-DIAG] u_buf_out mem samples:");
+      $display("      mem[0][0]   = %0.4f", from_q($signed(duv.u_accel_top.gen_lane[0].u_engine.u_buf_out.mem[0][0])));
+      $display("      mem[0][1]   = %0.4f", from_q($signed(duv.u_accel_top.gen_lane[0].u_engine.u_buf_out.mem[0][1])));
+      $display("      mem[1][0]   = %0.4f", from_q($signed(duv.u_accel_top.gen_lane[0].u_engine.u_buf_out.mem[1][0])));
+      $display("      mem[63][63] = %0.4f", from_q($signed(duv.u_accel_top.gen_lane[0].u_engine.u_buf_out.mem[63][63])));
     end
 
     // ----- Scenario 2: single ff_backward tile -----
