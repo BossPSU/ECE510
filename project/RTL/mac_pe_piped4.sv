@@ -158,17 +158,51 @@ module mac_pe_piped4
   // Questa's strict elaborator accepts the stage-2 operand reads below.
   logic signed [DATA_WIDTH-1:0] acc_r;
 
-  assign acc_lo_operand = clear_acc_r2 ? 16'h0 : acc_r[15:0];
-  assign acc_hi_operand = clear_acc_r2 ? 16'h0 : acc_r[31:16];
-  assign lo_sum_comb    = {1'b0, acc_lo_operand} + {1'b0, product_q[15:0]};
-
-  // ----- Stage 2 register: lower-16 sum + carry + upper-16 operands -----
-  // Carry is the bit-16 of the 17-bit lo_sum_comb.
+  // ----- B-light bypass: forward Stage 3's in-flight value into Stage 2 -----
+  //
+  // The 4-stage pipeline reads acc_r at Stage 2 (cycle X+2) and commits to
+  // it at Stage 3 NBA (cycle X+3) -- a 1-cycle gap with no forwarding.
+  // Reading `acc_r` directly meant MAC X saw MAC X-2's result (the last
+  // NBA committed before Stage 2 fires), not MAC X-1's. Consecutive MACs
+  // then overwrote each other on alternating parities and the dot-product
+  // sum collapsed to every-other-product accumulation -- the cause of the
+  // tb_stream_pipeline_tile S2/S3/S4-S8 failures (1/16 cell pass rate).
+  //
+  // The fix: read the values Stage 3 is currently committing to acc_r.
+  // - lo_sum_r is the Stage 2 register holding MAC X-1's lo half.
+  // - hi_sum_comb is the Stage 3 combinational add producing MAC X-1's
+  //   hi half (about to land in acc_r[31:16] at end of this same cycle).
+  //
+  // No combinational loop: hi_sum_comb's inputs (product_hi_r, carry_r,
+  // acc_hi_r2) are all Stage 2 NBA outputs from cycle X+1, broken by the
+  // register boundary.
+  //
+  // Safety conditions:
+  //   1. Bubble-safe: en is unified across stages (stream_pipeline drives
+  //      feed_active_r to every PE), so when en=0 every register holds
+  //      together. The bypass values stay consistent.
+  //   2. Clear-safe: clear_acc_r2 already overrides both operands to 0;
+  //      Stage 3 also zeroes acc_r on clear_acc_r3 as defense-in-depth.
+  //   3. Drain-safe: last real MAC's Stage 3 commit lands while en is
+  //      still high (DRAIN_CYCLES=9 in stream_pipeline gives 9 cycles of
+  //      slack vs the 6-cycle minimum).
+  // Forward-declare Stage 2 / Stage 3 signals so the bypass references
+  // above resolve under strict elaborators (Questa).
   logic [15:0]        lo_sum_r;
   logic               carry_r;
   logic signed [15:0] product_hi_r;       // upper 16 bits of product_q
   logic [15:0]        acc_hi_r2;          // upper 16 bits of acc_r (post-clear)
   logic               clear_acc_r3;
+  logic signed [15:0] hi_sum_comb;
+
+  assign acc_lo_operand = clear_acc_r2 ? 16'h0 : lo_sum_r;
+  assign acc_hi_operand = clear_acc_r2 ? 16'h0 : hi_sum_comb;
+  assign lo_sum_comb    = {1'b0, acc_lo_operand} + {1'b0, product_q[15:0]};
+
+  // ----- Stage 2 register: lower-16 sum + carry + upper-16 operands -----
+  // Carry is the bit-16 of the 17-bit lo_sum_comb.
+  // (lo_sum_r, carry_r, product_hi_r, acc_hi_r2, clear_acc_r3 forward-
+  // declared above.)
 
   always_ff @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
@@ -187,7 +221,7 @@ module mac_pe_piped4
   end
 
   // ----- Stage 3 comb: upper 16-bit acc add with carry-in -----
-  logic signed [15:0] hi_sum_comb;
+  // (hi_sum_comb forward-declared above at the Stage 2 bypass site.)
   assign hi_sum_comb = product_hi_r + $signed({15'h0, carry_r}) + $signed(acc_hi_r2);
 
   // ----- Stage 3 register (the accumulator itself) -----
