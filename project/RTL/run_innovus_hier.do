@@ -448,28 +448,43 @@ if { $RESUME_FROM eq "none" || $RESUME_FROM eq "pdn"
     #
     # SAED32 RVT naming: NBUFFXn_RVT for buffers, INVXn_RVT for inverters.
     # n = 1, 2, 4, 8, 16 covers the drive-strength range CTS needs.
+    # FIX (prior run failed with IMPCCOPT-1013): NBUFFX1_RVT doesn't
+    # exist in the SAED32 RVT lib variant we're using -- drop it. Keep
+    # only the drive strengths the library actually provides.
     if { [catch {
         set_db cts_buffer_cells \
-            "NBUFFX1_RVT NBUFFX2_RVT NBUFFX4_RVT NBUFFX8_RVT NBUFFX16_RVT"
+            "NBUFFX2_RVT NBUFFX4_RVT NBUFFX8_RVT NBUFFX16_RVT"
         set_db cts_inverter_cells \
             "INVX1_RVT INVX2_RVT INVX4_RVT INVX8_RVT"
         # No clock gates synthesized in this design.
         set_db cts_clock_gating_cells ""
     } err] } {
         puts "WARNING: set_db cts_*_cells failed ($err); trying legacy syntax."
-        # Fall back to older specifyClockTree-style globals if set_db is
-        # unsupported in this Innovus version.
         catch {set_ccopt_property buffer_cells \
-            {NBUFFX1_RVT NBUFFX2_RVT NBUFFX4_RVT NBUFFX8_RVT NBUFFX16_RVT}}
+            {NBUFFX2_RVT NBUFFX4_RVT NBUFFX8_RVT NBUFFX16_RVT}}
         catch {set_ccopt_property inverter_cells \
             {INVX1_RVT INVX2_RVT INVX4_RVT INVX8_RVT}}
         catch {set_ccopt_property clock_gating_cells {}}
     }
-    puts ">>> CTS cell-lists: buffer=NBUFFXn_RVT inverter=INVXn_RVT"
+    puts ">>> CTS cell-lists: buffer=NBUFFXn_RVT (n>=2) inverter=INVXn_RVT"
+
+    # FIX (prior run failed with IMPCCOPT-1013): target_max_trans was
+    # implicitly 0.05 ns (the script default), but SAED32 RVT's slowest
+    # NBUFF can't drive a max transition below ~0.127 ns. Set 0.15 ns
+    # as a safe target -- gives CCOpt headroom to actually build a tree.
+    catch {set_ccopt_property target_max_trans 0.15}
 
     create_ccopt_clock_tree_spec
     if { [catch {ccopt_design} err] } {
-        puts "WARNING: ccopt_design returned error: $err -- continuing"
+        # FIX: previously continued past a CTS failure, which produced
+        # bogus post-CTS timing. Now flag clearly + record so a wrapper
+        # script can detect failure. Don't run optDesign -postCTS if
+        # CTS itself failed -- there's no clock tree to optimize.
+        puts "ERROR: ccopt_design failed ($err)"
+        puts "ERROR: skipping optDesign -postCTS (no valid clock tree)"
+        # Save what we have for debug.
+        catch {write_db post_ccopt_failed.enc.dat}
+        return -code error "CTS failed: $err"
     }
 
     if { [catch {optDesign -postCTS -drv -hold} err] } {
