@@ -129,23 +129,39 @@ module mac_pe_piped4 (
         { Q88_PROMOTE_SH{1'b0} }
     };
 
+    // ----- Stage 2 register: lo_sum + carry + upper-16 operands -----
+    // (Forward-declared so the M3-fix bypass assigns below can reference
+    // them. The always_ff that drives them is right after acc_lo_operand.)
+    reg  [15:0]        lo_sum_r;
+    reg                carry_r;
+    reg  signed [15:0] product_hi_r;
+    reg  [15:0]        acc_hi_r2;
+    reg                clear_acc_r3;
+    wire signed [15:0] hi_sum_comb;     // Stage 3 comb result (defined ~line 175)
+
     // Pre-clear via operand path (so the carry/upper-add chain stays
     // straight). When clear_acc_r2 is high, both halves of acc are
     // treated as 0 for this iteration's add.
+    //
+    // M3-verified fix (commit b2354fe): the original assigned acc_r[*]
+    // here. acc_r is committed at Stage 3 NBA, but Stage 2 reads at the
+    // SAME cycle's active region -- so MAC X read acc_r holding MAC X-2's
+    // result, not MAC X-1's. Each MAC overwrote the previous on the
+    // SAME parity, halving the accumulator forwarding. The 4032/4096
+    // wrong cells in tb_stream_pipeline_tile S2 were the symptom.
+    //
+    // Bypass forward: lo_sum_r (Stage 2 reg holding MAC X-1's lo
+    // partial sum) and hi_sum_comb (Stage 3 combinational producing
+    // MAC X-1's hi partial sum) supply Stage 2's operand reads
+    // directly. No new combinational loop -- both inputs are FF
+    // outputs from cycle X+1 NBA.
     wire [15:0] acc_lo_operand;
     wire [15:0] acc_hi_operand;
     wire [16:0] lo_sum_comb;
 
-    assign acc_lo_operand = clear_acc_r2 ? 16'h0 : acc_r[15:0];
-    assign acc_hi_operand = clear_acc_r2 ? 16'h0 : acc_r[31:16];
+    assign acc_lo_operand = clear_acc_r2 ? 16'h0 : lo_sum_r;
+    assign acc_hi_operand = clear_acc_r2 ? 16'h0 : hi_sum_comb;
     assign lo_sum_comb    = {1'b0, acc_lo_operand} + {1'b0, product_q[15:0]};
-
-    // ----- Stage 2 register: lo_sum + carry + upper-16 operands -----
-    reg [15:0]        lo_sum_r;
-    reg               carry_r;
-    reg signed [15:0] product_hi_r;
-    reg [15:0]        acc_hi_r2;
-    reg               clear_acc_r3;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -164,7 +180,7 @@ module mac_pe_piped4 (
     end
 
     // ----- Stage 3 comb: upper-16 acc add with carry-in -----
-    wire signed [15:0] hi_sum_comb;
+    // (hi_sum_comb forward-declared above at the bypass site.)
     assign hi_sum_comb = product_hi_r
                        + $signed({15'h0, carry_r})
                        + $signed(acc_hi_r2);

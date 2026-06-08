@@ -90,9 +90,14 @@ module fused_postproc_unit (
         .out_valid (gelu_grad_valid)
     );
 
-    // 6-stage delay to align data_in with gelu_grad output for the
-    // dh = dh_act * gelu_grad(h) elementwise multiply.
-    localparam GRAD_DELAY = 6;
+    // M3-verified fix (commit f7e8605): GRAD_DELAY must equal the
+    // gelu_grad pipeline depth. v_hand instantiates gelu_grad_unit_lut
+    // (4-stage after M6 Tier 2B), not the original Pade gelu_grad_unit
+    // (6-stage). Was hardcoded to 6, which left data_delay[5] = 0 at
+    // the cycle gelu_grad_valid pulsed -> q_mul collapsed to 0*grad_out
+    // -> entire FFN_BWD path silently produced 0. Now 4 to match the
+    // LUT pipeline.
+    localparam GRAD_DELAY = 4;
     reg signed [31:0] data_delay [0:GRAD_DELAY-1];
 
     integer di;

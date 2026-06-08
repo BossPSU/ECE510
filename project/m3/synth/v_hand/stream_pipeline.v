@@ -128,9 +128,15 @@ module stream_pipeline (
     wire [15:0] output_end_c     = output_start_c +
                                    ({8'b0, tile_m_r} * {8'b0, tile_n_r});
     wire [15:0] elemwise_end_c   = output_end_c + FUSED_DEPTH;
-    wire [15:0] sm_feed_end_c      = output_start_c + {8'b0, tile_m_r};
+    // M3-fix: softmax backpressure widens the feed window. SM_ROW_PERIOD
+    // = 64 cycles/row (covers the ~48-cycle iterative divider + LUT
+    // phases + sideband). Without backpressure the divider couldn't
+    // keep up and silently dropped 56/64 rows per tile.
+    localparam SM_ROW_PERIOD = 16'd64;
+    wire [15:0] sm_feed_end_c      = output_start_c +
+                                     ({8'b0, tile_m_r} * SM_ROW_PERIOD);
     wire [15:0] sm_capture_start_c = output_start_c + SOFTMAX_LAT;
-    wire [15:0] sm_capture_end_c   = sm_capture_start_c + {8'b0, tile_m_r};
+    wire [15:0] sm_capture_end_c   = sm_feed_end_c + SM_ROW_PERIOD;
     wire [15:0] sm_walk_start_c    = sm_capture_end_c;
     wire [15:0] sm_walk_end_c      = sm_walk_start_c +
                                      ({8'b0, tile_m_r} * {8'b0, tile_n_r});
@@ -397,13 +403,28 @@ module stream_pipeline (
     end
 
     // ===== Stage 3b: softmax path =====
-    wire [15:0] sm_in_offset      = cycle_cnt - output_start;
-    wire [15:0] sm_capture_offset = cycle_cnt - sm_capture_start;
+    // M3-fix: ready-gated feed driven by an in_row counter (was cycle-
+    // derived; broke under backpressure). Replaces the original
+    // (cycle_cnt >= output_start) && (cycle_cnt < sm_feed_end) gate
+    // with a handshake that respects the softmax divider's ~48-cycle
+    // cadence.
+    wire        sm_ready;
+    reg  [7:0]  sm_in_row_r;
+    wire        sm_feed_phase = softmax_mode && running &&
+                                (cycle_cnt >= output_start) &&
+                                (sm_in_row_r < tile_m_r);
+    wire        sm_in_valid   = sm_feed_phase && sm_ready;
+    wire [7:0]  sm_in_row     = sm_in_row_r;
 
-    wire        sm_in_valid = softmax_mode && running &&
-                              (cycle_cnt >= output_start) &&
-                              (cycle_cnt <  sm_feed_end);
-    wire [7:0]  sm_in_row   = sm_in_offset[7:0];
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            sm_in_row_r <= 8'd0;
+        end else if (start && !running) begin
+            sm_in_row_r <= 8'd0;
+        end else if (sm_in_valid) begin
+            sm_in_row_r <= sm_in_row_r + 8'd1;
+        end
+    end
 
     wire [(ARRAY_DIM*DATA_WIDTH)-1:0] sm_scores_in_pkt;
     wire [(ARRAY_DIM*DATA_WIDTH)-1:0] sm_probs_out_pkt;
@@ -435,13 +456,25 @@ module stream_pipeline (
         .scores_in (sm_scores_in_pkt),
         .in_valid  (sm_in_valid),
         .probs_out (sm_probs_out_pkt),
-        .out_valid (sm_out_valid)
+        .out_valid (sm_out_valid),
+        .ready     (sm_ready)        // M3-fix: backpressure handshake
     );
 
-    wire        sm_capture_active = softmax_mode && sm_out_valid &&
-                                    (cycle_cnt >= sm_capture_start) &&
-                                    (cycle_cnt <  sm_capture_end);
-    wire [7:0]  sm_capture_row    = sm_capture_offset[7:0];
+    // M3-fix: capture is data-driven on sm_out_valid (was cycle-window;
+    // outputs no longer arrive at fixed cadences under backpressure).
+    // Count outputs as they fire; index sm_row_buf by the counter.
+    reg  [7:0]  sm_cap_row_r;
+    wire        sm_capture_active = softmax_mode && running && sm_out_valid;
+    wire [7:0]  sm_capture_row    = sm_cap_row_r;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            sm_cap_row_r <= 8'd0;
+        end else if (start && !running) begin
+            sm_cap_row_r <= 8'd0;
+        end else if (sm_capture_active) begin
+            sm_cap_row_r <= sm_cap_row_r + 8'd1;
+        end
+    end
 
     // Flat 2D row-buffer for softmax results.
     reg [DATA_WIDTH-1:0] sm_row_buf [0:(ARRAY_DIM*ARRAY_DIM)-1];
@@ -460,9 +493,34 @@ module stream_pipeline (
         end
     end
 
+    // M3-fix: walk gated on capture-done flag, not cycle window. Old
+    // window assumed captures finished at a fixed time; with
+    // backpressure captures finish at variable times.
+    reg         sm_capture_done_r;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            sm_capture_done_r <= 1'b0;
+        end else if (start && !running) begin
+            sm_capture_done_r <= 1'b0;
+        end else if (sm_capture_active &&
+                     (sm_cap_row_r + 8'd1 >= tile_m_r)) begin
+            sm_capture_done_r <= 1'b1;
+        end
+    end
+    reg [15:0]  sm_walk_cnt;
     wire        sm_walk_active = softmax_mode && running &&
-                                 (cycle_cnt >= sm_walk_start) &&
-                                 (cycle_cnt <  sm_walk_end);
+                                 sm_capture_done_r &&
+                                 (sm_walk_cnt < ({8'b0, tile_m_r} *
+                                                 {8'b0, tile_n_r}));
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            sm_walk_cnt <= 16'd0;
+        end else if (start && !running) begin
+            sm_walk_cnt <= 16'd0;
+        end else if (sm_walk_active) begin
+            sm_walk_cnt <= sm_walk_cnt + 16'd1;
+        end
+    end
     reg [7:0]   sm_walk_row_cnt, sm_walk_col_cnt;
 
     always @(posedge clk or negedge rst_n) begin

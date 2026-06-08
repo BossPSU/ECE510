@@ -40,7 +40,8 @@ module softmax_unit_lut (
     scores_in,
     in_valid,
     probs_out,
-    out_valid
+    out_valid,
+    ready          // M3-fix: backpressure handshake
 );
 
     parameter DATA_WIDTH  = 32;
@@ -63,9 +64,33 @@ module softmax_unit_lut (
     input  wire                                  in_valid;
     output reg  [(VEC_LEN*DATA_WIDTH)-1:0]       probs_out;
     output reg                                   out_valid;
+    output wire                                  ready;
 
     // Suppress unused-port warning for start (kept for API parity).
     wire _unused_start = start;
+
+    // -----------------------------------------------------------------
+    // M3-verified fix (commit dbdab93): in_flight tracks whether a row
+    // is currently in the divider/wait pipeline. Upstream MUST gate
+    // in_valid by `ready` or rows are silently dropped (the original
+    // bug: 56/64 softmax rows lost per tile, all 4032 cells wrong in
+    // tb_stream_pipeline_tile S6).
+    //
+    // Cleared on out_valid; set on accepted in_valid. out_valid wins
+    // when both fire same cycle so ready stays high one more cycle.
+    // -----------------------------------------------------------------
+    reg in_flight;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            in_flight <= 1'b0;
+        end else if (en) begin
+            if (out_valid)
+                in_flight <= 1'b0;
+            else if (in_valid)
+                in_flight <= 1'b1;
+        end
+    end
+    assign ready = !in_flight;
 
     // ------- helpers --------------------------------------------------
     function signed [31:0] q_mul;
