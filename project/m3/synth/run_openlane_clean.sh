@@ -53,14 +53,15 @@ for memfile in exp_lut.mem gelu_tanh_lut.mem \
 done
 echo ""
 
-# Run OpenLane. The exact invocation depends on which OpenLane the user has
-# loaded -- adjust if your env uses `openlane` directly, `flow.tcl`, or a
-# Docker wrapper.
-#
-# Common phobos invocation paths:
-#   1. openlane --run-tag $TAG -                     (OL2 standalone)
-#   2. flow.tcl -design $(pwd) -tag $TAG             (OL1 / older)
-#   3. docker run ... openlane:latest --tag $TAG     (containerized)
+# Strip /mnt/* PATH entries so WSL doesn't accidentally invoke Windows
+# binaries (which broke prior attempts -- see launch_openlane_attempt9.sh).
+export PATH="$(echo "$PATH" | tr ':' '\n' | grep -v '^/mnt/' | paste -sd:)"
+
+# Known-good install paths from the prior successful attempt 9 launch:
+NIX_OPENLANE=/nix/store/9hhfv2x4r4x6v55799pa58jc2yni6awy-python3.11-openlane-2.3.10/bin/openlane
+NIX_PDK_ROOT=/home/david/.volare/volare
+
+# Run OpenLane. Prefer the Nix install (known good), fall back to PATH lookup.
 
 # Use the pure-Verilog file set (v_hand/*.v) instead of the .sv set.
 # project/RTL/*.sv with Synlig has been historically flaky (10+ prior
@@ -70,8 +71,12 @@ echo ""
 # 12->13 bit fix that's in project/RTL/accel_controller.sv).
 CONFIG="config_top_small_v_hand.json"
 
-if command -v openlane >/dev/null 2>&1; then
-    echo "  -> using 'openlane' CLI with $CONFIG"
+if [ -x "$NIX_OPENLANE" ]; then
+    echo "  -> using Nix install: $NIX_OPENLANE"
+    echo "  -> pdk-root:          $NIX_PDK_ROOT"
+    "$NIX_OPENLANE" --pdk-root "$NIX_PDK_ROOT" --run-tag "$TAG" "$CONFIG" 2>&1 | tee "$LOG"
+elif command -v openlane >/dev/null 2>&1; then
+    echo "  -> using 'openlane' CLI on PATH"
     openlane --run-tag "$TAG" "$CONFIG" 2>&1 | tee "$LOG"
 elif command -v flow.tcl >/dev/null 2>&1; then
     echo "  -> using 'flow.tcl' CLI"
